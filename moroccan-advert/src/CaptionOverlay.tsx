@@ -9,14 +9,15 @@ import {
   useVideoConfig,
   Sequence,
   interpolate,
-  Easing,
+  spring,
 } from "remotion";
 import type { Caption } from "@remotion/captions";
 import { createTikTokStyleCaptions } from "@remotion/captions";
-import { ARABIC_FONT_FAMILY } from "./arabicFont";
+import { ARABIC_FONT } from "./arabicFont";
 
-const SWITCH_EVERY_MS = 1200;
-const HIGHLIGHT = "#FFD700";
+const SWITCH_EVERY_MS = 1800;
+const ACTIVE_BG = "#FFD000";
+const ACTIVE_FG = "#1A1000";
 
 const CaptionPage: React.FC<{
   page: ReturnType<typeof createTikTokStyleCaptions>["pages"][number];
@@ -27,62 +28,76 @@ const CaptionPage: React.FC<{
   const currentTimeMs = (frame / fps) * 1000;
   const absoluteTimeMs = page.startMs + currentTimeMs;
 
-  const progress = interpolate(frame, [0, 8], [0, 1], {
-    extrapolateRight: "clamp",
-    easing: Easing.bezier(0.16, 1, 0.3, 1),
+  const enterSpring = spring({
+    fps,
+    frame,
+    config: { damping: 26, stiffness: 280, mass: 0.55 },
+    from: 0,
+    to: 1,
   });
 
-  const translateY = interpolate(progress, [0, 1], [18, 0]);
+  const translateY = interpolate(enterSpring, [0, 1], [28, 0]);
+  const scale = interpolate(enterSpring, [0, 1], [0.93, 1]);
 
   return (
     <div
       style={{
-        opacity: progress,
-        transform: `translateY(${translateY}px)`,
-        direction: "rtl",
-        textAlign: "center",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
+        opacity: enterSpring,
+        transform: `translateY(${translateY}px) scale(${scale})`,
       }}
     >
       <div
         style={{
-          background: "rgba(0,0,0,0.55)",
+          background: "rgba(0,0,0,0.52)",
           borderRadius: 20,
-          paddingLeft: 28,
-          paddingRight: 28,
-          paddingTop: 10,
-          paddingBottom: 10,
+          paddingLeft: 22,
+          paddingRight: 22,
+          paddingTop: 14,
+          paddingBottom: 14,
+          maxWidth: 640,
         }}
       >
-        <span
+        <div
           style={{
-            fontFamily: ARABIC_FONT_FAMILY,
-            fontSize: 46,
-            fontWeight: 700,
-            lineHeight: 1.3,
-            whiteSpace: "pre",
+            direction: "rtl",
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "center",
+            gap: 5,
+            lineHeight: 1.55,
           }}
         >
-          {page.tokens.map((token) => {
+          {page.tokens.map((token, i) => {
             const isActive =
               token.fromMs <= absoluteTimeMs && token.toMs > absoluteTimeMs;
+            const word = token.text.trim();
+
             return (
               <span
-                key={token.fromMs}
+                key={i}
                 style={{
-                  color: isActive ? HIGHLIGHT : "#FFFFFF",
+                  fontFamily: ARABIC_FONT,
+                  fontSize: 54,
+                  fontWeight: 900,
+                  lineHeight: 1.55,
+                  background: isActive ? ACTIVE_BG : "transparent",
+                  color: isActive ? ACTIVE_FG : "#FFFFFF",
+                  borderRadius: isActive ? 10 : 0,
+                  paddingLeft: isActive ? 12 : 0,
+                  paddingRight: isActive ? 12 : 0,
+                  paddingTop: isActive ? 2 : 0,
+                  paddingBottom: isActive ? 2 : 0,
                   textShadow: isActive
-                    ? "0 0 16px rgba(255,215,0,0.6)"
-                    : "0 2px 8px rgba(0,0,0,0.8)",
+                    ? "none"
+                    : "0 1px 8px rgba(0,0,0,1), 0 2px 16px rgba(0,0,0,0.7)",
+                  display: "inline-block",
                 }}
               >
-                {token.text}
+                {word}
               </span>
             );
           })}
-        </span>
+        </div>
       </div>
     </div>
   );
@@ -123,7 +138,7 @@ export const CaptionOverlay: React.FC = () => {
       style={{
         justifyContent: "flex-end",
         alignItems: "center",
-        paddingBottom: 140,
+        paddingBottom: 130,
       }}
     >
       {pages.map((page, i) => {

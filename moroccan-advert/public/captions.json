@@ -1,72 +1,24 @@
 [
-  {
-    "text": "اكتشفي",
-    "startMs": 0,
-    "endMs": 800,
-    "timestampMs": 400,
-    "confidence": 1
-  },
-  {
-    "text": " الجمال",
-    "startMs": 800,
-    "endMs": 1600,
-    "timestampMs": 1200,
-    "confidence": 1
-  },
-  {
-    "text": " الطبيعي",
-    "startMs": 1600,
-    "endMs": 2500,
-    "timestampMs": 2000,
-    "confidence": 1
-  },
-  {
-    "text": " منتجات",
-    "startMs": 2700,
-    "endMs": 3500,
-    "timestampMs": 3100,
-    "confidence": 1
-  },
-  {
-    "text": " عالية",
-    "startMs": 3500,
-    "endMs": 4200,
-    "timestampMs": 3850,
-    "confidence": 1
-  },
-  {
-    "text": " الجودة",
-    "startMs": 4200,
-    "endMs": 5000,
-    "timestampMs": 4600,
-    "confidence": 1
-  },
-  {
-    "text": " لإطلالة",
-    "startMs": 5200,
-    "endMs": 6000,
-    "timestampMs": 5600,
-    "confidence": 1
-  },
-  {
-    "text": " مميزة",
-    "startMs": 6000,
-    "endMs": 6700,
-    "timestampMs": 6350,
-    "confidence": 1
-  },
-  {
-    "text": " كل",
-    "startMs": 6700,
-    "endMs": 7200,
-    "timestampMs": 6950,
-    "confidence": 1
-  },
-  {
-    "text": " يوم",
-    "startMs": 7200,
-    "endMs": 8000,
-    "timestampMs": 7600,
-    "confidence": 1
-  }
+  { "text": "الراحة",      "startMs": 0,    "endMs": 400,  "timestampMs": 200,  "confidence": 1 },
+  { "text": " والأناقة",   "startMs": 400,  "endMs": 900,  "timestampMs": 650,  "confidence": 1 },
+  { "text": " في",         "startMs": 900,  "endMs": 1080, "timestampMs": 990,  "confidence": 1 },
+  { "text": " قلب",        "startMs": 1080, "endMs": 1420, "timestampMs": 1250, "confidence": 1 },
+  { "text": " دارك",       "startMs": 1420, "endMs": 1950, "timestampMs": 1685, "confidence": 1 },
+  { "text": " صالون",      "startMs": 2050, "endMs": 2420, "timestampMs": 2235, "confidence": 1 },
+  { "text": " مخدوم",      "startMs": 2420, "endMs": 2780, "timestampMs": 2600, "confidence": 1 },
+  { "text": " باش",        "startMs": 2780, "endMs": 2980, "timestampMs": 2880, "confidence": 1 },
+  { "text": " يعطيك",      "startMs": 2980, "endMs": 3340, "timestampMs": 3160, "confidence": 1 },
+  { "text": " لمسة",       "startMs": 3340, "endMs": 3640, "timestampMs": 3490, "confidence": 1 },
+  { "text": " عصرية",      "startMs": 3640, "endMs": 3940, "timestampMs": 3790, "confidence": 1 },
+  { "text": " وراقية",     "startMs": 3940, "endMs": 4280, "timestampMs": 4110, "confidence": 1 },
+  { "text": " كتحمر",      "startMs": 4280, "endMs": 4620, "timestampMs": 4450, "confidence": 1 },
+  { "text": " لوجه",       "startMs": 4620, "endMs": 4960, "timestampMs": 4790, "confidence": 1 },
+  { "text": " بالجودة",    "startMs": 5060, "endMs": 5440, "timestampMs": 5250, "confidence": 1 },
+  { "text": " لي",         "startMs": 5440, "endMs": 5640, "timestampMs": 5540, "confidence": 1 },
+  { "text": " كتستاهلها",  "startMs": 5640, "endMs": 6120, "timestampMs": 5880, "confidence": 1 },
+  { "text": " إذا",        "startMs": 6220, "endMs": 6430, "timestampMs": 6325, "confidence": 1 },
+  { "text": " كنتي",       "startMs": 6430, "endMs": 6680, "timestampMs": 6555, "confidence": 1 },
+  { "text": " مأنتريسي",   "startMs": 6680, "endMs": 7000, "timestampMs": 6840, "confidence": 1 },
+  { "text": " تواصلي",     "startMs": 7000, "endMs": 7340, "timestampMs": 7170, "confidence": 1 },
+  { "text": " معنا",       "startMs": 7340, "endMs": 7750, "timestampMs": 7545, "confidence": 1 }
 ]

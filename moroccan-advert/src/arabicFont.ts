@@ -1,10 +1,10 @@
 import { loadFont } from "@remotion/fonts";
 import { staticFile } from "remotion";
 
-export const ARABIC_FONT_FAMILY = "ArabicBold";
+export const ARABIC_FONT = "NotoArabicBlack";
 
 loadFont({
-  family: ARABIC_FONT_FAMILY,
-  url: staticFile("arabic-bold.ttf"),
-  weight: "700",
+  family: ARABIC_FONT,
+  url: staticFile("arabic-black.ttf"),
+  weight: "900",
 });
