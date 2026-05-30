@@ -16,8 +16,8 @@ const CHARCOAL = "#090807";
 const ESPRESSO = "#17110d";
 
 const FPS = 30;
-const SCENE_DUR = 40; // frames per scene (~1.33s)
-const TRANS_DUR = 8;  // crossfade frames
+const SCENE_DUR = 75; // frames per scene (2.5s) — enough to read each caption
+const TRANS_DUR = 10; // crossfade frames
 const SCENES_COUNT = 6;
 
 interface SceneDef {
