@@ -1,6 +1,7 @@
 import "./index.css";
 import { Composition } from "remotion";
 import { AdvertComposition } from "./Composition";
+import { CouchPromo } from "./CouchPromo";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -12,6 +13,14 @@ export const RemotionRoot: React.FC = () => {
         fps={24}
         width={720}
         height={1280}
+      />
+      <Composition
+        id="CouchPromo"
+        component={CouchPromo}
+        durationInFrames={240}
+        fps={30}
+        width={1080}
+        height={1920}
       />
     </>
   );
