@@ -1,0 +1,89 @@
+{
+  "music_source": "synth placeholder pad",
+  "music_lufs_before_duck": -18,
+  "mix_lufs": -14.11,
+  "vo": [
+    {
+      "id": "v1",
+      "say": "¿Puntos negros?",
+      "start": 0.12,
+      "end": 1.109,
+      "maxEnd": 1.85,
+      "speed": 1.0,
+      "fits": true
+    },
+    {
+      "id": "v2",
+      "say": "Poros obstruidos.",
+      "start": 2.35,
+      "end": 3.499,
+      "maxEnd": 3.85,
+      "speed": 1.0,
+      "fits": true
+    },
+    {
+      "id": "v3",
+      "say": "Piel apagada.",
+      "start": 4.0,
+      "end": 4.846,
+      "maxEnd": 5.4,
+      "speed": 1.0,
+      "fits": true
+    },
+    {
+      "id": "v4",
+      "say": "Nuevo Sérum Purificante, de Obelcha.",
+      "start": 7.25,
+      "end": 9.387,
+      "maxEnd": 10.4,
+      "speed": 1.0,
+      "fits": true
+    },
+    {
+      "id": "v5",
+      "say": "Ayuda a limpiar los poros.",
+      "start": 11.85,
+      "end": 13.336,
+      "maxEnd": 13.4,
+      "speed": 1.0,
+      "fits": true
+    },
+    {
+      "id": "v6",
+      "say": "Aspecto más luminoso.",
+      "start": 13.52,
+      "end": 14.992,
+      "maxEnd": 14.85,
+      "speed": 1.05,
+      "fits": true
+    },
+    {
+      "id": "v7",
+      "say": "Ligero, no graso.",
+      "start": 15.052,
+      "end": 16.137,
+      "maxEnd": 16.05,
+      "speed": 1.15,
+      "fits": true
+    },
+    {
+      "id": "v8",
+      "say": "Descúbrelo en obelcha punto com.",
+      "start": 16.4,
+      "end": 18.411,
+      "maxEnd": 18.4,
+      "speed": 1.0,
+      "fits": true
+    },
+    {
+      "id": "v9",
+      "say": "Envío a toda España.",
+      "start": 18.471,
+      "end": 19.841,
+      "maxEnd": 19.85,
+      "speed": 1.0,
+      "fits": true
+    }
+  ],
+  "vo_fits_all": true
+}

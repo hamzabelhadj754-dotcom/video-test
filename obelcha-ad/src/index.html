@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OBELCHA Ad</title>
+<link rel="stylesheet" href="../fonts/fonts.css">
+<style>
+  :root { --black:#0B0B0B; --gold:#C9A24A; --champagne:#E8D9B5; --offwhite:#F5F1EA; }
+  html, body { margin:0; background:var(--black); color:var(--champagne); font-family:'Jost',sans-serif; }
+  body.render { overflow:hidden; }
+  #stage { display:block; }
+  body:not(.render) #stage { max-width:100%; max-height:82vh; width:auto; height:auto; margin:16px auto; }
+  #ui { display:flex; gap:12px; align-items:center; justify-content:center; padding:8px 16px; flex-wrap:wrap; }
+  #ui input[type=range] { width:min(520px, 70vw); }
+  body.render #ui { display:none; }
+  /* Preload font faces so canvas can use them */
+  .fl { position:absolute; left:-9999px; }
+</style>
+</head>
+<body>
+<span class="fl" style="font-family:'Cormorant Garamond';font-weight:500">a</span>
+<span class="fl" style="font-family:'Cormorant Garamond';font-weight:600">a</span>
+<span class="fl" style="font-family:'Cormorant Garamond';font-weight:500;font-style:italic">a</span>
+<span class="fl" style="font-family:'Jost';font-weight:400">a</span>
+<span class="fl" style="font-family:'Jost';font-weight:500">a</span>
+<canvas id="stage"></canvas>
+<div id="ui">
+  <button id="play">▶︎ Play</button>
+  <input id="scrub" type="range" min="0" max="20" step="0.0333" value="0">
+  <span id="tc">0.00s</span>
+  <span>?format=9x16|1x1|16x9 &amp; lang=es|en|fr</span>
+</div>
+<script src="ad.js"></script>
+</body>
+</html>

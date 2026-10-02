@@ -1,0 +1,714 @@
+{
+  "meta": {
+    "title": "OBELCHA — Sérum Purificante — 20s launch ad (Spain)",
+    "fps": 30,
+    "duration": 20.0,
+    "seed": 20261002,
+    "easing": [
+      0.22,
+      1,
+      0.36,
+      1
+    ],
+    "product": {
+      "es": "Sérum Purificante",
+      "en": "Purifying Serum",
+      "fr": "Sérum Purifiant"
+    },
+    "url": "obelcha.com",
+    "palette": {
+      "black": "#0B0B0B",
+      "gold": "#C9A24A",
+      "champagne": "#E8D9B5",
+      "offwhite": "#F5F1EA"
+    },
+    "fonts": {
+      "serif": "Cormorant Garamond",
+      "sans": "Jost"
+    },
+    "grain": {
+      "ffmpeg": "noise=alls=4:allf=t:all_seed=1337",
+      "canvasPreviewAlpha": 0.06
+    }
+  },
+  "formats": {
+    "9x16": {
+      "w": 1080,
+      "h": 1920,
+      "safe": {
+        "top": 250,
+        "bottom": 400,
+        "left": 80,
+        "right": 140
+      }
+    },
+    "1x1": {
+      "w": 1080,
+      "h": 1080,
+      "safe": {
+        "top": 80,
+        "bottom": 80,
+        "left": 80,
+        "right": 80
+      }
+    },
+    "16x9": {
+      "w": 1920,
+      "h": 1080,
+      "safe": {
+        "top": 90,
+        "bottom": 110,
+        "left": 160,
+        "right": 160
+      }
+    }
+  },
+  "scenes": [
+    {
+      "id": "hook",
+      "start": 0.0,
+      "end": 2.0,
+      "purpose": "Stop the scroll: macro gold droplet + the question."
+    },
+    {
+      "id": "tension",
+      "start": 2.0,
+      "end": 6.0,
+      "purpose": "Name the problem elegantly: clogged pores, dull skin."
+    },
+    {
+      "id": "reveal",
+      "start": 6.0,
+      "end": 12.0,
+      "purpose": "The droplet becomes the product; hero rotation + light sweeps."
+    },
+    {
+      "id": "benefits",
+      "start": 12.0,
+      "end": 16.0,
+      "purpose": "Three cosmetic benefits, one at a time."
+    },
+    {
+      "id": "cta",
+      "start": 16.0,
+      "end": 20.0,
+      "purpose": "Logo lockup, obelcha.com, offer. End card holds > 2s."
+    }
+  ],
+  "transitions": [
+    {
+      "id": "T1",
+      "from": "hook",
+      "to": "tension",
+      "start": 1.6,
+      "end": 2.5,
+      "kind": "ripple-wipe",
+      "motivation": "The droplet's impact ripple expands and wipes in the skin surface."
+    },
+    {
+      "id": "T2",
+      "from": "tension",
+      "to": "reveal",
+      "start": 5.4,
+      "end": 7.0,
+      "kind": "droplet-morph",
+      "motivation": "The droplet swells to macro, then condenses into the serum inside the bottle."
+    },
+    {
+      "id": "T3",
+      "from": "reveal",
+      "to": "benefits",
+      "start": 11.1,
+      "end": 12.1,
+      "kind": "droplet-lift",
+      "motivation": "A drop lifts out of the bottle and becomes the bullet of the first card."
+    },
+    {
+      "id": "T4",
+      "from": "benefits",
+      "to": "cta",
+      "start": 15.9,
+      "end": 17.0,
+      "kind": "droplet-land",
+      "motivation": "The droplet falls onto the wordmark and stretches into its gold underline."
+    }
+  ],
+  "droplet": {
+    "comment": "The visual spine. Anchors are resolved per format by the layout in src/ad.js. ease: out = brand bezier, in = gravity (quad-in), io = ease-in-out.",
+    "keys": [
+      {
+        "t": -0.45,
+        "at": "hook.dropStart",
+        "s": 1.5,
+        "tip": 1.0
+      },
+      {
+        "t": 0.55,
+        "at": "hook.dropLand",
+        "s": 1.5,
+        "tip": 0.0,
+        "ease": "in"
+      },
+      {
+        "t": 1.65,
+        "at": "hook.dropLand",
+        "s": 1.5,
+        "tip": 0.0
+      },
+      {
+        "t": 2.45,
+        "at": "tension.drop",
+        "s": 0.62,
+        "tip": 0.2,
+        "ease": "out"
+      },
+      {
+        "t": 5.35,
+        "at": "tension.drop2",
+        "s": 0.62,
+        "tip": 0.2,
+        "ease": "io"
+      },
+      {
+        "t": 6.05,
+        "at": "reveal.liquid",
+        "s": 3.2,
+        "tip": 0.0,
+        "ease": "io"
+      },
+      {
+        "t": 6.65,
+        "at": "reveal.liquid",
+        "s": 0.6,
+        "tip": 0.0,
+        "ease": "out"
+      },
+      {
+        "t": 11.2,
+        "at": "reveal.neck",
+        "s": 0.3,
+        "tip": 0.0
+      },
+      {
+        "t": 11.9,
+        "at": "card.bullet",
+        "s": 0.42,
+        "tip": 0.0,
+        "ease": "out"
+      },
+      {
+        "t": 16.15,
+        "at": "card.bullet",
+        "s": 0.42,
+        "tip": 0.0
+      },
+      {
+        "t": 16.5,
+        "at": "cta.dropHigh",
+        "s": 0.5,
+        "tip": 0.6,
+        "ease": "out"
+      },
+      {
+        "t": 16.8,
+        "at": "cta.dropLand",
+        "s": 0.28,
+        "tip": 1.0,
+        "ease": "in"
+      },
+      {
+        "t": 20.0,
+        "at": "cta.dropLand",
+        "s": 0.28,
+        "tip": 0.0
+      }
+    ],
+    "hidden": [
+      [
+        6.62,
+        11.12
+      ],
+      [
+        17.1,
+        99
+      ]
+    ],
+    "impacts": [
+      {
+        "t": 0.55,
+        "kind": "ripple"
+      },
+      {
+        "t": 6.35,
+        "kind": "bloom"
+      },
+      {
+        "t": 16.8,
+        "kind": "line"
+      }
+    ]
+  },
+  "bottle": {
+    "build": {
+      "start": 5.95,
+      "end": 7.05
+    },
+    "keys": [
+      {
+        "t": 5.9,
+        "at": "reveal.bottle",
+        "s": 0.96
+      },
+      {
+        "t": 11.3,
+        "at": "reveal.bottle",
+        "s": 1.0,
+        "ease": "linear"
+      },
+      {
+        "t": 12.2,
+        "at": "benefits.bottle",
+        "s": 1.0,
+        "ease": "io"
+      },
+      {
+        "t": 15.4,
+        "at": "benefits.bottle",
+        "s": 1.0
+      },
+      {
+        "t": 16.3,
+        "at": "cta.bottle",
+        "s": 1.0,
+        "ease": "io"
+      },
+      {
+        "t": 20.0,
+        "at": "cta.bottle",
+        "s": 1.015,
+        "ease": "linear"
+      }
+    ],
+    "rotation": [
+      {
+        "t": 5.9,
+        "theta": -0.55
+      },
+      {
+        "t": 11.6,
+        "theta": 0.3,
+        "ease": "io"
+      },
+      {
+        "t": 16.0,
+        "theta": -0.1,
+        "ease": "io"
+      },
+      {
+        "t": 20.0,
+        "theta": 0.08,
+        "ease": "linear"
+      }
+    ],
+    "sweeps": [
+      {
+        "t": 7.6,
+        "dur": 1.1
+      },
+      {
+        "t": 10.0,
+        "dur": 1.1
+      },
+      {
+        "t": 17.4,
+        "dur": 1.2
+      }
+    ],
+    "dropLift": {
+      "start": 11.0,
+      "end": 11.2
+    }
+  },
+  "text": [
+    {
+      "id": "hook",
+      "in": -0.3,
+      "out": 1.8,
+      "style": "hook",
+      "vo": "v1"
+    },
+    {
+      "id": "pores",
+      "in": 2.25,
+      "out": 3.85,
+      "style": "headline",
+      "vo": "v2"
+    },
+    {
+      "id": "dull",
+      "in": 3.95,
+      "out": 5.45,
+      "style": "headline",
+      "vo": "v3"
+    },
+    {
+      "id": "newEyebrow",
+      "in": 7.15,
+      "out": 11.2,
+      "style": "eyebrow"
+    },
+    {
+      "id": "product",
+      "in": 7.3,
+      "out": 11.2,
+      "style": "title",
+      "vo": "v4"
+    },
+    {
+      "id": "b1",
+      "in": 11.9,
+      "out": 13.45,
+      "style": "card",
+      "index": "01",
+      "vo": "v5"
+    },
+    {
+      "id": "b2",
+      "in": 13.45,
+      "out": 14.8,
+      "style": "card",
+      "index": "02",
+      "vo": "v6"
+    },
+    {
+      "id": "b3",
+      "in": 14.8,
+      "out": 16.0,
+      "style": "card",
+      "index": "03",
+      "vo": "v7"
+    },
+    {
+      "id": "wordmark",
+      "in": 16.4,
+      "out": 99,
+      "style": "wordmark"
+    },
+    {
+      "id": "url",
+      "in": 17.0,
+      "out": 99,
+      "style": "url",
+      "vo": "v8"
+    },
+    {
+      "id": "offer",
+      "in": 17.3,
+      "out": 99,
+      "style": "offer",
+      "vo": "v9"
+    }
+  ],
+  "copy": {
+    "es": {
+      "hook": "¿Puntos\nnegros?",
+      "pores": "Poros\nobstruidos.",
+      "dull": "Piel\napagada.",
+      "newEyebrow": "NUEVO",
+      "product": "Sérum\nPurificante",
+      "b1": "Ayuda a limpiar\nlos poros",
+      "b2": "Aspecto más\nluminoso",
+      "b3": "Ligero,\nno graso",
+      "wordmark": "OBELCHA",
+      "url": "obelcha.com",
+      "offer": "Envío a toda España"
+    },
+    "en": {
+      "hook": "Blackheads?",
+      "pores": "Clogged\npores.",
+      "dull": "Dull-looking\nskin.",
+      "newEyebrow": "NEW",
+      "product": "Purifying\nSerum",
+      "b1": "Helps cleanse\npores",
+      "b2": "A more\nradiant look",
+      "b3": "Light,\nnon-greasy",
+      "wordmark": "OBELCHA",
+      "url": "obelcha.com",
+      "offer": "Shipping across Spain"
+    },
+    "fr": {
+      "hook": "Points\nnoirs ?",
+      "pores": "Pores\nobstrués.",
+      "dull": "Teint\nterne.",
+      "newEyebrow": "NOUVEAU",
+      "product": "Sérum\nPurifiant",
+      "b1": "Aide à nettoyer\nles pores",
+      "b2": "Aspect plus\nlumineux",
+      "b3": "Léger,\nnon gras",
+      "wordmark": "OBELCHA",
+      "url": "obelcha.com",
+      "offer": "Livraison dans toute l'Espagne"
+    }
+  },
+  "vo": {
+    "comment": "Spanish VO (es_ES). 'say' is what the TTS reads. A line starts at t (or right after the previous line) and must end by maxEnd + tolerance; the audio build picks the slowest speed in 1.00–1.15 that fits. Generated lines are cached in audio/vo_cache for bit-identical rebuilds.",
+    "voice": {
+      "engine": "kokoro",
+      "model": "kokoro-multi-lang-v1_0",
+      "speaker": 28,
+      "speakerName": "ef_dora (es)",
+      "lengthScale": 1.0,
+      "why": "Highest Whisper intelligibility of 4 local voices tested (0.94 vs 0.80–0.87 for Piper es_ES voices)."
+    },
+    "lines": [
+      {
+        "id": "v1",
+        "t": 0.12,
+        "maxEnd": 1.85,
+        "say": "¿Puntos negros?"
+      },
+      {
+        "id": "v2",
+        "t": 2.35,
+        "maxEnd": 3.85,
+        "say": "Poros obstruidos."
+      },
+      {
+        "id": "v3",
+        "t": 4.0,
+        "maxEnd": 5.4,
+        "say": "Piel apagada."
+      },
+      {
+        "id": "v4",
+        "t": 7.25,
+        "maxEnd": 10.4,
+        "say": "Nuevo Sérum Purificante, de Obelcha."
+      },
+      {
+        "id": "v5",
+        "t": 11.85,
+        "maxEnd": 13.4,
+        "say": "Ayuda a limpiar los poros."
+      },
+      {
+        "id": "v6",
+        "t": 13.52,
+        "maxEnd": 14.85,
+        "say": "Aspecto más luminoso."
+      },
+      {
+        "id": "v7",
+        "t": 14.78,
+        "maxEnd": 16.05,
+        "say": "Ligero, no graso."
+      },
+      {
+        "id": "v8",
+        "t": 16.4,
+        "maxEnd": 18.4,
+        "say": "Descúbrelo en obelcha punto com."
+      },
+      {
+        "id": "v9",
+        "t": 18.45,
+        "maxEnd": 19.85,
+        "say": "Envío a toda España."
+      }
+    ],
+    "tolerance": 0.15
+  },
+  "captions": {
+    "comment": "SRT cues. Text for each language comes from copy[lang][id] (line breaks flattened).",
+    "cues": [
+      {
+        "id": "hook",
+        "in": 0.0,
+        "out": 1.85
+      },
+      {
+        "id": "pores",
+        "in": 2.3,
+        "out": 3.85
+      },
+      {
+        "id": "dull",
+        "in": 3.95,
+        "out": 5.45
+      },
+      {
+        "id": "productLine",
+        "in": 7.25,
+        "out": 10.9,
+        "text": {
+          "es": "Nuevo Sérum Purificante, de OBELCHA",
+          "en": "New Purifying Serum by OBELCHA",
+          "fr": "Nouveau Sérum Purifiant, par OBELCHA"
+        }
+      },
+      {
+        "id": "b1",
+        "in": 11.85,
+        "out": 13.5
+      },
+      {
+        "id": "b2",
+        "in": 13.55,
+        "out": 14.85
+      },
+      {
+        "id": "b3",
+        "in": 14.9,
+        "out": 16.1
+      },
+      {
+        "id": "urlLine",
+        "in": 16.5,
+        "out": 18.4,
+        "text": {
+          "es": "Descúbrelo en obelcha.com",
+          "en": "Discover it at obelcha.com",
+          "fr": "Découvrez-le sur obelcha.com"
+        }
+      },
+      {
+        "id": "offer",
+        "in": 18.45,
+        "out": 20.0
+      }
+    ]
+  },
+  "audio": {
+    "sampleRate": 48000,
+    "targetLUFS": -14,
+    "truePeak": -1.0,
+    "music": {
+      "file": "assets/music.mp3",
+      "lufs": -18,
+      "duckDb": -6,
+      "fadeOut": [
+        19.0,
+        20.0
+      ],
+      "placeholder": "synth-pad"
+    },
+    "sfx": [
+      {
+        "t": 0.0,
+        "type": "airRise",
+        "dur": 0.55,
+        "gain": -24,
+        "note": "pre-impact air under the falling drop"
+      },
+      {
+        "t": 0.55,
+        "type": "drop",
+        "gain": -12,
+        "note": "droplet hits the glass surface"
+      },
+      {
+        "t": 1.55,
+        "type": "whoosh",
+        "dur": 0.9,
+        "gain": -20,
+        "note": "T1 ripple wipe"
+      },
+      {
+        "t": 5.3,
+        "type": "whoosh",
+        "dur": 1.0,
+        "gain": -18,
+        "note": "T2 swell into macro"
+      },
+      {
+        "t": 6.35,
+        "type": "impact",
+        "gain": -10,
+        "note": "reveal: droplet condenses into the serum"
+      },
+      {
+        "t": 7.6,
+        "type": "shimmer",
+        "dur": 1.1,
+        "gain": -26,
+        "note": "light sweep 1"
+      },
+      {
+        "t": 10.0,
+        "type": "shimmer",
+        "dur": 1.1,
+        "gain": -26,
+        "note": "light sweep 2"
+      },
+      {
+        "t": 11.0,
+        "type": "whoosh",
+        "dur": 0.8,
+        "gain": -22,
+        "note": "T3 drop lifts"
+      },
+      {
+        "t": 11.9,
+        "type": "tick",
+        "gain": -22,
+        "note": "card 01"
+      },
+      {
+        "t": 13.45,
+        "type": "tick",
+        "gain": -22,
+        "note": "card 02"
+      },
+      {
+        "t": 14.8,
+        "type": "tick",
+        "gain": -22,
+        "note": "card 03"
+      },
+      {
+        "t": 16.05,
+        "type": "whoosh",
+        "dur": 0.9,
+        "gain": -20,
+        "note": "T4 drop rises and falls"
+      },
+      {
+        "t": 16.8,
+        "type": "chime",
+        "gain": -13,
+        "note": "drop lands, logo underline draws"
+      },
+      {
+        "t": 17.4,
+        "type": "shimmer",
+        "dur": 1.2,
+        "gain": -28,
+        "note": "light sweep on bottle/end card"
+      }
+    ]
+  },
+  "fx": {
+    "comment": "Secondary timings used by the renderer (all seconds).",
+    "dropHover": [
+      2.3,
+      5.4
+    ],
+    "dropOnTopAfter": 11.85,
+    "logoSheen": [
+      18.05,
+      19.0
+    ],
+    "bloomDecay": 3.2
+  },
+  "motion": {
+    "comment": "Entrance/exit durations (s) — brand easing applies to all ins.",
+    "textIn": 0.75,
+    "textOut": 0.4,
+    "lineStagger": 0.09,
+    "cardIn": 0.6,
+    "cardOut": 0.32,
+    "underlineDraw": 0.75,
+    "wordmarkIn": 1.0,
+    "ctaLineIn": 0.8
+  }
+}

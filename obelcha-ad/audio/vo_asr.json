@@ -1,0 +1,56 @@
+[
+  {
+    "id": "v1",
+    "script": "¿Puntos negros?",
+    "asr": "Punto de negros",
+    "similarity": 0.86
+  },
+  {
+    "id": "v2",
+    "script": "Poros obstruidos.",
+    "asr": "Por los obstruidos.",
+    "similarity": 0.94
+  },
+  {
+    "id": "v3",
+    "script": "Piel apagada.",
+    "asr": "¿Piel la pagada?",
+    "similarity": 0.92
+  },
+  {
+    "id": "v4",
+    "script": "Nuevo Sérum Purificante, de Obelcha.",
+    "asr": "Nuevo ser un purificante de obelcha.",
+    "similarity": 0.96
+  },
+  {
+    "id": "v5",
+    "script": "Ayuda a limpiar los poros.",
+    "asr": "Ayuda a limpiar los poros.",
+    "similarity": 1.0
+  },
+  {
+    "id": "v6",
+    "script": "Aspecto más luminoso.",
+    "asr": "aspecto más luminoso",
+    "similarity": 1.0
+  },
+  {
+    "id": "v7",
+    "script": "Ligero, no graso.",
+    "asr": "Lijero no graso.",
+    "similarity": 0.93
+  },
+  {
+    "id": "v8",
+    "script": "Descúbrelo en obelcha punto com.",
+    "asr": "Descubrelo en ovelchappuntocom",
+    "similarity": 0.92
+  },
+  {
+    "id": "v9",
+    "script": "Envío a toda España.",
+    "asr": "envío a toda España",
+    "similarity": 1.0
+  }
+]
