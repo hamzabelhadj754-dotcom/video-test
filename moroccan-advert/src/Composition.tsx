@@ -3,6 +3,7 @@ import { Video } from "@remotion/media";
 import { CaptionOverlay } from "./CaptionOverlay";
 import { GraphicOverlay } from "./GraphicOverlay";
 import { SWEEP_FRAMES } from "./constants";
+import { ArabicFontStyle } from "./arabicFont";
 
 const VideoBg: React.FC = () => {
   const frame = useCurrentFrame();
@@ -31,6 +32,7 @@ const VideoBg: React.FC = () => {
 export const AdvertComposition: React.FC = () => {
   return (
     <AbsoluteFill style={{ background: "#000" }}>
+      <style>{ArabicFontStyle}</style>
       <VideoBg />
       <GraphicOverlay />
       <CaptionOverlay />

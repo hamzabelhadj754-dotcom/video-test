@@ -264,7 +264,8 @@ const SweepLine: React.FC = () => {
           width: 5,
           background:
             "linear-gradient(to bottom, transparent 0%, rgba(255,220,0,0.95) 15%, #FFFFFF 50%, rgba(255,220,0,0.95) 85%, transparent 100%)",
-          boxShadow: "0 0 18px rgba(255,215,0,0.7), 0 0 36px rgba(255,215,0,0.35)",
+          boxShadow:
+            "0 0 18px rgba(255,215,0,0.7), 0 0 36px rgba(255,215,0,0.35)",
         }}
       />
       <div
@@ -283,68 +284,100 @@ const SweepLine: React.FC = () => {
 };
 
 /* ─────────────────────────────────────────────────────────
-   Floating emoji elements — the "viral" social media touch
-   Each floater rises, then fades. Timed to match speech content.
+   Sliding highlight badge
+   Smooth card that slides in from the right with spring physics,
+   inspired by the reference video's clean card-reveal style.
+   Each badge matches the active caption group's key phrase.
 ───────────────────────────────────────────────────────── */
 
-type FloatConfig = {
-  emoji: string;
-  startFrame: number;  // absolute frame when it appears
-  x: number;           // horizontal position px
-  startY: number;      // starting vertical position px
-  size: number;        // font size
+type BadgeConfig = {
+  text: string;
+  startFrame: number;
+  holdFrames: number;
+  yPos: number;
 };
 
-// Timed to what she's saying:
-//  frame  0-43  → الراحة والأناقة في قلب دارك
-//  frame 52-115 → صالون مخدوم باش يعطيك
-//  frame 116-146 → لمسة عصرية وراقية كتحمر لوجه
-//  frame 155-187 → و بالجودة لي كتستاهله
-const FLOATERS: FloatConfig[] = [
-  { emoji: "✨", startFrame: 4,   x: 62,  startY: 820, size: 34 },  // الراحة
-  { emoji: "🌸", startFrame: 20,  x: 624, startY: 780, size: 28 },  // والأناقة
-  { emoji: "💅", startFrame: 54,  x: 58,  startY: 860, size: 32 },  // صالون
-  { emoji: "✨", startFrame: 78,  x: 630, startY: 840, size: 30 },  // مخدوم / باش
-  { emoji: "🪞", startFrame: 118, x: 55,  startY: 810, size: 30 },  // لمسة عصرية
-  { emoji: "✨", startFrame: 136, x: 618, startY: 860, size: 28 },  // وراقية
-  { emoji: "⭐", startFrame: 158, x: 60,  startY: 850, size: 30 },  // بالجودة
-  { emoji: "✨", startFrame: 174, x: 620, startY: 820, size: 28 },  // كتستاهله
+const BADGES: BadgeConfig[] = [
+  // Group 1 (0–43f): الراحة والأناقة في قلب دارك
+  { text: "الراحة والأناقة", startFrame: 6,   holdFrames: 34, yPos: 248 },
+  // Group 2 (52–115f): صالون مخدوم باش يعطيك
+  { text: "صالون مخدوم",    startFrame: 58,  holdFrames: 50, yPos: 248 },
+  // Group 3 (116–146f): لمسة عصرية وراقية
+  { text: "عصرية وراقية",   startFrame: 120, holdFrames: 24, yPos: 248 },
+  // Group 4 (155–187f): بالجودة لي كتستاهله
+  { text: "بالجودة",        startFrame: 158, holdFrames: 28, yPos: 248 },
 ];
 
-const FLOAT_DURATION = 44; // frames (~1.8s)
+const FADE_OUT_FRAMES = 10;
 
-const FloatEmoji: React.FC<{ cfg: FloatConfig }> = ({ cfg }) => {
-  const frame = useCurrentFrame(); // 0-based inside its Sequence
+const HighlightBadge: React.FC<{ cfg: BadgeConfig }> = ({ cfg }) => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
 
-  const progress = interpolate(frame, [0, FLOAT_DURATION], [0, 1], {
-    extrapolateRight: "clamp",
+  const enterSpring = spring({
+    fps,
+    frame,
+    config: { damping: 18, stiffness: 200, mass: 0.75 },
+    from: 0,
+    to: 1,
   });
 
-  const y = interpolate(progress, [0, 1], [cfg.startY, cfg.startY - 220], {
-    easing: Easing.bezier(0.22, 1, 0.36, 1),
-  });
-  const opacity = interpolate(
-    progress,
-    [0, 0.08, 0.65, 1],
-    [0, 1, 0.85, 0],
-    { extrapolateRight: "clamp" }
+  const exitOpacity = interpolate(
+    frame,
+    [cfg.holdFrames - FADE_OUT_FRAMES, cfg.holdFrames],
+    [1, 0],
+    { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
   );
-  const scale = interpolate(progress, [0, 0.12, 1], [0.4, 1.15, 0.85]);
+
+  const slideX = interpolate(enterSpring, [0, 1], [180, 0]);
+  const scale = interpolate(enterSpring, [0, 1], [0.88, 1]);
+  const opacity = Math.min(enterSpring * 3, 1) * exitOpacity;
 
   return (
     <div
       style={{
         position: "absolute",
-        left: cfg.x,
-        top: y,
-        fontSize: cfg.size,
+        right: 24,
+        top: cfg.yPos,
+        transform: `translateX(${slideX}px) scale(${scale})`,
+        transformOrigin: "right center",
         opacity,
-        transform: `scale(${scale})`,
-        userSelect: "none",
-        pointerEvents: "none",
+        background: "rgba(8,5,2,0.80)",
+        border: "1.5px solid rgba(255,208,0,0.50)",
+        borderRadius: 44,
+        paddingLeft: 20,
+        paddingRight: 24,
+        paddingTop: 10,
+        paddingBottom: 10,
+        display: "flex",
+        alignItems: "center",
+        gap: 10,
+        direction: "rtl",
+        boxShadow: "0 6px 28px rgba(0,0,0,0.45), 0 0 0 0.5px rgba(255,208,0,0.15)",
       }}
     >
-      {cfg.emoji}
+      <div
+        style={{
+          width: 6,
+          height: 6,
+          borderRadius: "50%",
+          background: "#FFD000",
+          boxShadow: "0 0 8px rgba(255,208,0,1)",
+          flexShrink: 0,
+        }}
+      />
+      <span
+        style={{
+          fontFamily: ARABIC_FONT,
+          fontSize: 22,
+          fontWeight: 900,
+          color: "#FFFFFF",
+          letterSpacing: 0.3,
+          whiteSpace: "nowrap",
+        }}
+      >
+        {cfg.text}
+      </span>
     </div>
   );
 };
@@ -375,15 +408,15 @@ export const GraphicOverlay: React.FC = () => {
         </Sequence>
       ))}
 
-      {/* Floating emoji — one Sequence per floater */}
-      {FLOATERS.map((cfg) => (
+      {/* Sliding highlight badges — smooth card-reveal style */}
+      {BADGES.map((cfg) => (
         <Sequence
-          key={cfg.startFrame + cfg.emoji}
+          key={cfg.startFrame}
           from={cfg.startFrame}
-          durationInFrames={FLOAT_DURATION}
+          durationInFrames={cfg.holdFrames}
           layout="none"
         >
-          <FloatEmoji cfg={cfg} />
+          <HighlightBadge cfg={cfg} />
         </Sequence>
       ))}
     </AbsoluteFill>
