@@ -1,0 +1,20 @@
+{
+  "name": "skincare-doctor",
+  "version": "1.0.0",
+  "description": "Skincare explainer video with an animated Dr. Skin, built with HyperFrames",
+  "main": "index.js",
+  "scripts": {
+    "layers": "python3 tools/slice_doctor.py video/assets/doctor-source.jpg video/assets",
+    "voice": "cd video && while IFS=$'\\t' read id text; do npx hyperframes tts \"$text\" -v af_heart -o assets/vo/$id.wav </dev/null; done < ../tools/lines.tsv",
+    "audio": "python3 tools/build_audio.py video",
+    "check": "cd video && npx hyperframes check",
+    "render": "cd video && npx hyperframes render -q high -f 30 -o ../../skincare-doctor.mp4"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "gsap": "^3.14.2",
+    "hyperframes": "^0.8.166"
+  }
+}

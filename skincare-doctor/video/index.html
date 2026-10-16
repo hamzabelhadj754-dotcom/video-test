@@ -1,0 +1,1449 @@
+<!doctype html>
+<html lang="en" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="assets/vendor/gsap.min.js"></script>
+    <script src="assets/timing.js"></script>
+    <style>
+      :root {
+        --cream: #fbf6ec;
+        --paper: #fffdf8;
+        --ink: #2b2340;
+        --ink-soft: #5d5574;
+        --coral: #ff6f61;
+        --coral-ink: #c8412f;
+        --pink: #f7b3b8;
+        --mint: #8fd9c4;
+        --mint-deep: #3fae94;
+        --peach: #f9cfae;
+        --sun: #ffc53d;
+        --sky: #7cc4f2;
+        --line: #e9dfcf;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: var(--cream);
+      }
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        font-family: "Montserrat", sans-serif;
+        color: var(--ink);
+        background: var(--cream);
+      }
+      .clip {
+        position: absolute;
+        inset: 0;
+      }
+      .mono {
+        font-family: "IBM Plex Mono", monospace;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+      .abs {
+        position: absolute;
+      }
+
+      /* ---------- background ---------- */
+      #bg {
+        background:
+          radial-gradient(1100px 700px at 88% 8%, rgba(143, 217, 196, 0.32), transparent 70%),
+          radial-gradient(900px 700px at 6% 96%, rgba(247, 179, 184, 0.34), transparent 70%),
+          radial-gradient(700px 500px at 60% 70%, rgba(255, 197, 61, 0.1), transparent 70%),
+          var(--cream);
+      }
+      #dots {
+        position: absolute;
+        left: -400px;
+        top: -400px;
+        width: 2720px;
+        height: 1880px;
+        background-image: radial-gradient(rgba(43, 35, 64, 0.11) 2px, transparent 2.5px);
+        background-size: 44px 44px;
+      }
+      .float {
+        position: absolute;
+        border-radius: 50%;
+      }
+
+      /* ---------- world / camera ---------- */
+      #world {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 5200px;
+        height: 4000px;
+        transform-origin: 0 0;
+      }
+      .station {
+        position: absolute;
+      }
+      .eyebrow {
+        font-size: 26px;
+        color: var(--coral-ink);
+      }
+      .h-xl {
+        font-weight: 900;
+        font-size: 132px;
+        line-height: 0.92;
+        letter-spacing: -0.045em;
+      }
+      .h-l {
+        font-weight: 900;
+        font-size: 64px;
+        line-height: 1;
+        letter-spacing: -0.035em;
+      }
+      .body-l {
+        font-weight: 400;
+        font-size: 30px;
+        line-height: 1.3;
+        color: var(--ink-soft);
+      }
+      .chip {
+        position: absolute;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 16px 26px;
+        border-radius: 999px;
+        background: var(--paper);
+        box-shadow:
+          0 10px 30px rgba(43, 35, 64, 0.1),
+          0 0 0 3px var(--line);
+        font-weight: 700;
+        font-size: 30px;
+        white-space: nowrap;
+      }
+      .card {
+        position: absolute;
+        background: var(--paper);
+        border-radius: 36px;
+        box-shadow:
+          0 24px 60px rgba(43, 35, 64, 0.12),
+          0 0 0 3px var(--line);
+      }
+      .big-num {
+        position: absolute;
+        font-weight: 900;
+        font-size: 420px;
+        line-height: 1;
+        letter-spacing: -0.06em;
+        color: transparent;
+        -webkit-text-stroke: 4px rgba(43, 35, 64, 0.08);
+      }
+
+      /* menu cards */
+      .mcard {
+        width: 300px;
+        height: 380px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        padding-top: 36px;
+      }
+      .mcard .icon {
+        width: 170px;
+        height: 170px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .mcard .num {
+        margin-top: 30px;
+        font-size: 24px;
+        color: var(--coral-ink);
+      }
+      .mcard .name {
+        margin-top: 8px;
+        font-weight: 900;
+        font-size: 44px;
+        letter-spacing: -0.03em;
+      }
+
+      /* layer labels */
+      .llabel {
+        position: absolute;
+        left: 900px;
+        width: 420px;
+      }
+      .llabel .n {
+        font-size: 22px;
+        color: var(--coral-ink);
+      }
+      .llabel .t {
+        font-weight: 900;
+        font-size: 50px;
+        letter-spacing: -0.03em;
+        margin-top: 4px;
+      }
+      .llabel .d {
+        font-size: 27px;
+        color: var(--ink-soft);
+        margin-top: 6px;
+      }
+      .leader {
+        position: absolute;
+        left: 838px;
+        height: 4px;
+        width: 50px;
+        background: var(--ink);
+        border-radius: 2px;
+        transform-origin: 0 50%;
+      }
+      .leader::after {
+        content: "";
+        position: absolute;
+        left: -9px;
+        top: -7px;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: var(--ink);
+      }
+
+      .week {
+        display: flex;
+        gap: 14px;
+      }
+      .day {
+        width: 66px;
+        height: 66px;
+        border-radius: 50%;
+        background: var(--paper);
+        box-shadow: 0 0 0 3px var(--line);
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "IBM Plex Mono", monospace;
+        font-weight: 700;
+        font-size: 24px;
+      }
+      .day .fill {
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        background: var(--coral);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* ---------- doctor rig ---------- */
+      #doc {
+        position: absolute;
+        left: 516px;
+        top: 168px;
+        width: 900px;
+        height: 900px;
+      }
+      #doc img,
+      #doc svg.layer {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+      }
+      #doc-shadow {
+        position: absolute;
+        left: 290px;
+        top: 845px;
+        width: 320px;
+        height: 46px;
+        border-radius: 50%;
+        background: radial-gradient(closest-side, rgba(43, 35, 64, 0.22), transparent);
+      }
+      #arm-l {
+        transform-origin: 43.16% 35.64%;
+      }
+      #arm-r {
+        transform-origin: 54.3% 35.16%;
+      }
+      #head {
+        position: absolute;
+        inset: 0;
+        transform-origin: 48.83% 28.52%;
+      }
+      #doc img.eye {
+        width: 3.125%;
+        height: 5.078%;
+        transform-origin: 50% 50%;
+      }
+      #doc img#eye-l {
+        left: 43.457%;
+        top: 17.383%;
+      }
+      #doc img#eye-r {
+        left: 50.391%;
+        top: 17.48%;
+      }
+
+      /* ---------- overlay ---------- */
+      #brand {
+        position: absolute;
+        left: 64px;
+        top: 52px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+      #brand .logo {
+        width: 54px;
+        height: 54px;
+        border-radius: 16px;
+        background: var(--coral);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      #brand .txt {
+        font-weight: 900;
+        font-size: 30px;
+        letter-spacing: -0.02em;
+      }
+      #progress {
+        position: absolute;
+        right: 64px;
+        top: 58px;
+        display: flex;
+        gap: 12px;
+      }
+      .pstep {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 20px 10px 12px;
+        border-radius: 999px;
+        background: var(--paper);
+        box-shadow: 0 0 0 3px var(--line);
+        font-weight: 700;
+        font-size: 22px;
+        position: relative;
+        overflow: hidden;
+      }
+      .pstep .dot {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: var(--line);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 15px;
+        color: var(--ink);
+        position: relative;
+      }
+      .pstep .on {
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        background: var(--coral);
+      }
+      #title {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 1920px;
+        height: 1080px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+      #title .row {
+        display: flex;
+        align-items: center;
+        gap: 34px;
+      }
+      #title .word {
+        display: flex;
+        font-weight: 900;
+        font-size: 210px;
+        letter-spacing: -0.055em;
+        line-height: 1;
+      }
+      #title .word span {
+        display: inline-block;
+      }
+      #title .badge {
+        width: 210px;
+        height: 210px;
+        border-radius: 50%;
+        background: #d9493a;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 900;
+        font-size: 92px;
+        letter-spacing: -0.04em;
+      }
+      #title .sub {
+        margin-top: 34px;
+        font-size: 30px;
+        color: var(--ink-soft);
+      }
+      #lower {
+        position: absolute;
+        left: 1210px;
+        top: 470px;
+        width: 620px;
+      }
+      #lower .bar {
+        width: 120px;
+        height: 12px;
+        border-radius: 6px;
+        background: var(--coral);
+        transform-origin: 0 50%;
+      }
+      #lower .name {
+        font-weight: 900;
+        font-size: 104px;
+        letter-spacing: -0.05em;
+        margin-top: 22px;
+        line-height: 1;
+      }
+      #lower .role {
+        margin-top: 18px;
+        font-size: 28px;
+        color: var(--ink-soft);
+      }
+      #caption {
+        position: absolute;
+        left: 760px;
+        width: 1000px;
+        top: 960px;
+        display: flex;
+        justify-content: center;
+      }
+      .cap {
+        position: absolute;
+        top: 0;
+        padding: 14px 30px;
+        border-radius: 22px;
+        background: rgba(43, 35, 64, 0.9);
+        color: #fff;
+        font-weight: 700;
+        font-size: 31px;
+        letter-spacing: -0.01em;
+        white-space: nowrap;
+      }
+      .cap b {
+        color: var(--sun);
+        font-weight: 900;
+      }
+      #endcard {
+        position: absolute;
+        left: 820px;
+        top: 250px;
+        width: 1040px;
+      }
+      #vignette {
+        background: radial-gradient(ellipse at 50% 50%, transparent 60%, rgba(43, 35, 64, 0.12) 100%);
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="59"
+      data-width="1920"
+      data-height="1080"
+    >
+      <!-- ================= BACKGROUND (parallax) ================= -->
+      <div id="bg" class="clip" data-start="0" data-duration="59" data-track-index="0">
+        <div id="parallax" class="abs" style="left: 0; top: 0; width: 1920px; height: 1080px">
+          <div id="dots"></div>
+          <div id="floaters"></div>
+        </div>
+      </div>
+
+      <!-- ================= WORLD (camera) ================= -->
+      <div id="viewport" data-layout-allow-overlap data-layout-allow-occlusion class="clip" data-start="0" data-duration="59" data-track-index="1">
+        <div id="world">
+          <!-- path connecting the stations -->
+          <svg class="abs" style="left: 0; top: 0" width="5200" height="4000" viewBox="0 0 5200 4000">
+            <path
+              id="trail"
+              d="M 1000 960 C 1000 1200, 1000 1300, 1000 1380 M 1650 1900 C 1800 1900, 1880 1900, 1950 1900 M 3250 1900 C 3350 1900, 3450 1900, 3550 1900 M 4300 2350 C 4300 2550, 4250 2700, 4220 2800"
+              fill="none"
+              stroke="#e3d5bf"
+              stroke-width="10"
+              stroke-linecap="round"
+              stroke-dasharray="2 26"
+            />
+          </svg>
+
+          <!-- MENU station: center (1000, 600) -->
+          <div id="st-menu" class="station" style="left: 400px; top: 230px; width: 1200px; height: 740px">
+            <div id="menu-head" class="abs" style="left: 0; top: 0; width: 1200px; text-align: center">
+              <div class="mono eyebrow">Today's routine</div>
+              <div class="h-l" style="margin-top: 10px; font-size: 76px">3 simple steps</div>
+            </div>
+            <div id="mc1" class="card mcard" style="left: 120px; top: 230px">
+              <div class="icon" style="background: #dff5ee">
+                <svg width="110" height="130" viewBox="0 0 260 520">
+                  <use href="#g-bottle" />
+                </svg>
+              </div>
+              <div class="mono num">Step 01</div>
+              <div class="name">Cleanse</div>
+            </div>
+            <div id="mc2" class="card mcard" style="left: 450px; top: 230px">
+              <div class="icon" style="background: #fde6e7">
+                <svg width="130" height="110" viewBox="0 0 360 300">
+                  <use href="#g-jar" />
+                </svg>
+              </div>
+              <div class="mono num">Step 02</div>
+              <div class="name">Moisturize</div>
+            </div>
+            <div id="mc3" class="card mcard" style="left: 780px; top: 230px">
+              <div class="icon" style="background: #fff1cc">
+                <svg width="80" height="140" viewBox="0 0 200 460">
+                  <use href="#g-tube" />
+                </svg>
+              </div>
+              <div class="mono num">Step 03</div>
+              <div class="name">Protect</div>
+            </div>
+          </div>
+
+          <!-- LAYERS station: center (1000, 1900) -->
+          <div id="st-layers" class="station" style="left: 350px; top: 1400px; width: 1300px; height: 1000px">
+            <div id="ly-head" class="abs" style="left: 80px; top: 60px">
+              <div class="mono eyebrow">Anatomy 101</div>
+              <div class="h-xl" style="font-size: 120px; margin-top: 8px">Your skin</div>
+            </div>
+            <div id="ly-chip" class="chip" style="left: 760px; top: 120px">
+              <svg width="40" height="40" viewBox="0 0 40 40">
+                <circle cx="20" cy="20" r="18" fill="#ff6f61" />
+                <path d="M12 20 l6 6 l11 -12" stroke="#fff" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              Largest organ · ≈ 2 m²
+            </div>
+            <svg id="slab" class="abs" style="left: 80px; top: 300px; overflow: visible" width="760" height="600" viewBox="0 0 760 600">
+              <defs>
+                <clipPath id="slab-clip"><rect width="760" height="600" rx="40" /></clipPath>
+              </defs>
+              <!-- hair -->
+              <path id="hair" d="M 236 120 C 240 60, 250 10, 262 -40 C 268 -70, 282 -95, 300 -110" stroke="#5a3a2a" stroke-width="7" fill="none" stroke-linecap="round" />
+              <g clip-path="url(#slab-clip)">
+                <g id="band-hypo">
+                  <rect y="360" width="760" height="240" fill="#fde7b0" />
+                  <g id="fat" fill="#fff4d6" stroke="#ebc46e" stroke-width="3"></g>
+                </g>
+                <g id="band-derm">
+                  <rect y="120" width="760" height="240" fill="#f6bcb3" />
+                  <g stroke="#ea9b92" stroke-width="4" fill="none" stroke-linecap="round" opacity="0.8">
+                    <path class="collagen" d="M 330 170 q 20 -16 40 0 t 40 0 t 40 0 t 40 0 t 40 0" />
+                    <path class="collagen" d="M 420 230 q 20 -16 40 0 t 40 0 t 40 0 t 40 0 t 40 0 t 40 0" />
+                    <path class="collagen" d="M 320 300 q 20 -16 40 0 t 40 0 t 40 0 t 40 0" />
+                    <path class="collagen" d="M 40 200 q 20 -16 40 0 t 40 0 t 40 0" />
+                    <path class="collagen" d="M 60 290 q 20 -16 40 0 t 40 0" />
+                  </g>
+                  <path d="M -10 330 C 120 330, 140 250, 220 250 S 330 330, 420 330 S 560 260, 640 260 S 740 320, 780 320" stroke="#e04f5f" stroke-width="9" fill="none" />
+                  <path d="M -10 345 C 120 345, 150 275, 230 275 S 340 345, 430 345 S 570 280, 650 280 S 740 335, 780 335" stroke="#5b7bd5" stroke-width="9" fill="none" />
+                  <!-- follicle -->
+                  <path d="M 222 120 L 216 300 Q 236 330 256 300 L 250 120 Z" fill="#e7968a" />
+                  <circle cx="236" cy="306" r="20" fill="#d77a6e" />
+                  <!-- sweat gland -->
+                  <path d="M 560 120 L 560 250 q 30 0 30 18 q 0 18 -30 18 q -30 0 -30 18 q 0 18 30 18 q 26 0 26 -12" stroke="#c98fd0" stroke-width="7" fill="none" stroke-linecap="round" />
+                </g>
+                <g id="band-epi">
+                  <rect y="0" width="760" height="120" fill="#fbd9bf" />
+                  <g id="cells" fill="none" stroke="#efb994" stroke-width="3"></g>
+                  <path d="M 0 0 L 760 0 L 760 26 Q 700 36 640 24 T 520 26 T 400 22 T 280 28 T 160 24 T 40 28 L 0 26 Z" fill="#f1bf98" />
+                </g>
+                <rect x="0" y="118" width="760" height="4" fill="#e9a493" opacity="0.7" />
+                <rect x="0" y="358" width="760" height="4" fill="#e6c27d" opacity="0.8" />
+                <rect id="dim-epi" class="dim" x="0" y="0" width="760" height="120" fill="#fbf6ec" opacity="0" />
+                <rect id="dim-derm" class="dim" x="0" y="120" width="760" height="240" fill="#fbf6ec" opacity="0" />
+                <rect id="dim-hypo" class="dim" x="0" y="360" width="760" height="240" fill="#fbf6ec" opacity="0" />
+              </g>
+              <rect width="760" height="600" rx="40" fill="none" stroke="#2b2340" stroke-width="5" />
+              <rect id="focus-ring" x="-8" y="-8" width="776" height="136" rx="22" fill="none" stroke="#ff6f61" stroke-width="7" opacity="0" />
+            </svg>
+            <div id="ld1" class="leader" style="top: 358px"></div>
+            <div id="ll1" class="llabel" style="top: 300px">
+              <div class="mono n">Layer 01</div>
+              <div class="t">Epidermis</div>
+              <div class="d">Your protective shield</div>
+            </div>
+            <div id="ld2" class="leader" style="top: 538px"></div>
+            <div id="ll2" class="llabel" style="top: 480px">
+              <div class="mono n">Layer 02</div>
+              <div class="t">Dermis</div>
+              <div class="d">Strength &amp; elasticity</div>
+            </div>
+            <div id="ld3" class="leader" style="top: 778px"></div>
+            <div id="ll3" class="llabel" style="top: 720px">
+              <div class="mono n">Layer 03</div>
+              <div class="t">Hypodermis</div>
+              <div class="d">Cushion &amp; warmth</div>
+            </div>
+            <!-- little badges that pop on each layer -->
+            <svg id="ic-shield" class="abs" style="left: 1230px; top: 296px" width="64" height="72" viewBox="0 0 64 72">
+              <path d="M32 4 L58 14 V34 C58 52 46 63 32 68 C18 63 6 52 6 34 V14 Z" fill="#8fd9c4" stroke="#2b2340" stroke-width="4" />
+              <path d="M20 36 l8 8 l16 -16" stroke="#2b2340" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            <svg id="ic-spring" class="abs" style="left: 1170px; top: 478px" width="110" height="70" viewBox="0 0 110 70">
+              <path d="M6 35 l12 -24 l14 48 l14 -48 l14 48 l14 -48 l14 48 l12 -24" stroke="#ff6f61" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            <svg id="ic-warm" class="abs" style="left: 1240px; top: 714px" width="64" height="74" viewBox="0 0 64 74">
+              <path d="M14 66 C 4 50 24 44 14 26 M32 66 C 22 50 42 44 32 26 M50 66 C 40 50 60 44 50 26" stroke="#ff9f43" stroke-width="6" fill="none" stroke-linecap="round" />
+            </svg>
+          </div>
+
+          <!-- CLEANSE station: center (2600, 1900) -->
+          <div id="st-cleanse" class="station" style="left: 1950px; top: 1450px; width: 1300px; height: 900px">
+            <svg class="abs" aria-hidden="true" style="left: 10px; top: -110px" width="600" height="580" viewBox="0 0 600 580"><text x="0" y="440" font-family="Montserrat" font-weight="900" font-size="420" letter-spacing="-25" fill="none" stroke="#2b2340" stroke-opacity="0.08" stroke-width="4">01</text></svg>
+            <div id="cl-head" class="abs" style="left: 60px; top: 90px">
+              <div class="mono eyebrow">Step 01</div>
+              <div class="h-xl" style="margin-top: 8px">Cleanse</div>
+              <div class="body-l" style="margin-top: 20px; width: 420px">Gentle, twice a day.</div>
+            </div>
+            <div id="cl-am" class="chip" style="left: 60px; top: 420px">
+              <svg width="40" height="40" viewBox="0 0 40 40">
+                <circle cx="20" cy="20" r="9" fill="#ffc53d" />
+                <g stroke="#ffc53d" stroke-width="3.5" stroke-linecap="round">
+                  <path d="M20 2v5M20 33v5M2 20h5M33 20h5M7 7l3.5 3.5M29.5 29.5L33 33M7 33l3.5-3.5M29.5 10.5L33 7" />
+                </g>
+              </svg>
+              Morning
+            </div>
+            <div id="cl-pm" class="chip" style="left: 290px; top: 420px">
+              <svg width="40" height="40" viewBox="0 0 40 40">
+                <path d="M26 5 A 16 16 0 1 0 35 27 A 13 13 0 0 1 26 5 Z" fill="#6b5fa8" />
+              </svg>
+              Night
+            </div>
+            <div id="cl-bottle" class="abs" style="left: 690px; top: 230px; width: 260px; height: 520px">
+              <svg width="260" height="520" viewBox="0 0 260 520" style="overflow: visible">
+                <g id="pump"><use href="#g-pump" /></g>
+                <use href="#g-bottle-body" />
+              </svg>
+            </div>
+            <div id="foam" class="abs" style="left: 650px; top: 90px; width: 360px; height: 300px"></div>
+            <!-- skin disc with dirt -->
+            <div id="cl-disc" class="abs" style="left: 1010px; top: 260px; width: 380px; height: 380px">
+              <svg width="380" height="380" viewBox="0 0 380 380" style="overflow: visible">
+                <circle cx="190" cy="190" r="182" fill="#fbd9bf" stroke="#2b2340" stroke-width="5" />
+                <g fill="none" stroke="#efb994" stroke-width="3">
+                  <path d="M60 120 q40 -20 80 0" />
+                  <path d="M230 90 q40 -20 80 0" />
+                  <path d="M80 270 q40 -20 80 0" />
+                  <path d="M220 290 q40 -20 80 0" />
+                </g>
+              </svg>
+              <div id="dirt1" class="chip" style="left: 30px; top: 60px; background: #8b6b4a; color: #fff; box-shadow: none">Dirt</div>
+              <div id="dirt2" class="chip" style="left: 190px; top: 160px; background: #e9c46a; color: #2b2340; box-shadow: none">Oil</div>
+              <div id="dirt3" class="chip" style="left: 40px; top: 250px; background: #fff; color: #2b2340">Sunscreen</div>
+              <div id="sweep" class="abs" style="left: -60px; top: -30px; width: 500px; height: 440px"></div>
+              <svg id="clean-check" class="abs" style="left: 120px; top: 120px" width="140" height="140" viewBox="0 0 140 140">
+                <circle cx="70" cy="70" r="64" fill="#3fae94" />
+                <path d="M40 72 l20 20 l40 -42" stroke="#fff" stroke-width="12" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
+          </div>
+
+          <!-- MOISTURIZE station: center (4200, 1900) -->
+          <div id="st-moist" class="station" style="left: 3550px; top: 1450px; width: 1300px; height: 900px">
+            <svg class="abs" aria-hidden="true" style="left: 10px; top: -110px" width="600" height="580" viewBox="0 0 600 580"><text x="0" y="440" font-family="Montserrat" font-weight="900" font-size="420" letter-spacing="-25" fill="none" stroke="#2b2340" stroke-opacity="0.08" stroke-width="4">02</text></svg>
+            <div id="mo-head" class="abs" style="left: 60px; top: 90px">
+              <div class="mono eyebrow">Step 02</div>
+              <div class="h-xl" style="margin-top: 8px">Moisturize</div>
+            </div>
+            <div id="mo-jar" class="abs" style="left: 80px; top: 420px; width: 360px; height: 300px">
+              <svg width="360" height="300" viewBox="0 0 360 300" style="overflow: visible">
+                <path id="cream" d="M120 112 C 130 60, 170 70, 180 40 C 190 70, 240 66, 240 112 Z" fill="#fffaf2" stroke="#2b2340" stroke-width="4" />
+                <use href="#g-jar-body" />
+                <g id="jar-lid"><use href="#g-jar-lid" /></g>
+              </svg>
+            </div>
+            <div id="mo-barrier" class="abs" style="left: 620px; top: 170px; width: 620px; height: 640px">
+              <svg width="620" height="640" viewBox="0 0 620 640" style="overflow: visible">
+                <g id="drops"></g>
+                <g id="lock">
+                  <path id="shackle" d="M 282 236 V 214 a 28 28 0 0 1 56 0 V 236" stroke="#2b2340" stroke-width="11" fill="none" stroke-linecap="round" />
+                  <rect x="266" y="232" width="88" height="70" rx="14" fill="#2b2340" />
+                  <circle cx="310" cy="262" r="9" fill="#fff" />
+                  <rect x="306" y="264" width="8" height="18" rx="4" fill="#fff" />
+                </g>
+                <rect x="10" y="352" width="600" height="190" rx="18" fill="#f7b3b8" />
+                <g id="bricks"></g>
+                <rect x="10" y="352" width="600" height="190" rx="18" fill="none" stroke="#2b2340" stroke-width="5" />
+                <text x="310" y="600" text-anchor="middle" font-family="IBM Plex Mono" font-weight="700" font-size="26" letter-spacing="4" fill="#5d5574">SKIN BARRIER</text>
+              </svg>
+            </div>
+            <div id="mo-chip1" class="chip" style="left: 1010px; top: 400px">
+              <svg width="30" height="38" viewBox="0 0 30 38"><path d="M15 2 C 15 2, 28 18, 28 25 a 13 13 0 0 1 -26 0 C 2 18 15 2 15 2 Z" fill="#7cc4f2" /></svg>
+              Locks in water
+            </div>
+            <div id="mo-chip2" class="chip" style="left: 720px; top: 820px">
+              <svg width="34" height="38" viewBox="0 0 64 72"><path d="M32 4 L58 14 V34 C58 52 46 63 32 68 C18 63 6 52 6 34 V14 Z" fill="#8fd9c4" stroke="#2b2340" stroke-width="5" /></svg>
+              Strengthens your barrier
+            </div>
+          </div>
+
+          <!-- SUN station: center (4200, 3300) -->
+          <div id="st-sun" class="station" style="left: 3450px; top: 2800px; width: 1500px; height: 1000px">
+            <svg class="abs" aria-hidden="true" style="left: 10px; top: -110px" width="600" height="580" viewBox="0 0 600 580"><text x="0" y="440" font-family="Montserrat" font-weight="900" font-size="420" letter-spacing="-25" fill="none" stroke="#2b2340" stroke-opacity="0.08" stroke-width="4">03</text></svg>
+            <div id="su-head" class="abs" style="left: 60px; top: 70px">
+              <div class="mono eyebrow">Step 03</div>
+              <div class="h-xl" style="margin-top: 8px">Protect</div>
+            </div>
+            <div id="stamp" class="abs mono" style="left: 590px; top: 120px; padding: 14px 24px; border: 6px solid #c8412f; border-radius: 16px; color: #c8412f; font-size: 34px">
+              Most important
+            </div>
+            <div id="su-tube" class="abs" style="left: 90px; top: 330px; width: 200px; height: 460px">
+              <svg width="200" height="460" viewBox="0 0 200 460"><use href="#g-tube" /></svg>
+            </div>
+            <div id="spf" class="abs" style="left: 350px; top: 300px">
+              <div class="mono" style="font-size: 26px; color: var(--ink-soft)">Use daily</div>
+              <div style="display: flex; align-items: baseline; gap: 18px; margin-top: 4px">
+                <span style="font-weight: 900; font-size: 120px; letter-spacing: -0.04em">SPF</span>
+                <span id="spf-num" style="font-weight: 900; font-size: 170px; letter-spacing: -0.05em; color: var(--coral-ink); line-height: 1">30</span>
+                <span style="font-weight: 900; font-size: 120px; color: var(--coral-ink)">+</span>
+              </div>
+            </div>
+            <div id="week" class="abs week" style="left: 350px; top: 560px">
+              <div class="day">M<div class="fill"><svg width="30" height="30" viewBox="0 0 30 30"><path d="M6 15 l6 6 l12 -12" stroke="#fff" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round" /></svg></div></div>
+              <div class="day">T<div class="fill"><svg width="30" height="30" viewBox="0 0 30 30"><path d="M6 15 l6 6 l12 -12" stroke="#fff" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round" /></svg></div></div>
+              <div class="day">W<div class="fill"><svg width="30" height="30" viewBox="0 0 30 30"><path d="M6 15 l6 6 l12 -12" stroke="#fff" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round" /></svg></div></div>
+              <div class="day">T<div class="fill"><svg width="30" height="30" viewBox="0 0 30 30"><path d="M6 15 l6 6 l12 -12" stroke="#fff" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round" /></svg></div></div>
+              <div class="day">F<div class="fill"><svg width="30" height="30" viewBox="0 0 30 30"><path d="M6 15 l6 6 l12 -12" stroke="#fff" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round" /></svg></div></div>
+              <div class="day">S<div class="fill"><svg width="30" height="30" viewBox="0 0 30 30"><path d="M6 15 l6 6 l12 -12" stroke="#fff" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round" /></svg></div></div>
+              <div class="day">S<div class="fill"><svg width="30" height="30" viewBox="0 0 30 30"><path d="M6 15 l6 6 l12 -12" stroke="#fff" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round" /></svg></div></div>
+            </div>
+            <div class="abs mono" id="week-label" style="left: 350px; top: 650px; font-size: 22px; color: var(--ink-soft)">Every single day</div>
+            <!-- sun / shield cluster -->
+            <svg id="sun-cluster" class="abs" style="left: 960px; top: 20px; overflow: visible" width="520" height="760" viewBox="0 0 520 760">
+              <g id="sun">
+                <g id="sun-rays" stroke="#ffc53d" stroke-width="12" stroke-linecap="round">
+                  <path d="M300 30 v-26 M300 250 v26 M190 140 h-26 M410 140 h26 M222 62 l-18 -18 M378 218 l18 18 M222 218 l-18 18 M378 62 l18 -18" />
+                </g>
+                <circle cx="300" cy="140" r="74" fill="#ffc53d" />
+                <circle cx="300" cy="140" r="74" fill="none" stroke="#2b2340" stroke-width="5" />
+              </g>
+              <g stroke="#b06fd6" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path class="uv" d="M250 230 l-20 40 l26 10 l-24 50 l26 10 l-22 44" stroke-dasharray="320" stroke-dashoffset="320" />
+                <path class="uv" d="M300 236 l-8 44 l26 6 l-10 52 l26 6 l-8 44" stroke-dasharray="320" stroke-dashoffset="320" />
+                <path class="uv" d="M350 230 l14 40 l-24 14 l18 48 l-24 14 l16 42" stroke-dasharray="320" stroke-dashoffset="320" />
+              </g>
+              <g stroke="#b06fd6" stroke-width="6" fill="none" stroke-linecap="round" opacity="0.8">
+                <path class="bounce" d="M240 420 l-90 -50" stroke-dasharray="110" stroke-dashoffset="110" />
+                <path class="bounce" d="M300 420 l0 -0" />
+                <path class="bounce" d="M360 420 l90 -50" stroke-dasharray="110" stroke-dashoffset="110" />
+              </g>
+              <g id="shield">
+                <path d="M300 400 L410 440 V520 C410 600 360 650 300 672 C240 650 190 600 190 520 V440 Z" fill="#8fd9c4" stroke="#2b2340" stroke-width="6" />
+                <text x="300" y="560" text-anchor="middle" font-family="Montserrat" font-weight="900" font-size="58" fill="#2b2340">SPF</text>
+              </g>
+              <text x="470" y="290" font-family="IBM Plex Mono" font-weight="700" font-size="24" fill="#7f45a8" letter-spacing="3">UV</text>
+              <g id="cloud">
+                <path d="M120 190 a 50 50 0 0 1 60 -60 a 70 70 0 0 1 130 10 a 50 50 0 0 1 40 90 h -210 a 45 45 0 0 1 -20 -40 Z" fill="#ffffff" stroke="#2b2340" stroke-width="5" />
+              </g>
+            </svg>
+            <div id="cloud-chip" class="chip" style="left: 1060px; top: 690px">Even when it's cloudy</div>
+            <!-- 80% ring -->
+            <div id="ring" class="abs" style="left: 330px; top: 740px; width: 600px; height: 260px">
+              <svg class="abs" style="left: 0; top: 0" width="260" height="260" viewBox="0 0 260 260">
+                <circle cx="130" cy="130" r="108" fill="none" stroke="#efe3d1" stroke-width="28" />
+                <circle id="ring-arc" cx="130" cy="130" r="108" fill="none" stroke="#ff6f61" stroke-width="28" stroke-linecap="round" stroke-dasharray="678.6" stroke-dashoffset="678.6" transform="rotate(-90 130 130)" />
+              </svg>
+              <div class="abs" style="left: 0; top: 0; width: 260px; height: 260px; display: flex; align-items: center; justify-content: center">
+                <span id="pct" style="font-weight: 900; font-size: 74px; letter-spacing: -0.04em">0%</span>
+              </div>
+              <div class="abs" style="left: 296px; top: 52px; width: 330px">
+                <div class="mono" style="font-size: 22px; color: var(--coral-ink)">Up to</div>
+                <div style="font-weight: 900; font-size: 44px; line-height: 1.05; letter-spacing: -0.03em; margin-top: 6px">of visible skin aging</div>
+                <div style="font-size: 25px; color: var(--ink-soft); margin-top: 10px">is caused by the sun</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= DOCTOR ================= -->
+      <div id="doc-cam" class="clip" data-start="0" data-duration="59" data-track-index="2">
+        <div id="doc-move" class="abs" style="left: 0; top: 0; width: 1920px; height: 1080px">
+          <div id="doc">
+            <div id="doc-shadow"></div>
+            <img id="arm-l" src="assets/doctor-arm-l.png" alt="" />
+            <img id="arm-r" src="assets/doctor-arm-r.png" alt="" />
+            <img id="body" src="assets/doctor-body.png" alt="" />
+            <div id="head">
+              <img src="assets/doctor-head.png" alt="" />
+              <img id="eye-l" class="eye" src="assets/doctor-eye-l.png" alt="" />
+              <img id="eye-r" class="eye" src="assets/doctor-eye-r.png" alt="" />
+              <svg class="layer" viewBox="0 0 1024 1024">
+                <g transform="translate(496 244)">
+                  <path id="mouth-open" d="M -21 1 Q 0 14 21 1 Q 18 30 0 31 Q -18 30 -21 1 Z" fill="#6b2427" stroke="#3b2116" stroke-width="2.6" stroke-linejoin="round" />
+                  <path d="M -24 -2 Q 0 18 24 -2" fill="none" stroke="#3b2116" stroke-width="3.6" stroke-linecap="round" />
+                </g>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= OVERLAY ================= -->
+      <div id="overlay" class="clip" data-start="0" data-duration="59" data-track-index="3">
+        <div id="title">
+          <div class="row">
+            <div class="word" id="tw"><span>S</span><span>k</span><span>i</span><span>n</span><span>c</span><span>a</span><span>r</span><span>e</span></div>
+            <div class="badge" id="tbadge">101</div>
+          </div>
+          <div class="mono sub" id="tsub">A dermatologist's guide</div>
+        </div>
+
+        <div id="brand">
+          <div class="logo">
+            <svg width="30" height="36" viewBox="0 0 30 38"><path d="M15 2 C 15 2, 28 18, 28 25 a 13 13 0 0 1 -26 0 C 2 18 15 2 15 2 Z" fill="#fff" /></svg>
+          </div>
+          <div class="txt">Skincare 101</div>
+        </div>
+
+        <div id="progress">
+          <div class="pstep" id="ps1"><div class="dot"><div class="on"></div><span style="position: relative">1</span></div>Cleanse</div>
+          <div class="pstep" id="ps2"><div class="dot"><div class="on"></div><span style="position: relative">2</span></div>Moisturize</div>
+          <div class="pstep" id="ps3"><div class="dot"><div class="on"></div><span style="position: relative">3</span></div>Protect</div>
+        </div>
+
+        <div id="lower">
+          <div class="bar"></div>
+          <div class="name">Dr. Skin</div>
+          <div class="mono role">Dermatologist · Your skin coach</div>
+        </div>
+
+        <div id="caption"></div>
+
+        <div id="endcard">
+          <div class="mono eyebrow" id="ec-eyebrow">Remember</div>
+          <div id="ec-row" style="display: flex; gap: 26px; margin-top: 26px">
+            <div class="card" id="ec1" style="position: relative; width: 300px; height: 150px; display: flex; align-items: center; gap: 18px; padding: 0 26px">
+              <svg width="44" height="88" viewBox="0 0 260 520"><use href="#g-bottle" /></svg>
+              <span style="font-weight: 900; font-size: 38px; letter-spacing: -0.03em">Cleanse</span>
+            </div>
+            <div class="card" id="ec2" style="position: relative; width: 340px; height: 150px; display: flex; align-items: center; gap: 18px; padding: 0 26px">
+              <svg width="70" height="58" viewBox="0 0 360 300"><use href="#g-jar" /></svg>
+              <span style="font-weight: 900; font-size: 38px; letter-spacing: -0.03em">Moisturize</span>
+            </div>
+            <div class="card" id="ec3" style="position: relative; width: 300px; height: 150px; display: flex; align-items: center; gap: 18px; padding: 0 26px">
+              <svg width="40" height="92" viewBox="0 0 200 460"><use href="#g-tube" /></svg>
+              <span style="font-weight: 900; font-size: 38px; letter-spacing: -0.03em">Protect</span>
+            </div>
+          </div>
+          <div id="ec-thanks" class="h-xl" style="margin-top: 70px; font-size: 112px">Your skin will<br />thank you<span style="color: var(--coral-ink)">.</span></div>
+          <div id="ec-sign" class="mono" style="margin-top: 30px; font-size: 26px; color: var(--ink-soft)">— Dr. Skin, Dermatologist</div>
+        </div>
+
+        <div id="vignette" class="abs" style="inset: 0"></div>
+      </div>
+
+      <audio id="soundtrack" src="assets/soundtrack.wav" data-start="0" data-duration="59" data-track-index="4"></audio>
+
+      <!-- shared vector symbols -->
+      <svg width="0" height="0" style="position: absolute">
+        <defs>
+          <g id="g-pump">
+            <rect x="34" y="22" width="86" height="16" rx="8" fill="#3e3557" />
+            <rect x="92" y="14" width="76" height="30" rx="10" fill="#3e3557" />
+            <rect x="118" y="44" width="24" height="56" fill="#d9d3e8" />
+          </g>
+          <g id="g-bottle-body">
+            <rect x="88" y="94" width="84" height="44" rx="12" fill="#3e3557" />
+            <rect x="40" y="128" width="180" height="380" rx="56" fill="#9fdccb" stroke="#2b2340" stroke-width="5" />
+            <rect x="62" y="158" width="18" height="300" rx="9" fill="#ffffff" opacity="0.4" />
+            <rect x="72" y="236" width="116" height="168" rx="20" fill="#ffffff" />
+            <path d="M130 262 C 130 262, 152 290, 152 302 a 22 22 0 0 1 -44 0 C 108 290 130 262 130 262 Z" fill="#7cc4f2" />
+            <rect x="94" y="348" width="72" height="9" rx="4.5" fill="#2b2340" />
+            <rect x="104" y="368" width="52" height="9" rx="4.5" fill="#c8c0d8" />
+          </g>
+          <g id="g-bottle">
+            <use href="#g-pump" />
+            <use href="#g-bottle-body" />
+          </g>
+          <g id="g-jar-body">
+            <rect x="34" y="112" width="292" height="168" rx="42" fill="#f7b3b8" stroke="#2b2340" stroke-width="5" />
+            <rect x="34" y="166" width="292" height="62" fill="#ffffff" />
+            <rect x="34" y="112" width="292" height="168" rx="42" fill="none" stroke="#2b2340" stroke-width="5" />
+            <circle cx="180" cy="197" r="20" fill="#ff6f61" />
+          </g>
+          <g id="g-jar-lid">
+            <rect x="20" y="58" width="320" height="64" rx="22" fill="#ff8a7a" stroke="#2b2340" stroke-width="5" />
+            <rect x="44" y="72" width="80" height="10" rx="5" fill="#ffffff" opacity="0.55" />
+          </g>
+          <g id="g-jar">
+            <use href="#g-jar-body" />
+            <use href="#g-jar-lid" />
+          </g>
+          <g id="g-tube">
+            <rect x="24" y="8" width="152" height="26" rx="7" fill="#f2a93b" stroke="#2b2340" stroke-width="5" />
+            <path d="M30 32 L170 32 L150 384 L50 384 Z" fill="#ffd46b" stroke="#2b2340" stroke-width="5" stroke-linejoin="round" />
+            <rect x="56" y="382" width="88" height="70" rx="14" fill="#ff6f61" stroke="#2b2340" stroke-width="5" />
+            <circle cx="100" cy="130" r="30" fill="#ff6f61" />
+            <text x="100" y="236" text-anchor="middle" font-family="Montserrat" font-weight="900" font-size="46" fill="#2b2340">SPF</text>
+            <text x="100" y="296" text-anchor="middle" font-family="Montserrat" font-weight="900" font-size="58" fill="#2b2340">30+</text>
+          </g>
+        </defs>
+      </svg>
+    </div>
+
+    <script>
+      (function () {
+        // ---------- deterministic helpers ----------
+        function rng(seed) {
+          let a = seed >>> 0;
+          return function () {
+            a = (a + 0x6d2b79f5) >>> 0;
+            let t = a;
+            t = Math.imul(t ^ (t >>> 15), t | 1);
+            t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+            return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+          };
+        }
+        const R = rng(20261016);
+        const SVGNS = "http://www.w3.org/2000/svg";
+        const $ = (s) => document.querySelector(s);
+        const $$ = (s) => Array.from(document.querySelectorAll(s));
+        const TIM = window.DOC_TIMING;
+        const L = {};
+        Object.keys(TIM.lines).forEach((k) => (L[k] = TIM.lines[k].start));
+
+        // ---------- generated decoration ----------
+        const floaters = $("#floaters");
+        const fColors = ["#8fd9c4", "#f7b3b8", "#ffc53d", "#7cc4f2", "#f9cfae"];
+        for (let i = 0; i < 26; i++) {
+          const d = document.createElement("div");
+          d.className = "float";
+          const s = 14 + R() * 46;
+          d.style.width = s + "px";
+          d.style.height = s + "px";
+          d.style.left = -200 + R() * 2300 + "px";
+          d.style.top = -200 + R() * 1450 + "px";
+          const c = fColors[i % fColors.length];
+          if (i % 3 === 0) {
+            d.style.border = "5px solid " + c;
+          } else {
+            d.style.background = c;
+            d.style.opacity = "0.55";
+          }
+          floaters.appendChild(d);
+        }
+
+        // epidermis cells
+        const cells = $("#cells");
+        for (let r = 0; r < 3; r++) {
+          for (let c = 0; c < 17; c++) {
+            const e = document.createElementNS(SVGNS, "rect");
+            e.setAttribute("x", c * 46 + (r % 2) * 23 - 10);
+            e.setAttribute("y", 34 + r * 28);
+            e.setAttribute("width", 40);
+            e.setAttribute("height", 22);
+            e.setAttribute("rx", 10);
+            cells.appendChild(e);
+          }
+        }
+        // fat cells
+        const fat = $("#fat");
+        for (let r = 0; r < 4; r++) {
+          for (let c = 0; c < 11; c++) {
+            const e = document.createElementNS(SVGNS, "circle");
+            e.setAttribute("cx", c * 72 + (r % 2) * 36 + 20 + (R() - 0.5) * 10);
+            e.setAttribute("cy", 395 + r * 58 + (R() - 0.5) * 8);
+            e.setAttribute("r", 25 + R() * 6);
+            e.setAttribute("class", "fatcell");
+            fat.appendChild(e);
+          }
+        }
+        // bricks
+        const bricks = $("#bricks");
+        const brickEls = [];
+        for (let r = 0; r < 3; r++) {
+          const off = r % 2 ? -60 : 0;
+          for (let c = 0; c < 6; c++) {
+            const x = 22 + off + c * 120;
+            const y = 480 - r * 60;
+            const w = 108;
+            const x0 = Math.max(18, x);
+            const x1 = Math.min(602, x + w);
+            if (x1 - x0 < 40) continue;
+            const e = document.createElementNS(SVGNS, "rect");
+            e.setAttribute("x", x0);
+            e.setAttribute("y", y);
+            e.setAttribute("width", x1 - x0);
+            e.setAttribute("height", 50);
+            e.setAttribute("rx", 9);
+            e.setAttribute("fill", "#fbd9bf");
+            e.setAttribute("stroke", "#e7a57e");
+            e.setAttribute("stroke-width", "3");
+            bricks.appendChild(e);
+            brickEls.push(e);
+          }
+        }
+        // water drops
+        const drops = $("#drops");
+        const dropEls = [];
+        [120, 230, 400, 500, 310].forEach((x, i) => {
+          const g = document.createElementNS(SVGNS, "path");
+          g.setAttribute("d", "M0 -34 C 0 -34, 22 -6, 22 6 a 22 22 0 0 1 -44 0 C -22 -6 0 -34 0 -34 Z");
+          g.setAttribute("fill", "#7cc4f2");
+          g.setAttribute("stroke", "#2b2340");
+          g.setAttribute("stroke-width", "4");
+          g.setAttribute("transform", "translate(" + x + " 60)");
+          drops.appendChild(g);
+          dropEls.push(g);
+        });
+        // foam bubbles
+        const foam = $("#foam");
+        const bubbles = [];
+        for (let i = 0; i < 16; i++) {
+          const b = document.createElement("div");
+          const s = 26 + R() * 50;
+          b.className = "abs";
+          b.style.width = s + "px";
+          b.style.height = s + "px";
+          b.style.borderRadius = "50%";
+          b.style.left = 150 + (R() - 0.5) * 300 + "px";
+          b.style.top = 230 + R() * 50 + "px";
+          b.style.background = "radial-gradient(circle at 32% 30%, #ffffff 0 18%, rgba(255,255,255,0.65) 30%, rgba(124,196,242,0.35) 100%)";
+          b.style.boxShadow = "inset 0 0 0 3px rgba(43,35,64,0.25)";
+          foam.appendChild(b);
+          bubbles.push(b);
+        }
+        // sweep bubbles across the disc
+        const sweep = $("#sweep");
+        const sweepB = [];
+        for (let i = 0; i < 18; i++) {
+          const b = document.createElement("div");
+          const s = 40 + R() * 70;
+          b.className = "abs";
+          b.style.width = s + "px";
+          b.style.height = s + "px";
+          b.style.borderRadius = "50%";
+          b.style.left = R() * 420 + "px";
+          b.style.top = R() * 380 + "px";
+          b.style.background = "radial-gradient(circle at 32% 30%, #ffffff 0 18%, rgba(255,255,255,0.75) 32%, rgba(124,196,242,0.45) 100%)";
+          b.style.boxShadow = "inset 0 0 0 3px rgba(43,35,64,0.2)";
+          sweep.appendChild(b);
+          sweepB.push(b);
+        }
+
+        // captions
+        const CAPS = [
+          ["l01", "Hi there! I'm <b>Dr. Skin</b>, your friendly dermatologist."],
+          ["l02", "Let's learn to care for your skin in <b>3 simple steps</b>."],
+          ["l03", "Your skin is your body's <b>largest organ</b>."],
+          ["l04", "It has <b>three main layers</b>."],
+          ["l05", "The <b>epidermis</b> is your protective shield."],
+          ["l06", "The <b>dermis</b> gives strength and elasticity."],
+          ["l07", "The <b>hypodermis</b> cushions you and keeps you warm."],
+          ["l08", "Step one: <b>cleanse</b>."],
+          ["l09", "Wash gently, <b>morning and night</b>."],
+          ["l10", "Step two: <b>moisturize</b>."],
+          ["l11", "Lock in water. <b>Strengthen your barrier</b>."],
+          ["l12", "Step three: <b>sunscreen!</b>"],
+          ["l13", "<b>SPF 30+</b> every day, even when it's cloudy."],
+          ["l14", "The sun causes up to <b>80%</b> of visible skin aging."],
+          ["l15", "<b>Cleanse. Moisturize. Protect.</b>"],
+          ["l16", "Your skin will <b>thank you!</b>"],
+        ];
+        const capBox = $("#caption");
+        const capEls = CAPS.map(([id, html]) => {
+          const d = document.createElement("div");
+          d.className = "cap";
+          d.innerHTML = html;
+          capBox.appendChild(d);
+          return [id, d];
+        });
+
+        // ---------- timeline ----------
+        const tl = gsap.timeline({ paused: true });
+        const DUR = 59;
+
+        // initial states
+        gsap.set("#world", { x: 0, y: 0, scale: 1 });
+        gsap.set(["#st-menu", "#st-layers", "#st-cleanse", "#st-moist", "#st-sun"], { opacity: 1 });
+        gsap.set("#viewport", { opacity: 1 });
+        gsap.set("#world", { opacity: 0 });
+        gsap.set(["#mc1", "#mc2", "#mc3", "#menu-head"], { opacity: 0, y: 40, scale: 0.9 });
+        gsap.set(".cap", { opacity: 0, y: 16 });
+        gsap.set("#doc", { y: 900 });
+        gsap.set(["#lower .bar"], { scaleX: 0 });
+        gsap.set(["#lower .name", "#lower .role"], { opacity: 0, y: 30 });
+        gsap.set(["#brand", "#progress"], { opacity: 0, y: -20 });
+        gsap.set(".pstep .on", { scale: 0 });
+        gsap.set("#tw span", { yPercent: 110, opacity: 0 });
+        gsap.set("#tbadge", { scale: 0, rotation: -40 });
+        gsap.set("#tsub", { opacity: 0, y: 20 });
+        gsap.set("#mouth-open", { scaleY: 0, transformOrigin: "50% 0%" });
+        gsap.set("#endcard", { opacity: 0 });
+        gsap.set(["#ec1", "#ec2", "#ec3"], { opacity: 0, y: 50, scale: 0.85 });
+        gsap.set(["#ec-thanks", "#ec-sign", "#ec-eyebrow"], { opacity: 0, y: 40 });
+
+        // ----- camera -----
+        // Point (x, y) of the world lands on screen (fx, fy) at zoom s.
+        const parallax = $("#parallax");
+        function cam(at, x, y, s, dur, ease, fx, fy) {
+          fx = fx === undefined ? 1250 : fx;
+          fy = fy === undefined ? 520 : fy;
+          const tx = fx - x * s;
+          const ty = fy - y * s;
+          tl.to("#world", { x: tx, y: ty, scale: s, duration: dur, ease: ease || "expo.inOut" }, at);
+          tl.to(parallax, { x: (tx % 2400) * 0.12, y: (ty % 2400) * 0.12, scale: 1 + (s - 1) * 0.15, duration: dur, ease: ease || "expo.inOut" }, at);
+        }
+        function camSet(x, y, s, fx, fy) {
+          fx = fx === undefined ? 1250 : fx;
+          fy = fy === undefined ? 520 : fy;
+          tl.set("#world", { x: fx - x * s, y: fy - y * s, scale: s }, 0);
+        }
+
+        // ----- doctor: mouth from her own voice -----
+        Object.keys(TIM.lines).forEach((id) => {
+          const ln = TIM.lines[id];
+          const step = 1 / TIM.fps;
+          let prev = -1;
+          ln.v.forEach((v, i) => {
+            const q = Math.round(v * 10) / 10;
+            if (q === prev) return;
+            prev = q;
+            tl.to("#mouth-open", { scaleY: q, duration: step, ease: "none" }, ln.start + i * step);
+          });
+          tl.to("#mouth-open", { scaleY: 0, duration: 0.08, ease: "none" }, ln.start + ln.dur);
+        });
+
+        // ----- doctor: head talk motion -----
+        Object.keys(TIM.lines).forEach((id, li) => {
+          const ln = TIM.lines[id];
+          const hr = rng(100 + li);
+          let t = ln.start;
+          while (t < ln.start + ln.dur - 0.3) {
+            const d = 0.42 + hr() * 0.3;
+            tl.to("#head", { rotation: (hr() - 0.5) * 7, y: (hr() - 0.5) * 6, duration: d, ease: "sine.inOut" }, t);
+            t += d;
+          }
+          tl.to("#head", { rotation: 0, y: 0, duration: 0.5, ease: "sine.inOut" }, ln.start + ln.dur);
+        });
+
+        // ----- doctor: blinks -----
+        [2.7, 6.4, 9.1, 12.2, 14.9, 17.9, 20.7, 24.0, 27.6, 30.3, 33.7, 36.9, 40.3, 43.4, 46.1, 49.5, 52.7, 55.9, 58.0].forEach((t) => {
+          tl.to(".eye", { scaleY: 0.08, duration: 0.07, ease: "power2.in" }, t);
+          tl.to(".eye", { scaleY: 1, duration: 0.1, ease: "power2.out" }, t + 0.08);
+        });
+
+        // ----- doctor: idle bob (finite) -----
+        tl.fromTo("#doc-move", { y: 0 }, { y: -7, duration: 1.6, ease: "sine.inOut", repeat: 35, yoyo: true }, 0);
+
+        // ----- doctor: arms -----
+        function arm(sel, at, rot, dur, ease) {
+          tl.to(sel, { rotation: rot, duration: dur || 0.5, ease: ease || "back.out(1.6)" }, at);
+        }
+        // entry + wave
+        tl.to("#doc", { y: 0, duration: 0.9, ease: "back.out(1.3)" }, 0.95);
+        arm("#arm-r", 1.25, -112, 0.45);
+        for (let i = 0; i < 5; i++) {
+          arm("#arm-r", 1.7 + i * 0.3, i % 2 ? -112 : -96, 0.3, "sine.inOut");
+        }
+        arm("#arm-r", 3.3, 0, 0.6, "power2.inOut");
+        arm("#arm-l", 3.9, 26, 0.5); // "your friendly dermatologist" open hand
+        arm("#arm-l", 5.1, 0, 0.6, "power2.inOut");
+        // presents menu
+        arm("#arm-r", 6.0, -58, 0.6);
+        arm("#arm-r", 9.0, -20, 0.5, "power2.inOut");
+        // layers: point at each
+        arm("#arm-r", 12.2, -70, 0.5);
+        arm("#arm-r", 15.6, -78, 0.5);
+        arm("#arm-r", 18.3, -62, 0.5);
+        arm("#arm-r", 21.3, -48, 0.5);
+        arm("#arm-r", 24.3, 0, 0.6, "power2.inOut");
+        // cleanse
+        arm("#arm-l", 25.2, 30, 0.45);
+        arm("#arm-l", 26.6, 0, 0.5, "power2.inOut");
+        arm("#arm-r", 27.0, -62, 0.5);
+        arm("#arm-r", 31.4, 0, 0.5, "power2.inOut");
+        // moisturize
+        arm("#arm-l", 32.3, 30, 0.45);
+        arm("#arm-l", 33.8, 0, 0.5, "power2.inOut");
+        arm("#arm-r", 34.4, -66, 0.5);
+        arm("#arm-r", 38.2, 0, 0.5, "power2.inOut");
+        // protect: emphatic
+        arm("#arm-r", 39.0, -118, 0.45);
+        arm("#arm-r", 40.4, -104, 0.25, "sine.inOut");
+        arm("#arm-r", 40.65, -118, 0.25, "sine.inOut");
+        arm("#arm-r", 41.5, -60, 0.5, "power2.inOut");
+        arm("#arm-l", 46.6, 34, 0.45);
+        arm("#arm-l", 50.2, 0, 0.5, "power2.inOut");
+        arm("#arm-r", 50.4, 0, 0.5, "power2.inOut");
+        // outro: count on fingers... then wave goodbye
+        arm("#arm-l", 52.0, 24, 0.35);
+        arm("#arm-r", 52.8, -40, 0.35);
+        arm("#arm-l", 53.6, 40, 0.35);
+        arm("#arm-r", 54.4, -112, 0.45);
+        for (let i = 0; i < 7; i++) arm("#arm-r", 54.9 + i * 0.3, i % 2 ? -112 : -96, 0.3, "sine.inOut");
+        arm("#arm-r", 57.2, -104, 0.4, "sine.inOut");
+        arm("#arm-l", 55.0, 0, 0.6, "power2.inOut");
+
+        // ================= INTRO =================
+        tl.to("#tw span", { yPercent: 0, opacity: 1, duration: 0.55, ease: "back.out(2)", stagger: 0.04 }, 0.1);
+        tl.to("#tbadge", { scale: 1, rotation: 0, duration: 0.6, ease: "back.out(2.2)" }, 0.45);
+        tl.to("#tsub", { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 0.6);
+        // title lifts away as she rises
+        tl.to("#title", { y: -330, scale: 0.42, duration: 0.8, ease: "expo.inOut" }, 1.05);
+        tl.to("#title", { opacity: 0, duration: 0.4 }, 1.6);
+        tl.to(["#brand", "#progress"], { opacity: 1, y: 0, duration: 0.5, ease: "power3.out", stagger: 0.1 }, 1.6);
+        // camera push-in on her (doctor camera)
+        tl.set("#doc-cam", { transformOrigin: "960px 400px" }, 0);
+        tl.fromTo("#doc-cam", { scale: 1 }, { scale: 1.32, duration: 3.6, ease: "sine.inOut" }, 1.4);
+        tl.to("#doc-cam", { scale: 1, x: -560, duration: 1.2, ease: "expo.inOut" }, 5.05);
+        // name super
+        tl.to("#lower .bar", { scaleX: 1, duration: 0.5, ease: "expo.out" }, 2.3);
+        tl.to("#lower .name", { opacity: 1, y: 0, duration: 0.6, ease: "expo.out" }, 2.4);
+        tl.to("#lower .role", { opacity: 1, y: 0, duration: 0.6, ease: "expo.out" }, 2.55);
+        tl.to("#lower", { opacity: 0, x: 60, duration: 0.4, ease: "power2.in" }, 4.75);
+
+        // ================= MENU =================
+        camSet(1000, 600, 1.25);
+        tl.to("#world", { opacity: 1, duration: 0.6 }, 5.3);
+        cam(5.3, 1000, 600, 0.92, 1.4, "expo.out");
+        tl.to("#menu-head", { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: "expo.out" }, 5.6);
+        ["#mc1", "#mc2", "#mc3"].forEach((s, i) => {
+          tl.to(s, { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: "back.out(1.8)" }, 7.55 + i * 0.3);
+        });
+
+        // ================= LAYERS =================
+        tl.fromTo("#trail", { strokeDashoffset: 0 }, { strokeDashoffset: -560, duration: DUR, ease: "none" }, 0);
+        cam(9.35, 1000, 1880, 0.85, 1.3);
+        gsap.set(["#ly-head", "#ly-chip"], { opacity: 0, y: 30 });
+        gsap.set(["#band-epi", "#band-derm", "#band-hypo"], { opacity: 0 });
+        gsap.set("#hair", { opacity: 0 });
+        gsap.set("#slab", { opacity: 0 });
+        tl.to("#slab", { opacity: 1, duration: 0.3 }, 13.9);
+        gsap.set(["#ll1", "#ll2", "#ll3"], { opacity: 0, x: 30 });
+        gsap.set([".leader"], { scaleX: 0 });
+        gsap.set(["#ic-shield", "#ic-spring", "#ic-warm"], { scale: 0, transformOrigin: "50% 50%" });
+        tl.to("#ly-head", { opacity: 1, y: 0, duration: 0.7, ease: "expo.out" }, 9.9);
+        tl.to("#ly-chip", { opacity: 1, y: 0, duration: 0.6, ease: "back.out(2)" }, 12.35);
+        // build layers bottom-up
+        [["#band-hypo", 13.95], ["#band-derm", 14.25], ["#band-epi", 14.55]].forEach(([s, t]) => {
+          tl.fromTo(s, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.55, ease: "expo.out" }, t);
+        });
+        tl.to("#hair", { opacity: 1, duration: 0.4 }, 14.9);
+        // epidermis
+        cam(15.55, 1040, 1800, 1.15, 1.1, "expo.inOut", 1240, 540);
+        tl.to("#ld1", { scaleX: 1, duration: 0.4, ease: "expo.out" }, 15.75);
+        tl.to("#ll1", { opacity: 1, x: 0, duration: 0.5, ease: "expo.out" }, 15.85);
+        tl.to("#ic-shield", { scale: 1, duration: 0.5, ease: "back.out(2.5)" }, 16.4);
+        tl.to(["#dim-derm", "#dim-hypo"], { opacity: 0.6, duration: 0.4 }, 15.75);
+        tl.set("#focus-ring", { attr: { y: -8, height: 136 } }, 15.7);
+        tl.to("#focus-ring", { opacity: 1, duration: 0.3 }, 15.8);
+        // dermis
+        cam(18.3, 1040, 1900, 1.15, 1.0, "expo.inOut", 1240, 540);
+        tl.to("#ld2", { scaleX: 1, duration: 0.4, ease: "expo.out" }, 18.45);
+        tl.to("#ll2", { opacity: 1, x: 0, duration: 0.5, ease: "expo.out" }, 18.55);
+        tl.to("#ic-spring", { scale: 1, duration: 0.5, ease: "back.out(2.5)" }, 19.4);
+        tl.to("#ic-spring", { scaleX: 0.6, duration: 0.25, ease: "sine.inOut", repeat: 5, yoyo: true }, 19.9);
+        tl.to("#dim-derm", { opacity: 0, duration: 0.4 }, 18.45);
+        tl.to("#dim-epi", { opacity: 0.6, duration: 0.4 }, 18.45);
+        tl.to("#focus-ring", { attr: { y: 112, height: 256 }, duration: 0.6, ease: "expo.inOut" }, 18.4);
+        tl.to(".collagen", { y: -6, duration: 0.35, ease: "sine.inOut", repeat: 7, yoyo: true, stagger: 0.08 }, 18.6);
+        // hypodermis
+        cam(21.3, 1040, 2010, 1.15, 1.0, "expo.inOut", 1240, 540);
+        tl.to("#ld3", { scaleX: 1, duration: 0.4, ease: "expo.out" }, 21.45);
+        tl.to("#ll3", { opacity: 1, x: 0, duration: 0.5, ease: "expo.out" }, 21.55);
+        tl.to("#ic-warm", { scale: 1, duration: 0.5, ease: "back.out(2.5)" }, 22.6);
+        tl.to("#ic-warm", { y: -10, duration: 0.4, ease: "sine.inOut", repeat: 3, yoyo: true }, 23.0);
+        tl.to("#dim-hypo", { opacity: 0, duration: 0.4 }, 21.45);
+        tl.to("#dim-derm", { opacity: 0.6, duration: 0.4 }, 21.45);
+        tl.to("#focus-ring", { attr: { y: 352, height: 256 }, duration: 0.6, ease: "expo.inOut" }, 21.4);
+        tl.to(".fatcell", { scale: 1.08, transformOrigin: "50% 50%", duration: 0.4, ease: "sine.inOut", repeat: 3, yoyo: true, stagger: 0.015 }, 21.7);
+        // reset dims for the overview pass-by
+        tl.to(["#dim-epi", "#dim-derm"], { opacity: 0, duration: 0.4 }, 23.9);
+        tl.to("#focus-ring", { opacity: 0, duration: 0.3 }, 23.9);
+
+        // ================= CLEANSE =================
+        cam(24.4, 2600, 1900, 0.95, 1.2);
+        tl.to("#ps1 .on", { scale: 1, duration: 0.5, ease: "back.out(2)" }, 25.2);
+        tl.to("#ps1", { boxShadow: "0 0 0 3px #ff6f61", duration: 0.3 }, 25.2);
+        gsap.set("#cl-head", { opacity: 0, x: -40 });
+        gsap.set(["#cl-am", "#cl-pm"], { opacity: 0, scale: 0.6 });
+        gsap.set("#cl-bottle", { y: -700 });
+        gsap.set(bubbles, { scale: 0, opacity: 0 });
+        gsap.set(["#cl-disc"], { opacity: 0, scale: 0.7 });
+        gsap.set(sweepB, { scale: 0, opacity: 0 });
+        gsap.set("#clean-check", { scale: 0, rotation: -30, transformOrigin: "50% 50%" });
+        tl.to("#cl-head", { opacity: 1, x: 0, duration: 0.7, ease: "expo.out" }, 25.1);
+        tl.to("#cl-bottle", { y: 0, duration: 0.8, ease: "bounce.out" }, 25.3);
+        tl.to("#pump", { y: 16, duration: 0.12, ease: "power2.in" }, 26.0);
+        tl.to("#pump", { y: 0, duration: 0.3, ease: "back.out(3)" }, 26.15);
+        bubbles.forEach((b, i) => {
+          const t = 26.05 + i * 0.12;
+          tl.to(b, { scale: 1, opacity: 1, duration: 0.35, ease: "back.out(2)" }, t);
+          tl.to(b, { y: -170 - (i % 5) * 30, x: (i % 2 ? 1 : -1) * (10 + (i % 4) * 14), duration: 2.4, ease: "sine.out" }, t);
+          tl.to(b, { opacity: 0, scale: 1.3, duration: 0.3 }, t + 2.1);
+        });
+        cam(26.9, 2420, 1900, 1.15, 1.2, "power3.inOut");
+        tl.to("#cl-am", { opacity: 1, scale: 1, duration: 0.45, ease: "back.out(2.4)" }, 28.15);
+        tl.to("#cl-pm", { opacity: 1, scale: 1, duration: 0.45, ease: "back.out(2.4)" }, 28.75);
+        cam(29.2, 2940, 1940, 1.15, 1.0, "power3.inOut");
+        tl.to("#cl-disc", { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.8)" }, 29.2);
+        // wash the grime away
+        sweepB.forEach((b, i) => {
+          const t = 30.0 + i * 0.05;
+          tl.to(b, { scale: 1, opacity: 1, duration: 0.3, ease: "back.out(2)" }, t);
+          tl.to(b, { scale: 1.4, opacity: 0, duration: 0.35, ease: "power2.in" }, t + 0.9);
+        });
+        tl.to("#dirt1", { scale: 0, opacity: 0, rotation: -20, duration: 0.3, ease: "back.in(2)" }, 29.75);
+        tl.to("#dirt2", { scale: 0, opacity: 0, rotation: 20, duration: 0.3, ease: "back.in(2)" }, 30.25);
+        tl.to("#dirt3", { scale: 0, opacity: 0, rotation: -20, duration: 0.3, ease: "back.in(2)" }, 30.75);
+        tl.to("#clean-check", { scale: 1, rotation: 0, duration: 0.55, ease: "back.out(2.5)" }, 31.1);
+
+        // ================= MOISTURIZE =================
+        cam(31.7, 4200, 1900, 0.95, 1.2);
+        tl.to("#ps2 .on", { scale: 1, duration: 0.5, ease: "back.out(2)" }, 32.3);
+        tl.to("#ps2", { boxShadow: "0 0 0 3px #ff6f61", duration: 0.3 }, 32.3);
+        gsap.set("#mo-head", { opacity: 0, x: -40 });
+        gsap.set("#mo-jar", { opacity: 0, y: 120, scale: 0.8 });
+        gsap.set("#cream", { y: 50, opacity: 0 });
+        gsap.set(dropEls, { opacity: 0 });
+        gsap.set(brickEls, { opacity: 0, y: -40 });
+        gsap.set("#lock", { opacity: 0, scale: 0.5, transformOrigin: "310px 260px" });
+        gsap.set("#shackle", { y: -22 });
+        gsap.set(["#mo-chip1", "#mo-chip2"], { opacity: 0, scale: 0.6 });
+        gsap.set("#mo-barrier", { opacity: 0 });
+        tl.to("#mo-head", { opacity: 1, x: 0, duration: 0.7, ease: "expo.out" }, 32.2);
+        tl.to("#mo-jar", { opacity: 1, y: 0, scale: 1, duration: 0.7, ease: "back.out(1.6)" }, 32.6);
+        tl.to("#jar-lid", { y: -110, x: 30, rotation: 14, transformOrigin: "50% 50%", duration: 0.6, ease: "back.out(1.7)" }, 33.4);
+        tl.to("#cream", { y: 0, opacity: 1, duration: 0.5, ease: "back.out(2)" }, 33.6);
+        tl.to("#mo-barrier", { opacity: 1, duration: 0.4 }, 34.1);
+        cam(34.2, 4260, 1950, 1.05, 1.1, "power3.inOut");
+        cam(36.4, 4480, 2080, 1.35, 1.0, "power3.inOut");
+        // bricks build (some already there, more "strengthen" later)
+        brickEls.forEach((b, i) => {
+          if (i < 6) tl.to(b, { opacity: 1, y: 0, duration: 0.35, ease: "back.out(2)" }, 34.3 + i * 0.04);
+        });
+        dropEls.forEach((d, i) => {
+          const t = 34.75 + i * 0.18;
+          tl.fromTo(d, { opacity: 0, y: -60 }, { opacity: 1, y: 0, duration: 0.25, ease: "power2.out" }, t);
+          tl.to(d, { y: 260, duration: 0.45, ease: "power2.in" }, t + 0.25);
+          tl.to(d, { scaleX: 1.5, scaleY: 0.3, opacity: 0, transformOrigin: "50% 100%", duration: 0.2 }, t + 0.7);
+        });
+        tl.to("#mo-chip1", { opacity: 1, scale: 1, duration: 0.45, ease: "back.out(2.2)" }, 35.0);
+        tl.to("#lock", { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(2.2)" }, 35.5);
+        tl.to("#shackle", { y: 0, duration: 0.2, ease: "power3.in" }, 35.8);
+        brickEls.forEach((b, i) => {
+          if (i >= 6) tl.to(b, { opacity: 1, y: 0, duration: 0.35, ease: "back.out(2.4)" }, 36.5 + (i - 6) * 0.1);
+        });
+        tl.to("#mo-chip2", { opacity: 1, scale: 1, duration: 0.45, ease: "back.out(2.2)" }, 36.9);
+        tl.to("#mo-barrier", { scale: 1.03, duration: 0.25, ease: "sine.inOut", repeat: 1, yoyo: true }, 37.6);
+
+        // ================= PROTECT =================
+        cam(38.4, 4200, 3300, 0.9, 1.3);
+        tl.to("#ps3 .on", { scale: 1, duration: 0.5, ease: "back.out(2)" }, 39.0);
+        tl.to("#ps3", { boxShadow: "0 0 0 3px #ff6f61", duration: 0.3 }, 39.0);
+        gsap.set("#su-head", { opacity: 0, x: -40 });
+        gsap.set("#stamp", { opacity: 0, scale: 2.6, rotation: -8 });
+        gsap.set("#su-tube", { opacity: 0, x: -200, rotation: -25 });
+        gsap.set("#spf", { opacity: 0, y: 40 });
+        gsap.set(".day .fill", { scale: 0 });
+        gsap.set(["#week", "#week-label"], { opacity: 0, y: 30 });
+        gsap.set("#sun", { scale: 0, transformOrigin: "300px 140px" });
+        gsap.set("#shield", { scale: 0, transformOrigin: "300px 530px" });
+        gsap.set("#cloud", { x: -520, opacity: 0 });
+        gsap.set("#cloud-chip", { opacity: 0, scale: 0.6 });
+        gsap.set("#ring", { opacity: 0, y: 40 });
+        tl.to("#su-head", { opacity: 1, x: 0, duration: 0.7, ease: "expo.out" }, 39.0);
+        tl.to("#sun", { scale: 1, duration: 0.7, ease: "back.out(1.8)" }, 39.4);
+        tl.fromTo("#sun-rays", { rotation: 0 }, { rotation: 90, svgOrigin: "300 140", duration: 19, ease: "none" }, 39.4);
+        tl.to("#stamp", { opacity: 1, scale: 1, rotation: -8, duration: 0.3, ease: "power4.in" }, 40.15);
+        tl.to("#st-sun", { x: 6, duration: 0.05, repeat: 3, yoyo: true, ease: "none" }, 40.45);
+        tl.to("#su-tube", { opacity: 1, x: 0, rotation: -6, duration: 0.7, ease: "back.out(1.5)" }, 41.6);
+        cam(41.9, 3900, 3250, 1.2, 1.1, "power3.inOut");
+        tl.to("#spf", { opacity: 1, y: 0, duration: 0.6, ease: "expo.out" }, 42.2);
+        const spf = { v: 0 };
+        const spfEl = $("#spf-num");
+        tl.fromTo(spf, { v: 0 }, { v: 30, duration: 1.0, ease: "power2.out", onUpdate: () => (spfEl.textContent = Math.round(spf.v)) }, 42.4);
+        tl.to(["#week", "#week-label"], { opacity: 1, y: 0, duration: 0.5, ease: "expo.out", stagger: 0.1 }, 43.5);
+        $$(".day .fill").forEach((f, i) => {
+          tl.to(f, { scale: 1, duration: 0.3, ease: "back.out(2.6)" }, 43.85 + i * 0.2);
+        });
+        // even when it's cloudy
+        cam(45.1, 4560, 3200, 1.05, 1.0, "power3.inOut");
+        tl.to("#shield", { scale: 1, duration: 0.6, ease: "back.out(2)" }, 45.0);
+        tl.to("#cloud", { x: 0, opacity: 1, duration: 1.0, ease: "power3.out" }, 45.3);
+        tl.to("#cloud-chip", { opacity: 1, scale: 1, duration: 0.45, ease: "back.out(2.2)" }, 45.6);
+        tl.to(".uv", { strokeDashoffset: 0, duration: 0.6, ease: "power2.in", stagger: 0.12 }, 45.6);
+        tl.to(".bounce", { strokeDashoffset: 0, duration: 0.4, ease: "power2.out", stagger: 0.12 }, 46.25);
+        tl.to("#shield", { scale: 1.08, duration: 0.15, ease: "power2.out", repeat: 1, yoyo: true }, 46.2);
+        // 80%
+        cam(47.3, 4000, 3650, 1.3, 1.1, "power3.inOut");
+        tl.to("#ring", { opacity: 1, y: 0, duration: 0.6, ease: "expo.out" }, 47.4);
+        tl.to("#ring-arc", { strokeDashoffset: 678.6 * 0.2, duration: 1.8, ease: "power3.out" }, 47.7);
+        const pct = { v: 0 };
+        const pctEl = $("#pct");
+        tl.fromTo(pct, { v: 0 }, { v: 80, duration: 1.8, ease: "power3.out", immediateRender: false, onUpdate: () => (pctEl.textContent = Math.round(pct.v) + "%") }, 47.7);
+        tl.to("#ring", { scale: 1.05, duration: 0.2, ease: "power2.out", repeat: 1, yoyo: true }, 49.5);
+
+        // ----- tidy stations once the camera has left them -----
+        tl.to("#st-menu", { opacity: 0, duration: 0.5 }, 10.4);
+        tl.to("#st-layers", { opacity: 0, duration: 0.5 }, 25.3);
+        tl.to(["#cl-am", "#cl-pm", "#cl-head"], { opacity: 0, duration: 0.4 }, 29.3);
+        tl.to("#st-cleanse", { opacity: 0, duration: 0.5 }, 32.5);
+        tl.to("#mo-jar", { opacity: 0, duration: 0.4 }, 36.5);
+        tl.to("#st-moist", { opacity: 0, duration: 0.5 }, 39.2);
+        tl.to(["#su-head", "#su-tube"], { opacity: 0, duration: 0.4 }, 45.2);
+        tl.to("#spf", { opacity: 0, duration: 0.4 }, 47.3);
+
+        // ================= OUTRO =================
+        // pull way back: the whole journey on one map
+        tl.to(["#st-menu", "#st-layers", "#st-cleanse", "#st-moist", "#mo-jar", "#su-head", "#su-tube", "#spf", "#cl-am", "#cl-pm", "#cl-head"], { opacity: 1, duration: 0.5 }, 50.45);
+        cam(50.45, 2650, 2050, 0.27, 1.5, "power3.inOut", 1290, 560);
+        tl.to("#viewport", { opacity: 0, duration: 0.6, ease: "power2.inOut" }, 51.95);
+        tl.to("#endcard", { opacity: 1, duration: 0.01 }, 51.85);
+        tl.to("#ec-eyebrow", { opacity: 1, y: 0, duration: 0.5, ease: "expo.out" }, 51.9);
+        tl.to("#ec1", { opacity: 1, y: 0, scale: 1, duration: 0.55, ease: "back.out(2)" }, 52.15);
+        tl.to("#ec2", { opacity: 1, y: 0, scale: 1, duration: 0.55, ease: "back.out(2)" }, 52.85);
+        tl.to("#ec3", { opacity: 1, y: 0, scale: 1, duration: 0.55, ease: "back.out(2)" }, 53.6);
+        tl.to("#ec-thanks", { opacity: 1, y: 0, duration: 0.8, ease: "expo.out" }, 54.6);
+        tl.to("#ec-sign", { opacity: 1, y: 0, duration: 0.6, ease: "expo.out" }, 55.3);
+        tl.to("#progress", { opacity: 0, y: -20, duration: 0.4 }, 51.5);
+        // final push toward her
+        tl.to("#doc-cam", { scale: 1.06, duration: 6, ease: "sine.inOut" }, 52.5);
+        // fade to cream at the very end
+        tl.to(["#viewport", "#endcard", "#brand", "#caption"], { opacity: 0, duration: 0.6, ease: "power2.in" }, 58.3);
+        tl.to("#doc", { opacity: 0, duration: 0.6, ease: "power2.in" }, 58.3);
+
+        // ================= CAPTIONS =================
+        capEls.forEach(([id, el]) => {
+          const ln = TIM.lines[id];
+          const w = el.getBoundingClientRect().width;
+          gsap.set(el, { x: (1000 - w) / 2 });
+          tl.to(el, { opacity: 1, y: 0, duration: 0.25, ease: "power2.out" }, ln.start);
+          tl.to(el, { opacity: 0, y: -10, duration: 0.2, ease: "power2.in" }, ln.start + ln.dur + 0.15);
+        });
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>
