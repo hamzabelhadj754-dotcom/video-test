@@ -364,8 +364,8 @@
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="main" data-start="0" data-duration="58.14" data-width="1080" data-height="1920">
-      <div id="bg" class="clip" data-start="0" data-duration="58.14" data-track-index="0">
+    <div id="root" data-composition-id="main" data-start="0" data-duration="62.23" data-width="1080" data-height="1920">
+      <div id="bg" class="clip" data-start="0" data-duration="62.23" data-track-index="0">
         <div id="parallax" class="abs" style="left: 0; top: 0; width: 1080px; height: 1920px">
           <div id="dots"></div>
           <div id="floaters"></div>
@@ -373,7 +373,7 @@
       </div>
 
       <!-- ============ WORLD ============ -->
-      <div id="viewport" class="clip" data-start="0" data-duration="58.14" data-track-index="1" data-layout-allow-overlap data-layout-allow-occlusion>
+      <div id="viewport" class="clip" data-start="0" data-duration="62.23" data-track-index="1" data-layout-allow-overlap data-layout-allow-occlusion>
         <div id="world">
           <svg class="abs" style="left: 0; top: 0" width="4600" height="4800" viewBox="0 0 4600 4800">
             <path id="trail" d="M 540 1060 L 540 1260 M 1060 1950 L 1380 1950 M 2420 1950 L 2680 1950 M 3200 2640 L 3200 2880" fill="none" stroke="#e3d5bf" stroke-width="12" stroke-linecap="round" stroke-dasharray="2 28" />
@@ -576,7 +576,7 @@
       </div>
 
       <!-- ============ DOCTOR ============ -->
-      <div id="docl" class="clip" data-start="0" data-duration="58.14" data-track-index="2">
+      <div id="docl" class="clip" data-start="0" data-duration="62.23" data-track-index="2">
         <div id="doc-cam">
           <div id="doc-move" class="abs" style="left: 0; top: 0; width: 1080px; height: 1920px">
             <div id="doc">
@@ -601,7 +601,7 @@
       </div>
 
       <!-- ============ OVERLAY ============ -->
-      <div id="overlay" class="clip" data-start="0" data-duration="58.14" data-track-index="3" data-layout-allow-overlap>
+      <div id="overlay" class="clip" data-start="0" data-duration="62.23" data-track-index="3" data-layout-allow-overlap>
         <div id="brand">
           <img src="assets/obelcha-mark-black.png" alt="" style="width: 62px; height: 44px" />
           <span class="mono" style="font-size: 24px; letter-spacing: 0.08em">@obelcha</span>
@@ -640,7 +640,7 @@
         <div id="subs"></div>
       </div>
 
-      <audio id="soundtrack" src="assets/soundtrack.wav" data-start="0" data-duration="58.14" data-track-index="4"></audio>
+      <audio id="soundtrack" src="assets/soundtrack.wav" data-start="0" data-duration="62.23" data-track-index="4"></audio>
 
       <svg width="0" height="0" style="position: absolute">
         <defs>
@@ -879,11 +879,11 @@
           }
           tl.to("#head", { rotation: 0, y: 0, duration: 0.4, ease: "sine.inOut" }, ln.start + ln.dur);
         });
-        for (let t = 2.2; t < 58; t += 3.1 + ((t * 7) % 1.3)) {
+        for (let t = 2.2; t < 61.5; t += 3.1 + ((t * 7) % 1.3)) {
           tl.to(".eye", { scaleY: 0.08, duration: 0.07, ease: "power2.in" }, t);
           tl.to(".eye", { scaleY: 1, duration: 0.1, ease: "power2.out" }, t + 0.08);
         }
-        tl.fromTo("#doc", { y: 0 }, { y: -8, duration: 1.4, ease: "sine.inOut", repeat: 40, yoyo: true }, 0);
+        tl.fromTo("#doc", { y: 0 }, { y: -8, duration: 1.4, ease: "sine.inOut", repeat: 44, yoyo: true }, 0);
 
         // ================= HOOK + MENU =================
         // face close-up first, then pull back to her presenting spot
@@ -978,7 +978,7 @@
         });
         arm("#arm-l", A("l08"), 32);
         arm("#arm-l", E("l08", 0.2), 0, 0.45, "power2.inOut");
-        docHide(A("l09", 0.4));
+        docHide(A("l09", -0.15));
         tl.to("#cl-head", { opacity: 0, duration: 0.35 }, A("l09", 0.3));
         cam(A("l09", 0.3), 1900, 1950, 1.0, 1.1, "power3.inOut", 900);
         tl.to("#cl-am", { opacity: 1, scale: 1, duration: 0.45, ease: "back.out(2.4)" }, W("l09", 5));
@@ -1020,7 +1020,7 @@
         brickEls.forEach((b, i) => {
           if (i < 6) tl.to(b, { opacity: 1, y: 0, duration: 0.35, ease: "back.out(2)" }, A("l11", 0.1 + i * 0.04));
         });
-        docHide(A("l11", 0.3));
+        docHide(A("l11", -0.15));
         tl.to(["#mo-head", "#mo-jar"], { opacity: 0, duration: 0.35 }, A("l11", 0.2));
         cam(A("l11", 0.2), 3400, 1960, 1.15, 1.0, "power3.inOut", 900);
         dropEls.forEach((d, i) => {
@@ -1061,7 +1061,7 @@
         arm("#arm-r", W("l12", 4, -0.2), -104, 0.25, "sine.inOut");
         arm("#arm-r", W("l12", 4, 0.05), -118, 0.25, "sine.inOut");
         arm("#arm-r", E("l12", 0.1), -20, 0.4, "power2.inOut");
-        docHide(A("l13", 0.3));
+        docHide(A("l13", -0.2));
         tl.to(["#su-head", "#stamp"], { opacity: 0, duration: 0.35 }, A("l13", 0.15));
         cam(A("l13", 0.15), 3240, 3520, 1.1, 1.0, "power3.inOut", 760);
         tl.to("#spf", { opacity: 1, y: 0, duration: 0.5, ease: "expo.out" }, W("l13", 1, -0.2));

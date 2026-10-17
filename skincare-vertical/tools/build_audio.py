@@ -13,6 +13,11 @@ import soundfile as sf
 SR = 44100
 TEXT = dict(l.rstrip("\n").split("\t", 1) for l in open("tools/lines.tsv", encoding="utf-8"))
 ORDER = list(TEXT)
+# word times for a recorded voice-over (written by tools/align_voice.py)
+try:
+    REC_WORDS = json.load(open("assets/words.json", encoding="utf-8"))
+except FileNotFoundError:
+    REC_WORDS = None
 # extra breathing room before these lines (camera travels to a new station)
 SECTION = {"l03": 0.85, "l08": 0.9, "l10": 0.9, "l12": 0.9, "l15": 1.0, "l16": 0.5}
 rng = np.random.default_rng(3)
@@ -94,7 +99,8 @@ for k, y in clips.items():
     v[db < -45] = 0
     v = np.convolve(v, [0.2, 0.6, 0.2], mode="same")
     lines[k]["v"] = [round(float(x), 2) for x in v]
-    lines[k]["words"] = [[w, round(at + a, 3), round(at + b, 3)] for w, a, b in word_timings(y, TEXT[k])]
+    wt = REC_WORDS[k] if REC_WORDS else word_timings(y, TEXT[k])
+    lines[k]["words"] = [[w, round(at + a, 3), round(at + b, 3)] for w, a, b in wt]
 
 
 def A(k, off=0.0):
