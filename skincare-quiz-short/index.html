@@ -1,0 +1,638 @@
+<!doctype html>
+<html lang="es" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="assets/gsap.min.js"></script>
+    <script src="assets/timing.js"></script>
+    <style>
+      :root {
+        --ink: #111318;
+        --gray: #6b7079;
+        --line: #ececec;
+        --red: #e5484d;
+        --red-ink: #c9343a;
+        --green: #1fa463;
+        --green-ink: #13804a;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #fff;
+      }
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: #fff;
+        font-family: "Montserrat", sans-serif;
+        color: var(--ink);
+      }
+      .clip {
+        position: absolute;
+        inset: 0;
+      }
+      .abs {
+        position: absolute;
+      }
+      .mono {
+        font-family: "IBM Plex Mono", monospace;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+      .center {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* camera */
+      #cam {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 1080px;
+        height: 1920px;
+        transform-origin: 540px 640px;
+      }
+      #world {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 8000px;
+        height: 1920px;
+      }
+      .panel {
+        position: absolute;
+        top: 0;
+        width: 1080px;
+        height: 1920px;
+      }
+      .card {
+        position: absolute;
+        left: 70px;
+        top: 330px;
+        width: 940px;
+        height: 520px;
+        background: #fff;
+        border: 3px solid var(--line);
+        border-radius: 48px;
+        box-shadow: 0 30px 70px rgba(17, 19, 24, 0.08);
+      }
+      .q-label {
+        position: absolute;
+        left: 0;
+        top: 54px;
+        width: 940px;
+        text-align: center;
+        font-size: 26px;
+        color: var(--gray);
+      }
+      .q-text {
+        position: absolute;
+        left: 60px;
+        top: 120px;
+        width: 820px;
+        height: 340px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        font-weight: 900;
+        font-size: 70px;
+        line-height: 1.08;
+        letter-spacing: -0.03em;
+      }
+      .verdict {
+        position: absolute;
+        left: 0;
+        top: 96px;
+        width: 940px;
+        text-align: center;
+        font-weight: 900;
+        font-size: 150px;
+        line-height: 1;
+        letter-spacing: -0.04em;
+      }
+      .explain {
+        position: absolute;
+        left: 70px;
+        top: 290px;
+        width: 800px;
+        text-align: center;
+        font-weight: 700;
+        font-size: 46px;
+        line-height: 1.22;
+        color: var(--ink);
+      }
+      .btns {
+        position: absolute;
+        left: 70px;
+        top: 900px;
+        width: 940px;
+        height: 124px;
+      }
+      .btn {
+        position: absolute;
+        top: 0;
+        width: 400px;
+        height: 124px;
+        border-radius: 999px;
+        font-weight: 900;
+        font-size: 52px;
+        letter-spacing: 0.02em;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+      }
+      .btn .fill {
+        position: absolute;
+        inset: 0;
+        border-radius: 999px;
+      }
+      .btn span {
+        position: relative;
+      }
+      .btn.m {
+        left: 0;
+        border: 5px solid var(--red);
+        color: var(--red-ink);
+      }
+      .btn.v {
+        right: 0;
+        border: 5px solid var(--green);
+        color: var(--green-ink);
+      }
+      .btn.m .fill {
+        background: var(--red);
+      }
+      .btn.v .fill {
+        background: var(--green);
+      }
+      .timer {
+        position: absolute;
+        left: 470px;
+        top: 900px;
+        width: 140px;
+        height: 124px;
+      }
+
+      /* doctor */
+      #doc-cam {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 1080px;
+        height: 1920px;
+        transform-origin: 0 0;
+      }
+      #doc {
+        position: absolute;
+        left: -101px;
+        top: 1057px;
+        width: 1300px;
+        height: 1300px;
+      }
+      #doc img,
+      #doc svg.layer {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+      }
+      #arm-l {
+        transform-origin: 43.16% 35.64%;
+      }
+      #arm-r {
+        transform-origin: 54.3% 35.16%;
+      }
+      #head {
+        position: absolute;
+        inset: 0;
+        transform-origin: 48.83% 28.52%;
+      }
+      #doc img.eye {
+        width: 3.125%;
+        height: 5.078%;
+        transform-origin: 50% 50%;
+      }
+      #doc img#eye-l {
+        left: 43.457%;
+        top: 17.383%;
+      }
+      #doc img#eye-r {
+        left: 50.391%;
+        top: 17.48%;
+      }
+
+      /* subtitles */
+      #subs {
+        position: absolute;
+        left: 90px;
+        top: 1500px;
+        width: 900px;
+        height: 120px;
+      }
+      .sub {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 900px;
+        display: flex;
+        justify-content: center;
+      }
+      .sub .in {
+        padding: 16px 30px;
+        border-radius: 24px;
+        background: rgba(255, 255, 255, 0.96);
+        box-shadow: 0 12px 34px rgba(17, 19, 24, 0.14);
+        font-weight: 800;
+        font-size: 46px;
+        letter-spacing: -0.01em;
+        white-space: nowrap;
+        color: #858a93;
+      }
+      .sub .w {
+        display: inline-block;
+        margin: 0 6px;
+      }
+
+      #top {
+        position: absolute;
+        left: 70px;
+        top: 220px;
+        width: 940px;
+        height: 60px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="43.22" data-width="1080" data-height="1920">
+      <div id="bg" class="clip" data-start="0" data-duration="43.22" data-track-index="0" style="background: #fff"></div>
+
+      <!-- ============ WORLD (camera) ============ -->
+      <div id="stage" class="clip" data-start="0" data-duration="43.22" data-track-index="1" data-layout-allow-overlap data-layout-allow-occlusion>
+        <div id="cam">
+          <div id="world">
+            <!-- panel 0: hook + intro -->
+            <div class="panel" id="p0" style="left: 0">
+              <div id="hook" class="abs" style="left: 0; top: 300px; width: 1080px; text-align: center">
+                <div id="hk1" style="font-weight: 900; font-size: 230px; line-height: 0.95; letter-spacing: -0.05em; color: var(--red-ink)">90%</div>
+                <div id="hk2" style="font-weight: 900; font-size: 88px; line-height: 1.05; letter-spacing: -0.035em; margin-top: 8px">falla este test de piel</div>
+              </div>
+              <div id="hk-btns" class="btns" style="top: 700px" data-layout-allow-occlusion>
+                <div class="btn m" id="hb-m"><div class="fill"></div><span data-layout-allow-occlusion>MITO</span></div>
+                <div class="btn v" id="hb-v"><div class="fill"></div><span data-layout-allow-occlusion>VERDAD</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ DOCTOR ============ -->
+      <div id="docl" class="clip" data-start="0" data-duration="43.22" data-track-index="2">
+        <div id="doc-cam">
+          <div id="doc-move" class="abs" style="left: 0; top: 0; width: 1080px; height: 1920px">
+            <div id="doc">
+              <img id="arm-l" src="assets/doctor-arm-l.png" alt="" data-layout-allow-occlusion />
+              <img id="arm-r" src="assets/doctor-arm-r.png" alt="" data-layout-allow-occlusion />
+              <img id="body" src="assets/doctor-body.png" alt="" />
+              <div id="head">
+                <img src="assets/doctor-head.png" alt="" />
+                <img id="eye-l" class="eye" src="assets/doctor-eye-l.png" alt="" />
+                <img id="eye-r" class="eye" src="assets/doctor-eye-r.png" alt="" />
+                <svg class="layer" viewBox="0 0 1024 1024">
+                  <g transform="translate(496 244)">
+                    <path id="mouth-open" d="M -21 1 Q 0 14 21 1 Q 18 30 0 31 Q -18 30 -21 1 Z" fill="#6b2427" stroke="#3b2116" stroke-width="2.6" stroke-linejoin="round" />
+                    <path d="M -24 -2 Q 0 18 24 -2" fill="none" stroke="#3b2116" stroke-width="3.6" stroke-linecap="round" />
+                  </g>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ HUD + SUBTITLES ============ -->
+      <div id="hud" class="clip" data-start="0" data-duration="43.22" data-track-index="3">
+        <div id="top">
+          <div class="abs" style="left: 0; top: 4px; display: flex; align-items: center; gap: 12px">
+            <img src="assets/obelcha-mark-black.png" alt="" style="width: 62px; height: 44px" />
+            <span class="mono" style="font-size: 24px; letter-spacing: 0.08em">@obelcha</span>
+          </div>
+          <div id="prog" class="abs" style="right: 0; top: 0; display: flex; gap: 10px"></div>
+        </div>
+        <div id="subs"></div>
+      </div>
+
+      <audio id="soundtrack" src="assets/soundtrack.wav" data-start="0" data-duration="43.22" data-track-index="4"></audio>
+    </div>
+
+    <script>
+      (function () {
+        const Q = window.QUIZ;
+        const L = Q.lines;
+        const $ = (s) => document.querySelector(s);
+        const W = (id, i) => L[id].words[i][1];
+        const wEnd = (id) => L[id].words[L[id].words.length - 1][2];
+        function rng(seed) {
+          let a = seed >>> 0;
+          return function () {
+            a = (a + 0x6d2b79f5) >>> 0;
+            let t = a;
+            t = Math.imul(t ^ (t >>> 15), t | 1);
+            t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+            return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+          };
+        }
+
+        // ---------- build question panels ----------
+        const QS = [
+          { id: "q1", a: "a1", ok: "m", q: "Si tienes piel grasa, no necesitas crema hidratante", v: "MITO", ex: "La piel grasa también necesita hidratación." },
+          { id: "q2", a: "a2", ok: "v", q: "Debes usar protector solar aunque estés en casa", v: "VERDAD", ex: "Los rayos UVA atraviesan las ventanas." },
+          { id: "q3", a: "a3", ok: "m", q: "La pasta de dientes ayuda a quitar los granos", v: "MITO", ex: "Irrita y reseca. Mejor: ácido salicílico o peróxido de benzoilo." },
+        ];
+        const world = $("#world");
+        const PX = (i) => i * 1300;
+        QS.forEach((q, i) => {
+          const p = document.createElement("div");
+          p.className = "panel";
+          p.id = "p" + (i + 1);
+          p.style.left = PX(i + 1) + "px";
+          const okCol = q.ok === "m" ? "var(--red-ink)" : "var(--green-ink)";
+          p.innerHTML =
+            '<div class="card"><div class="q-label mono">Pregunta ' + (i + 1) + " / 3</div>" +
+            '<div class="q-text">' + q.q + "</div>" +
+            '<div class="verdict" style="color:' + okCol + '">' + q.v + "</div>" +
+            '<div class="explain">' + q.ex + "</div></div>" +
+            '<div class="btns" data-layout-allow-occlusion><div class="btn m"><div class="fill"></div><span data-layout-allow-occlusion>MITO</span></div>' +
+            '<div class="btn v"><div class="fill"></div><span data-layout-allow-occlusion>VERDAD</span></div></div>' +
+            '<svg class="timer" viewBox="0 0 140 124" width="140" height="124">' +
+            '<circle cx="70" cy="62" r="52" fill="#fff" stroke="#ececec" stroke-width="9"/>' +
+            '<circle class="ring" cx="70" cy="62" r="52" fill="none" stroke="#111318" stroke-width="9" stroke-linecap="round" stroke-dasharray="326.7" stroke-dashoffset="0" transform="rotate(-90 70 62)"/>' +
+            '<text class="n3" x="70" y="80" text-anchor="middle" font-family="Montserrat" font-weight="900" font-size="52" fill="#111318">3</text>' +
+            '<text class="n2" x="70" y="80" text-anchor="middle" font-family="Montserrat" font-weight="900" font-size="52" fill="#111318">2</text>' +
+            '<text class="n1" x="70" y="80" text-anchor="middle" font-family="Montserrat" font-weight="900" font-size="52" fill="#111318">1</text></svg>';
+          world.appendChild(p);
+        });
+        // outro panel
+        const po = document.createElement("div");
+        po.className = "panel";
+        po.id = "p5";
+        po.style.left = PX(4) + "px";
+        po.innerHTML =
+          '<div id="o-ask" class="abs" style="left:0;top:340px;width:1080px;text-align:center">' +
+          '<div style="font-weight:900;font-size:104px;line-height:1;letter-spacing:-0.04em">¿Cuántas<br>acertaste?</div>' +
+          '<div id="o-row" style="display:flex;justify-content:center;gap:22px;margin-top:56px"></div>' +
+          '<div class="mono" id="o-c" style="font-size:28px;color:var(--gray);margin-top:44px">Escríbelo en comentarios</div></div>' +
+          '<div id="o-brand" class="abs" style="left:0;top:330px;width:1080px;height:640px">' +
+          '<img id="o-mark" src="assets/obelcha-mark-black.png" alt="" style="position:absolute;left:300px;top:20px;width:480px;height:344px">' +
+          '<div id="o-word-w" style="position:absolute;left:300px;top:400px;width:480px;height:86px;overflow:hidden">' +
+          '<img src="assets/obelcha-word-black.png" alt="" style="position:absolute;left:0;top:0;width:480px;height:86px"></div>' +
+          '<div id="o-follow" class="center" style="position:absolute;left:330px;top:540px;width:420px;height:104px;border-radius:999px;background:var(--ink);color:#fff;font-weight:900;font-size:42px">' +
+          '<span id="of-a" style="position:absolute">Seguir</span><span id="of-b" style="position:absolute">Siguiendo ✓</span></div></div>';
+        world.appendChild(po);
+        const row = po.querySelector("#o-row");
+        for (let i = 0; i <= 3; i++) {
+          const c = document.createElement("div");
+          c.className = "center oc";
+          c.style.cssText = "width:120px;height:120px;border-radius:50%;border:5px solid #111318;font-weight:900;font-size:56px";
+          c.textContent = i;
+          row.appendChild(c);
+        }
+        // progress dots
+        const prog = $("#prog");
+        for (let i = 0; i < 3; i++) {
+          const d = document.createElement("div");
+          d.className = "pd";
+          d.style.cssText = "width:46px;height:12px;border-radius:6px;background:#ececec;margin-top:20px;position:relative;overflow:hidden";
+          d.innerHTML = '<div style="position:absolute;inset:0;background:#111318;transform-origin:0 50%"></div>';
+          prog.appendChild(d);
+        }
+
+        // subtitles: short chunks, karaoke fill
+        const subs = $("#subs");
+        const chunks = [];
+        Object.keys(L).forEach((id) => {
+          const ws = L[id].words;
+          let cur = [];
+          ws.forEach((w, i) => {
+            cur.push(w);
+            const len = cur.map((x) => x[0]).join(" ").length;
+            if (/[,.:;!?]$/.test(w[0]) || len > 22 || i === ws.length - 1) {
+              chunks.push(cur);
+              cur = [];
+            }
+          });
+        });
+        const chunkEls = chunks.map((c) => {
+          const d = document.createElement("div");
+          d.className = "sub";
+          const inner = document.createElement("div");
+          inner.className = "in";
+          c.forEach((w) => {
+            const s = document.createElement("span");
+            s.className = "w";
+            s.textContent = w[0];
+            inner.appendChild(s);
+          });
+          d.appendChild(inner);
+          subs.appendChild(d);
+          return d;
+        });
+
+        // ---------- timeline ----------
+        const tl = gsap.timeline({ paused: true });
+        gsap.set("#mouth-open", { scaleY: 0, transformOrigin: "50% 0%" });
+        gsap.set(".sub", { opacity: 0, y: 14 });
+        gsap.set("#world", { x: 0 });
+        gsap.set("#cam", { scale: 1 });
+
+        // camera: slide to panel i with a zoom dip
+        function camTo(i, at, dur) {
+          dur = dur || 0.9;
+          tl.to("#world", { x: -PX(i), duration: dur, ease: "expo.inOut" }, at);
+          tl.to("#cam", { scale: 0.86, duration: dur / 2, ease: "power2.in" }, at);
+          tl.to("#cam", { scale: 1, duration: dur / 2, ease: "power2.out" }, at + dur / 2);
+          tl.to("#doc-move", { x: -40, duration: dur / 2, ease: "power2.in" }, at);
+          tl.to("#doc-move", { x: 0, duration: dur / 2, ease: "back.out(1.4)" }, at + dur / 2);
+        }
+        function punch(at, s) {
+          tl.to("#cam", { scale: s || 1.05, duration: 0.18, ease: "power2.out" }, at);
+          tl.to("#cam", { scale: 1, duration: 0.7, ease: "power3.out" }, at + 0.18);
+        }
+        function arm(sel, at, rot, dur, ease) {
+          tl.to(sel, { rotation: rot, duration: dur || 0.45, ease: ease || "back.out(1.5)" }, at);
+        }
+
+        // doctor: mouth from the voice, head motion, blinks, idle
+        Object.keys(L).forEach((id, li) => {
+          const ln = L[id];
+          const step = 1 / Q.fps;
+          let prev = -1;
+          ln.v.forEach((v, i) => {
+            const q = Math.round(v * 10) / 10;
+            if (q === prev) return;
+            prev = q;
+            tl.to("#mouth-open", { scaleY: q, duration: step, ease: "none" }, ln.start + i * step);
+          });
+          tl.to("#mouth-open", { scaleY: 0, duration: 0.08, ease: "none" }, ln.start + ln.dur);
+          const hr = rng(70 + li);
+          let t = ln.start;
+          while (t < ln.start + ln.dur - 0.3) {
+            const d = 0.4 + hr() * 0.3;
+            tl.to("#head", { rotation: (hr() - 0.5) * 7, y: (hr() - 0.5) * 7, duration: d, ease: "sine.inOut" }, t);
+            t += d;
+          }
+          tl.to("#head", { rotation: 0, y: 0, duration: 0.4, ease: "sine.inOut" }, ln.start + ln.dur);
+        });
+        [2.4, 6.2, 11.4, 17.4, 22.9, 29.6, 34.6, 41.8, 46.0, 53.1, 58.0, 62.6].forEach((t) => {
+          tl.to(".eye", { scaleY: 0.08, duration: 0.07, ease: "power2.in" }, t);
+          tl.to(".eye", { scaleY: 1, duration: 0.1, ease: "power2.out" }, t + 0.08);
+        });
+        tl.fromTo("#doc", { y: 0 }, { y: -8, duration: 1.4, ease: "sine.inOut", repeat: 45, yoyo: true }, 0);
+
+        // ================= HOOK =================
+        // everything readable on frame 0: the claim and the quiz buttons
+        const FX = 534, FY = 1324;
+        const IS = L.q1.start - 0.45;
+        tl.fromTo("#doc-cam", { scale: 1.5, x: 540 - FX * 1.5, y: 1340 - FY * 1.5 }, { scale: 1.42, x: 540 - FX * 1.42, y: 1345 - FY * 1.42, duration: IS - 0.3, ease: "sine.inOut" }, 0);
+        tl.to("#doc-cam", { scale: 1, x: 0, y: 0, duration: 0.9, ease: "expo.inOut" }, IS - 0.3);
+        tl.fromTo("#hk1", { scale: 1.25 }, { scale: 1, duration: 0.5, ease: "back.out(2)" }, 0);
+        tl.fromTo("#hk-btns", { y: 20 }, { y: 0, duration: 0.5, ease: "back.out(2)" }, 0);
+        punch(W("hook", 1), 1.04);
+        punch(W("hook", 5), 1.03);
+        const hbm = $("#hb-m"), hbv = $("#hb-v");
+        gsap.set(["#hb-m .fill", "#hb-v .fill"], { scaleX: 0, transformOrigin: "0% 50%" });
+        tl.to(hbm, { scale: 1.06, duration: 0.25, ease: "sine.inOut", repeat: 1, yoyo: true }, 1.0);
+        tl.to(hbv, { scale: 1.06, duration: 0.25, ease: "sine.inOut", repeat: 1, yoyo: true }, 1.5);
+        tl.to("#hb-m .fill", { scaleX: 1, duration: 0.25, ease: "expo.out" }, W("mv", 0) - 0.05);
+        tl.to(hbm, { color: "#ffffff", duration: 0.1 }, W("mv", 0));
+        tl.to("#hb-m .fill", { scaleX: 0, duration: 0.2 }, W("mv", 2) - 0.05);
+        tl.to(hbm, { color: "#c9343a", duration: 0.1 }, W("mv", 2) - 0.05);
+        tl.to("#hb-v .fill", { scaleX: 1, duration: 0.25, ease: "expo.out" }, W("mv", 2) - 0.05);
+        tl.to(hbv, { color: "#ffffff", duration: 0.1 }, W("mv", 2));
+        tl.to(["#hook", "#hk-btns"], { opacity: 0, duration: 0.3, ease: "power2.in" }, IS);
+        arm("#arm-r", 0.3, -108);
+        arm("#arm-r", IS, -20, 0.4, "power2.inOut");
+
+        // ================= QUESTIONS =================
+        const pd = Array.from(document.querySelectorAll(".pd > div"));
+        gsap.set(pd, { scaleX: 0 });
+        QS.forEach((q, i) => {
+          const p = $("#p" + (i + 1));
+          const ql = L[q.id], al = L[q.a];
+          const cd = Q.counts[i];
+          const card = p.querySelector(".card");
+          const qt = p.querySelector(".q-text");
+          const vd = p.querySelector(".verdict");
+          const ex = p.querySelector(".explain");
+          const bm = p.querySelector(".btn.m"), bv = p.querySelector(".btn.v");
+          const good = q.ok === "m" ? bm : bv, bad = q.ok === "m" ? bv : bm;
+          const timer = p.querySelector(".timer");
+          gsap.set([vd, ex], { opacity: 0 });
+          gsap.set(p.querySelectorAll(".fill"), { scaleX: 0, transformOrigin: "0% 50%" });
+          gsap.set(timer, { scale: 0, transformOrigin: "50% 50%" });
+          gsap.set(p.querySelectorAll(".n2, .n1"), { opacity: 0 });
+
+          camTo(i + 1, ql.start - 0.75);
+          tl.to(pd[i], { scaleX: 1, duration: 0.4, ease: "expo.out" }, ql.start);
+          tl.fromTo(qt, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.45, ease: "expo.out", immediateRender: false }, ql.start - 0.1);
+          tl.fromTo([bm, bv], { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.4, ease: "back.out(1.8)", stagger: 0.08, immediateRender: false }, ql.start + 0.3);
+          arm("#arm-r", ql.start, -108);
+          arm("#arm-r", ql.start + ql.dur - 0.2, -20, 0.5, "power2.inOut");
+
+          // countdown: viewers answer
+          tl.to(timer, { scale: 1, duration: 0.3, ease: "back.out(2.4)" }, cd.start);
+          tl.fromTo(p.querySelector(".ring"), { strokeDashoffset: 0 }, { strokeDashoffset: 326.7, duration: Q.count, ease: "none", immediateRender: false }, cd.start);
+          const step = Q.count / 3;
+          tl.set(p.querySelector(".n3"), { opacity: 0 }, cd.start + step);
+          tl.set(p.querySelector(".n2"), { opacity: 1 }, cd.start + step);
+          tl.set(p.querySelector(".n2"), { opacity: 0 }, cd.start + 2 * step);
+          tl.set(p.querySelector(".n1"), { opacity: 1 }, cd.start + 2 * step);
+          [0, 1, 2].forEach((k) => {
+            tl.fromTo(timer, { scale: 1.12 }, { scale: 1, duration: 0.25, ease: "power2.out", immediateRender: false }, cd.start + 0.1 + k * step);
+          });
+          tl.to(bm, { x: -8, duration: 0.5, ease: "sine.inOut", repeat: 1, yoyo: true }, cd.start + 0.3);
+          tl.to(bv, { x: 8, duration: 0.5, ease: "sine.inOut", repeat: 1, yoyo: true }, cd.start + 0.8);
+          tl.to("#head", { rotation: 6, duration: 0.6, ease: "sine.inOut" }, cd.start + 0.1);
+          tl.to("#head", { rotation: -4, duration: 0.8, ease: "sine.inOut" }, cd.start + 0.9);
+          tl.to("#head", { rotation: 0, duration: 0.5, ease: "sine.inOut" }, cd.end - 0.4);
+          tl.to(timer, { scale: 0, duration: 0.2, ease: "back.in(2)" }, cd.end - 0.1);
+
+          // reveal
+          const r = al.start;
+          tl.to(good.querySelector(".fill"), { scaleX: 1, duration: 0.3, ease: "expo.out" }, r);
+          tl.to(good, { color: "#ffffff", duration: 0.15 }, r + 0.05);
+          tl.fromTo(good, { scale: 1 }, { scale: 1.08, duration: 0.15, ease: "power2.out", immediateRender: false }, r);
+          tl.to(good, { scale: 1, duration: 0.4, ease: "back.out(2)" }, r + 0.15);
+          tl.to(bad, { opacity: 0.25, duration: 0.3 }, r);
+          tl.to(qt, { opacity: 0, y: -30, duration: 0.25, ease: "power2.in" }, r);
+          tl.fromTo(vd, { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(2.2)", immediateRender: false }, r + 0.1);
+          tl.fromTo(ex, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.45, ease: "expo.out", immediateRender: false }, W(q.a, 1) - 0.05);
+          tl.to(card, { borderColor: q.ok === "m" ? "#e5484d" : "#1fa463", duration: 0.3 }, r);
+          punch(r, 1.06);
+          arm("#arm-l", r, 36);
+          arm("#arm-l", r + al.dur - 0.3, 0, 0.45, "power2.inOut");
+        });
+
+        // ================= OUTRO =================
+        const O = L.outro;
+        camTo(4, O.start - 0.75);
+        gsap.set("#o-brand", { opacity: 0 });
+        gsap.set(".oc", { scale: 0 });
+        gsap.set("#o-c", { opacity: 0 });
+        gsap.set("#of-b", { opacity: 0 });
+        tl.to("#prog", { opacity: 0, duration: 0.3 }, O.start - 0.6);
+        Array.from(document.querySelectorAll(".oc")).forEach((c, i) => {
+          tl.to(c, { scale: 1, duration: 0.3, ease: "back.out(2.6)" }, W("outro", 1) + i * 0.08);
+        });
+        tl.to(".oc", { backgroundColor: "#111318", color: "#ffffff", duration: 0.15, stagger: 0.12 }, W("outro", 2));
+        tl.to(".oc", { backgroundColor: "#ffffff", color: "#111318", duration: 0.15, stagger: 0.12 }, W("outro", 2) + 0.12);
+        tl.to("#o-c", { opacity: 1, duration: 0.3 }, W("outro", 2));
+        // brand
+        const ob = W("outro", 8);
+        tl.to("#o-ask", { opacity: 0, y: -40, duration: 0.3, ease: "power2.in" }, ob - 0.3);
+        tl.set("#o-brand", { opacity: 1 }, ob);
+        tl.fromTo("#o-mark", { scale: 0.4, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(2)", immediateRender: false }, W("outro", 10) - 0.2);
+        tl.fromTo("#o-word-w", { clipPath: "inset(0% 100% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 0.6, ease: "expo.out", immediateRender: false }, W("outro", 10) + 0.2);
+        punch(W("outro", 10), 1.05);
+        tl.fromTo("#o-follow", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.4, ease: "back.out(2)", immediateRender: false }, W("outro", 12));
+        const tap = W("outro", 16);
+        tl.to("#o-follow", { scale: 0.93, duration: 0.08 }, tap);
+        tl.to("#o-follow", { scale: 1, backgroundColor: "#1fa463", duration: 0.3, ease: "back.out(3)" }, tap + 0.08);
+        tl.set("#of-a", { opacity: 0 }, tap + 0.08);
+        tl.set("#of-b", { opacity: 1 }, tap + 0.08);
+        arm("#arm-r", O.start + 0.1, -128);
+        arm("#arm-r", O.start + 2.6, -30, 0.5, "power2.inOut");
+        arm("#arm-r", ob, -112, 0.4);
+        for (let i = 0; i < 12; i++) arm("#arm-r", ob + 0.4 + i * 0.3, i % 2 ? -112 : -96, 0.3, "sine.inOut");
+
+        // ================= SUBTITLES =================
+        chunks.forEach((c, k) => {
+          const el = chunkEls[k];
+          const next = chunks[k + 1];
+          const t0 = c[0][1];
+          const t1 = Math.min(c[c.length - 1][2] + 0.25, next ? next[0][1] - 0.02 : 999);
+          tl.to(el, { opacity: 1, y: 0, duration: 0.15, ease: "power2.out" }, t0 - 0.05);
+          tl.set(el, { opacity: 0 }, t1);
+          const spans = el.querySelectorAll(".w");
+          c.forEach((w, j) => tl.set(spans[j], { color: "#111318" }, w[1]));
+        });
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>
