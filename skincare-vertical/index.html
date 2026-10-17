@@ -364,8 +364,8 @@
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="main" data-start="0" data-duration="58.39" data-width="1080" data-height="1920">
-      <div id="bg" class="clip" data-start="0" data-duration="58.39" data-track-index="0">
+    <div id="root" data-composition-id="main" data-start="0" data-duration="58.14" data-width="1080" data-height="1920">
+      <div id="bg" class="clip" data-start="0" data-duration="58.14" data-track-index="0">
         <div id="parallax" class="abs" style="left: 0; top: 0; width: 1080px; height: 1920px">
           <div id="dots"></div>
           <div id="floaters"></div>
@@ -373,7 +373,7 @@
       </div>
 
       <!-- ============ WORLD ============ -->
-      <div id="viewport" class="clip" data-start="0" data-duration="58.39" data-track-index="1" data-layout-allow-overlap data-layout-allow-occlusion>
+      <div id="viewport" class="clip" data-start="0" data-duration="58.14" data-track-index="1" data-layout-allow-overlap data-layout-allow-occlusion>
         <div id="world">
           <svg class="abs" style="left: 0; top: 0" width="4600" height="4800" viewBox="0 0 4600 4800">
             <path id="trail" d="M 540 1060 L 540 1260 M 1060 1950 L 1380 1950 M 2420 1950 L 2680 1950 M 3200 2640 L 3200 2880" fill="none" stroke="#e3d5bf" stroke-width="12" stroke-linecap="round" stroke-dasharray="2 28" />
@@ -576,7 +576,7 @@
       </div>
 
       <!-- ============ DOCTOR ============ -->
-      <div id="docl" class="clip" data-start="0" data-duration="58.39" data-track-index="2">
+      <div id="docl" class="clip" data-start="0" data-duration="58.14" data-track-index="2">
         <div id="doc-cam">
           <div id="doc-move" class="abs" style="left: 0; top: 0; width: 1080px; height: 1920px">
             <div id="doc">
@@ -601,7 +601,7 @@
       </div>
 
       <!-- ============ OVERLAY ============ -->
-      <div id="overlay" class="clip" data-start="0" data-duration="58.39" data-track-index="3" data-layout-allow-overlap>
+      <div id="overlay" class="clip" data-start="0" data-duration="58.14" data-track-index="3" data-layout-allow-overlap>
         <div id="brand">
           <img src="assets/obelcha-mark-black.png" alt="" style="width: 62px; height: 44px" />
           <span class="mono" style="font-size: 24px; letter-spacing: 0.08em">@obelcha</span>
@@ -640,7 +640,7 @@
         <div id="subs"></div>
       </div>
 
-      <audio id="soundtrack" src="assets/soundtrack.wav" data-start="0" data-duration="58.39" data-track-index="4"></audio>
+      <audio id="soundtrack" src="assets/soundtrack.wav" data-start="0" data-duration="58.14" data-track-index="4"></audio>
 
       <svg width="0" height="0" style="position: absolute">
         <defs>
@@ -1089,10 +1089,11 @@
         tl.to("#ring", { scale: 1.04, duration: 0.2, ease: "power2.out", repeat: 1, yoyo: true }, W("l14", 6, 1.7));
 
         // ================= OUTRO =================
-        tl.to(["#st-menu", "#st-layers", "#st-cleanse", "#st-moist", "#ly-head", "#ly-chip", "#cl-head", "#cl-am", "#cl-pm", "#mo-head", "#mo-jar", "#su-head", "#stamp", "#spf", "#week", "#week-label", "#su-tube", "#sun-cluster", "#cloud-chip"], { opacity: 1, duration: 0.4 }, A("l15", -1.0));
-        cam(A("l15", -0.95), 2000, 2500, 0.27, 1.5, "power3.inOut", 900);
-        docShow(A("l15", -0.4));
-        tl.to("#viewport", { opacity: 0, duration: 0.6, ease: "power2.inOut" }, W("l15", 1, -0.4));
+        // clean exit: push into the ring while the scene irises closed onto the background
+        cam(A("l15", -1.0), 3200, 4620, 1.6, 1.0, "power2.in", 900);
+        tl.fromTo("#viewport", { clipPath: "circle(120% at 50% 47%)" }, { clipPath: "circle(0% at 50% 47%)", duration: 0.8, ease: "power3.inOut", immediateRender: false }, A("l15", -0.85));
+        tl.set("#viewport", { opacity: 0 }, A("l15", -0.04));
+        docShow(A("l15", -0.25));
         tl.to("#steps", { opacity: 0, duration: 0.3 }, A("l15", -0.5));
         tl.set("#end", { opacity: 1 }, W("l15", 0));
         gsap.set("#recap .eyebrow", { opacity: 0 });
