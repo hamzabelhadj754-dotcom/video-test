@@ -287,9 +287,10 @@
           <div id="world">
             <!-- panel 0: hook + intro -->
             <div class="panel" id="p0" style="left: 0">
-              <div id="hook" class="abs" style="left: 0; top: 330px; width: 1080px; text-align: center">
-                <div id="hk1" style="font-weight: 900; font-size: 210px; line-height: 0.95; letter-spacing: -0.05em; color: var(--red-ink)">90%</div>
-                <div id="hk2" style="font-weight: 900; font-size: 92px; line-height: 1.05; letter-spacing: -0.035em; margin-top: 10px">falla este test<br />de piel</div>
+              <div id="hook" class="abs" style="left: 0; top: 340px; width: 1080px; text-align: center">
+                <div id="hk0" class="mono" style="font-size: 30px; color: var(--gray)">Test de piel</div>
+                <div id="hk1" style="font-weight: 900; font-size: 150px; line-height: 0.95; letter-spacing: -0.05em; margin-top: 22px">¿Aciertas<br />las <span style="color: var(--red-ink)">4</span>?</div>
+                <div id="hk2" style="font-weight: 700; font-size: 52px; line-height: 1.1; margin-top: 26px; color: var(--gray)">La mayoría falla</div>
               </div>
               <div id="intro" class="abs" style="left: 0; top: 360px; width: 1080px; text-align: center">
                 <div class="mono" style="font-size: 28px; color: var(--gray)">Test de piel · 4 preguntas</div>
@@ -522,8 +523,11 @@
         tl.to("#doc-cam", { scale: 1, x: 0, y: 0, duration: 0.9, ease: "expo.inOut" }, 3.3);
         gsap.set("#hk1", { scale: 0.4, opacity: 0 });
         gsap.set("#hk2", { opacity: 0, y: 30 });
-        tl.to("#hk1", { scale: 1, opacity: 1, duration: 0.35, ease: "back.out(2.2)" }, 0.3);
-        tl.to("#hk2", { opacity: 1, y: 0, duration: 0.4, ease: "expo.out" }, W("hook", 5) - 0.1);
+        gsap.set("#hk0", { opacity: 0 });
+        tl.to("#hk0", { opacity: 1, duration: 0.3 }, 0.25);
+        tl.to("#hk2", { opacity: 1, y: 0, duration: 0.4, ease: "expo.out" }, W("hook", 1) - 0.05);
+        tl.to("#hk1", { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(2.2)" }, 0.15);
+        punch(W("hook", 9), 1.04);
         tl.to("#hook", { opacity: 0, y: -40, duration: 0.35, ease: "power2.in" }, 3.3);
 
         // ================= INTRO =================
