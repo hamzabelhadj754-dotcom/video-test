@@ -16,7 +16,7 @@ COUNT = 2.7  # seconds viewers get to answer
 
 # line bounds in the source recording (seconds), snapped to its pauses
 BOUNDS = {
-    "hook": (1.91, 4.78), "intro": (5.24, 10.02),
+    "hook": (0.04, 4.78), "intro": (5.24, 10.02),
     "q1": (10.56, 13.56), "a1": (14.03, 19.69),
     "q2": (20.13, 22.74), "a2": (23.04, 28.40),
     "q3": (28.81, 31.26), "a3": (31.57, 37.17),
