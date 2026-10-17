@@ -1,0 +1,11 @@
+hook	El 90% de la gente falla este test de piel. A ver si tú aciertas las cuatro.
+intro	Soy la doctora Skin. Yo te digo una frase, y tú adivinas: ¿mito o verdad?
+q1	Si tienes la piel grasa, no necesitas crema hidratante.
+a1	¡Mito! La piel grasa también necesita hidratación. Usa una crema ligera, sin aceites.
+q2	Debes usar protector solar aunque estés en casa.
+a2	¡Verdad! Los rayos UVA atraviesan las ventanas. Si te da la luz, protégete.
+q3	La pasta de dientes ayuda a quitar los granos.
+a3	¡Mito! Irrita y reseca tu piel. Mejor usa ácido salicílico o peróxido de benzoilo.
+q4	Dormir poco se nota en tu piel.
+a4	¡Verdad! Mientras duermes, tu piel se repara. Sin descanso, se ve apagada y con ojeras.
+outro	¿Cuántas acertaste? Escribe tu número en los comentarios. Y sigue a Obelcha para más secretos de una piel sana.
