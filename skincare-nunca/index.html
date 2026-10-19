@@ -579,6 +579,14 @@
           tl.set(sel, { clipPath: "none" }, at + 0.56);
         }
         gsap.set("#ban", { opacity: 0 });
+        ["#p1", "#p2", "#p3", "#p4"].forEach((id) => gsap.set(id + " .ln", { yPercent: 140 }));
+        gsap.set(".num", { opacity: 0, yPercent: 30 });
+        gsap.set(".tag", { clipPath: "inset(0% 100% 0% 0% round 999px)" });
+        $$(".disc").forEach((d) => {
+          const k = Array.from(d.children);
+          gsap.set(k[0], { scale: 0.6, opacity: 0, transformOrigin: "260px 260px" });
+          gsap.set(k.slice(1), { y: 26, opacity: 0 });
+        });
         gsap.set("#cam", { filter: "blur(0px)", x: 0 });
 
         // ambient depth: slow background drift (finite)
@@ -666,7 +674,6 @@
           tl.to([p.querySelector(".num"), p.querySelector(".tag")], { opacity: 0, duration: 0.3, ease: "power2.in" }, A(it.b, -0.15));
           tl.to("#cam", { scale: 1.17, duration: 1.0, ease: "power3.inOut" }, A(it.b, -0.15));
           drift(A(it.b, 0.85), E(it.b) - A(it.b, 0.85) + 0.2, 1.2);
-          tl.to("#cam", { scale: 1, duration: 0.5, ease: "power3.inOut" }, E(it.b, 0.15));
         });
         // 1: clogged pores become pimples
         gsap.set(poreEls, { scale: 0, transformOrigin: "50% 50%" });
