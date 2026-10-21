@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template id="s05-target-template">
+      <style>
+        @font-face { font-family: "Hidra Display"; src: url(../assets/fonts/ArchivoBlack.woff2) format("woff2"); font-weight: 400; }
+        @font-face { font-family: "Hidra Serif"; src: url(../assets/fonts/InstrumentSerif-Italic.woff2) format("woff2"); font-style: italic; }
+        @font-face { font-family: "Hidra Sans"; src: url(../assets/fonts/Montserrat-Var.woff2) format("woff2"); font-weight: 100 900; }
+
+        #s05 { position: absolute; inset: 0; overflow: hidden; color: #15161c; }
+        #s05-title { position: absolute; left: 0; right: 0; top: 330px; display: flex; flex-direction: column; align-items: center; transform-origin: center top; }
+        #s05-t1 { font: 400 170px/1 "Hidra Display", sans-serif; letter-spacing: -0.045em; }
+        #s05-t1 span { color: #2447e6; }
+        #s05-t2 { font: italic 400 128px/1 "Hidra Serif", serif; margin-top: 8px; }
+
+        .s05-card {
+          position: absolute; top: 292px; width: 500px; height: 640px; border-radius: 38px; background: #ffffff;
+          box-shadow: 0 34px 70px rgba(21, 22, 40, 0.13), 0 2px 0 rgba(21, 22, 40, 0.04);
+          display: flex; flex-direction: column; align-items: center; padding-top: 340px;
+        }
+        #s05-c1 { left: 150px; }
+        #s05-c2 { left: 710px; }
+        #s05-c3 { left: 1270px; }
+        .s05-icon { position: absolute; left: 50%; top: 18px; width: 330px; height: 330px; margin-left: -165px; }
+        .s05-icon img { width: 100%; height: 100%; display: block; }
+        .s05-halo { position: absolute; left: 50%; top: 40px; width: 280px; height: 280px; margin-left: -140px; border-radius: 50%; background: radial-gradient(closest-side, rgba(36, 71, 230, 0.12), transparent); }
+        .s05-name { font: 400 62px/1 "Hidra Display", sans-serif; letter-spacing: -0.035em; }
+        .s05-box {
+          margin-top: 26px; padding: 10px 22px 14px; border: 2px dashed rgba(21, 22, 28, 0.35); border-radius: 8px;
+          font: italic 400 44px/1 "Hidra Serif", serif; color: #15161c;
+        }
+        .s05-box b { font: 400 40px/1 "Hidra Display", sans-serif; font-style: normal; color: #d9700f; letter-spacing: -0.02em; }
+        .s05-desc { margin-top: 26px; font: 600 26px/1.3 "Hidra Sans", sans-serif; color: rgba(21, 22, 28, 0.58); }
+        .s05-num { position: absolute; left: 30px; top: 26px; font: 800 22px/1 "Hidra Sans", sans-serif; letter-spacing: 0.2em; color: rgba(21, 22, 28, 0.58); }
+      </style>
+
+      <div id="s05" data-composition-id="s05-target" data-width="1920" data-height="1080" data-duration="11.2">
+        <div id="s05-title">
+          <div id="s05-t1">¿A <span>quién</span></div>
+          <div id="s05-t2">se la vamos a vender?</div>
+        </div>
+
+        <div class="s05-card" id="s05-c1">
+          <div class="s05-num">01</div>
+          <div class="s05-halo"></div>
+          <div class="s05-icon" id="s05-i1"><img src="../assets/img/gradcap.png" alt="" /></div>
+          <div class="s05-name">Estudiantes</div>
+          <div class="s05-box"><b>16–30</b> años</div>
+          <div class="s05-desc">Universidad e instituto</div>
+        </div>
+        <div class="s05-card" id="s05-c2">
+          <div class="s05-num">02</div>
+          <div class="s05-halo"></div>
+          <div class="s05-icon" id="s05-i2"><img src="../assets/img/dumbbell.png" alt="" /></div>
+          <div class="s05-name">Deportistas</div>
+          <div class="s05-box">gimnasio · running</div>
+          <div class="s05-desc">Hidratación en cada entreno</div>
+        </div>
+        <div class="s05-card" id="s05-c3">
+          <div class="s05-num">03</div>
+          <div class="s05-halo"></div>
+          <div class="s05-icon" id="s05-i3"><img src="../assets/img/briefcase.png" alt="" /></div>
+          <div class="s05-name">Profesionales</div>
+          <div class="s05-box"><b>8 h</b> en la oficina</div>
+          <div class="s05-desc">Recordatorios en su rutina</div>
+        </div>
+      </div>
+
+      <script>
+        (function () {
+          const tl = gsap.timeline({ paused: true });
+
+          // Question (VO 0.4 s), then it lifts into a header.
+          tl.fromTo("#s05-t1", { opacity: 0, y: 60, filter: "blur(16px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.55, ease: "expo.out" }, 0.35);
+          tl.fromTo("#s05-t2", { opacity: 0, y: 40, filter: "blur(12px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.55, ease: "power3.out" }, 0.9);
+          tl.fromTo("#s05-title", { y: 0, scale: 1 }, { y: -270, scale: 0.5, duration: 0.6, ease: "power3.inOut" }, 2.15);
+
+          // Cards land on their cue: students (2.6 s), athletes (6.1 s), professionals (7.5 s).
+          [["#s05-c1", "#s05-i1", 2.6, -6], ["#s05-c2", "#s05-i2", 6.1, 5], ["#s05-c3", "#s05-i3", 7.5, -4]].forEach(([card, icon, at, rot]) => {
+            tl.fromTo(card, { opacity: 0, y: 220, rotation: rot, filter: "blur(14px)" }, { opacity: 1, y: 0, rotation: 0, filter: "blur(0px)", duration: 0.7, ease: "back.out(1.3)" }, at);
+            tl.fromTo(card + " .s05-name, " + card + " .s05-box, " + card + " .s05-desc", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.45, ease: "power3.out", stagger: 0.08 }, at + 0.25);
+            tl.fromTo(icon, { scale: 0, rotation: -30 }, { scale: 1, rotation: 0, duration: 0.7, ease: "back.out(2)" }, at + 0.15);
+            const bob = Math.max(0, Math.floor((10.8 - at - 0.85) / 1.3) - 1);
+            tl.fromTo(icon + " img", { y: 0 }, { y: -16, duration: 1.3, ease: "sine.inOut", yoyo: true, repeat: bob }, at + 0.85);
+          });
+
+          // Exit: cards lift away in sequence.
+          tl.to(["#s05-c1", "#s05-c2", "#s05-c3"], { y: -160, opacity: 0, filter: "blur(14px)", duration: 0.35, ease: "power2.in", stagger: 0.05 }, 10.75);
+          tl.to("#s05-title", { opacity: 0, duration: 0.3, ease: "power1.in" }, 10.75);
+
+          window.__timelines["s05-target"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

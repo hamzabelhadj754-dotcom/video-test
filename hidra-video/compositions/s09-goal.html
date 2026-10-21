@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template id="s09-goal-template">
+      <style>
+        @font-face { font-family: "Hidra Display"; src: url(../assets/fonts/ArchivoBlack.woff2) format("woff2"); font-weight: 400; }
+        @font-face { font-family: "Hidra Serif"; src: url(../assets/fonts/InstrumentSerif-Italic.woff2) format("woff2"); font-style: italic; }
+        @font-face { font-family: "Hidra Sans"; src: url(../assets/fonts/Montserrat-Var.woff2) format("woff2"); font-weight: 100 900; }
+
+        #s09 { position: absolute; inset: 0; overflow: hidden; color: #15161c; }
+        #s09-target { position: absolute; left: 110px; top: 250px; width: 580px; height: 580px; }
+        #s09-target img { width: 100%; height: 100%; display: block; }
+        #s09-tag {
+          position: absolute; left: 770px; top: 168px; padding: 12px 20px; border: 2px dashed rgba(36, 71, 230, 0.55); border-radius: 10px;
+          font: 800 26px/1 "Hidra Sans", sans-serif; letter-spacing: 0.2em; text-transform: uppercase; color: #2447e6;
+        }
+        #s09-num { position: absolute; left: 756px; top: 236px; font: 400 270px/1 "Hidra Display", sans-serif; letter-spacing: -0.05em; color: #ff8a1f; filter: drop-shadow(0 0 40px rgba(255, 138, 31, 0.4)); }
+        #s09-unit { position: absolute; left: 770px; top: 516px; font: italic 400 96px/1 "Hidra Serif", serif; }
+        #s09-chart { position: absolute; left: 780px; top: 650px; width: 900px; height: 330px; }
+        .s09-col { position: absolute; bottom: 60px; width: 150px; }
+        .s09-bar { position: absolute; left: 0; right: 0; bottom: 0; border-radius: 14px 14px 6px 6px; transform-origin: bottom center; }
+        .s09-val { position: absolute; left: 0; right: 0; text-align: center; font: 400 30px/1 "Hidra Display", sans-serif; letter-spacing: -0.02em; }
+        .s09-q { position: absolute; bottom: 0; width: 150px; text-align: center; }
+        .s09-q span { display: inline-block; padding: 6px 14px 8px; border: 2px dashed rgba(21, 22, 28, 0.35); border-radius: 6px; font: italic 400 30px/1 "Hidra Serif", serif; }
+        #s09-trend { position: absolute; left: 0; top: 0; width: 900px; height: 330px; overflow: visible; }
+      </style>
+
+      <div id="s09" data-composition-id="s09-goal" data-width="1920" data-height="1080" data-duration="5.4">
+        <div id="s09-target"><img src="../assets/img/target.png" alt="" /></div>
+        <div id="s09-tag">Objetivo · año 1</div>
+        <div id="s09-num">0</div>
+        <div id="s09-unit">botellas vendidas</div>
+        <div id="s09-chart">
+          <div class="s09-col" style="left: 20px; height: 70px"><div class="s09-bar" style="height: 70px; background: linear-gradient(#4fb3c9, #2f8fa6)"></div><div class="s09-val" style="top: -42px">1.500</div></div>
+          <div class="s09-col" style="left: 250px; height: 95px"><div class="s09-bar" style="height: 95px; background: linear-gradient(#7b6cff, #2447e6)"></div><div class="s09-val" style="top: -42px">2.000</div></div>
+          <div class="s09-col" style="left: 480px; height: 140px"><div class="s09-bar" style="height: 140px; background: linear-gradient(#ff7aa8, #d9467a)"></div><div class="s09-val" style="top: -42px">2.800</div></div>
+          <div class="s09-col" style="left: 710px; height: 190px"><div class="s09-bar" style="height: 190px; background: linear-gradient(#ffb04d, #ff8a1f)"></div><div class="s09-val" style="top: -42px">3.700</div></div>
+          <div class="s09-q" style="left: 20px"><span>T1</span></div>
+          <div class="s09-q" style="left: 250px"><span>T2</span></div>
+          <div class="s09-q" style="left: 480px"><span>T3</span></div>
+          <div class="s09-q" style="left: 710px"><span>T4</span></div>
+          <svg id="s09-trend" viewBox="0 0 900 330">
+            <polyline id="s09-line" points="95,135 325,110 555,66 785,16 860,-10" fill="none" stroke="#15161c" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+            <path id="s09-arrow" d="M 836 -14 L 862 -11 L 853 14" fill="none" stroke="#15161c" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </div>
+      </div>
+
+      <script>
+        (function () {
+          const fmt = (n) => String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+          const line = document.getElementById("s09-line");
+          // Polyline length from its points (pure math, no layout reads).
+          const pts = line.getAttribute("points").trim().split(/\s+/).map((p) => p.split(",").map(Number));
+          const len = pts.slice(1).reduce((s, p, i) => s + Math.hypot(p[0] - pts[i][0], p[1] - pts[i][1]), 0);
+          line.style.strokeDasharray = len;
+
+          const tl = gsap.timeline({ paused: true });
+          tl.fromTo("#s09-target", { opacity: 0, scale: 0.3, rotation: -60 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.8, ease: "back.out(1.6)" }, 0.2);
+          tl.to("#s09-target img", { y: -16, duration: 1.4, ease: "sine.inOut", yoyo: true, repeat: 2 }, 1.0);
+          tl.fromTo("#s09-tag", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.45, ease: "power3.out" }, 0.35);
+
+          // "Nuestro objetivo: diez mil botellas vendidas el primer año." (VO 0.4 s; "diez mil" ≈ 1.7 s).
+          tl.fromTo("#s09-num", { opacity: 0, filter: "blur(14px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.4, ease: "power2.out" }, 0.6);
+          const c = { v: 0 };
+          const numEl = document.getElementById("s09-num");
+          tl.to(c, { v: 10000, duration: 1.8, ease: "power3.out", onUpdate: () => { numEl.textContent = fmt(c.v); } }, 0.6);
+          tl.fromTo("#s09-unit", { opacity: 0, y: 26, filter: "blur(10px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.5, ease: "power3.out" }, 2.0);
+
+          tl.fromTo("#s09 .s09-q", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.3, stagger: 0.08 }, 2.4);
+          tl.fromTo("#s09 .s09-bar", { scaleY: 0 }, { scaleY: 1, duration: 0.6, ease: "back.out(1.5)", stagger: 0.14 }, 2.55);
+          tl.fromTo("#s09 .s09-val", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.3, ease: "power2.out", stagger: 0.14 }, 2.95);
+          tl.fromTo(line, { strokeDashoffset: len }, { strokeDashoffset: 0, duration: 0.8, ease: "power2.inOut" }, 3.3);
+          tl.fromTo("#s09-arrow", { opacity: 0 }, { opacity: 1, duration: 0.2 }, 4.0);
+
+          window.__timelines["s09-goal"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

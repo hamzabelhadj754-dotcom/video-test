@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template id="s03-reveal-template">
+      <style>
+        @font-face { font-family: "Hidra Display"; src: url(../assets/fonts/ArchivoBlack.woff2) format("woff2"); font-weight: 400; }
+        @font-face { font-family: "Hidra Serif"; src: url(../assets/fonts/InstrumentSerif-Italic.woff2) format("woff2"); font-style: italic; }
+        @font-face { font-family: "Hidra Sans"; src: url(../assets/fonts/Montserrat-Var.woff2) format("woff2"); font-weight: 100 900; }
+
+        #s03 { position: absolute; inset: 0; overflow: hidden; color: #15161c; }
+        #s03-pre { position: absolute; left: 0; right: 0; top: 96px; text-align: center; font: italic 400 96px/1 "Hidra Serif", serif; color: #15161c; }
+        #s03-word {
+          position: absolute; left: 0; right: 0; top: 50%; margin-top: -215px; height: 430px; text-align: center;
+          font: 400 430px/430px "Hidra Display", sans-serif; letter-spacing: -0.045em; color: #2447e6; white-space: nowrap;
+        }
+        #s03-word .ch { display: inline-block; }
+        #s03-shadow {
+          position: absolute; left: 50%; top: 852px; width: 300px; height: 40px; margin-left: -150px; border-radius: 50%;
+          background: radial-gradient(closest-side, rgba(21, 22, 40, 0.38), transparent);
+        }
+        #s03-canvas { position: absolute; inset: 0; width: 1920px; height: 1080px; display: block; }
+        #s03-pill {
+          position: absolute; left: 50%; bottom: 84px; transform-origin: center center;
+          display: flex; align-items: center; height: 96px; padding: 0 46px; margin-left: -470px; width: 940px; justify-content: center;
+          background: #2447e6; border-radius: 26px; color: #f2f4f8; box-shadow: 0 24px 60px rgba(36, 71, 230, 0.35);
+          font: 800 40px/1 "Hidra Sans", sans-serif; letter-spacing: -0.01em;
+        }
+        #s03-ball {
+          position: absolute; right: -18px; top: -22px; width: 48px; height: 48px; border-radius: 50%;
+          background: radial-gradient(circle at 34% 30%, #e7ff9a, #b9e34c 55%, #7fa524); box-shadow: 0 8px 18px rgba(127, 165, 36, 0.45);
+        }
+      </style>
+
+      <div id="s03" data-composition-id="s03-reveal" data-width="1920" data-height="1080" data-duration="6">
+        <div id="s03-pre">Por eso nace</div>
+        <div id="s03-word">HIDRA</div>
+        <div id="s03-shadow"></div>
+        <canvas id="s03-canvas" width="1920" height="1080"></canvas>
+        <div id="s03-pill">La botella reutilizable inteligente<div id="s03-ball"></div></div>
+      </div>
+
+      <script>
+        (function () {
+          const D = 6;
+          // Shared state between this timeline and the Three.js module below.
+          const host = { render: null, t: 0 };
+          window.__hidraReveal = host;
+          window.__hf = window.__hf || {};
+          window.__hf.buildReady = window.__hf.buildReady || {};
+          window.__hf.buildReady["s03-reveal-bottle"] = new Promise((resolve) => { host.ready = resolve; });
+
+          const word = document.getElementById("s03-word");
+          const letters = [...word.textContent].map((c) => {
+            const s = document.createElement("span");
+            s.className = "ch";
+            s.textContent = c;
+            return s;
+          });
+          word.textContent = "";
+          letters.forEach((s) => word.appendChild(s));
+
+          const tl = gsap.timeline({ paused: true });
+          tl.fromTo("#s03-pre", { opacity: 0, y: 30, filter: "blur(14px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.6, ease: "power3.out" }, 0.5);
+          tl.fromTo(letters, { opacity: 0, scale: 1.7, y: -50, filter: "blur(22px)" },
+            { opacity: 1, scale: 1, y: 0, filter: "blur(0px)", duration: 0.55, ease: "power4.out", stagger: 0.06 }, 1.2);
+          tl.fromTo("#s03-word", { x: 0 }, { x: -40, duration: 4.3, ease: "none" }, 1.2);
+          tl.fromTo("#s03-shadow", { opacity: 0, scaleX: 0.4 }, { opacity: 1, scaleX: 1, duration: 1.2, ease: "power3.out" }, 1.5);
+          tl.fromTo("#s03-pill", { opacity: 0, scale: 0.6, y: 40 }, { opacity: 1, scale: 1, y: 0, duration: 0.6, ease: "back.out(1.8)" }, 2.45);
+          tl.fromTo("#s03-ball", { y: -160, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7, ease: "bounce.out" }, 2.75);
+
+          // Exit: the whole set pans left, handing off to the features scene.
+          tl.to(["#s03-pre", "#s03-word", "#s03-pill", "#s03-shadow"], { x: "-=420", opacity: 0, filter: "blur(16px)", duration: 0.45, ease: "power2.in" }, 5.5);
+          tl.to("#s03-canvas", { opacity: 0, duration: 0.4, ease: "power2.in" }, 5.55);
+
+          // One linear clock drives every 3D frame: render(t) is a pure function of t.
+          const clock = { t: 0 };
+          tl.to(clock, { t: D, duration: D, ease: "none", onUpdate: () => { host.t = clock.t; if (host.render) host.render(clock.t); } }, 0);
+          window.__timelines["s03-reveal"] = tl;
+        })();
+      </script>
+      <script type="module">
+        import * as THREE from "../vendor/three/three.module.js";
+        import { makeRenderer, makeStudio, createBottle } from "../assets/js/hidra3d.js";
+
+        const host = window.__hidraReveal;
+        await document.fonts.load('400 100px "Hidra Display"');
+        await document.fonts.load('700 40px "Hidra Sans"');
+        const renderer = makeRenderer(document.getElementById("s03-canvas"), 1920, 1080);
+        const scene = new THREE.Scene();
+        makeStudio(renderer, scene);
+        const bottle = createBottle();
+        const rig = new THREE.Group();
+        bottle.group.position.y = -1.62;
+        rig.add(bottle.group);
+        scene.add(rig);
+        const camera = new THREE.PerspectiveCamera(22, 1920 / 1080, 0.1, 100);
+        camera.position.set(0, 0.35, 14.4);
+        camera.lookAt(0, 0.05, 0);
+
+        const ease = (name) => gsap.parseEase(name);
+        const seg = (t, a, b, e) => e(Math.min(1, Math.max(0, (t - a) / (b - a))));
+        const out3 = ease("power3.out"), in2 = ease("power2.in");
+
+        host.render = (t) => {
+          const rise = seg(t, 1.35, 2.75, out3);
+          const exit = seg(t, 5.5, 6.0, in2);
+          rig.position.y = -4.6 * (1 - rise) + 0.06 * Math.sin(t * 1.6) * rise;
+          rig.position.x = -3.2 * exit;
+          rig.rotation.y = -0.35 - Math.PI * 2.5 * (1 - rise) + 0.22 * Math.sin((t - 2.75) * 0.9) * rise;
+          rig.rotation.z = 0.08 * (1 - rise);
+          const led = seg(t, 2.55, 2.85, out3);
+          bottle.setLed(led * (0.8 + 0.2 * Math.sin(t * 5)));
+          renderer.render(scene, camera);
+        };
+        host.render(host.t);
+        host.ready();
+      </script>
+    </template>
+  </body>
+</html>

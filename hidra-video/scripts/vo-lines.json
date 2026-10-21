@@ -1,0 +1,132 @@
+[
+ {
+  "id": "l01",
+  "scene": "intro",
+  "text": "Hola, soy Yassir."
+ },
+ {
+  "id": "l02",
+  "scene": "intro",
+  "text": "Hoy te voy a presentar un producto, y cómo lo vamos a vender."
+ },
+ {
+  "id": "l03",
+  "scene": "problem",
+  "text": "Cada minuto, en el mundo, se compra un millón de botellas de plástico."
+ },
+ {
+  "id": "l04",
+  "scene": "problem",
+  "text": "Y la mayoría de nosotros se olvida de beber agua durante el día."
+ },
+ {
+  "id": "l05",
+  "scene": "reveal",
+  "text": "Por eso nace Hidra."
+ },
+ {
+  "id": "l06",
+  "scene": "reveal",
+  "text": "La botella reutilizable inteligente."
+ },
+ {
+  "id": "l07",
+  "scene": "features",
+  "text": "Una luz te avisa cuándo beber."
+ },
+ {
+  "id": "l08",
+  "scene": "features",
+  "text": "Un sensor mide cuánta agua tomas, y lo envía a tu móvil."
+ },
+ {
+  "id": "l09",
+  "scene": "features",
+  "text": "Y mantiene el agua fría durante veinticuatro horas."
+ },
+ {
+  "id": "l10",
+  "scene": "target",
+  "text": "¿A quién se la vamos a vender?"
+ },
+ {
+  "id": "l11",
+  "scene": "target",
+  "text": "A estudiantes y jóvenes de dieciséis a treinta años."
+ },
+ {
+  "id": "l12",
+  "scene": "target",
+  "text": "A deportistas."
+ },
+ {
+  "id": "l13",
+  "scene": "target",
+  "text": "Y a profesionales que pasan todo el día en la oficina."
+ },
+ {
+  "id": "l14",
+  "scene": "price",
+  "text": "¿Su precio? Veintinueve euros con noventa y nueve."
+ },
+ {
+  "id": "l15",
+  "scene": "price",
+  "text": "Premium, pero accesible."
+ },
+ {
+  "id": "l16",
+  "scene": "distribution",
+  "text": "¿Y cómo llega al cliente?"
+ },
+ {
+  "id": "l17",
+  "scene": "distribution",
+  "text": "Con una distribución mixta."
+ },
+ {
+  "id": "l18",
+  "scene": "distribution",
+  "text": "En línea: en nuestra web y en Amazon."
+ },
+ {
+  "id": "l19",
+  "scene": "distribution",
+  "text": "Y en tiendas de deporte, gimnasios y universidades."
+ },
+ {
+  "id": "l20",
+  "scene": "promotion",
+  "text": "Para venderla, apostamos por las redes sociales."
+ },
+ {
+  "id": "l21",
+  "scene": "promotion",
+  "text": "Influensers de fitnes en Tik Tok e Instagram,"
+ },
+ {
+  "id": "l22",
+  "scene": "promotion",
+  "text": "el reto: treinta días Hidra,"
+ },
+ {
+  "id": "l23",
+  "scene": "promotion",
+  "text": "y un veinte por ciento de descuento para estudiantes."
+ },
+ {
+  "id": "l24",
+  "scene": "goal",
+  "text": "Nuestro objetivo: diez mil botellas vendidas el primer año."
+ },
+ {
+  "id": "l25",
+  "scene": "close",
+  "text": "Hidra. Bebe mejor. Vive mejor."
+ },
+ {
+  "id": "l26",
+  "scene": "close",
+  "text": "Gracias por ver."
+ }
+]

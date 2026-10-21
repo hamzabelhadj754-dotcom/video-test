@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      @font-face { font-family: "Hidra Display"; src: url(../assets/fonts/ArchivoBlack.woff2) format("woff2"); }
+      @font-face { font-family: "Hidra Sans"; font-weight: 100 900; src: url(../assets/fonts/Montserrat-Var.woff2) format("woff2"); }
+      html, body { margin: 0; background: transparent; }
+      canvas { display: block; }
+    </style>
+  </head>
+  <body>
+    <canvas id="c"></canvas>
+    <script type="module">
+      // Offline still renderer for the 3D kit; driven by scripts/render-stills.mjs.
+      import { THREE, makeRenderer, makeStudio, createBottle, createIcon } from "../assets/js/hidra3d.js";
+      const q = new URLSearchParams(location.search);
+      const num = (k, d) => (q.has(k) ? parseFloat(q.get(k)) : d);
+      const W = num("w", 900), H = num("h", 900);
+      await document.fonts.load('400 100px "Hidra Display"');
+      await document.fonts.load('700 40px "Hidra Sans"');
+      const renderer = makeRenderer(document.getElementById("c"), W, H);
+      const scene = new THREE.Scene();
+      makeStudio(renderer, scene, { warm: q.get("warm") === "1" });
+      let obj;
+      if (q.get("bottle")) {
+        const b = createBottle();
+        b.setLed(num("led", 0));
+        obj = new THREE.Group();
+        b.group.position.y = -1.6;
+        obj.add(b.group);
+      } else {
+        obj = createIcon(q.get("icon"));
+      }
+      obj.rotation.set(num("rx", 0.25), num("ry", -0.5), num("rz", 0));
+      scene.add(obj);
+      const box = new THREE.Box3().setFromObject(obj);
+      const sphere = box.getBoundingSphere(new THREE.Sphere());
+      const fov = num("fov", 26);
+      const camera = new THREE.PerspectiveCamera(fov, W / H, 0.1, 100);
+      const dist = (sphere.radius / Math.sin(THREE.MathUtils.degToRad(fov / 2))) * num("pad", 1.08);
+      camera.position.set(sphere.center.x, sphere.center.y + num("cy", 0), sphere.center.z + dist);
+      camera.lookAt(sphere.center);
+      renderer.render(scene, camera);
+      window.__png = renderer.domElement.toDataURL("image/png");
+    </script>
+  </body>
+</html>

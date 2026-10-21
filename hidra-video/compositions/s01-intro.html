@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template id="s01-intro-template">
+      <style>
+        @font-face { font-family: "Hidra Display"; src: url(../assets/fonts/ArchivoBlack.woff2) format("woff2"); font-weight: 400; }
+        @font-face { font-family: "Hidra Serif"; src: url(../assets/fonts/InstrumentSerif-Italic.woff2) format("woff2"); font-style: italic; }
+        @font-face { font-family: "Hidra Sans"; src: url(../assets/fonts/Montserrat-Var.woff2) format("woff2"); font-weight: 100 900; }
+
+        #s01 { position: absolute; inset: 0; overflow: hidden; background: #07090f; color: #f2f4f8; }
+        #s01 .fill { position: absolute; inset: 0; }
+        #s01-glow {
+          position: absolute; left: 50%; top: 62%; width: 1500px; height: 900px; margin: -450px 0 0 -750px;
+          background: radial-gradient(closest-side, rgba(36, 71, 230, 0.42), rgba(36, 71, 230, 0.12) 55%, transparent);
+          filter: blur(10px);
+        }
+        .s01-ember { position: absolute; border-radius: 50%; background: #ffb46b; box-shadow: 0 0 10px 2px rgba(255, 138, 31, 0.6); }
+        #s01-vignette { background: radial-gradient(ellipse at center, transparent 45%, rgba(0, 0, 0, 0.7) 100%); }
+
+        #s01-stage { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+        #s01-a, #s01-b { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        #s01-hola { font: italic 400 140px/1 "Hidra Serif", serif; color: rgba(242, 244, 248, 0.82); margin-bottom: 6px; }
+        #s01-name { font: 400 220px/1 "Hidra Display", sans-serif; letter-spacing: -0.035em; white-space: nowrap; }
+        #s01-name .ch { display: inline-block; }
+        #s01-name .accent { color: #6f8bff; }
+
+        #s01-l1 { font: 700 34px/1 "Hidra Sans", sans-serif; letter-spacing: 0.34em; text-transform: uppercase; color: rgba(242, 244, 248, 0.66); margin-bottom: 34px; }
+        #s01-l1 .ch { display: inline-block; white-space: pre; }
+        #s01-l2 { position: relative; font: 400 176px/1 "Hidra Display", sans-serif; letter-spacing: -0.035em; overflow: hidden; padding: 0 10px 44px; }
+        #s01-l2-in { display: block; }
+        #s01-strike { position: absolute; left: 10px; right: 10px; bottom: 12px; height: 14px; border-radius: 7px; background: #2447e6; transform-origin: left center; box-shadow: 0 0 30px rgba(36, 71, 230, 0.8); }
+        #s01-l3 { display: flex; align-items: baseline; gap: 26px; margin-top: 4px; }
+        #s01-l3a { font: italic 400 118px/1 "Hidra Serif", serif; color: rgba(242, 244, 248, 0.9); }
+        #s01-l3b { position: relative; font: 400 112px/1 "Hidra Display", sans-serif; letter-spacing: -0.03em; padding: 6px 22px 14px; }
+        #s01-hl { position: absolute; inset: 0; background: #2447e6; border-radius: 14px; transform-origin: left center; }
+        #s01-vender { position: relative; display: block; }
+      </style>
+
+      <div id="s01" data-composition-id="s01-intro" data-width="1920" data-height="1080" data-duration="7.2">
+        <div id="s01-glow"></div>
+        <div id="s01-embers" class="fill"></div>
+        <div id="s01-stage">
+          <div id="s01-a">
+            <div id="s01-hola">Hola,</div>
+            <div id="s01-name">soy <span class="accent">Yassir</span></div>
+          </div>
+          <div id="s01-b">
+            <div id="s01-l1">Hoy te voy a presentar</div>
+            <div id="s01-l2"><span id="s01-l2-in">un producto</span><div id="s01-strike"></div></div>
+            <div id="s01-l3">
+              <div id="s01-l3a">y cómo lo vamos a</div>
+              <div id="s01-l3b"><div id="s01-hl"></div><span id="s01-vender">vender.</span></div>
+            </div>
+          </div>
+        </div>
+        <div id="s01-vignette" class="fill"></div>
+      </div>
+
+      <script>
+        (function () {
+          // Seeded PRNG so ember placement is identical on every render.
+          function rng(seed) {
+            return function () {
+              seed |= 0; seed = (seed + 0x6d2b79f5) | 0;
+              let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+              t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+              return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+            };
+          }
+          function splitChars(el) {
+            const out = [];
+            const walk = (node) => {
+              [...node.childNodes].forEach((c) => {
+                if (c.nodeType === 3) {
+                  const frag = document.createDocumentFragment();
+                  [...c.textContent].forEach((ch) => {
+                    const s = document.createElement("span");
+                    s.className = "ch";
+                    s.textContent = ch === " " ? " " : ch;
+                    frag.appendChild(s);
+                    out.push(s);
+                  });
+                  c.replaceWith(frag);
+                } else walk(c);
+              });
+            };
+            walk(el);
+            return out;
+          }
+
+          const D = 7.2;
+          const r = rng(11);
+          const embers = document.getElementById("s01-embers");
+          const emberEls = [];
+          for (let i = 0; i < 46; i++) {
+            const e = document.createElement("div");
+            e.className = "s01-ember";
+            const size = 2 + r() * 5;
+            e.style.width = e.style.height = size + "px";
+            e.style.left = r() * 1920 + "px";
+            e.style.top = 300 + r() * 900 + "px";
+            embers.appendChild(e);
+            emberEls.push({ el: e, rise: 260 + r() * 420, sway: (r() - 0.5) * 140, op: 0.25 + r() * 0.65, delay: r() * 0.8 });
+          }
+          const nameChars = splitChars(document.getElementById("s01-name"));
+          const l1Chars = splitChars(document.getElementById("s01-l1"));
+
+          const tl = gsap.timeline({ paused: true });
+
+          // Ambient: glow breath, embers rising.
+          tl.fromTo("#s01-glow", { scale: 0.85, opacity: 0.6 }, { scale: 1.08, opacity: 1, duration: 6.6, ease: "sine.inOut" }, 0);
+          emberEls.forEach((m) => {
+            tl.fromTo(m.el, { y: 0, x: 0, opacity: 0 }, { y: -m.rise, x: m.sway, opacity: m.op, duration: D - m.delay, ease: "none" }, m.delay);
+          });
+          tl.fromTo("#s01-stage", { scale: 1 }, { scale: 1.045, duration: D, ease: "none" }, 0);
+
+          // Beat A — "Hola, soy Yassir" (VO 0.8 s).
+          tl.fromTo("#s01-hola", { y: 34, opacity: 0, filter: "blur(18px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.6, ease: "power3.out" }, 0.62);
+          tl.fromTo(nameChars, { y: 90, opacity: 0, filter: "blur(16px)", rotationX: -70 },
+            { y: 0, opacity: 1, filter: "blur(0px)", rotationX: 0, duration: 0.6, ease: "expo.out", stagger: 0.035 }, 1.12);
+          tl.to("#s01-a", { y: -50, opacity: 0, filter: "blur(16px)", duration: 0.35, ease: "power2.in" }, 2.3);
+
+          // Beat B — "Hoy te voy a presentar un producto, y cómo lo vamos a vender." (VO 2.6 s).
+          tl.fromTo(l1Chars, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.35, ease: "power2.out", stagger: 0.014 }, 2.6);
+          tl.fromTo("#s01-l2-in", { yPercent: 110 }, { yPercent: 0, duration: 0.6, ease: "expo.out" }, 3.3);
+          tl.fromTo("#s01-strike", { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "power3.inOut" }, 3.75);
+          tl.fromTo("#s01-l3a", { opacity: 0, x: -40, filter: "blur(12px)" }, { opacity: 1, x: 0, filter: "blur(0px)", duration: 0.5, ease: "power3.out" }, 4.55);
+          tl.fromTo("#s01-hl", { scaleX: 0 }, { scaleX: 1, duration: 0.45, ease: "power4.inOut" }, 5.2);
+          tl.fromTo("#s01-vender", { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.45, ease: "back.out(2)" }, 5.4);
+
+          // Exit into the problem scene.
+          tl.to("#s01-b", { scale: 1.12, opacity: 0, filter: "blur(20px)", duration: 0.55, ease: "power2.in" }, 6.55);
+          tl.to(["#s01-glow", "#s01-embers"], { opacity: 0, duration: 0.5, ease: "power1.in" }, 6.65);
+
+          window.__timelines["s01-intro"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

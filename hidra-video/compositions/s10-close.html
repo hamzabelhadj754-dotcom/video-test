@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template id="s10-close-template">
+      <style>
+        @font-face { font-family: "Hidra Display"; src: url(../assets/fonts/ArchivoBlack.woff2) format("woff2"); font-weight: 400; }
+        @font-face { font-family: "Hidra Serif"; src: url(../assets/fonts/InstrumentSerif-Italic.woff2) format("woff2"); font-style: italic; }
+        @font-face { font-family: "Hidra Sans"; src: url(../assets/fonts/Montserrat-Var.woff2) format("woff2"); font-weight: 100 900; }
+
+        #s10 { position: absolute; inset: 0; overflow: hidden; background: #07090f; color: #f2f4f8; }
+        #s10 .fill { position: absolute; inset: 0; }
+        #s10-glow { position: absolute; left: 516px; top: 540px; width: 1300px; height: 1300px; margin: -650px 0 0 -650px; background: radial-gradient(closest-side, rgba(36, 71, 230, 0.45), rgba(36, 71, 230, 0.1) 55%, transparent); }
+        #s10-floor { position: absolute; left: 0; right: 0; top: 820px; height: 260px; background: linear-gradient(rgba(36, 71, 230, 0.12), transparent); }
+        #s10-led { position: absolute; left: 516px; top: 320px; width: 360px; height: 220px; margin: -110px 0 0 -180px; border-radius: 50%; background: radial-gradient(closest-side, rgba(159, 216, 255, 0.75), rgba(120, 180, 255, 0.2) 50%, transparent); mix-blend-mode: screen; }
+        #s10-canvas { position: absolute; inset: 0; width: 1920px; height: 1080px; display: block; }
+        #s10-vignette { background: radial-gradient(ellipse at center, transparent 45%, rgba(0, 0, 0, 0.7) 100%); }
+
+        #s10-lock { position: absolute; left: 960px; top: 0; bottom: 0; right: 80px; }
+        #s10-word { position: absolute; left: 0; top: 270px; font: 400 240px/1 "Hidra Display", sans-serif; letter-spacing: -0.05em; white-space: nowrap; }
+        #s10-word .ch { display: inline-block; }
+        #s10-t1, #s10-t2 { position: absolute; left: 8px; font: italic 400 112px/1 "Hidra Serif", serif; }
+        #s10-t1 { top: 540px; }
+        #s10-t2 { top: 660px; color: #8ea4ff; }
+        #s10-rule { position: absolute; left: 8px; top: 820px; width: 680px; height: 2px; background: rgba(242, 244, 248, 0.3); transform-origin: left center; }
+        #s10-thanks { position: absolute; left: 8px; top: 852px; font: italic 400 64px/1 "Hidra Serif", serif; }
+        #s10-sign { position: absolute; left: 8px; top: 938px; font: 700 24px/1 "Hidra Sans", sans-serif; letter-spacing: 0.3em; text-transform: uppercase; color: rgba(242, 244, 248, 0.6); }
+        #s10-black { background: #000; }
+      </style>
+
+      <div id="s10" data-composition-id="s10-close" data-width="1920" data-height="1080" data-duration="8">
+        <div id="s10-glow"></div>
+        <div id="s10-floor"></div>
+        <canvas id="s10-canvas" width="1920" height="1080"></canvas>
+        <div id="s10-led"></div>
+        <div id="s10-lock">
+          <div id="s10-word">HIDRA</div>
+          <div id="s10-t1">Bebe mejor.</div>
+          <div id="s10-t2">Vive mejor.</div>
+          <div id="s10-rule"></div>
+          <div id="s10-thanks">Gracias por ver</div>
+          <div id="s10-sign">Yassir · Proyecto de marketing</div>
+        </div>
+        <div id="s10-vignette" class="fill"></div>
+        <div id="s10-black" class="fill"></div>
+      </div>
+
+      <script>
+        (function () {
+          const D = 8;
+          const host = { render: null, t: 0 };
+          window.__hidraClose = host;
+          window.__hf = window.__hf || {};
+          window.__hf.buildReady = window.__hf.buildReady || {};
+          window.__hf.buildReady["s10-close-bottle"] = new Promise((resolve) => { host.ready = resolve; });
+
+          const word = document.getElementById("s10-word");
+          const letters = [...word.textContent].map((c) => {
+            const s = document.createElement("span");
+            s.className = "ch";
+            s.textContent = c;
+            return s;
+          });
+          word.textContent = "";
+          letters.forEach((s) => word.appendChild(s));
+
+          const tl = gsap.timeline({ paused: true });
+          tl.fromTo("#s10-glow", { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1, duration: 1.6, ease: "power2.out" }, 0.1);
+          tl.fromTo("#s10-led", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power2.out" }, 1.2);
+          tl.to("#s10-led", { scale: 0.85, duration: 0.6, ease: "sine.inOut", yoyo: true, repeat: 7 }, 1.7);
+
+          // "Hidra. Bebe mejor. Vive mejor." (VO 0.8 s).
+          tl.fromTo(letters, { opacity: 0, y: 70, filter: "blur(18px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.6, ease: "expo.out", stagger: 0.06 }, 0.75);
+          tl.fromTo("#s10-t1", { opacity: 0, x: -40, filter: "blur(12px)" }, { opacity: 1, x: 0, filter: "blur(0px)", duration: 0.55, ease: "power3.out" }, 1.5);
+          tl.fromTo("#s10-t2", { opacity: 0, x: -40, filter: "blur(12px)" }, { opacity: 1, x: 0, filter: "blur(0px)", duration: 0.55, ease: "power3.out" }, 2.15);
+
+          // "Gracias por ver." (VO 4.4 s).
+          tl.fromTo("#s10-rule", { scaleX: 0 }, { scaleX: 1, duration: 0.6, ease: "power3.inOut" }, 4.1);
+          tl.fromTo("#s10-thanks", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 4.35);
+          tl.fromTo("#s10-sign", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 4.75);
+
+          // Fade to black.
+          tl.fromTo("#s10-black", { opacity: 0 }, { opacity: 1, duration: 1.0, ease: "power1.inOut" }, 6.9);
+
+          const clock = { t: 0 };
+          tl.to(clock, { t: D, duration: D, ease: "none", onUpdate: () => { host.t = clock.t; if (host.render) host.render(clock.t); } }, 0);
+          window.__timelines["s10-close"] = tl;
+        })();
+      </script>
+      <script type="module">
+        import * as THREE from "../vendor/three/three.module.js";
+        import { makeRenderer, makeStudio, createBottle } from "../assets/js/hidra3d.js";
+
+        const host = window.__hidraClose;
+        await document.fonts.load('400 100px "Hidra Display"');
+        await document.fonts.load('700 40px "Hidra Sans"');
+        const renderer = makeRenderer(document.getElementById("s10-canvas"), 1920, 1080);
+        renderer.toneMappingExposure = 1.0;
+        const scene = new THREE.Scene();
+        makeStudio(renderer, scene, { keyDeg: -60, rimDeg: 110 });
+        const bottle = createBottle();
+        const rig = new THREE.Group();
+        bottle.group.position.y = -1.62;
+        rig.add(bottle.group);
+        scene.add(rig);
+        const camera = new THREE.PerspectiveCamera(22, 1920 / 1080, 0.1, 100);
+        camera.position.set(0, 0.35, 14.4);
+        camera.lookAt(0, 0.05, 0);
+
+        const ease = (name) => gsap.parseEase(name);
+        const seg = (t, a, b, e) => e(Math.min(1, Math.max(0, (t - a) / (b - a))));
+        const out3 = ease("power3.out");
+
+        host.render = (t) => {
+          const rise = seg(t, 0.15, 1.5, out3);
+          rig.position.set(-2.3, -4.2 * (1 - rise) + 0.05 * Math.sin(t * 1.4) * rise, 0);
+          rig.rotation.y = -0.35 - Math.PI * 1.5 * (1 - rise) + 0.35 * Math.sin((t - 1.5) * 0.6) * rise;
+          const led = seg(t, 1.1, 1.5, out3);
+          bottle.setLed(led * (0.75 + 0.25 * Math.sin(t * 5.2)));
+          renderer.render(scene, camera);
+        };
+        host.render(host.t);
+        host.ready();
+      </script>
+    </template>
+  </body>
+</html>

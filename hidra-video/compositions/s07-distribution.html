@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template id="s07-distribution-template">
+      <style>
+        @font-face { font-family: "Hidra Display"; src: url(../assets/fonts/ArchivoBlack.woff2) format("woff2"); font-weight: 400; }
+        @font-face { font-family: "Hidra Serif"; src: url(../assets/fonts/InstrumentSerif-Italic.woff2) format("woff2"); font-style: italic; }
+        @font-face { font-family: "Hidra Sans"; src: url(../assets/fonts/Montserrat-Var.woff2) format("woff2"); font-weight: 100 900; }
+
+        #s07 { position: absolute; inset: 0; overflow: hidden; color: #15161c; }
+        #s07-title { position: absolute; left: 0; right: 0; top: 330px; display: flex; flex-direction: column; align-items: center; transform-origin: center top; }
+        #s07-t1 { font: 400 170px/1 "Hidra Display", sans-serif; letter-spacing: -0.045em; }
+        #s07-t1 span { color: #2447e6; }
+        #s07-t2 { font: italic 400 128px/1 "Hidra Serif", serif; margin-top: 8px; }
+        #s07-pill {
+          position: absolute; left: 50%; top: 214px; width: 400px; margin-left: -200px; height: 58px; border-radius: 16px; background: #2447e6; color: #f2f4f8;
+          font: 800 26px/58px "Hidra Sans", sans-serif; letter-spacing: 0.16em; text-transform: uppercase; text-align: center; box-shadow: 0 16px 36px rgba(36, 71, 230, 0.32);
+        }
+        #s07-net { position: absolute; inset: 0; }
+        .s07-node { position: absolute; width: 300px; height: 330px; margin: -150px 0 0 -150px; display: flex; flex-direction: column; align-items: center; }
+        .s07-node img { width: 280px; height: 280px; display: block; }
+        .s07-node .lab { margin-top: 2px; font: 800 22px/1 "Hidra Sans", sans-serif; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(21, 22, 28, 0.7); white-space: nowrap; }
+        .s07-chip {
+          position: absolute; height: 52px; padding: 0 22px; border-radius: 26px; background: #ffffff; border: 2px solid rgba(36, 71, 230, 0.22);
+          box-shadow: 0 10px 24px rgba(21, 22, 40, 0.08); font: 700 25px/48px "Hidra Sans", sans-serif; color: #15161c; white-space: nowrap;
+        }
+        .s07-chip i { display: inline-block; width: 12px; height: 12px; border-radius: 50%; background: #ff8a1f; margin-right: 12px; vertical-align: 1px; }
+        .s07-dot { position: absolute; left: -11px; top: -11px; width: 22px; height: 22px; border-radius: 50%; background: #ff8a1f; box-shadow: 0 0 16px rgba(255, 138, 31, 0.8); }
+      </style>
+
+      <div id="s07" data-composition-id="s07-distribution" data-width="1920" data-height="1080" data-duration="11.2">
+        <div id="s07-title">
+          <div id="s07-t1">¿Y cómo <span>llega</span></div>
+          <div id="s07-t2">al cliente?</div>
+        </div>
+        <div id="s07-pill">Distribución mixta</div>
+
+        <svg id="s07-net" viewBox="0 0 1920 1080">
+          <g fill="none" stroke="#2447e6" stroke-width="4" stroke-linecap="round">
+            <path id="s07-pAB" d="M 360 640 L 470 640" />
+            <path id="s07-pBO" d="M 720 600 C 820 600, 830 430, 895 430" />
+            <path id="s07-pBF" d="M 720 680 C 820 680, 830 850, 895 850" />
+            <path id="s07-pOC" d="M 1440 430 C 1560 430, 1560 600, 1590 620" stroke="#ff8a1f" />
+            <path id="s07-pFC" d="M 1480 850 C 1580 850, 1570 690, 1595 665" stroke="#ff8a1f" />
+          </g>
+        </svg>
+
+        <div class="s07-node" id="s07-nA" style="left: 230px; top: 640px"><img src="../assets/img/factory.png" alt="" /><div class="lab">Fábrica</div></div>
+        <div class="s07-node" id="s07-nB" style="left: 600px; top: 640px"><img src="../assets/img/parcel.png" alt="" /><div class="lab">Almacén</div></div>
+        <div class="s07-node" id="s07-nO" style="left: 1010px; top: 430px"><img src="../assets/img/globe.png" alt="" /><div class="lab">Online</div></div>
+        <div class="s07-node" id="s07-nF" style="left: 1010px; top: 850px"><img src="../assets/img/store.png" alt="" /><div class="lab">Tiendas físicas</div></div>
+        <div class="s07-node" id="s07-nC" style="left: 1700px; top: 640px"><img src="../assets/img/person.png" alt="" /><div class="lab">Cliente</div></div>
+
+        <div class="s07-chip" id="s07-c1" style="left: 1150px; top: 368px"><i></i>Web propia</div>
+        <div class="s07-chip" id="s07-c2" style="left: 1150px; top: 436px"><i></i>Amazon</div>
+        <div class="s07-chip" id="s07-c3" style="left: 1150px; top: 758px"><i></i>Tiendas de deporte</div>
+        <div class="s07-chip" id="s07-c4" style="left: 1150px; top: 822px"><i></i>Gimnasios</div>
+        <div class="s07-chip" id="s07-c5" style="left: 1150px; top: 886px"><i></i>Universidades</div>
+
+        <div id="s07-dots"></div>
+      </div>
+
+      <script>
+        (function () {
+          const paths = ["pAB", "pBO", "pBF", "pOC", "pFC"].reduce((acc, k) => {
+            const el = document.getElementById("s07-" + k);
+            const len = el.getTotalLength();
+            el.style.strokeDasharray = len;
+            el.style.strokeDashoffset = len;
+            acc[k] = { el, len };
+            return acc;
+          }, {});
+
+          const tl = gsap.timeline({ paused: true });
+          const draw = (k, at, dur = 0.5) =>
+            tl.fromTo(paths[k].el, { strokeDashoffset: paths[k].len }, { strokeDashoffset: 0, duration: dur, ease: "power2.inOut" }, at);
+          const pop = (sel, at) => {
+            tl.fromTo(sel, { opacity: 0, scale: 0.3, y: 30 }, { opacity: 1, scale: 1, y: 0, duration: 0.55, ease: "back.out(1.9)" }, at);
+          };
+          const chip = (sel, at) => {
+            tl.fromTo(sel, { opacity: 0, x: -30, scale: 0.8 }, { opacity: 1, x: 0, scale: 1, duration: 0.4, ease: "back.out(2)" }, at);
+          };
+
+          // Question (VO 0.4 s) lifts into a header, then "Con una distribución mixta" (2.5 s).
+          tl.fromTo("#s07-t1", { opacity: 0, y: 60, filter: "blur(16px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.55, ease: "expo.out" }, 0.35);
+          tl.fromTo("#s07-t2", { opacity: 0, y: 40, filter: "blur(12px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.55, ease: "power3.out" }, 0.85);
+          tl.fromTo("#s07-title", { y: 0, scale: 1 }, { y: -270, scale: 0.5, duration: 0.6, ease: "power3.inOut" }, 2.0);
+          tl.fromTo("#s07-pill", { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(2)" }, 2.5);
+
+          pop("#s07-nA", 2.6);
+          draw("pAB", 3.0, 0.35);
+          pop("#s07-nB", 3.3);
+
+          // "En línea: en nuestra web y en Amazon" (VO 4.6 s).
+          draw("pBO", 4.6);
+          pop("#s07-nO", 5.0);
+          chip("#s07-c1", 5.45);
+          chip("#s07-c2", 6.1);
+
+          // "Y en tiendas de deporte, gimnasios y universidades" (VO 7.1 s).
+          draw("pBF", 7.1);
+          pop("#s07-nF", 7.5);
+          chip("#s07-c3", 7.75);
+          chip("#s07-c4", 8.55);
+          chip("#s07-c5", 9.15);
+
+          // Both channels converge on the customer; product dots flow along every route.
+          draw("pOC", 9.35);
+          draw("pFC", 9.45);
+          pop("#s07-nC", 9.6);
+          const dotsEl = document.getElementById("s07-dots");
+          [["pAB", "pBO", "pOC"], ["pAB", "pBF", "pFC"]].forEach((route, ri) => {
+            [0, 0.45].forEach((lag) => {
+              const dot = document.createElement("div");
+              dot.className = "s07-dot";
+              dotsEl.appendChild(dot);
+              const total = route.reduce((s, k) => s + paths[k].len, 0);
+              const prog = { p: 0 };
+              const place = () => {
+                let d = prog.p * total;
+                for (const k of route) {
+                  if (d <= paths[k].len) {
+                    const pt = paths[k].el.getPointAtLength(d);
+                    dot.style.transform = `translate(${pt.x}px, ${pt.y}px)`;
+                    return;
+                  }
+                  d -= paths[k].len;
+                }
+              };
+              place();
+              tl.fromTo(dot, { opacity: 0 }, { opacity: 1, duration: 0.15 }, 9.7 + lag + ri * 0.2);
+              tl.to(prog, { p: 1, duration: 0.9, ease: "power1.inOut", onUpdate: place }, 9.7 + lag + ri * 0.2);
+            });
+          });
+
+          // Exit.
+          tl.to(["#s07-title", "#s07-pill", "#s07-net", "#s07-dots", ".s07-node", ".s07-chip"], { y: -80, opacity: 0, filter: "blur(12px)", duration: 0.35, ease: "power2.in" }, 10.8);
+
+          window.__timelines["s07-distribution"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>
