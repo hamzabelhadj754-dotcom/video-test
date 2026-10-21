@@ -217,7 +217,7 @@ html = f"""<!doctype html>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=1920, height=1080" />
-    <title>HIDRA — Proyecto de marketing de Yassir</title>
+    <title>HIDRA — Proyecto de procesos de venta de Yassir</title>
     <script src="vendor/gsap.min.js"></script>
     <style>
       * {{ margin: 0; padding: 0; box-sizing: border-box; }}

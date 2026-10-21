@@ -1,4 +1,4 @@
-# HIDRA — proyecto de marketing (Yassir)
+# HIDRA — proyecto de procesos de venta (Yassir)
 
 An 88-second, 1920×1080 YouTube video built with [HyperFrames](https://hyperframes.heygen.com).
 It presents **HIDRA**, a reusable smart water bottle, and its marketing plan:
