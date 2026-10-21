@@ -1,17 +1,21 @@
-"""Place each voiceover line at its cue (scripts/timing.json) into assets/narration.wav."""
-import json, os
+"""Place each voiceover line at its cue (scripts/timing.json) into assets/narration.wav.
+
+Usage: python3 scripts/build-narration.py [vo-dir]   (default assets/vo-eleven; assets/vo = Kokoro)
+"""
+import json, os, sys
 import numpy as np
 import soundfile as sf
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 timing = json.load(open(f"{ROOT}/scripts/timing.json"))
-lines = {l["id"]: l for l in json.load(open(f"{ROOT}/assets/vo/lines.json"))}
-sr = sf.info(f"{ROOT}/assets/vo/l01.wav").samplerate
+VO = sys.argv[1] if len(sys.argv) > 1 else "assets/vo-eleven"
+lines = {l["id"]: l for l in json.load(open(f"{ROOT}/{VO}/lines.json"))}
+sr = sf.info(f"{ROOT}/{VO}/l01.wav").samplerate
 out = np.zeros(int(timing["duration"] * sr), dtype=np.float32)
 for scene in timing["scenes"]:
     end = scene["start"] + scene["duration"]
     for lid, local in scene["cues"].items():
-        samples, _ = sf.read(f"{ROOT}/assets/vo/{lid}.wav", dtype="float32")
+        samples, _ = sf.read(f"{ROOT}/{VO}/{lid}.wav", dtype="float32")
         g = scene["start"] + local
         stop = g + len(samples) / sr
         flag = "  <-- overruns scene" if stop > end - 0.2 else ""
