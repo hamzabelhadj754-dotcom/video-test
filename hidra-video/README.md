@@ -4,6 +4,8 @@ An 88-second, 1920×1080 YouTube video built with [HyperFrames](https://hyperfra
 It presents **HIDRA**, a reusable smart water bottle, and its marketing plan:
 problem → product → features → target audience → price → distribution → promotion → sales goal.
 
+**Final video:** [`../hidra-yassir-final.mp4`](../hidra-yassir-final.mp4) (88 s, 1080p30, audio normalized to −14 LUFS for YouTube).
+
 ## Files
 | Path | What it is |
 | --- | --- |
@@ -26,6 +28,8 @@ python3 scripts/gen-music.py               # music bed
 python3 -m http.server 8765 --bind 127.0.0.1 &  # then: node scripts/render-stills.mjs
 python3 scripts/build-index.py             # host + fx layers (keeps the music carve)
 npx hyperframes check
-npx hyperframes render -o renders/hidra-yassir.mp4
+# Long renders with the 3D scenes need segmented capture (fresh browser per 20 s):
+HF_SEGMENTED_CAPTURE=true HF_SEGMENT_FRAMES=600 HF_SEGMENT_BROWSER_RECYCLE=1 \
+  npx hyperframes render -o renders/hidra-yassir.mp4
 ```
 To use a female Spanish voice instead, run `gen-vo.py ef_dora 1.0`, then rebuild the narration.
