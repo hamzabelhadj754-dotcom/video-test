@@ -544,6 +544,8 @@
         tl.set("#endc", { opacity: 1 }, W("l10", 6, -0.1));
         gsap.set("#lg-word-w", { clipPath: "inset(0% 100% 0% 0%)" });
         gsap.set("#lg-rule", { scaleX: 0 });
+        gsap.set("#lg-mark", { opacity: 0, y: 40, scale: 0.9, filter: "blur(16px)" });
+        gsap.set("#up-dot", { scale: 0, transformOrigin: "50% 50%", svgOrigin: "740 50" });
         gsap.set(["#follow"], { opacity: 0, y: 24 });
         gsap.set("#f-b", { opacity: 0 });
         tl.fromTo("#lg-mark", { opacity: 0, y: 40, scale: 0.9, filter: "blur(16px)" }, { opacity: 1, y: 0, scale: 1, filter: "blur(0px)", duration: 0.8, ease: "expo.out", immediateRender: false }, W("l10", 9, -0.15));
