@@ -1,0 +1,563 @@
+<!doctype html>
+<html lang="es" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="assets/gsap.min.js"></script>
+    <script src="assets/timing.js"></script>
+    <style>
+      :root {
+        --ink: #0f0f12;
+        --ink-2: #3a3a40;
+        --gray: #6f6d69;
+        --paper: #fbfaf7;
+        --line: #e8e5df;
+        --red: #e5303a;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: var(--paper);
+      }
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: var(--paper);
+        font-family: "Inter", sans-serif;
+        color: var(--ink);
+      }
+      .clip {
+        position: absolute;
+        inset: 0;
+      }
+      .abs {
+        position: absolute;
+      }
+      .full {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 1080px;
+        height: 1920px;
+      }
+      .mono {
+        font-family: "IBM Plex Mono", monospace;
+        font-weight: 700;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+      #vignette {
+        background: radial-gradient(ellipse 80% 60% at 50% 48%, transparent 55%, rgba(15, 15, 18, 0.07) 100%);
+      }
+
+      /* kinetic type */
+      .tb {
+        position: absolute;
+        left: 60px;
+        width: 960px;
+        text-align: center;
+      }
+      .row {
+        display: block;
+        white-space: nowrap;
+      }
+      .w {
+        display: inline-block;
+        margin: 0 0.12em;
+        will-change: transform, filter, opacity;
+      }
+      .s {
+        font-weight: 400;
+        font-size: 62px;
+        letter-spacing: -0.035em;
+        color: var(--ink-2);
+      }
+      .b {
+        font-weight: 800;
+        font-size: 118px;
+        line-height: 0.98;
+        letter-spacing: -0.05em;
+      }
+      .r {
+        font-weight: 800;
+        font-size: 150px;
+        line-height: 0.95;
+        letter-spacing: -0.055em;
+        color: var(--red);
+      }
+      .xl {
+        font-weight: 900;
+        font-size: 260px;
+        line-height: 0.86;
+        letter-spacing: -0.06em;
+      }
+
+      .shadow {
+        position: absolute;
+        border-radius: 50%;
+        background: radial-gradient(closest-side, rgba(15, 15, 18, 0.28), rgba(15, 15, 18, 0.08) 60%, transparent);
+      }
+      .prod {
+        position: absolute;
+      }
+      .card {
+        position: absolute;
+        background: var(--ink);
+        color: #fff;
+        border-radius: 10px;
+        box-shadow:
+          0 40px 80px rgba(15, 15, 18, 0.28),
+          0 8px 20px rgba(15, 15, 18, 0.18);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="22.42" data-width="1080" data-height="1920">
+      <!-- ============ BACKGROUND ============ -->
+      <div id="bg" class="clip" data-start="0" data-duration="22.42" data-track-index="0">
+        <svg id="arc" class="abs" style="left: -1150px; top: -200px; overflow: visible" width="1600" height="1600" viewBox="0 0 1600 1600">
+          <circle cx="800" cy="800" r="740" fill="none" stroke="#ece9e3" stroke-width="80" stroke-dasharray="1500 3150" stroke-linecap="round" />
+        </svg>
+        <svg id="grid" class="abs" style="left: 190px; top: 700px" width="700" height="700" viewBox="0 0 700 700">
+          <g stroke="#0f0f12" stroke-opacity="0.07" stroke-width="2">
+            <path d="M0 0 H700 M0 140 H700 M0 280 H700 M0 420 H700 M0 560 H700 M0 700 H700 M0 0 V700 M140 0 V700 M280 0 V700 M420 0 V700 M560 0 V700 M700 0 V700" />
+          </g>
+          <g fill="#0f0f12" fill-opacity="0.25">
+            <circle cx="0" cy="0" r="4" /><circle cx="700" cy="0" r="4" /><circle cx="0" cy="700" r="4" /><circle cx="700" cy="700" r="4" />
+          </g>
+        </svg>
+      </div>
+
+      <!-- ============ STAGE ============ -->
+      <div id="stage" class="clip" data-start="0" data-duration="22.42" data-track-index="1" data-layout-allow-overlap data-layout-allow-occlusion data-layout-allow-overflow>
+        <div id="cam" class="full">
+          <!-- editorial ghost numeral (scene 1) -->
+          <div id="ghost10" class="abs" style="left: 0; top: 760px; width: 1080px; text-align: center; font-weight: 900; font-size: 640px; line-height: 0.8; letter-spacing: -0.07em; color: #efece6">10</div>
+          <!-- shelf of ten products (scenes 1-3) -->
+          <div id="shelf" class="full"></div>
+
+          <!-- flat results chart (scene 2) -->
+          <svg id="chart-flat" class="abs" style="left: 150px; top: 860px; overflow: visible" width="780" height="420" viewBox="0 0 780 420">
+            <path d="M40 20 V380 H760" stroke="#0f0f12" stroke-width="3" fill="none" stroke-opacity="0.35" />
+            <g stroke="#0f0f12" stroke-opacity="0.08" stroke-width="2"><path d="M40 110 H760 M40 200 H760 M40 290 H760" /></g>
+            <path id="flat-line" d="M60 300 C 200 302, 330 296, 460 300 S 680 298, 740 300" stroke="#0f0f12" stroke-width="10" fill="none" stroke-linecap="round" />
+            <circle id="flat-dot" cx="740" cy="300" r="16" fill="#e5303a" />
+            <text x="60" y="60" font-family="IBM Plex Mono" font-weight="700" font-size="24" letter-spacing="4" fill="#6f6d69">RESULTADOS</text>
+            <text id="flat-pct" x="760" y="250" text-anchor="end" font-family="Inter" font-weight="800" font-size="64" fill="#e5303a">0%</text>
+          </svg>
+
+          <!-- habit tracker (scene 4) -->
+          <div id="tracker" class="abs" style="left: 190px; top: 760px; width: 700px; height: 600px"></div>
+
+          <!-- routine: hero products + pinned card (scene 5) -->
+          <div id="hero-wrap" class="full">
+            <div class="shadow" id="hero-shadow" style="left: 520px; top: 1370px; width: 420px; height: 70px"></div>
+            <svg class="prod hero" id="hero1" style="left: 560px; top: 700px" width="300" height="700" viewBox="0 0 120 300"><use href="#p-pump" /></svg>
+            <svg class="prod hero" id="hero2" style="left: 470px; top: 1010px" width="480" height="360" viewBox="0 0 200 150"><use href="#p-jar" /></svg>
+            <svg class="prod hero" id="hero3" style="left: 590px; top: 660px" width="250" height="727" viewBox="0 0 110 320"><use href="#p-tube" /></svg>
+          </div>
+          <div id="rcard" class="card" style="left: 90px; top: 930px; width: 470px; height: 470px; padding: 44px 40px">
+            <svg class="abs" style="left: 205px; top: -26px; overflow: visible" width="60" height="60" viewBox="0 0 60 60">
+              <circle cx="30" cy="26" r="18" fill="#e5303a" />
+              <circle cx="24" cy="20" r="6" fill="#ff8a8f" />
+            </svg>
+            <div class="mono" style="font-size: 20px; color: #9a9893">Tu rutina · 3 pasos</div>
+            <div style="font-weight: 800; font-size: 58px; letter-spacing: -0.04em; margin-top: 10px">Lo esencial</div>
+            <div style="height: 3px; background: #ffffff; opacity: 0.85; margin: 22px 0 26px; width: 100%"></div>
+            <div class="ri" id="ri1" style="display: flex; align-items: center; gap: 18px; font-size: 34px; font-weight: 600; margin-bottom: 22px"><span class="ck" style="width: 40px; height: 40px; border-radius: 50%; border: 3px solid #fff; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 22 22"><path class="ckp" d="M4 11 l5 5 l9 -10" stroke="#e5303a" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round" /></svg></span>Limpiador suave</div>
+            <div class="ri" id="ri2" style="display: flex; align-items: center; gap: 18px; font-size: 34px; font-weight: 600; margin-bottom: 22px"><span class="ck" style="width: 40px; height: 40px; border-radius: 50%; border: 3px solid #fff; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 22 22"><path class="ckp" d="M4 11 l5 5 l9 -10" stroke="#e5303a" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round" /></svg></span>Crema hidratante</div>
+            <div class="ri" id="ri3" style="display: flex; align-items: center; gap: 18px; font-size: 34px; font-weight: 600"><span class="ck" style="width: 40px; height: 40px; border-radius: 50%; border: 3px solid #fff; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 22 22"><path class="ckp" d="M4 11 l5 5 l9 -10" stroke="#e5303a" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round" /></svg></span>Protector solar</div>
+          </div>
+
+          <!-- rising chart (scene 7) -->
+          <svg id="chart-up" class="abs" style="left: 150px; top: 900px; overflow: visible" width="780" height="460" viewBox="0 0 780 460">
+            <path d="M40 20 V420 H760" stroke="#0f0f12" stroke-width="3" fill="none" stroke-opacity="0.35" />
+            <g stroke="#0f0f12" stroke-opacity="0.08" stroke-width="2"><path d="M40 120 H760 M40 220 H760 M40 320 H760" /></g>
+            <path id="up-area" d="M60 380 C 260 372, 380 320, 480 230 S 660 70, 740 50 L 740 420 L 60 420 Z" fill="#e5303a" fill-opacity="0.08" />
+            <path id="up-line" d="M60 380 C 260 372, 380 320, 480 230 S 660 70, 740 50" stroke="#e5303a" stroke-width="10" fill="none" stroke-linecap="round" />
+            <circle id="up-dot" cx="740" cy="50" r="16" fill="#0f0f12" />
+            <g id="steps-mini" font-family="IBM Plex Mono" font-weight="700" font-size="24" letter-spacing="4" fill="#6f6d69"><text x="60" y="60">3 PASOS</text></g>
+          </svg>
+
+          <!-- bookmark (scene 8) -->
+          <svg id="bookmark" class="abs" style="left: 410px; top: 880px; overflow: visible" width="260" height="340" viewBox="0 0 260 340">
+            <path id="bm-fill" d="M30 20 H230 V320 L130 240 L30 320 Z" fill="#0f0f12" />
+            <path id="bm-line" d="M30 20 H230 V320 L130 240 L30 320 Z" fill="none" stroke="#0f0f12" stroke-width="12" stroke-linejoin="round" />
+          </svg>
+
+          <!-- ===== kinetic text blocks ===== -->
+          <div class="tb" id="t01" style="top: 300px">
+            <span class="row"><span class="w s" data-l="l01" data-i="0">Tienes</span></span>
+            <span class="row"><span class="w r" data-l="l01" data-i="1" style="font-size: 190px">diez</span></span>
+            <span class="row"><span class="w b" data-l="l01" data-i="2">productos</span></span>
+            <span class="row"><span class="w s" data-l="l01" data-i="3">en</span><span class="w s" data-l="l01" data-i="4">tu</span><span class="w s" data-l="l01" data-i="5">baño…</span></span>
+          </div>
+          <div class="tb" id="t02" style="top: 360px">
+            <span class="row"><span class="w s" data-l="l02" data-i="0">y</span><span class="w s" data-l="l02" data-i="1">tu</span><span class="w s" data-l="l02" data-i="2">piel</span><span class="w b" data-l="l02" data-i="3" style="font-size: 96px">sigue</span></span>
+            <span class="row"><span class="w r" data-l="l02" data-i="4" style="font-size: 190px">igual.</span></span>
+          </div>
+          <div class="tb" id="t03" style="top: 330px">
+            <span class="row"><span class="w s" data-l="l03" data-i="0">Porque</span><span class="w s" data-l="l03" data-i="1">tu</span><span class="w s" data-l="l03" data-i="2">piel</span></span>
+            <span class="row"><span class="w b" data-l="l03" data-i="3" style="font-size: 96px">no</span><span class="w b" data-l="l03" data-i="4" style="font-size: 96px">necesita</span></span>
+            <span class="row" style="position: relative"><span class="w b" data-l="l03" data-i="5" id="w-mas" style="font-size: 170px; position: relative">más<svg id="strike" style="position: absolute; left: -16px; top: 46%; overflow: visible" width="290" height="30" viewBox="0 0 290 30"><path id="strike-p" d="M6 18 C 90 8, 200 6, 284 12" stroke="#e5303a" stroke-width="18" fill="none" stroke-linecap="round" /></svg></span></span>
+            <span class="row"><span class="w s" data-l="l03" data-i="6" style="font-size: 70px">productos.</span></span>
+          </div>
+          <div class="tb" id="t04" style="top: 380px">
+            <span class="row"><span class="w s" data-l="l04" data-i="0">Necesita</span></span>
+            <span class="row"><span class="w r" data-l="l04" data-i="1" style="font-size: 176px">constancia.</span></span>
+          </div>
+          <div class="tb" id="t05" style="top: 330px">
+            <span class="row"><span class="w s" data-l="l05" data-i="0">Un</span><span class="w s" data-l="l05" data-i="1">limpiador</span></span>
+            <span class="row"><span class="w r" data-l="l05" data-i="2">suave.</span></span>
+          </div>
+          <div class="tb" id="t06" style="top: 330px">
+            <span class="row"><span class="w s" data-l="l06" data-i="0">Una</span><span class="w s" data-l="l06" data-i="1">buena</span></span>
+            <span class="row"><span class="w b" data-l="l06" data-i="2">crema</span></span>
+            <span class="row"><span class="w r" data-l="l06" data-i="3" style="font-size: 124px">hidratante.</span></span>
+          </div>
+          <div class="tb" id="t07" style="top: 330px">
+            <span class="row"><span class="w s" data-l="l07" data-i="0">Y</span><span class="w s" data-l="l07" data-i="1">protector</span></span>
+            <span class="row"><span class="w r" data-l="l07" data-i="2">solar.</span></span>
+          </div>
+          <div class="tb" id="t08" style="top: 470px">
+            <span class="row"><span class="w xl" data-l="l08" data-i="0">TODOS.</span></span>
+            <span class="row"><span class="w xl" data-l="l08" data-i="1" style="color: var(--ink-2)">LOS.</span></span>
+            <span class="row"><span class="w xl" data-l="l08" data-i="2" style="color: var(--red)">DÍAS.</span></span>
+          </div>
+          <div class="tb" id="t09" style="top: 330px">
+            <span class="row"><span class="w b" data-l="l09" data-i="0" style="font-weight: 300; color: var(--gray); font-size: 104px">Menos</span><span class="w b" data-l="l09" data-i="1" style="font-weight: 300; color: var(--gray); font-size: 104px">pasos.</span></span>
+            <span class="row"><span class="w r" data-l="l09" data-i="2" style="font-size: 132px">Mejores</span></span>
+            <span class="row"><span class="w b" data-l="l09" data-i="3" style="font-size: 112px">resultados.</span></span>
+          </div>
+          <div class="tb" id="t10a" style="top: 360px">
+            <span class="row"><span class="w b" data-l="l10" data-i="0">Guarda</span><span class="w b" data-l="l10" data-i="1">este</span></span>
+            <span class="row"><span class="w r" data-l="l10" data-i="2" style="font-size: 160px">video</span></span>
+            <span class="row"><span class="w s" data-l="l10" data-i="3">para</span><span class="w s" data-l="l10" data-i="4">tu</span><span class="w s" data-l="l10" data-i="5">rutina,</span></span>
+          </div>
+          <!-- brand end -->
+          <div id="endc" class="abs" style="left: 0; top: 420px; width: 1080px; text-align: center">
+            <div class="row" style="text-align: center"><span class="w s" data-l="l10" data-i="6">y</span><span class="w s" data-l="l10" data-i="7">sigue</span><span class="w s" data-l="l10" data-i="8">a</span></div>
+            <img id="lg-mark" src="assets/obelcha-mark-black.png" alt="" style="width: 470px; height: 337px; margin-top: 50px" />
+            <div id="lg-word-w" style="position: relative; width: 470px; height: 84px; margin: 26px auto 0; overflow: hidden">
+              <img src="assets/obelcha-word-black.png" alt="" style="position: absolute; left: 0; top: 0; width: 470px; height: 84px" />
+            </div>
+            <div id="lg-rule" style="width: 470px; height: 4px; background: var(--red); margin: 34px auto 0; transform-origin: 0 50%"></div>
+            <div id="follow" style="position: relative; width: 400px; height: 104px; margin: 44px auto 0; border-radius: 999px; background: var(--ink); color: #fff; font-weight: 800; font-size: 42px">
+              <span id="f-a" class="abs" style="inset: 0; display: flex; align-items: center; justify-content: center">Seguir</span>
+              <span id="f-b" class="abs" style="inset: 0; display: flex; align-items: center; justify-content: center">Siguiendo ✓</span>
+            </div>
+          </div>
+        </div>
+        <div id="flash" class="full" style="background: #fff"></div>
+      </div>
+
+      <!-- ============ EDITORIAL CHROME ============ -->
+      <div id="chrome" class="clip" data-start="0" data-duration="22.42" data-track-index="2">
+        <div class="abs" style="left: 64px; top: 210px; display: flex; align-items: center; gap: 14px">
+          <img src="assets/obelcha-mark-black.png" alt="" style="width: 56px; height: 40px" />
+          <span class="mono" style="font-size: 20px; color: var(--ink-2)">Skin notes · Nº 06</span>
+        </div>
+        <svg id="barcode" class="abs" style="right: 64px; top: 208px" width="150" height="46" viewBox="0 0 150 46"></svg>
+        <div id="idx" class="abs mono" style="right: 64px; top: 266px; width: 200px; height: 24px; font-size: 18px; color: var(--gray)"></div>
+        <div id="pbar" class="abs" style="left: 64px; top: 268px; width: 300px; height: 3px; background: var(--line)"><div id="pfill" style="width: 100%; height: 100%; background: var(--ink); transform-origin: 0 50%"></div></div>
+        <div id="vignette" class="full"></div>
+      </div>
+
+      <audio id="soundtrack" src="assets/soundtrack.wav" data-start="0" data-duration="22.42" data-track-index="3"></audio>
+
+      <!-- product symbols -->
+      <svg width="0" height="0" style="position: absolute">
+        <defs>
+          <linearGradient id="gW" x1="0" x2="1">
+            <stop offset="0" stop-color="#d9d5ce" /><stop offset="0.16" stop-color="#ffffff" /><stop offset="0.32" stop-color="#f6f4f0" />
+            <stop offset="0.7" stop-color="#ebe8e2" /><stop offset="0.9" stop-color="#d6d1c9" /><stop offset="1" stop-color="#c4beb5" />
+          </linearGradient>
+          <linearGradient id="gK" x1="0" x2="1">
+            <stop offset="0" stop-color="#0b0b0d" /><stop offset="0.22" stop-color="#4a4a52" /><stop offset="0.38" stop-color="#1c1c21" />
+            <stop offset="0.85" stop-color="#101013" /><stop offset="1" stop-color="#2a2a30" />
+          </linearGradient>
+          <linearGradient id="gR" x1="0" x2="1">
+            <stop offset="0" stop-color="#9e1820" /><stop offset="0.2" stop-color="#ff6a70" /><stop offset="0.4" stop-color="#e5303a" />
+            <stop offset="0.85" stop-color="#b5202a" /><stop offset="1" stop-color="#8c1219" />
+          </linearGradient>
+          <linearGradient id="gG" x1="0" x2="1">
+            <stop offset="0" stop-color="#b9b3a9" /><stop offset="0.2" stop-color="#f3efe8" /><stop offset="0.45" stop-color="#d9d3c9" />
+            <stop offset="0.85" stop-color="#bcb5aa" /><stop offset="1" stop-color="#a39b8f" />
+          </linearGradient>
+          <linearGradient id="gHi" x1="0" x2="1">
+            <stop offset="0" stop-color="#fff" stop-opacity="0" /><stop offset="0.5" stop-color="#fff" stop-opacity="0.85" /><stop offset="1" stop-color="#fff" stop-opacity="0" />
+          </linearGradient>
+          <g id="p-pump">
+            <rect x="10" y="92" width="100" height="200" rx="26" fill="url(#gW)" />
+            <rect x="22" y="104" width="10" height="170" rx="5" fill="url(#gHi)" />
+            <rect x="34" y="62" width="52" height="36" rx="8" fill="url(#gK)" />
+            <rect x="53" y="30" width="14" height="34" fill="#bdb8b0" />
+            <rect x="30" y="14" width="66" height="20" rx="7" fill="url(#gK)" />
+            <rect x="84" y="18" width="34" height="10" rx="5" fill="#141417" />
+            <text x="60" y="186" text-anchor="middle" font-family="Inter" font-weight="800" font-size="20" fill="#0f0f12">OB</text>
+            <rect x="38" y="196" width="44" height="3" fill="#0f0f12" />
+            <text x="60" y="214" text-anchor="middle" font-family="IBM Plex Mono" font-weight="700" font-size="7" letter-spacing="1.5" fill="#6d6a65">CLEANSER</text>
+          </g>
+          <g id="p-drop">
+            <rect x="15" y="110" width="70" height="142" rx="14" fill="url(#gG)" />
+            <rect x="24" y="120" width="8" height="120" rx="4" fill="url(#gHi)" />
+            <rect x="32" y="66" width="36" height="50" rx="6" fill="url(#gK)" />
+            <ellipse cx="50" cy="42" rx="17" ry="28" fill="url(#gK)" />
+            <text x="50" y="190" text-anchor="middle" font-family="IBM Plex Mono" font-weight="700" font-size="9" letter-spacing="1" fill="#2d2b28">SERUM</text>
+          </g>
+          <g id="p-jar">
+            <rect x="16" y="50" width="168" height="92" rx="28" fill="url(#gW)" />
+            <rect x="30" y="62" width="10" height="66" rx="5" fill="url(#gHi)" />
+            <rect x="10" y="10" width="180" height="48" rx="14" fill="url(#gK)" />
+            <rect x="24" y="18" width="60" height="6" rx="3" fill="#ffffff" opacity="0.25" />
+            <text x="100" y="104" text-anchor="middle" font-family="Inter" font-weight="800" font-size="20" fill="#0f0f12">OB</text>
+            <text x="100" y="120" text-anchor="middle" font-family="IBM Plex Mono" font-weight="700" font-size="7" letter-spacing="1.5" fill="#6d6a65">MOISTURIZER</text>
+          </g>
+          <g id="p-tube">
+            <path d="M14 22 L96 22 L84 268 L26 268 Z" fill="url(#gW)" />
+            <path d="M24 34 L32 34 L36 250 L30 250 Z" fill="url(#gHi)" />
+            <rect x="8" y="8" width="94" height="20" rx="4" fill="#d9d4cc" />
+            <rect x="28" y="264" width="54" height="50" rx="10" fill="url(#gK)" />
+            <circle cx="55" cy="96" r="16" fill="#e5303a" />
+            <text x="55" y="150" text-anchor="middle" font-family="Inter" font-weight="800" font-size="22" fill="#0f0f12">SPF</text>
+            <text x="55" y="176" text-anchor="middle" font-family="Inter" font-weight="800" font-size="24" fill="#e5303a">30+</text>
+          </g>
+          <g id="p-tall">
+            <rect x="12" y="70" width="66" height="262" rx="30" fill="url(#gR)" />
+            <rect x="22" y="90" width="8" height="220" rx="4" fill="url(#gHi)" />
+            <rect x="26" y="20" width="38" height="56" rx="8" fill="url(#gK)" />
+          </g>
+          <g id="p-slim">
+            <rect x="14" y="40" width="52" height="250" rx="12" fill="url(#gK)" />
+            <rect x="20" y="52" width="6" height="220" rx="3" fill="#ffffff" opacity="0.22" />
+            <rect x="22" y="10" width="36" height="34" rx="6" fill="url(#gW)" />
+          </g>
+        </defs>
+      </svg>
+    </div>
+
+    <script>
+      (function () {
+        const $ = (s) => document.querySelector(s);
+        const $$ = (s) => Array.from(document.querySelectorAll(s));
+        const L = window.T.lines;
+        const A = (k, o) => L[k].start + (o || 0);
+        const E = (k, o) => L[k].start + L[k].dur + (o || 0);
+        const W = (k, i, o) => L[k].words[i][1] + (o || 0);
+        const NS = "http://www.w3.org/2000/svg";
+
+        // ---------- build: shelf of ten products ----------
+        const shelf = $("#shelf");
+        const kinds = [
+          ["p-pump", 120, 300, 0.78], ["p-drop", 100, 260, 0.8], ["p-tall", 90, 340, 0.72], ["p-jar", 200, 150, 0.7], ["p-slim", 80, 300, 0.78],
+          ["p-tube", 110, 320, 0.72], ["p-pump", 120, 300, 0.66], ["p-drop", 100, 260, 0.7], ["p-slim", 80, 300, 0.66], ["p-jar", 200, 150, 0.6],
+        ];
+        // two rows, each sitting on a baseline
+        const slots = [
+          [150, 1180], [265, 1180], [370, 1180], [470, 1180], [640, 1180], [745, 1180],
+          [220, 1420], [360, 1420], [520, 1420], [640, 1420],
+        ];
+        const prodEls = [];
+        kinds.forEach(([id, vw, vh, k], i) => {
+          const w = vw * k * 1.15, h = vh * k * 1.15;
+          const [x, base] = slots[i];
+          const wrap = document.createElement("div");
+          wrap.className = "abs sp";
+          wrap.style.cssText = "left:" + x + "px;top:" + (base - h) + "px;width:" + w + "px;height:" + (h + 30) + "px";
+          wrap.innerHTML =
+            '<div class="shadow" style="left:' + (-w * 0.15) + "px;top:" + (h - 14) + "px;width:" + w * 1.3 + 'px;height:30px"></div>' +
+            '<svg class="abs" style="left:0;top:0" width="' + w + '" height="' + h + '" viewBox="0 0 ' + vw + " " + vh + '"><use href="#' + id + '"/></svg>';
+          shelf.appendChild(wrap);
+          prodEls.push(wrap);
+        });
+        // habit tracker: 4 weeks x 7 days
+        const tracker = $("#tracker");
+        const dots = [];
+        for (let r = 0; r < 4; r++)
+          for (let c = 0; c < 7; c++) {
+            const d = document.createElement("div");
+            d.className = "abs";
+            d.style.cssText = "left:" + (24 + c * 96) + "px;top:" + (40 + r * 130) + "px;width:72px;height:72px;border-radius:50%;border:3px solid #e2ded7;background:#fff";
+            const f = document.createElement("div");
+            f.className = "abs";
+            f.style.cssText = "inset:-3px;border-radius:50%;background:" + (r === 3 && c === 6 ? "#e5303a" : "#0f0f12");
+            d.appendChild(f);
+            tracker.appendChild(d);
+            dots.push(f);
+          }
+        const tlab = document.createElement("div");
+        tlab.className = "abs mono";
+        tlab.style.cssText = "left:24px;top:-20px;font-size:22px;color:#6f6d69";
+        tlab.textContent = "Semana 1 — 4";
+        tracker.appendChild(tlab);
+        // barcode
+        const bc = $("#barcode");
+        let x = 0;
+        [3, 1, 2, 1, 4, 1, 1, 3, 2, 1, 1, 2, 3, 1, 2, 4, 1, 1, 2, 3, 1, 2, 1, 1, 3, 2, 1, 4, 1, 2].forEach((w, i) => {
+          if (i % 2 === 0) {
+            const r = document.createElementNS(NS, "rect");
+            r.setAttribute("x", x * 2.1);
+            r.setAttribute("y", 0);
+            r.setAttribute("width", w * 2.1);
+            r.setAttribute("height", 46);
+            r.setAttribute("fill", "#0f0f12");
+            bc.appendChild(r);
+          }
+          x += w;
+        });
+
+        // ---------- timeline ----------
+        const tl = gsap.timeline({ paused: true, defaults: { ease: "power3.out", duration: 0.6 } });
+        const words = $$(".w[data-l]");
+        gsap.set(words, { opacity: 0, y: 30, filter: "blur(14px)" });
+        gsap.set(".tb", { opacity: 1 });
+        gsap.set("#endc", { opacity: 0 });
+        gsap.set(prodEls, { opacity: 0, y: 50, scale: 0.85, filter: "blur(10px)", transformOrigin: "50% 100%" });
+        gsap.set(["#chart-flat", "#chart-up", "#tracker", "#hero-wrap", "#rcard", "#bookmark", "#grid", "#flash"], { opacity: 0 });
+        gsap.set(".hero", { opacity: 0 });
+        gsap.set(dots, { scale: 0, transformOrigin: "50% 50%" });
+        gsap.set(["#flat-line"], { strokeDasharray: 700, strokeDashoffset: 700 });
+        gsap.set(["#up-line"], { strokeDasharray: 820, strokeDashoffset: 820 });
+        gsap.set(["#up-area", "#up-dot", "#flat-dot", "#flat-pct"], { opacity: 0 });
+        gsap.set("#strike-p", { strokeDasharray: 300, strokeDashoffset: 300 });
+        gsap.set("#bm-line", { strokeDasharray: 1100, strokeDashoffset: 1100 });
+        gsap.set("#bm-fill", { opacity: 0 });
+        gsap.set(".ckp", { strokeDasharray: 30, strokeDashoffset: 30 });
+        gsap.set(".ri", { opacity: 0.35 });
+        gsap.set("#pfill", { scaleX: 0 });
+        gsap.set("#cam", { filter: "blur(0px)" });
+
+        // word reveals: blur into focus on the spoken word
+        // the first word is on screen from frame 0 so the opening frame already reads
+        const first = words[0];
+        gsap.set(first, { opacity: 1, y: 0, filter: "blur(0px)" });
+        words.slice(1).forEach((el) => {
+          const t = W(el.dataset.l, +el.dataset.i, -0.05);
+          const big = el.classList.contains("r") || el.classList.contains("xl");
+          tl.fromTo(el, { opacity: 0, y: big ? 40 : 26, filter: big ? "blur(18px)" : "blur(12px)", scale: big ? 1.12 : 1 }, { opacity: 1, y: 0, filter: "blur(0px)", scale: 1, duration: big ? 0.6 : 0.45, ease: "power3.out", immediateRender: false }, t);
+        });
+        // text block exits: lift and defocus
+        function blockOut(sel, at) {
+          tl.to(sel, { opacity: 0, y: -40, filter: "blur(12px)", duration: 0.3, ease: "power2.in" }, at);
+        }
+        blockOut("#t01", A("l02", -0.3));
+        blockOut("#t02", A("l03", -0.3));
+        blockOut("#t03", A("l04", -0.3));
+        blockOut("#t04", A("l05", -0.3));
+        blockOut("#t05", A("l06", -0.3));
+        blockOut("#t06", A("l07", -0.3));
+        blockOut("#t07", A("l08", -0.3));
+        blockOut("#t08", A("l09", -0.3));
+        blockOut("#t09", A("l10", -0.3));
+        blockOut("#t10a", W("l10", 6, -0.3));
+
+        // camera: always breathing in, a small kick on each scene change
+        const cuts = ["l02", "l03", "l04", "l05", "l08", "l09", "l10"].map((k) => A(k, -0.3));
+        tl.fromTo("#cam", { scale: 1.0 }, { scale: 1.035, duration: cuts[0], ease: "none", transformOrigin: "50% 45%" }, 0);
+        cuts.forEach((t, i) => {
+          const next = cuts[i + 1] || 22.4;
+          tl.to("#cam", { filter: "blur(8px)", duration: 0.14, ease: "power2.in" }, t);
+          tl.to("#cam", { filter: "blur(0px)", duration: 0.26, ease: "power2.out" }, t + 0.14);
+          tl.fromTo("#cam", { scale: 1.05 }, { scale: 1.0, duration: 0.5, ease: "expo.out", immediateRender: false }, t + 0.14);
+          tl.to("#cam", { scale: 1.03, duration: next - (t + 0.64), ease: "none" }, t + 0.64);
+        });
+        // soft arc + grid drift
+        tl.fromTo("#arc", { rotation: 0 }, { rotation: 38, svgOrigin: "800 800", duration: 22.4, ease: "none" }, 0);
+        tl.fromTo("#pfill", { scaleX: 0 }, { scaleX: 1, duration: 22.4, ease: "none" }, 0);
+        const idx = $("#idx");
+        const scenesAt = [0, A("l02", -0.3), A("l03", -0.3), A("l04", -0.3), A("l05", -0.3), A("l08", -0.3), A("l09", -0.3), A("l10", -0.3)];
+        const idxEls = scenesAt.map((t, i) => {
+          const sp = document.createElement("span");
+          sp.className = "abs";
+          sp.style.cssText = "right:0;top:0;white-space:nowrap";
+          sp.textContent = String(i + 1).padStart(2, "0") + " / 08";
+          idx.appendChild(sp);
+          return sp;
+        });
+        gsap.set(idxEls, { opacity: 0 });
+        scenesAt.forEach((t, i) => {
+          tl.set(idxEls, { opacity: 0 }, t);
+          tl.set(idxEls[i], { opacity: 1 }, t);
+        });
+
+        // ===== 1. ten products appear one by one =====
+        prodEls.forEach((p, i) => {
+          if (i < 3) gsap.set(p, { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" });
+          else tl.to(p, { opacity: 1, y: 0, scale: 1, filter: "blur(0px)", duration: 0.5, ease: "power3.out" }, 0.02 + (i - 3) * 0.07);
+        });
+        tl.fromTo("#ghost10", { scale: 1.06 }, { scale: 1, duration: 2.0, ease: "power2.out", transformOrigin: "50% 50%" }, 0);
+        tl.to("#ghost10", { opacity: 0, filter: "blur(14px)", duration: 0.4, ease: "power2.in" }, A("l02", -0.3));
+        // ===== 2. ...and nothing changes: products recede, a flat line draws =====
+        tl.to(prodEls, { opacity: 0.16, filter: "blur(6px)", scale: 0.92, duration: 0.5, ease: "power2.inOut" }, A("l02", -0.25));
+        tl.to("#chart-flat", { opacity: 1, duration: 0.4 }, A("l02", -0.1));
+        tl.to("#flat-line", { strokeDashoffset: 0, duration: 1.0, ease: "power2.inOut" }, A("l02"));
+        tl.to(["#flat-dot", "#flat-pct"], { opacity: 1, duration: 0.3 }, W("l02", 4, 0.05));
+        tl.fromTo("#flat-pct", { scale: 1.3 }, { scale: 1, duration: 0.5, transformOrigin: "100% 100%", immediateRender: false }, W("l02", 4, 0.05));
+        tl.to("#chart-flat", { opacity: 0, filter: "blur(10px)", duration: 0.3, ease: "power2.in" }, A("l03", -0.3));
+        // ===== 3. "más" gets struck through, the clutter falls away =====
+        tl.to(prodEls, { opacity: 1, filter: "blur(0px)", scale: 1, duration: 0.45 }, A("l03", -0.1));
+        tl.to("#strike-p", { strokeDashoffset: 0, duration: 0.35, ease: "power3.inOut" }, W("l03", 5, 0.2));
+        prodEls.forEach((p, i) => {
+          tl.to(p, { y: 900, rotation: (i % 2 ? 1 : -1) * (12 + i * 3), opacity: 0, duration: 0.7, ease: "power3.in" }, W("l03", 6, -0.1) + i * 0.04);
+        });
+        // ===== 4. consistency: four weeks fill in =====
+        tl.to(["#tracker"], { opacity: 1, duration: 0.3 }, A("l04", -0.15));
+        dots.forEach((d, i) => tl.to(d, { scale: 1, duration: 0.25, ease: "power3.out" }, A("l04") + i * 0.045));
+        tl.to("#tracker", { opacity: 0, filter: "blur(10px)", duration: 0.3, ease: "power2.in" }, A("l05", -0.3));
+        // ===== 5. the routine: one hero at a time, ticked off on the pinned card =====
+        tl.to(["#hero-wrap", "#grid"], { opacity: 1, duration: 0.3 }, A("l05", -0.2));
+        tl.fromTo("#rcard", { opacity: 0, x: -80, rotation: -9 }, { opacity: 1, x: 0, rotation: -3, duration: 0.8, ease: "expo.out", immediateRender: false }, A("l05", -0.1));
+        [["#hero1", "l05", "#ri1"], ["#hero2", "l06", "#ri2"], ["#hero3", "l07", "#ri3"]].forEach(([h, k, ri], i) => {
+          tl.fromTo(h, { opacity: 0, y: 70, scale: 0.9, filter: "blur(14px)" }, { opacity: 1, y: 0, scale: 1, filter: "blur(0px)", duration: 0.7, ease: "power3.out", transformOrigin: "50% 100%", immediateRender: false }, A(k, -0.1));
+          tl.fromTo(h, { rotation: 0 }, { rotation: i === 1 ? -2 : 3, duration: 1.4, ease: "sine.inOut", immediateRender: false }, A(k, 0.6));
+          if (i < 2) tl.to(h, { opacity: 0, y: -40, filter: "blur(12px)", duration: 0.3, ease: "power2.in" }, A(["l06", "l07"][i], -0.3));
+          tl.to(ri, { opacity: 1, duration: 0.3 }, W(k, k === "l07" ? 1 : k === "l06" ? 2 : 1, 0));
+          tl.to(ri + " .ckp", { strokeDashoffset: 0, duration: 0.35, ease: "power3.inOut" }, W(k, k === "l07" ? 2 : k === "l06" ? 3 : 2, 0.1));
+        });
+        tl.to(["#hero-wrap", "#rcard", "#grid"], { opacity: 0, filter: "blur(12px)", duration: 0.3, ease: "power2.in" }, A("l08", -0.3));
+        // ===== 6. TODOS. LOS. DÍAS. =====
+        [0, 1, 2].forEach((i) => {
+          tl.fromTo("#cam", { x: 0 }, { keyframes: { x: [0, 10, -7, 4, 0] }, duration: 0.24, ease: "none", immediateRender: false }, W("l08", i, 0.05));
+        });
+        tl.fromTo("#flash", { opacity: 0.4 }, { opacity: 0, duration: 0.25, immediateRender: false }, W("l08", 2));
+        // ===== 7. fewer steps, better results: the line finally rises =====
+        tl.to("#chart-up", { opacity: 1, duration: 0.3 }, A("l09", -0.1));
+        tl.to("#up-line", { strokeDashoffset: 0, duration: 1.2, ease: "power2.inOut" }, W("l09", 2, -0.1));
+        tl.to(["#up-area", "#up-dot"], { opacity: 1, duration: 0.5 }, W("l09", 3));
+        tl.fromTo("#up-dot", { scale: 0 }, { scale: 1, duration: 0.5, transformOrigin: "50% 50%", svgOrigin: "740 50", immediateRender: false }, W("l09", 3));
+        tl.to("#chart-up", { opacity: 0, filter: "blur(10px)", duration: 0.3, ease: "power2.in" }, A("l10", -0.3));
+        // ===== 8. save it, then the brand =====
+        tl.to("#bookmark", { opacity: 1, duration: 0.2 }, A("l10", -0.1));
+        tl.to("#bm-line", { strokeDashoffset: 0, duration: 0.6, ease: "power3.inOut" }, W("l10", 0));
+        tl.to("#bm-fill", { opacity: 1, duration: 0.25 }, W("l10", 0, 0.55));
+        tl.fromTo("#bookmark", { scale: 1 }, { scale: 1.08, duration: 0.15, ease: "power2.out", yoyo: true, repeat: 1, transformOrigin: "50% 50%", immediateRender: false }, W("l10", 0, 0.55));
+        tl.to("#bookmark", { opacity: 0, y: -40, filter: "blur(12px)", duration: 0.3, ease: "power2.in" }, W("l10", 6, -0.3));
+        tl.set("#endc", { opacity: 1 }, W("l10", 6, -0.1));
+        gsap.set("#lg-word-w", { clipPath: "inset(0% 100% 0% 0%)" });
+        gsap.set("#lg-rule", { scaleX: 0 });
+        gsap.set(["#follow"], { opacity: 0, y: 24 });
+        gsap.set("#f-b", { opacity: 0 });
+        tl.fromTo("#lg-mark", { opacity: 0, y: 40, scale: 0.9, filter: "blur(16px)" }, { opacity: 1, y: 0, scale: 1, filter: "blur(0px)", duration: 0.8, ease: "expo.out", immediateRender: false }, W("l10", 9, -0.15));
+        tl.to("#lg-word-w", { clipPath: "inset(0% 0% 0% 0%)", duration: 0.8, ease: "power4.inOut" }, W("l10", 9, 0.2));
+        tl.to("#lg-rule", { scaleX: 1, duration: 0.7, ease: "power4.inOut" }, W("l10", 9, 0.45));
+        tl.to("#follow", { opacity: 1, y: 0, duration: 0.6 }, W("l10", 9, 0.6));
+        const tap = W("l10", 9, 1.1);
+        tl.to("#follow", { scale: 0.95, duration: 0.09, ease: "power2.in" }, tap);
+        tl.to("#follow", { scale: 1, backgroundColor: "#e5303a", duration: 0.45 }, tap + 0.09);
+        tl.set("#f-a", { opacity: 0 }, tap + 0.09);
+        tl.set("#f-b", { opacity: 1 }, tap + 0.09);
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>
