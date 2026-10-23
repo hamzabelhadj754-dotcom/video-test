@@ -572,8 +572,9 @@
 
         // camera kick on every cut
         const cuts = ["l02", "l03", "l04", "l05", "l06", "l07", "l08", "l09", "l10", "l11", "l12"].map((k) => A(k, -0.3));
-        cuts.forEach((t) => {
-          tl.fromTo("#cam", { scale: 1.05, filter: "blur(7px)" }, { scale: 1, filter: "blur(0px)", duration: 0.5, ease: "expo.out", immediateRender: false }, t + 0.1);
+        // camera settle only where the whole frame changes (persistent items must not re-enter)
+        ["l03", "l10", "l11", "l12"].forEach((k) => {
+          tl.fromTo("#cam", { scale: 1.03 }, { scale: 1, duration: 0.6, ease: "expo.out", immediateRender: false }, A(k, -0.2));
         });
 
         // scene counter
