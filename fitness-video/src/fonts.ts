@@ -1,11 +1,11 @@
 import { loadFont } from "@remotion/fonts";
-import { staticFile } from "remotion";
 import { DISPLAY_FONT, LABEL_FONT } from "./constants";
+import { ANTON_WOFF2, OSWALD_500_WOFF2 } from "./fontData";
 
-// Fonts are bundled locally so rendering never depends on Google Fonts being reachable.
-loadFont({ family: DISPLAY_FONT, url: staticFile("fonts/anton.woff2") });
+loadFont({ family: DISPLAY_FONT, url: ANTON_WOFF2, format: "woff2" });
 loadFont({
   family: LABEL_FONT,
-  url: staticFile("fonts/oswald-500.woff2"),
+  url: OSWALD_500_WOFF2,
+  format: "woff2",
   weight: "500",
 });
