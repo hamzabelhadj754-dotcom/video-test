@@ -1,0 +1,32 @@
+{
+  "name": "fitness-video",
+  "version": "1.0.0",
+  "description": "Gains Dom - dark black & white motivational loop edits",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "@remotion/cli": "4.0.465",
+    "@remotion/fonts": "4.0.465",
+    "@remotion/media": "4.0.465",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "remotion": "4.0.465"
+  },
+  "devDependencies": {
+    "@fontsource/anton": "5.2.6",
+    "@fontsource/oswald": "5.2.6",
+    "@remotion/eslint-config-flat": "4.0.465",
+    "@types/react": "19.2.7",
+    "@types/web": "0.0.166",
+    "eslint": "9.19.0",
+    "prettier": "3.8.1",
+    "typescript": "5.9.3"
+  },
+  "scripts": {
+    "dev": "remotion studio",
+    "fetch-clips": "node scripts/fetch-clips.mjs",
+    "prep-clips": "node scripts/prep-clips.mjs",
+    "render": "remotion render GainsDom001 ../gains-dom-001.mp4 --crf=18 --concurrency=1 --timeout=240000",
+    "lint": "eslint src && tsc"
+  }
+}
