@@ -1,64 +1,6 @@
 import React from "react";
-import {
-  AbsoluteFill,
-  random,
-  useCurrentFrame,
-  useVideoConfig,
-} from "remotion";
-import { LABEL_FONT, WHITE } from "../constants";
-
-const GLITCH_LENGTH = 4;
-
-export const glitchProgress = (frame: number, cutFrames: number[]) => {
-  for (const f of cutFrames) {
-    const d = frame - f;
-    if (f > 0 && d >= 0 && d < GLITCH_LENGTH) {
-      return 1 - d / GLITCH_LENGTH;
-    }
-  }
-  return 0;
-};
-
-// Monochrome ghost-split for the footage layer on each cut (no colour fringing).
-export const GhostSplitFilter: React.FC<{ offset: number }> = ({ offset }) => (
-  <svg width={0} height={0} style={{ position: "absolute" }}>
-    <filter id="ghostsplit" x="-5%" y="0" width="110%" height="100%">
-      <feOffset in="SourceGraphic" dx={offset} result="right" />
-      <feOffset in="SourceGraphic" dx={-offset} result="left" />
-      <feBlend in="right" in2="left" mode="lighten" result="ghost" />
-      <feComponentTransfer in="ghost" result="dim">
-        <feFuncA type="linear" slope={0.55} />
-      </feComponentTransfer>
-      <feBlend in="SourceGraphic" in2="dim" mode="lighten" />
-    </filter>
-  </svg>
-);
-
-export const GlitchBars: React.FC<{ progress: number }> = ({ progress }) => {
-  const frame = useCurrentFrame();
-  const { height } = useVideoConfig();
-  if (progress === 0) {
-    return null;
-  }
-  return (
-    <AbsoluteFill style={{ mixBlendMode: "difference" }}>
-      {new Array(6).fill(0).map((_, i) => (
-        <div
-          key={i}
-          style={{
-            position: "absolute",
-            top: random(`gy-${frame}-${i}`) * height,
-            left: (random(`gx-${frame}-${i}`) * 2 - 1) * 140 * progress,
-            width: "100%",
-            height: 6 + random(`gh-${frame}-${i}`) * 60,
-            background: "white",
-            opacity: progress * 0.9,
-          }}
-        />
-      ))}
-    </AbsoluteFill>
-  );
-};
+import { AbsoluteFill, random, useCurrentFrame } from "remotion";
+import { SERIF, WHITE } from "../constants";
 
 // Crushed edges so the eye locks on the centre text.
 export const Vignette: React.FC = () => (
@@ -73,14 +15,14 @@ export const Vignette: React.FC = () => (
 export const Flicker: React.FC = () => {
   const frame = useCurrentFrame();
   const dip =
-    random(`flicker-${frame}`) > 0.92 ? 0.16 : random(`fl-${frame}`) * 0.05;
+    random(`flicker-${frame}`) > 0.95 ? 0.1 : random(`fl-${frame}`) * 0.04;
   return <AbsoluteFill style={{ backgroundColor: "black", opacity: dip }} />;
 };
 
 export const Grain: React.FC = () => {
   const frame = useCurrentFrame();
   return (
-    <AbsoluteFill style={{ mixBlendMode: "overlay", opacity: 0.35 }}>
+    <AbsoluteFill style={{ mixBlendMode: "overlay", opacity: 0.3 }}>
       <svg
         width="100%"
         height="100%"
@@ -130,59 +72,49 @@ export const Letterbox: React.FC = () => (
   </>
 );
 
-// Brand mark in the lower third, clear of TikTok/Reels UI at the very bottom.
+// Quiet brand mark in the lower third, clear of TikTok/Reels UI at the bottom.
 export const Wordmark: React.FC<{ series: string; number: number }> = ({
   series,
   number,
-}) => {
-  const rule: React.CSSProperties = {
-    width: 70,
-    height: 2,
-    background: WHITE,
-    opacity: 0.7,
-  };
-  return (
-    <AbsoluteFill style={{ alignItems: "center", top: 1390 }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 22 }}>
-        <div style={rule} />
-        <div
-          style={{
-            fontFamily: LABEL_FONT,
-            fontSize: 34,
-            letterSpacing: "0.55em",
-            marginRight: "-0.55em",
-            color: WHITE,
-          }}
-        >
-          GAINS DOM
-        </div>
-        <div style={rule} />
-      </div>
-      <div
-        style={{
-          fontFamily: LABEL_FONT,
-          fontSize: 22,
-          letterSpacing: "0.5em",
-          marginRight: "-0.5em",
-          marginTop: 12,
-          color: WHITE,
-          opacity: 0.6,
-        }}
-      >
-        {series} #{String(number).padStart(3, "0")}
-      </div>
-    </AbsoluteFill>
-  );
-};
+}) => (
+  <AbsoluteFill style={{ alignItems: "center", top: 1400 }}>
+    <div
+      style={{
+        fontFamily: SERIF,
+        fontWeight: 600,
+        fontSize: 28,
+        letterSpacing: "0.6em",
+        marginRight: "-0.6em",
+        color: WHITE,
+        opacity: 0.8,
+      }}
+    >
+      GAINS DOM
+    </div>
+    <div
+      style={{
+        fontFamily: SERIF,
+        fontStyle: "italic",
+        fontSize: 22,
+        letterSpacing: "0.15em",
+        marginTop: 8,
+        color: WHITE,
+        opacity: 0.5,
+      }}
+    >
+      {series.toLowerCase()} · {String(number).padStart(3, "0")}
+    </div>
+  </AbsoluteFill>
+);
 
-// White pop on the song's bass hits.
+// Soft white pop on the song's bass hits.
 export const AccentFlash: React.FC<{ frames: number[] }> = ({ frames }) => {
   const frame = useCurrentFrame();
   let opacity = 0;
   for (const f of frames) {
     const d = frame - f;
     if (f > 0 && d >= 0 && d < 4) {
-      opacity = Math.max(opacity, 0.7 * (1 - d / 4));
+      opacity = Math.max(opacity, 0.3 * (1 - d / 4));
     }
   }
   return opacity > 0 ? (

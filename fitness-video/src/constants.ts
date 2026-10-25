@@ -2,9 +2,8 @@ export const FPS = 30;
 export const WIDTH = 1080;
 export const HEIGHT = 1920;
 
-// Gains Dom is strictly black and white: emphasis comes from inversion, outline and size.
-export const WHITE = "#F4F4F4";
-export const BLACK = "#000000";
+// Gains Dom is strictly black and white.
+export const WHITE = "#F2F2F2";
 
-export const DISPLAY_FONT = "Anton";
-export const LABEL_FONT = "Oswald";
+// One quiet serif for everything: small, sentence case, emphasis in italic.
+export const SERIF = "Cormorant Garamond";

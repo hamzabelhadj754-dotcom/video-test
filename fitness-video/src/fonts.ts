@@ -1,11 +1,13 @@
 import { loadFont } from "@remotion/fonts";
-import { DISPLAY_FONT, LABEL_FONT } from "./constants";
-import { ANTON_WOFF2, OSWALD_500_WOFF2 } from "./fontData";
+import { SERIF } from "./constants";
+import { SERIF_500, SERIF_500_ITALIC, SERIF_600 } from "./fontData";
 
-loadFont({ family: DISPLAY_FONT, url: ANTON_WOFF2, format: "woff2" });
+loadFont({ family: SERIF, url: SERIF_500, format: "woff2", weight: "500" });
 loadFont({
-  family: LABEL_FONT,
-  url: OSWALD_500_WOFF2,
+  family: SERIF,
+  url: SERIF_500_ITALIC,
   format: "woff2",
   weight: "500",
+  style: "italic",
 });
+loadFont({ family: SERIF, url: SERIF_600, format: "woff2", weight: "600" });

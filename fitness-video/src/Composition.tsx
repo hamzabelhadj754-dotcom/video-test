@@ -22,16 +22,13 @@ import { Backdrop } from "./fx/Backdrop";
 import {
   AccentFlash,
   Flicker,
-  GhostSplitFilter,
-  glitchProgress,
-  GlitchBars,
   Grain,
   Letterbox,
   Vignette,
   Wordmark,
 } from "./fx/Overlays";
 import { framesSinceHit, shakeAt } from "./shake";
-import { WordSlam } from "./text/WordSlam";
+import { Caption } from "./text/Caption";
 
 const AVAILABLE = new Set<string>(available);
 
@@ -71,22 +68,16 @@ export const GainsDomLoop: React.FC<{
 }> = ({ episode, withAudio }) => {
   const frame = useCurrentFrame();
   const hits = hitsOf(episode);
-  const cutFrames = episode.cuts
-    .filter((c) => c.length >= 1)
-    .map((c) => atFrame(episode, c.from));
-  const glitch = glitchProgress(frame, cutFrames);
-  // Zoom punch on every hit, on top of the shake.
-  const punch = interpolate(framesSinceHit(frame, hits), [0, 6], [1.05, 1], {
+  // Subtle zoom punch on every hit, on top of a light camera nudge.
+  const punch = interpolate(framesSinceHit(frame, hits), [0, 8], [1.025, 1], {
     extrapolateRight: "clamp",
   });
   return (
     <AbsoluteFill style={{ backgroundColor: "black" }}>
       {withAudio && episode.audio && <Audio src={staticFile(episode.audio)} />}
-      <GhostSplitFilter offset={glitch * 26} />
       <AbsoluteFill
         style={{
-          transform: `${shakeAt(frame, hits, 24)} scale(${punch})`,
-          filter: glitch > 0 ? "url(#ghostsplit)" : undefined,
+          transform: `${shakeAt(frame, hits, 9)} scale(${punch})`,
         }}
       >
         {episode.cuts.map((cut) => {
@@ -103,14 +94,14 @@ export const GainsDomLoop: React.FC<{
         })}
       </AbsoluteFill>
       <Vignette />
-      <AbsoluteFill style={{ transform: shakeAt(frame, hits, 14) }}>
+      <AbsoluteFill>
         {episode.cards.map((card) => (
           <Sequence
             key={card.from}
             from={atFrame(episode, card.from)}
             durationInFrames={spanFrames(episode, card.from, card.length)}
           >
-            <WordSlam
+            <Caption
               card={card}
               toFrames={(b: number) => beatFrames(episode, b)}
             />
@@ -123,7 +114,6 @@ export const GainsDomLoop: React.FC<{
       />
       <Flicker />
       <Grain />
-      <GlitchBars progress={glitch} />
       <Letterbox />
     </AbsoluteFill>
   );

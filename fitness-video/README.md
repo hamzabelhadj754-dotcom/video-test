@@ -1,6 +1,6 @@
 # Gains Dom: dark loop edits
 
-Faceless, black & white, 15 s motivational loops (1080×1920, 30 fps, silent).
+Serious, faceless, black & white, 15 s motivational loops (1080×1920, 30 fps, silent).
 Add the song in-app on TikTok/Reels/Shorts.
 
 ## Daily workflow
@@ -17,9 +17,9 @@ Add the song in-app on TikTok/Reels/Shorts.
 ## Episode format
 Everything is in beats, so set `bpm` to your song's tempo and the cuts land on the beat.
 - `cuts`: `{ clip, backdrop, from, length, trimSeconds?, push? }`
-- `cards`: `{ from, length, lines: [{ text, at, style }] }`
-  - `style`: `solid` (white), `inverted` (black on white block) or `outline`.
-  - `instant` makes the first card visible on frame 0 (the hook).
+- `cards`: `{ from, length, lines: [{ text, at }] }`
+  - Text is a small serif (Cormorant Garamond) in sentence case. Wrap a word in `*asterisks*` to set it in italic.
+  - `instant` makes the card's beat-0 lines visible on frame 0 (the hook).
   - `hold` keeps the last card on screen to the end (the loop point).
 
 ### The loop

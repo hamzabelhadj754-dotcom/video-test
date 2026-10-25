@@ -16,7 +16,7 @@ export const shakeAt = (frame: number, hits: Hit[], amplitude: number) => {
     const decay = hit.strength * (1 - d / SHAKE_FRAMES) ** 2;
     x += (random(`x-${hit.frame}-${frame}`) * 2 - 1) * amplitude * decay;
     y += (random(`y-${hit.frame}-${frame}`) * 2 - 1) * amplitude * decay;
-    rot += (random(`r-${hit.frame}-${frame}`) * 2 - 1) * 0.6 * decay;
+    rot += (random(`r-${hit.frame}-${frame}`) * 2 - 1) * 0.25 * decay;
   }
   return `translate(${x}px, ${y}px) rotate(${rot}deg)`;
 };

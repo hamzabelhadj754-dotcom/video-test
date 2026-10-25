@@ -21,7 +21,7 @@ export const episode001: Episode = {
   lengthBeats: 32.65,
   durationSeconds: 15,
   audio: "music/song-001.m4a",
-  accents: [4, 8, 13, 16, 18, 20, 24, 28],
+  accents: [8, 13, 18, 24, 28],
   cuts: [
     // Hook: sweat close-up, text already on screen.
     { ...SWEAT, from: 0, length: 4, push: [1.04, 1.12] },
@@ -65,58 +65,51 @@ export const episode001: Episode = {
   cards: [
     {
       from: 0,
-      length: 4,
+      length: 8,
       instant: true,
       lines: [
-        { text: "NOBODY", at: 0 },
-        { text: "CARES", at: 0 },
-      ],
-    },
-    {
-      from: 4,
-      length: 4,
-      lines: [
-        { text: "HOW TIRED", at: 0 },
-        { text: "YOU ARE.", at: 2, style: "inverted" },
+        { text: "Nobody cares", at: 0 },
+        { text: "how *tired* you are.", at: 4 },
       ],
     },
     {
       from: 8,
       length: 8,
       lines: [
-        { text: "THEY SLEEP.", at: 0 },
-        { text: "YOU", at: 4, style: "outline" },
-        { text: "TRAIN.", at: 5, style: "inverted" },
+        { text: "Do it *tired.*", at: 0 },
+        { text: "Do it *alone.*", at: 5 },
       ],
     },
     {
       from: 16,
       length: 4,
       lines: [
-        { text: "MOTIVATION", at: 0, style: "outline" },
-        { text: "FADES.", at: 2 },
+        { text: "Motivation", at: 0 },
+        { text: "*fades.*", at: 2 },
       ],
     },
     {
       from: 20,
       length: 4,
       lines: [
-        { text: "DISCIPLINE", at: 0, style: "inverted" },
-        { text: "DOESN'T.", at: 2 },
+        { text: "Discipline", at: 0 },
+        { text: "*doesn't.*", at: 2 },
       ],
     },
     {
       from: 28,
       length: 2,
-      lines: [{ text: "EARN IT.", at: 0, style: "inverted" }],
+      lines: [{ text: "So get up.", at: 0 }],
     },
     {
+      // Loop point: lands exactly like frame 0. The second line never shows
+      // (it starts after the card ends) but keeps the layout identical.
       from: 30,
       length: 2.65,
       hold: true,
       lines: [
-        { text: "NOBODY", at: 0 },
-        { text: "CARES", at: 0.5 },
+        { text: "Nobody cares", at: 0.3 },
+        { text: "how *tired* you are.", at: 4 },
       ],
     },
   ],

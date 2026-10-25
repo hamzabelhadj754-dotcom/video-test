@@ -7,7 +7,6 @@ export type BackdropKind =
   | "speed"
   | "dust"
   | "void";
-export type LineStyle = "solid" | "inverted" | "outline";
 
 // Everything in an episode is written in beats so cuts land on the song's tempo.
 export type Cut = {
@@ -23,13 +22,14 @@ export type Cut = {
   overlay?: BackdropKind; // procedural layer over the footage (dust, rain…)
 };
 
-export type Line = { text: string; at: number; style?: LineStyle };
+// `text` may wrap words in *asterisks* to set them in italic.
+export type Line = { text: string; at: number };
 
 export type Card = {
   from: number;
   length: number;
   lines: Line[];
-  instant?: boolean; // fully landed on its first frame (the hook)
+  instant?: boolean; // lines at beat 0 are fully shown on the first frame (the hook)
   hold?: boolean; // no exit animation (the loop point)
 };
 
@@ -87,24 +87,12 @@ export const strobe = (
   return cuts;
 };
 
-// Frames where the camera shakes: text slams and bass accents hit hard, full
-// cuts nudge. Frame 0 is excluded so the first frame stays identical to the
-// loop's last frame.
+// Frames where the camera nudges: bass accents hit hardest, full cuts lightly.
+// Frame 0 is excluded so the first frame stays identical to the loop's last.
 export const hitsOf = (ep: Episode): Hit[] =>
   [
     ...ep.cuts
       .filter((c) => c.length >= 1)
-      .map((c) => ({ frame: atFrame(ep, c.from), strength: 0.5 })),
-    ...ep.cards.flatMap((card) =>
-      card.instant
-        ? []
-        : card.lines.map((l) => ({
-            frame: atFrame(ep, card.from + l.at),
-            strength: 1,
-          })),
-    ),
-    ...(ep.accents ?? []).map((b) => ({
-      frame: atFrame(ep, b),
-      strength: 1.3,
-    })),
+      .map((c) => ({ frame: atFrame(ep, c.from), strength: 0.4 })),
+    ...(ep.accents ?? []).map((b) => ({ frame: atFrame(ep, b), strength: 1 })),
   ].filter((h) => h.frame > 0);
