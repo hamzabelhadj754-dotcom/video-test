@@ -174,3 +174,18 @@ export const Wordmark: React.FC<{ series: string; number: number }> = ({
     </AbsoluteFill>
   );
 };
+
+// White pop on the song's bass hits.
+export const AccentFlash: React.FC<{ frames: number[] }> = ({ frames }) => {
+  const frame = useCurrentFrame();
+  let opacity = 0;
+  for (const f of frames) {
+    const d = frame - f;
+    if (f > 0 && d >= 0 && d < 4) {
+      opacity = Math.max(opacity, 0.7 * (1 - d / 4));
+    }
+  }
+  return opacity > 0 ? (
+    <AbsoluteFill style={{ backgroundColor: "white", opacity }} />
+  ) : null;
+};

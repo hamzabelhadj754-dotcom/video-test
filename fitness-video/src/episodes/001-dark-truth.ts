@@ -1,65 +1,66 @@
-import { Episode } from "../episode";
+import { Episode, strobe } from "../episode";
 
-// 15 s loop at 120 BPM (2 beats per second). The last beat replays the opening
-// shot's first second and re-slams the hook, landing exactly on frame 0.
+// Cut to the song in public/music/song-001.m4a: ~130 BPM, bass hits on every
+// 4th beat (1.79 s, 3.64 s, 5.5 s …), drum rolls at beats 12–13 and 26.3–26.7.
+// The last 2.65 beats replay the hook so the 15 s video loops with the song.
+const TEMPO = { bpm: 130.1 };
+
+const SWEAT = { clip: "07-sweat", backdrop: "dust" } as const;
+const LIFT = { clip: "04-deadlift", backdrop: "spotlight" } as const;
+const BAG = { clip: "05-boxing", backdrop: "speed" } as const;
+const DUMBBELL = { clip: "03-dumbbell", backdrop: "dust" } as const;
+const RUN = { clip: "06-rain-run", backdrop: "rain" } as const;
+const HERO = { clip: "08-silhouette", backdrop: "smoke" } as const;
+
 export const episode001: Episode = {
   id: "GainsDom001",
   number: 1,
   series: "DARK TRUTH",
-  bpm: 120,
-  lengthBeats: 30,
+  ...TEMPO,
+  offsetSeconds: -0.055,
+  lengthBeats: 32.65,
+  durationSeconds: 15,
+  audio: "music/song-001.m4a",
+  accents: [4, 8, 13, 16, 18, 20, 24, 28],
   cuts: [
-    {
-      clip: "01-dark-gym",
-      backdrop: "spotlight",
-      from: 0,
-      length: 4,
-      trimSeconds: 1,
-      push: [1.04, 1.12],
-    },
-    { clip: "07-sweat", backdrop: "dust", from: 4, length: 2 },
-    { clip: "02-chalk", backdrop: "dust", from: 6, length: 2 },
-    { clip: "03-barbell", backdrop: "speed", from: 8, length: 1 },
-    { clip: "04-deadlift", backdrop: "spotlight", from: 9, length: 1 },
-    { clip: "05-boxing", backdrop: "speed", from: 10, length: 1 },
-    {
-      clip: "03-barbell",
-      backdrop: "speed",
-      from: 11,
-      length: 1,
-      trimSeconds: 1,
-    },
-    {
-      clip: "04-deadlift",
-      backdrop: "spotlight",
-      from: 12,
-      length: 1,
-      trimSeconds: 1,
-    },
-    {
-      clip: "05-boxing",
-      backdrop: "speed",
-      from: 13,
-      length: 1,
-      trimSeconds: 1,
-    },
-    {
-      clip: "04-deadlift",
-      backdrop: "spotlight",
-      from: 14,
-      length: 2,
-      trimSeconds: 2,
-    },
-    { clip: "06-rain-run", backdrop: "rain", from: 16, length: 6 },
-    { clip: "08-silhouette", backdrop: "smoke", from: 22, length: 6 },
-    {
-      clip: "01-dark-gym",
-      backdrop: "spotlight",
-      from: 28,
-      length: 2,
-      trimSeconds: 0,
-      push: [1.0, 1.04],
-    },
+    // Hook: sweat close-up, text already on screen.
+    { ...SWEAT, from: 0, length: 4, push: [1.04, 1.12] },
+    { ...DUMBBELL, from: 4, length: 2, trimSeconds: 12, overlay: "dust" },
+    { ...SWEAT, from: 6, length: 2, push: [1.4, 1.5] },
+    { ...LIFT, from: 8, length: 4, trimSeconds: 0.8, rate: 1.15 },
+    ...strobe(
+      TEMPO,
+      [
+        { ...LIFT, trimSeconds: 3.2 },
+        { ...BAG, trimSeconds: 9 },
+        { ...DUMBBELL, trimSeconds: 8.5 },
+      ],
+      12,
+      13,
+    ),
+    { ...BAG, from: 13, length: 3, trimSeconds: 4, rate: 0.75 },
+    // Runner keeps going… then collapses on "FADES."
+    { ...RUN, from: 16, length: 2, trimSeconds: 10.6 },
+    { ...RUN, from: 18, length: 2, trimSeconds: 12.6, rate: 0.8 },
+    { ...HERO, from: 20, length: 4, push: [1.0, 1.15], overlay: "smoke" },
+    // Beat montage, footage only.
+    { ...BAG, from: 24, length: 1, trimSeconds: 1 },
+    { ...LIFT, from: 25, length: 1, trimSeconds: 2.6 },
+    { ...DUMBBELL, from: 26, length: 0.25, trimSeconds: 8 },
+    ...strobe(
+      TEMPO,
+      [
+        { ...BAG, trimSeconds: 12 },
+        { ...RUN, trimSeconds: 4 },
+        { ...LIFT, trimSeconds: 4 },
+      ],
+      26.25,
+      26.75,
+    ),
+    { ...DUMBBELL, from: 26.75, length: 1.25, trimSeconds: 9.5 },
+    { ...BAG, from: 28, length: 2, trimSeconds: 6, rate: 0.6 },
+    // Loop point: back to the hook shot, ending where frame 0 begins.
+    { ...SWEAT, from: 30, length: 2.65, push: [1.0, 1.04] },
   ],
   cards: [
     {
@@ -90,15 +91,15 @@ export const episode001: Episode = {
     },
     {
       from: 16,
-      length: 6,
+      length: 4,
       lines: [
         { text: "MOTIVATION", at: 0, style: "outline" },
         { text: "FADES.", at: 2 },
       ],
     },
     {
-      from: 22,
-      length: 6,
+      from: 20,
+      length: 4,
       lines: [
         { text: "DISCIPLINE", at: 0, style: "inverted" },
         { text: "DOESN'T.", at: 2 },
@@ -107,6 +108,11 @@ export const episode001: Episode = {
     {
       from: 28,
       length: 2,
+      lines: [{ text: "EARN IT.", at: 0, style: "inverted" }],
+    },
+    {
+      from: 30,
+      length: 2.65,
       hold: true,
       lines: [
         { text: "NOBODY", at: 0 },

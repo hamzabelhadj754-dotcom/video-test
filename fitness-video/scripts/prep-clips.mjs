@@ -9,7 +9,7 @@ const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname.replace
 const RAW = path.join(ROOT, "clips");
 const OUT = path.join(ROOT, "public", "clips");
 const MANIFEST = path.join(ROOT, "src", "clips.json");
-const MAX_SECONDS = 8;
+const MAX_SECONDS = 16;
 
 const VIDEO = new Set([".mp4", ".mov", ".m4v", ".webm", ".mkv"]);
 const IMAGE = new Set([".jpg", ".jpeg", ".png", ".webp"]);
@@ -17,7 +17,7 @@ const IMAGE = new Set([".jpg", ".jpeg", ".png", ".webp"]);
 // Crop to 9:16, 30 fps, monochrome with crushed blacks, no audio.
 const GRADE =
   "scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,fps=30," +
-  "hue=s=0,eq=contrast=1.25:brightness=-0.05:gamma=0.9,format=yuv420p";
+  "hue=s=0,eq=contrast=1.15:gamma=1.15,format=yuv420p";
 
 const ffmpegCommand = () => {
   const bin = process.env.FFMPEG || "ffmpeg";

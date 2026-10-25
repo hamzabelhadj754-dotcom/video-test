@@ -19,6 +19,8 @@ export type Cut = {
   length: number;
   trimSeconds?: number;
   push?: [number, number];
+  rate?: number; // playback speed, e.g. 0.6 for slow motion
+  overlay?: BackdropKind; // procedural layer over the footage (dust, rain…)
 };
 
 export type Line = { text: string; at: number; style?: LineStyle };
@@ -36,29 +38,73 @@ export type Episode = {
   number: number;
   series: string;
   bpm: number;
+  offsetSeconds?: number; // where beat 0 falls in the song
   lengthBeats: number;
+  durationSeconds?: number; // fixed length, e.g. to match the song exactly
+  audio?: string; // song in public/, only played by the "-Music" composition
+  accents?: number[]; // bass hits (beats): flash + shake + zoom punch
   cuts: Cut[];
   cards: Card[];
 };
 
 export type Hit = { frame: number; strength: number };
 
-export const framesPerBeat = (ep: Episode) => (FPS * 60) / ep.bpm;
-export const toFrames = (ep: Episode, beats: number) =>
+export const framesPerBeat = (ep: Pick<Episode, "bpm">) => (FPS * 60) / ep.bpm;
+// Relative length in frames (no song offset).
+export const beatFrames = (ep: Episode, beats: number) =>
   Math.round(beats * framesPerBeat(ep));
-export const durationOf = (ep: Episode) => toFrames(ep, ep.lengthBeats);
+// Absolute frame of a beat on the song's timeline.
+export const atFrame = (ep: Episode, beat: number) =>
+  Math.max(
+    0,
+    Math.round((ep.offsetSeconds ?? 0) * FPS + beat * framesPerBeat(ep)),
+  );
+export const spanFrames = (ep: Episode, from: number, length: number) =>
+  atFrame(ep, from + length) - atFrame(ep, from);
+export const durationOf = (ep: Episode) =>
+  ep.durationSeconds
+    ? Math.round(ep.durationSeconds * FPS)
+    : atFrame(ep, ep.lengthBeats);
 
-// Frames where the camera shakes: text slams hit hard, cuts nudge. Frame 0 is
-// excluded so the first frame stays identical to the loop's last frame.
+// Rapid-fire cuts (default 2 frames each) cycling through clips, for drum rolls.
+export const strobe = (
+  ep: Pick<Episode, "bpm">,
+  clips: Pick<Cut, "clip" | "backdrop" | "trimSeconds">[],
+  from: number,
+  to: number,
+  frames = 2,
+): Cut[] => {
+  const step = frames / framesPerBeat(ep);
+  const cuts: Cut[] = [];
+  for (let b = from, i = 0; b < to - 1e-6; b += step, i++) {
+    cuts.push({
+      ...clips[i % clips.length],
+      from: b,
+      length: Math.min(step, to - b),
+      push: [1.1, 1.12],
+    });
+  }
+  return cuts;
+};
+
+// Frames where the camera shakes: text slams and bass accents hit hard, full
+// cuts nudge. Frame 0 is excluded so the first frame stays identical to the
+// loop's last frame.
 export const hitsOf = (ep: Episode): Hit[] =>
   [
-    ...ep.cuts.map((c) => ({ frame: toFrames(ep, c.from), strength: 0.5 })),
+    ...ep.cuts
+      .filter((c) => c.length >= 1)
+      .map((c) => ({ frame: atFrame(ep, c.from), strength: 0.5 })),
     ...ep.cards.flatMap((card) =>
       card.instant
         ? []
         : card.lines.map((l) => ({
-            frame: toFrames(ep, card.from + l.at),
+            frame: atFrame(ep, card.from + l.at),
             strength: 1,
           })),
     ),
+    ...(ep.accents ?? []).map((b) => ({
+      frame: atFrame(ep, b),
+      strength: 1.3,
+    })),
   ].filter((h) => h.frame > 0);

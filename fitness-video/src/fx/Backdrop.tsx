@@ -235,10 +235,15 @@ const Speed: React.FC<{ frame: number }> = ({ frame }) => {
   );
 };
 
-export const Backdrop: React.FC<{ kind: BackdropKind }> = ({ kind }) => {
+export const Backdrop: React.FC<{
+  kind: BackdropKind;
+  transparent?: boolean;
+}> = ({ kind, transparent }) => {
   const frame = useCurrentFrame();
   return (
-    <AbsoluteFill style={{ backgroundColor: "#050505" }}>
+    <AbsoluteFill
+      style={{ backgroundColor: transparent ? undefined : "#050505" }}
+    >
       {kind === "smoke" && <Smoke frame={frame} />}
       {kind === "spotlight" && <Spotlight frame={frame} />}
       {kind === "rain" && <Rain frame={frame} />}
