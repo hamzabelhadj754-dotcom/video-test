@@ -20,10 +20,17 @@ export type Cut = {
   push?: [number, number];
   rate?: number; // playback speed, e.g. 0.6 for slow motion
   overlay?: BackdropKind; // procedural layer over the footage (dust, rain…)
+  // How the shot arrives: hard cut (default), zoom-through with motion blur,
+  // or "inset": starts as a small framed window on black, expands on a beat.
+  entry?: "cut" | "zoom" | "inset";
+  insetBeats?: number; // beats the inset stays small before expanding
+  // Split screen: vertical panels of other clips slide in on the beat.
+  panels?: { clip: string; trimSeconds?: number }[];
 };
 
-// `text` may wrap words in *asterisks* to set them in italic.
-export type Line = { text: string; at: number };
+// `text` may wrap words in *asterisks* to set them in italic. A `hero` line
+// is set large in italic and revealed from behind a mask.
+export type Line = { text: string; at: number; hero?: boolean };
 
 export type Card = {
   from: number;
@@ -43,6 +50,9 @@ export type Episode = {
   durationSeconds?: number; // fixed length, e.g. to match the song exactly
   audio?: string; // song in public/, only played by the "-Music" composition
   accents?: number[]; // bass hits (beats): flash + shake + zoom punch
+  streaks?: boolean; // anamorphic light streak on every accent
+  burns?: number[]; // film-burn light sweeps (beats), e.g. at section changes
+  clock?: { at: number; label: string }[]; // small timestamp that ticks on
   cuts: Cut[];
   cards: Card[];
 };

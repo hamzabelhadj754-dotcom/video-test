@@ -42,6 +42,77 @@ const Word: React.FC<{ word: string; italic: boolean; frame: number }> = ({
   );
 };
 
+const HERO_REVEAL = 16;
+// Fit long hero lines to the frame: Cormorant italic averages ~0.45em a glyph.
+const heroSize = (text: string) =>
+  Math.min(172, Math.floor(820 / (text.length * 0.45)));
+const RULE_DELAY = 8;
+const RULE_DRAW = 14;
+
+// Large italic line rising out of a mask, letter-spacing settling as it lands,
+// with a hairline rule drawing in underneath.
+const Hero: React.FC<{ text: string; frame: number }> = ({ text, frame }) => {
+  const t = interpolate(frame, [0, HERO_REVEAL], [0, 1], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+    easing: Easing.out(Easing.exp),
+  });
+  const rule = interpolate(
+    frame,
+    [RULE_DELAY, RULE_DELAY + RULE_DRAW],
+    [0, 1],
+    {
+      extrapolateLeft: "clamp",
+      extrapolateRight: "clamp",
+      easing: Easing.inOut(Easing.cubic),
+    },
+  );
+  return (
+    <div
+      style={{
+        position: "relative",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
+      <div
+        style={{
+          overflow: "hidden",
+          padding: "0.05em 0.15em 0.28em",
+          marginBottom: "-0.2em",
+        }}
+      >
+        <div
+          style={{
+            fontFamily: SERIF,
+            fontStyle: "italic",
+            fontWeight: 500,
+            fontSize: heroSize(text),
+            lineHeight: 1.02,
+            color: WHITE,
+            whiteSpace: "nowrap",
+            letterSpacing: `${interpolate(t, [0, 1], [0.12, -0.01])}em`,
+            transform: `translateY(${(1 - t) * 105}%)`,
+            textShadow: "0 4px 40px rgba(0,0,0,0.85)",
+          }}
+        >
+          {text.replace(/\*/g, "")}
+        </div>
+      </div>
+      <div
+        style={{
+          width: 260 * rule,
+          height: 2,
+          marginTop: 34,
+          background: WHITE,
+          opacity: 0.85,
+        }}
+      />
+    </div>
+  );
+};
+
 // Small centred serif lines; each word fades up out of a soft blur.
 export const Caption: React.FC<{
   card: Card;
@@ -49,6 +120,7 @@ export const Caption: React.FC<{
 }> = ({ card, toFrames }) => {
   const frame = useCurrentFrame();
   const total = toFrames(card.length);
+  const hasHero = card.lines.some((l) => l.hero);
   const out = card.hold
     ? 0
     : interpolate(frame, [total - EXIT_FRAMES, total], [0, 1], {
@@ -81,6 +153,9 @@ export const Caption: React.FC<{
           card.instant && line.at === 0
             ? frame + LANDED
             : frame - toFrames(line.at);
+        if (line.hero) {
+          return <Hero key={line.text} text={line.text} frame={lineFrame} />;
+        }
         return (
           <div
             key={line.text}
@@ -88,7 +163,9 @@ export const Caption: React.FC<{
               position: "relative",
               fontFamily: SERIF,
               fontWeight: 500,
-              fontSize: 76,
+              // Next to a hero line the other lines become a small kicker.
+              fontSize: hasHero ? 58 : 76,
+              letterSpacing: hasHero ? "0.04em" : undefined,
               lineHeight: 1.25,
               color: WHITE,
               textAlign: "center",
