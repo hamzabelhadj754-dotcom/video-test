@@ -5,3 +5,6 @@ dist
 
 # Ignore the output video from Git but not videos you import into src/.
 out
+
+# Raw downloads are re-fetchable from clips/credits.json; prepped copies in public/clips are committed.
+clips/*.mp4
