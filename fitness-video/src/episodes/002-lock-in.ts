@@ -1,12 +1,15 @@
 import { Episode } from "../episode";
 
-// "Lock in": the hours nobody sees. Same song and beat map as #001
-// (~130 BPM, bass hits every 4th beat, drum rolls at beats 12–13 and
-// 26.3–26.7). Clips 21–30 are free Coverr footage, see clips/credits.json.
+// "Lock in": the hours nobody sees. Cut to "War of the Future" (free Coverr
+// track, public/music/war-of-the-future-002.m4a, 44.07–60.02 s of the song):
+// ~120.4 BPM, a quiet tense build for two bars, then the drop on beat 8 with a
+// hit on every bar after. Clips 21–30 are free Coverr footage, see
+// clips/credits.json.
 // Editorial style: kicker + hero titles, zoom-through cuts, inset frames that
 // open on the beat, triptych split-screens on the drum rolls.
-const TEMPO = { bpm: 130.1 };
-const OFFSET = -0.055;
+const TEMPO = { bpm: 120.43 };
+const OFFSET = 0;
+const BEATS = 32;
 
 const SHOES = { clip: "21-shoes", backdrop: "dust" } as const;
 const GYM = { clip: "23-dark-gym", backdrop: "spotlight" } as const;
@@ -21,7 +24,7 @@ const HERO = { clip: "08-silhouette", backdrop: "smoke" } as const;
 
 // The hook shot starts this far in; the loop shot ends exactly here.
 const HOOK_IN = 9;
-const LOOP_SECONDS = 15 - (OFFSET + 30 * (60 / TEMPO.bpm));
+const LOOP_SECONDS = (BEATS - 30) * (60 / TEMPO.bpm);
 
 export const episode002: Episode = {
   id: "GainsDom002",
@@ -29,10 +32,10 @@ export const episode002: Episode = {
   series: "DARK TRUTH",
   ...TEMPO,
   offsetSeconds: OFFSET,
-  lengthBeats: 32.65,
-  durationSeconds: 15,
-  audio: "music/song-001.m4a",
-  accents: [8, 13, 18, 24, 28],
+  lengthBeats: BEATS,
+  durationSeconds: BEATS * (60 / TEMPO.bpm),
+  audio: "music/war-of-the-future-002.m4a",
+  accents: [8, 12, 16, 20, 24, 28],
   streaks: true,
   burns: [8, 16, 28],
   clock: [
@@ -47,17 +50,16 @@ export const episode002: Episode = {
   cuts: [
     // Hook: lone silhouette at the end of a tunnel.
     { ...TUNNEL, from: 0, length: 4, trimSeconds: HOOK_IN, push: [1.04, 1.1] },
-    { ...SHOES, from: 4, length: 2, trimSeconds: 12, entry: "zoom" },
-    { ...RUN, from: 6, length: 2, trimSeconds: 3.5, entry: "zoom" },
-    // Alone on the road: a small framed window that opens up mid-phrase.
+    { ...SHOES, from: 4, length: 2, trimSeconds: 12 },
+    { ...RUN, from: 6, length: 2, trimSeconds: 3.5 },
+    // The drop: alone on the road, full frame.
     {
       ...RUN,
       from: 8,
       length: 4,
       trimSeconds: 5.5,
-      entry: "inset",
-      insetBeats: 2.5,
-      push: [1.0, 1.08],
+      entry: "zoom",
+      push: [1.0, 1.1],
     },
     {
       ...BOXING,
@@ -109,7 +111,7 @@ export const episode002: Episode = {
     {
       ...TUNNEL,
       from: 30,
-      length: 2.65,
+      length: 2,
       trimSeconds: HOOK_IN - LOOP_SECONDS,
       push: [1.0, 1.04],
     },
@@ -167,7 +169,7 @@ export const episode002: Episode = {
     {
       // Loop point: lands exactly like frame 0.
       from: 30,
-      length: 2.65,
+      length: 2,
       hold: true,
       lines: [
         { text: "Everyone wants", at: 0.25 },
