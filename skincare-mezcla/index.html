@@ -1,0 +1,650 @@
+<!doctype html>
+<html lang="es" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="assets/gsap.min.js"></script>
+    <script src="assets/timing.js"></script>
+    <style>
+      :root {
+        --ink: #0f0f12;
+        --ink-2: #3a3a40;
+        --gray: #6f6d69;
+        --paper: #fbfaf7;
+        --line: #e8e5df;
+        --red: #e5303a;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: var(--paper);
+      }
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: var(--paper);
+        font-family: "Inter", sans-serif;
+        color: var(--ink);
+      }
+      .clip {
+        position: absolute;
+        inset: 0;
+      }
+      .abs {
+        position: absolute;
+      }
+      .full {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 1080px;
+        height: 1920px;
+      }
+      .mono {
+        font-family: "IBM Plex Mono", monospace;
+        font-weight: 700;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+      #vignette {
+        background: radial-gradient(ellipse 80% 60% at 50% 48%, transparent 55%, rgba(15, 15, 18, 0.07) 100%);
+      }
+
+      /* kinetic type */
+      .tb {
+        position: absolute;
+        left: 60px;
+        width: 960px;
+        text-align: center;
+      }
+      .row {
+        display: block;
+        white-space: nowrap;
+      }
+      .w {
+        display: inline-block;
+        margin: 0 0.12em;
+        will-change: transform, filter, opacity;
+      }
+      .s {
+        font-weight: 400;
+        font-size: 62px;
+        letter-spacing: -0.035em;
+        color: var(--ink-2);
+      }
+      .b {
+        font-weight: 800;
+        font-size: 118px;
+        line-height: 0.98;
+        letter-spacing: -0.05em;
+      }
+      .r {
+        font-weight: 800;
+        font-size: 150px;
+        line-height: 0.95;
+        letter-spacing: -0.055em;
+        color: var(--red);
+      }
+      .xl {
+        font-weight: 900;
+        font-size: 260px;
+        line-height: 0.86;
+        letter-spacing: -0.06em;
+      }
+
+      .shadow {
+        position: absolute;
+        border-radius: 50%;
+        background: radial-gradient(closest-side, rgba(15, 15, 18, 0.28), rgba(15, 15, 18, 0.08) 60%, transparent);
+      }
+      .prod {
+        position: absolute;
+      }
+      .card {
+        position: absolute;
+        background: var(--ink);
+        color: #fff;
+        border-radius: 10px;
+        box-shadow:
+          0 40px 80px rgba(15, 15, 18, 0.28),
+          0 8px 20px rgba(15, 15, 18, 0.18);
+      }
+      .ghost {
+        left: 0;
+        top: 640px;
+        width: 1080px;
+        text-align: center;
+        font-weight: 900;
+        font-size: 700px;
+        line-height: 0.8;
+        letter-spacing: -0.07em;
+        color: #efece6;
+      }
+      .vcard {
+        width: 860px;
+        height: 560px;
+        border-radius: 30px;
+        overflow: hidden;
+        box-shadow: 0 40px 80px rgba(15, 15, 18, 0.22), 0 8px 20px rgba(15, 15, 18, 0.12);
+      }
+    </style>
+
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="46.55" data-width="1080" data-height="1920">
+      <div id="bg" class="clip" data-start="0" data-duration="46.55" data-track-index="0">
+        <svg id="arc" class="abs" style="left: -1150px; top: -200px; overflow: visible" width="1600" height="1600" viewBox="0 0 1600 1600">
+          <circle cx="800" cy="800" r="740" fill="none" stroke="#ece9e3" stroke-width="80" stroke-dasharray="1500 3150" stroke-linecap="round" />
+        </svg>
+      </div>
+
+      <video id="v1" class="vcard" src="assets/broll/sun.mp4" muted playsinline data-start="0.8" data-duration="7.0" data-track-index="5" style="position: absolute; left: 110px; top: 950px; object-fit: cover"></video>
+      <video id="v2" class="vcard" src="assets/broll/mirror.mp4" muted playsinline data-start="28.8" data-duration="4.5" data-track-index="6" style="position: absolute; left: 110px; top: 950px; object-fit: cover"></video>
+
+      <div id="stage" class="clip" data-start="0" data-duration="46.55" data-track-index="1" data-layout-allow-overlap data-layout-allow-occlusion data-layout-allow-overflow>
+        <div id="cam" class="full">
+          <div class="abs ghost" data-layout-ignore id="g1">01</div>
+          <div class="abs ghost" data-layout-ignore id="g2">02</div>
+          <div class="abs ghost" data-layout-ignore id="g3">03</div>
+          <div class="abs ghost" data-layout-ignore id="g4">1</div>
+
+          <!-- real footage cards -->
+          <div id="c1" class="abs" style="left: 110px; top: 950px; width: 860px; height: 560px; border-radius: 30px; overflow: hidden">
+            <div id="c1-tint" class="abs" style="inset: 0; background: rgba(229, 48, 58, 0.22)"></div>
+          </div>
+          <div id="c1-ring" class="abs" style="left: 110px; top: 950px; width: 860px; height: 560px; border-radius: 30px; border: 8px solid #e5303a"></div>
+          <div id="c1-warn" class="abs" style="left: 900px; top: 920px; width: 96px; height: 96px; border-radius: 50%; background: #e5303a; color: #fff; font-weight: 900; font-size: 66px; display: flex; align-items: center; justify-content: center">!</div>
+
+          <div id="c2" class="abs" style="left: 110px; top: 950px; width: 860px; height: 560px; border-radius: 30px; overflow: hidden">
+          </div>
+          <div id="c2-pills" class="abs" style="left: 110px; top: 1400px; width: 860px; display: flex; justify-content: center; align-items: center; gap: 18px"></div>
+          <div id="stamp" class="abs" style="left: 200px; top: 1090px; width: 680px; text-align: center; font-weight: 900; font-size: 190px; letter-spacing: -0.04em; color: #e5303a; border: 14px solid #e5303a; border-radius: 22px; padding: 6px 0 14px; line-height: 1">MITO</div>
+          <div id="okpill" class="abs" style="left: 200px; top: 1100px; width: 680px; height: 120px; border-radius: 999px; background: #0f0f12; color: #fff; font-weight: 800; font-size: 54px; display: flex; align-items: center; justify-content: center; gap: 18px">✓ Sí se puede</div>
+
+          <!-- mini products over card 1 -->
+          <div id="mix1" class="full"></div>
+
+          <!-- combo tiles -->
+          <div id="tiles" class="full"></div>
+          <svg id="conflict" class="abs" style="left: 60px; top: 910px; overflow: visible" width="960" height="560" viewBox="0 0 960 560"><rect id="conf-r" x="4" y="4" width="952" height="552" rx="48" fill="none" stroke="#e5303a" stroke-width="6" pathLength="100" /></svg>
+          <div id="plus" class="abs" style="left: 440px; top: 1120px; width: 200px; text-align: center; font-weight: 300; font-size: 150px; line-height: 1; color: #0f0f12">+</div>
+          <div id="xx" class="abs" style="left: 380px; top: 1130px; width: 320px; text-align: center; font-weight: 900; font-size: 190px; line-height: 1; color: #e5303a">×2</div>
+          <svg id="strike2" class="abs" style="left: 360px; top: 1180px; overflow: visible" width="360" height="100" viewBox="0 0 360 100"><path id="strike2-p" d="M10 70 L350 30" stroke="#0f0f12" stroke-width="16" stroke-linecap="round" fill="none" /></svg>
+          <div id="chip" class="abs mono" data-layout-ignore style="left: 64px; top: 872px; font-size: 28px; color: #6f6d69">Combo 1/3</div>
+          <div id="pill-irr" class="abs mono" data-layout-ignore style="left: 340px; top: 1492px; width: 400px; height: 62px; border-radius: 999px; background: #e5303a; color: #fff; font-size: 28px; display: flex; align-items: center; justify-content: center">Irritación</div>
+          <div id="pill-day" class="abs mono" data-layout-ignore style="left: 340px; top: 1492px; width: 400px; height: 62px; border-radius: 999px; background: #0f0f12; color: #fff; font-size: 28px; display: flex; align-items: center; justify-content: center">Mismo día</div>
+          <svg id="moon-i" class="abs" style="left: 220px; top: 880px; overflow: visible" width="100" height="100" viewBox="-50 -50 100 100"><path d="M18 -34 A38 38 0 1 0 34 18 A29 29 0 1 1 18 -34 Z" fill="#0f0f12" /></svg>
+          <svg id="sun-i" class="abs" style="left: 760px; top: 880px; overflow: visible" width="100" height="100" viewBox="-50 -50 100 100"><circle r="20" fill="#e5303a" /><g id="sun-i-r" stroke="#e5303a" stroke-width="5" stroke-linecap="round"></g></svg>
+          <div id="pill-doc" class="abs mono" data-layout-ignore style="left: 290px; top: 1492px; width: 500px; height: 62px; border-radius: 999px; background: #e5303a; color: #fff; font-size: 28px; display: flex; align-items: center; justify-content: center">✚ Dermatólogo</div>
+
+          <!-- bookmark + paper plane -->
+          <svg id="bookmark" class="abs" style="left: 410px; top: 960px; overflow: visible" width="260" height="340" viewBox="0 0 260 340">
+            <path id="bm-fill" d="M30 20 H230 V320 L130 240 L30 320 Z" fill="#0f0f12" />
+            <path id="bm-line" d="M30 20 H230 V320 L130 240 L30 320 Z" fill="none" stroke="#0f0f12" stroke-width="12" stroke-linejoin="round" />
+          </svg>
+          <svg id="trail" class="abs" style="left: 0; top: 0; overflow: visible" width="1080" height="1920" viewBox="0 0 1080 1920">
+            <path id="trail-p" d="M-60 1500 C 120 1380, 300 1330, 520 1130" stroke="#0f0f12" stroke-opacity="0.3" stroke-width="6" stroke-dasharray="4 22" stroke-linecap="round" fill="none" />
+          </svg>
+          <svg id="plane" class="abs" style="left: 290px; top: 1000px; overflow: visible" width="500" height="320" viewBox="0 0 500 320">
+            <path d="M20 150 L480 10 L230 290 Z" fill="#0f0f12" />
+            <path d="M230 290 L248 180 L480 10 Z" fill="#3a3a40" />
+            <path d="M248 180 L300 250 L230 290 Z" fill="#e5303a" />
+          </svg>
+
+          <!-- ===== kinetic text blocks ===== -->
+          <div class="tb" id="t01" style="top: 290px">
+            <span class="row"><span class="w r" data-l="l01" data-i="0" style="font-size: 180px">¡Cuidado!</span></span>
+            <span class="row"><span class="w s" data-l="l01" data-i="1">Mezclar</span><span class="w s" data-l="l01" data-i="2">estos</span></span>
+            <span class="row"><span class="w b" data-l="l01" data-i="3" style="font-size: 120px">productos</span></span>
+            <span class="row"><span class="w s" data-l="l01" data-i="4">puede</span><span class="w r" data-l="l01" data-i="5" style="font-size: 100px">irritar</span><span class="w s" data-l="l01" data-i="6">tu</span><span class="w s" data-l="l01" data-i="7">piel.</span></span>
+          </div>
+          <div class="tb" id="t02a" style="top: 300px">
+            <span class="row"><span class="w s" data-l="l02" data-i="0">Uno:</span><span class="w b" data-l="l02" data-i="1" style="font-size: 130px">retinol</span></span>
+            <span class="row"><span class="w s" data-l="l02" data-i="2">con</span><span class="w b" data-l="l02" data-i="3" style="font-size: 130px">ácidos</span></span>
+            <span class="row"><span class="w r" data-l="l02" data-i="4" style="font-size: 140px">exfoliantes.</span></span>
+          </div>
+          <div class="tb" id="t02b" style="top: 300px">
+            <span class="row"><span class="w s" data-l="l02" data-i="5">Dos</span><span class="w s" data-l="l02" data-i="6">activos</span></span>
+            <span class="row"><span class="w r" data-l="l02" data-i="7" style="font-size: 170px">fuertes</span></span>
+            <span class="row"><span class="w s" data-l="l02" data-i="8">a</span><span class="w s" data-l="l02" data-i="9">la</span><span class="w s" data-l="l02" data-i="10">vez,</span></span>
+            <span class="row"><span class="w s" data-l="l02" data-i="11" style="font-size: 54px">y</span><span class="w s" data-l="l02" data-i="12" style="font-size: 54px">tu</span><span class="w s" data-l="l02" data-i="13" style="font-size: 54px">piel</span><span class="w b" data-l="l02" data-i="14" style="font-size: 84px">se</span><span class="w b" data-l="l02" data-i="15" style="font-size: 84px">queja.</span></span>
+          </div>
+          <div class="tb" id="t03" style="top: 290px">
+            <span class="row"><span class="w s" data-l="l03" data-i="0">Dos:</span><span class="w b" data-l="l03" data-i="1" style="font-size: 120px">retinol</span></span>
+            <span class="row"><span class="w s" data-l="l03" data-i="2">con</span><span class="w b" data-l="l03" data-i="3" style="font-size: 120px">peróxido</span></span>
+            <span class="row"><span class="w s" data-l="l03" data-i="4">de</span><span class="w r" data-l="l03" data-i="5" style="font-size: 140px">benzoilo.</span></span>
+            <span class="row"><span class="w s" data-l="l03" data-i="6" style="font-size: 54px">Mejor</span><span class="w s" data-l="l03" data-i="7" style="font-size: 54px">úsalos</span><span class="w s" data-l="l03" data-i="8" style="font-size: 54px">en</span></span>
+            <span class="row"><span class="w b" data-l="l03" data-i="9" style="font-size: 84px">momentos</span><span class="w b" data-l="l03" data-i="10" style="font-size: 84px">distintos.</span></span>
+          </div>
+          <div class="tb" id="t04" style="top: 300px">
+            <span class="row"><span class="w s" data-l="l04" data-i="0">Tres:</span><span class="w b" data-l="l04" data-i="1" style="font-size: 130px">dos</span></span>
+            <span class="row"><span class="w r" data-l="l04" data-i="2" style="font-size: 140px">exfoliantes</span></span>
+            <span class="row"><span class="w s" data-l="l04" data-i="3">el</span><span class="w s" data-l="l04" data-i="4">mismo</span><span class="w b" data-l="l04" data-i="5" style="font-size: 100px">día.</span></span>
+            <span class="row"><span class="w s" data-l="l04" data-i="6">Más</span><span class="w s" data-l="l04" data-i="7">no</span><span class="w s" data-l="l04" data-i="8">es</span><span class="w b" data-l="l04" data-i="9" style="font-size: 100px">mejor.</span></span>
+          </div>
+          <div class="tb" id="t05" style="top: 290px">
+            <span class="row"><span class="w s" data-l="l05" data-i="0">¿Y</span><span class="w s" data-l="l05" data-i="1">la</span><span class="w b" data-l="l05" data-i="2" style="font-size: 100px">vitamina</span><span class="w b" data-l="l05" data-i="3" style="font-size: 100px">C</span></span>
+            <span class="row"><span class="w s" data-l="l05" data-i="4">con</span><span class="w s" data-l="l05" data-i="5">la</span><span class="w b" data-l="l05" data-i="6" style="font-size: 100px">niacinamida?</span></span>
+            <span class="row"><span class="w s" data-l="l05" data-i="7">Es</span><span class="w s" data-l="l05" data-i="8">un</span><span class="w r" data-l="l05" data-i="9" style="font-size: 150px">mito.</span></span>
+            <span class="row"><span class="w s" data-l="l05" data-i="10" style="font-size: 54px">Puedes</span><span class="w s" data-l="l05" data-i="11" style="font-size: 54px">usarlas</span><span class="w b" data-l="l05" data-i="12" style="font-size: 100px">juntas.</span></span>
+          </div>
+          <div class="tb" id="t06" style="top: 290px">
+            <span class="row"><span class="w s" data-l="l06" data-i="0">Si</span><span class="w s" data-l="l06" data-i="1">dudas,</span></span>
+            <span class="row"><span class="w s" data-l="l06" data-i="2">empieza</span><span class="w s" data-l="l06" data-i="3">con</span><span class="w b" data-l="l06" data-i="4" style="font-size: 110px">un</span><span class="w b" data-l="l06" data-i="5" style="font-size: 110px">solo</span></span>
+            <span class="row"><span class="w r" data-l="l06" data-i="6" style="font-size: 150px">producto,</span></span>
+            <span class="row"><span class="w s" data-l="l06" data-i="7" style="font-size: 54px">y</span><span class="w s" data-l="l06" data-i="8" style="font-size: 54px">consulta</span><span class="w s" data-l="l06" data-i="9" style="font-size: 54px">a</span><span class="w s" data-l="l06" data-i="10" style="font-size: 54px">tu</span></span>
+            <span class="row"><span class="w b" data-l="l06" data-i="11" style="font-size: 104px">dermatólogo.</span></span>
+          </div>
+          <div class="tb" id="t07a" style="top: 330px">
+            <span class="row"><span class="w b" data-l="l07" data-i="0" style="font-size: 130px">Guarda</span></span>
+            <span class="row"><span class="w s" data-l="l07" data-i="1">este</span><span class="w r" data-l="l07" data-i="2" style="font-size: 150px">video</span></span>
+            <span class="row"><span class="w s" data-l="l07" data-i="3" style="font-size: 54px">antes</span><span class="w s" data-l="l07" data-i="4" style="font-size: 54px">de</span><span class="w s" data-l="l07" data-i="5" style="font-size: 54px">comprar</span></span>
+            <span class="row"><span class="w s" data-l="l07" data-i="6" style="font-size: 54px">tu</span><span class="w s" data-l="l07" data-i="7" style="font-size: 54px">próximo</span><span class="w b" data-l="l07" data-i="8" style="font-size: 90px">producto,</span></span>
+          </div>
+          <div class="tb" id="t07b" style="top: 300px">
+            <span class="row"><span class="w s" data-l="l07" data-i="9" style="font-size: 70px">y</span><span class="w b" data-l="l07" data-i="10" style="font-size: 124px">envíaselo</span></span>
+            <span class="row"><span class="w s" data-l="l07" data-i="11" style="font-size: 54px">a</span><span class="w s" data-l="l07" data-i="12" style="font-size: 54px">esa</span><span class="w s" data-l="l07" data-i="13" style="font-size: 54px">amiga</span></span>
+            <span class="row"><span class="w s" data-l="l07" data-i="14" style="font-size: 54px">que</span><span class="w s" data-l="l07" data-i="15" style="font-size: 54px">lo</span><span class="w b" data-l="l07" data-i="16" style="font-size: 90px">mezcla</span></span>
+            <span class="row"><span class="w r" data-l="l07" data-i="17" style="font-size: 190px">todo.</span></span>
+          </div>
+          <!-- brand end -->
+          <div id="endc" class="abs" style="left: 0; top: 420px; width: 1080px; text-align: center">
+            <div class="row" style="text-align: center"><span class="w s" data-l="l08" data-i="0">Y</span><span class="w s" data-l="l08" data-i="1">sigue</span><span class="w s" data-l="l08" data-i="2">a</span></div>
+            <img id="lg-mark" src="assets/obelcha-mark-black.png" alt="" style="width: 470px; height: 337px; margin-top: 50px" />
+            <div id="lg-word-w" style="position: relative; width: 470px; height: 84px; margin: 26px auto 0; overflow: hidden">
+              <img src="assets/obelcha-word-black.png" alt="" style="position: absolute; left: 0; top: 0; width: 470px; height: 84px" />
+            </div>
+            <div id="lg-rule" style="width: 470px; height: 4px; background: var(--red); margin: 34px auto 0; transform-origin: 0 50%"></div>
+            <div id="follow" style="position: relative; width: 400px; height: 104px; margin: 44px auto 0; border-radius: 999px; background: var(--ink); color: #fff; font-weight: 800; font-size: 42px">
+              <span id="f-a" class="abs" style="inset: 0; display: flex; align-items: center; justify-content: center">Seguir</span>
+              <span id="f-b" class="abs" style="inset: 0; display: flex; align-items: center; justify-content: center">Siguiendo ✓</span>
+            </div>
+          </div>
+        </div>
+        <div id="flash" class="full" style="background: #fff"></div>
+      </div>
+
+      <!-- ============ EDITORIAL CHROME ============ -->
+      <div id="chrome" class="clip" data-start="0" data-duration="46.55" data-track-index="2">
+        <div class="abs" style="left: 64px; top: 210px; display: flex; align-items: center; gap: 14px">
+          <img src="assets/obelcha-mark-black.png" alt="" style="width: 56px; height: 40px" />
+          <span class="mono" style="font-size: 20px; color: var(--ink-2)">Skin notes · Nº 08</span>
+        </div>
+        <svg id="barcode" class="abs" style="right: 64px; top: 208px" width="150" height="46" viewBox="0 0 150 46"></svg>
+        <div id="idx" class="abs mono" style="right: 64px; top: 266px; width: 200px; height: 24px; font-size: 18px; color: var(--gray)"></div>
+        <div id="pbar" class="abs" style="left: 64px; top: 268px; width: 300px; height: 3px; background: var(--line)"><div id="pfill" style="width: 100%; height: 100%; background: var(--ink); transform-origin: 0 50%"></div></div>
+        <div id="vignette" class="full"></div>
+      </div>
+
+      <audio id="soundtrack" src="assets/soundtrack.wav" data-start="0" data-duration="46.55" data-track-index="3"></audio>
+
+      <!-- product symbols -->
+      <svg width="0" height="0" style="position: absolute">
+        <defs>
+          <linearGradient id="gW" x1="0" x2="1">
+            <stop offset="0" stop-color="#d9d5ce" /><stop offset="0.16" stop-color="#ffffff" /><stop offset="0.32" stop-color="#f6f4f0" />
+            <stop offset="0.7" stop-color="#ebe8e2" /><stop offset="0.9" stop-color="#d6d1c9" /><stop offset="1" stop-color="#c4beb5" />
+          </linearGradient>
+          <linearGradient id="gK" x1="0" x2="1">
+            <stop offset="0" stop-color="#0b0b0d" /><stop offset="0.22" stop-color="#4a4a52" /><stop offset="0.38" stop-color="#1c1c21" />
+            <stop offset="0.85" stop-color="#101013" /><stop offset="1" stop-color="#2a2a30" />
+          </linearGradient>
+          <linearGradient id="gR" x1="0" x2="1">
+            <stop offset="0" stop-color="#9e1820" /><stop offset="0.2" stop-color="#ff6a70" /><stop offset="0.4" stop-color="#e5303a" />
+            <stop offset="0.85" stop-color="#b5202a" /><stop offset="1" stop-color="#8c1219" />
+          </linearGradient>
+          <linearGradient id="gG" x1="0" x2="1">
+            <stop offset="0" stop-color="#b9b3a9" /><stop offset="0.2" stop-color="#f3efe8" /><stop offset="0.45" stop-color="#d9d3c9" />
+            <stop offset="0.85" stop-color="#bcb5aa" /><stop offset="1" stop-color="#a39b8f" />
+          </linearGradient>
+          <linearGradient id="gHi" x1="0" x2="1">
+            <stop offset="0" stop-color="#fff" stop-opacity="0" /><stop offset="0.5" stop-color="#fff" stop-opacity="0.85" /><stop offset="1" stop-color="#fff" stop-opacity="0" />
+          </linearGradient>
+          <g id="p-pump">
+            <rect x="10" y="92" width="100" height="200" rx="26" fill="url(#gW)" />
+            <rect x="22" y="104" width="10" height="170" rx="5" fill="url(#gHi)" />
+            <rect x="34" y="62" width="52" height="36" rx="8" fill="url(#gK)" />
+            <rect x="53" y="30" width="14" height="34" fill="#bdb8b0" />
+            <rect x="30" y="14" width="66" height="20" rx="7" fill="url(#gK)" />
+            <rect x="84" y="18" width="34" height="10" rx="5" fill="#141417" />
+            <text x="60" y="186" text-anchor="middle" font-family="Inter" font-weight="800" font-size="20" fill="#0f0f12">OB</text>
+            <rect x="38" y="196" width="44" height="3" fill="#0f0f12" />
+            <text x="60" y="214" text-anchor="middle" font-family="IBM Plex Mono" font-weight="700" font-size="7" letter-spacing="1.5" fill="#6d6a65">CLEANSER</text>
+          </g>
+          <g id="p-pump-b">
+            <rect x="10" y="92" width="100" height="200" rx="26" fill="url(#gW)" />
+            <rect x="22" y="104" width="10" height="170" rx="5" fill="url(#gHi)" />
+            <rect x="34" y="62" width="52" height="36" rx="8" fill="url(#gK)" />
+            <rect x="53" y="30" width="14" height="34" fill="#bdb8b0" />
+            <rect x="30" y="14" width="66" height="20" rx="7" fill="url(#gK)" />
+            <rect x="84" y="18" width="34" height="10" rx="5" fill="#141417" />
+            
+            <rect x="38" y="196" width="44" height="3" fill="#0f0f12" />
+            
+          </g>
+          <g id="p-drop">
+            <rect x="15" y="110" width="70" height="142" rx="14" fill="url(#gG)" />
+            <rect x="24" y="120" width="8" height="120" rx="4" fill="url(#gHi)" />
+            <rect x="32" y="66" width="36" height="50" rx="6" fill="url(#gK)" />
+            <ellipse cx="50" cy="42" rx="17" ry="28" fill="url(#gK)" />
+            <text x="50" y="190" text-anchor="middle" font-family="IBM Plex Mono" font-weight="700" font-size="9" letter-spacing="1" fill="#2d2b28">SERUM</text>
+          </g>
+          <g id="p-drop-b">
+            <rect x="15" y="110" width="70" height="142" rx="14" fill="url(#gG)" />
+            <rect x="24" y="120" width="8" height="120" rx="4" fill="url(#gHi)" />
+            <rect x="32" y="66" width="36" height="50" rx="6" fill="url(#gK)" />
+            <ellipse cx="50" cy="42" rx="17" ry="28" fill="url(#gK)" />
+            
+          </g>
+          <g id="p-jar">
+            <rect x="16" y="50" width="168" height="92" rx="28" fill="url(#gW)" />
+            <rect x="30" y="62" width="10" height="66" rx="5" fill="url(#gHi)" />
+            <rect x="10" y="10" width="180" height="48" rx="14" fill="url(#gK)" />
+            <rect x="24" y="18" width="60" height="6" rx="3" fill="#ffffff" opacity="0.25" />
+            <text x="100" y="104" text-anchor="middle" font-family="Inter" font-weight="800" font-size="20" fill="#0f0f12">OB</text>
+            <text x="100" y="120" text-anchor="middle" font-family="IBM Plex Mono" font-weight="700" font-size="7" letter-spacing="1.5" fill="#6d6a65">MOISTURIZER</text>
+          </g>
+          <g id="p-jar-b">
+            <rect x="16" y="50" width="168" height="92" rx="28" fill="url(#gW)" />
+            <rect x="30" y="62" width="10" height="66" rx="5" fill="url(#gHi)" />
+            <rect x="10" y="10" width="180" height="48" rx="14" fill="url(#gK)" />
+            <rect x="24" y="18" width="60" height="6" rx="3" fill="#ffffff" opacity="0.25" />
+            
+            
+          </g>
+          <g id="p-tube">
+            <path d="M14 22 L96 22 L84 268 L26 268 Z" fill="url(#gW)" />
+            <path d="M24 34 L32 34 L36 250 L30 250 Z" fill="url(#gHi)" />
+            <rect x="8" y="8" width="94" height="20" rx="4" fill="#d9d4cc" />
+            <rect x="28" y="264" width="54" height="50" rx="10" fill="url(#gK)" />
+            <circle cx="55" cy="96" r="16" fill="#e5303a" />
+            <text x="55" y="150" text-anchor="middle" font-family="Inter" font-weight="800" font-size="22" fill="#0f0f12">SPF</text>
+            <text x="55" y="176" text-anchor="middle" font-family="Inter" font-weight="800" font-size="24" fill="#e5303a">30+</text>
+          </g>
+          <g id="p-tube-b">
+            <path d="M14 22 L96 22 L84 268 L26 268 Z" fill="url(#gW)" />
+            <path d="M24 34 L32 34 L36 250 L30 250 Z" fill="url(#gHi)" />
+            <rect x="8" y="8" width="94" height="20" rx="4" fill="#d9d4cc" />
+            <rect x="28" y="264" width="54" height="50" rx="10" fill="url(#gK)" />
+            
+            
+            
+          </g>
+          <g id="p-tall">
+            <rect x="12" y="70" width="66" height="262" rx="30" fill="url(#gR)" />
+            <rect x="22" y="90" width="8" height="220" rx="4" fill="url(#gHi)" />
+            <rect x="26" y="20" width="38" height="56" rx="8" fill="url(#gK)" />
+          </g>
+          <g id="p-slim">
+            <rect x="14" y="40" width="52" height="250" rx="12" fill="url(#gK)" />
+            <rect x="20" y="52" width="6" height="220" rx="3" fill="#ffffff" opacity="0.22" />
+            <rect x="22" y="10" width="36" height="34" rx="6" fill="url(#gW)" />
+          </g>
+        </defs>
+      </svg>
+    </div>
+
+    <script>
+      (function () {
+        const $ = (s) => document.querySelector(s);
+        const $$ = (s) => Array.from(document.querySelectorAll(s));
+        const L = window.T.lines;
+        const DUR = window.T.dur;
+        const A = (k, o) => L[k].start + (o || 0);
+        const W = (k, i, o) => L[k].words[i][1] + (o || 0);
+        const NS = "http://www.w3.org/2000/svg";
+        const el = (tag, attrs, parent) => {
+          const n = document.createElementNS(NS, tag);
+          Object.keys(attrs).forEach((a) => n.setAttribute(a, attrs[a]));
+          if (parent) parent.appendChild(n);
+          return n;
+        };
+        const div = (css, parent, cls) => {
+          const d = document.createElement("div");
+          d.className = cls || "abs";
+          d.style.cssText = css;
+          parent.appendChild(d);
+          return d;
+        };
+
+        // ---------- build ----------
+        const P = { pump: ["p-pump-b", 120, 300], drop: ["p-drop-b", 100, 260], jar: ["p-jar-b", 200, 150], tube: ["p-tube-b", 110, 320] };
+        const prodHtml = (key, h) => {
+          const [id, vw, vh] = P[key];
+          const w = Math.round((h * vw) / vh);
+          return { w, html: '<svg class="abs" style="left:0;top:0" width="' + w + '" height="' + h + '" viewBox="0 0 ' + vw + " " + vh + '"><use href="#' + id + '"/></svg>' };
+        };
+        // a white product tile with a mono label
+        const tile = (key, ph, l1, l2, cx, cy) => {
+          const t = div("left:" + (cx - 190) + "px;top:" + (cy - 240) + "px;width:380px;height:480px;border-radius:34px;background:#fff;box-shadow:0 36px 70px rgba(15,15,18,0.14),0 6px 16px rgba(15,15,18,0.08)", $("#tiles"));
+          const p = prodHtml(key, ph);
+          const holder = div("left:" + (190 - p.w / 2) + "px;top:" + (30 + (300 - ph) / 2) + "px;width:" + p.w + "px;height:" + ph + "px", t);
+          holder.innerHTML = p.html;
+          const lab = div("left:0;top:362px;width:380px;text-align:center;font-size:28px;letter-spacing:0.12em;color:#0f0f12;font-weight:700", t, "abs mono");
+          lab.setAttribute("data-layout-ignore", "");
+          lab.textContent = l1;
+          if (l2) {
+            const l = div("left:0;top:408px;width:380px;text-align:center;font-size:24px;letter-spacing:0.1em;color:#6f6d69;font-weight:700", t, "abs mono");
+            l.setAttribute("data-layout-ignore", "");
+            l.textContent = l2;
+          }
+          return t;
+        };
+        const LX = 300, RX = 780, TY = 1190;
+        const tiles = {
+          a1: tile("drop", 270, "RETINOL", "", LX, TY), b1: tile("pump", 300, "ÁCIDOS", "AHA · BHA", RX, TY),
+          a2: tile("drop", 270, "RETINOL", "", LX, TY), b2: tile("jar", 190, "PERÓXIDO", "DE BENZOILO", RX, TY),
+          a3: tile("tube", 300, "EXFOLIANTE", "AHA / BHA", LX, TY), b3: tile("jar", 190, "EXFOLIANTE", "SCRUB", RX, TY),
+          a4: tile("drop", 270, "1 PRODUCTO", "", 540, TY),
+        };
+        // mini products over the first footage card
+        const mixA = div("left:260px;top:1330px;width:240px;height:290px;border-radius:26px;background:#fff;box-shadow:0 24px 50px rgba(15,15,18,0.2)", $("#mix1"));
+        mixA.innerHTML = '<div class="abs" style="left:' + (120 - 50) + 'px;top:30px">' + prodHtml("jar", 130).html.replace('class="abs"', "") + "</div>";
+        const mixB = div("left:580px;top:1330px;width:240px;height:290px;border-radius:26px;background:#fff;box-shadow:0 24px 50px rgba(15,15,18,0.2)", $("#mix1"));
+        mixB.innerHTML = '<div class="abs" style="left:' + (120 - 45) + 'px;top:30px">' + prodHtml("drop", 230).html.replace('class="abs"', "") + "</div>";
+        const mixP = div("left:500px;top:1415px;width:80px;text-align:center;font-weight:300;font-size:110px;line-height:1;color:#0f0f12", $("#mix1"));
+        mixP.textContent = "+";
+        // pills on the second card
+        ["VITAMINA C", "+", "NIACINAMIDA"].forEach((t, i) => {
+          const p = div(i === 1 ? "font-size:44px;color:#fff;font-weight:800" : "height:70px;padding:0 30px;border-radius:999px;background:rgba(15,15,18,0.82);color:#fff;font-size:28px;letter-spacing:0.1em;display:flex;align-items:center", $("#c2-pills"), i === 1 ? "pil" : "pil mono");
+          p.setAttribute("data-layout-ignore", "");
+          p.textContent = t;
+        });
+        // sun rays (small)
+        for (let i = 0; i < 10; i++) {
+          const a = (i / 10) * Math.PI * 2;
+          el("line", { x1: Math.cos(a) * 30, y1: Math.sin(a) * 30, x2: Math.cos(a) * 42, y2: Math.sin(a) * 42 }, $("#sun-i-r"));
+        }
+        // barcode
+        const bc = $("#barcode");
+        let bx = 0;
+        [3, 1, 2, 1, 4, 1, 1, 3, 2, 1, 1, 2, 3, 1, 2, 4, 1, 1, 2, 3, 1, 2, 1, 1, 3, 2, 1, 4, 1, 2].forEach((w, i) => {
+          if (i % 2 === 0) el("rect", { x: bx * 2.1, y: 0, width: w * 2.1, height: 46, fill: "#0f0f12" }, bc);
+          bx += w;
+        });
+
+        // ---------- timeline ----------
+        const tl = gsap.timeline({ paused: true, defaults: { ease: "power3.out", duration: 0.6 } });
+        const words = $$(".w[data-l]");
+        const T = Object.keys(tiles).map((k) => tiles[k]);
+        gsap.set(words, { opacity: 0, y: 30, filter: "blur(14px)" });
+        gsap.set("#endc", { opacity: 0 });
+        gsap.set(["#c1-ring", "#c1-warn", "#c1-tint", "#mix1", "#c2-pills", "#stamp", "#okpill", "#conflict", "#plus", "#xx", "#strike2", "#chip", "#pill-irr", "#pill-day", "#pill-doc", "#moon-i", "#sun-i", "#bookmark", "#trail", "#plane", "#flash", ".ghost"], { opacity: 0 });
+        gsap.set(T, { opacity: 0 });
+        gsap.set("#conf-r", { strokeDasharray: 100, strokeDashoffset: 100 });
+        gsap.set("#strike2-p", { strokeDasharray: 400, strokeDashoffset: 400 });
+        gsap.set("#bm-line", { strokeDasharray: 1100, strokeDashoffset: 1100 });
+        gsap.set("#bm-fill", { opacity: 0 });
+        gsap.set("#lg-word-w", { clipPath: "inset(0% 100% 0% 0%)" });
+        gsap.set("#lg-rule", { scaleX: 0 });
+        gsap.set("#lg-mark", { opacity: 0, y: 40, scale: 0.9, filter: "blur(16px)" });
+        gsap.set("#follow", { opacity: 0, y: 24 });
+        gsap.set("#f-b", { opacity: 0 });
+        gsap.set("#pfill", { scaleX: 0 });
+        gsap.set(["#v1", "#v2", "#c1", "#c2"], { opacity: 0, clipPath: "inset(0% 0% 100% 0% round 30px)" });
+        gsap.set(["#mix1 > div", "#c2-pills > div"], { opacity: 0 });
+
+        gsap.set(words[0], { opacity: 1, y: 0, filter: "blur(0px)" });
+        words.slice(1).forEach((w) => {
+          const t = W(w.dataset.l, +w.dataset.i, -0.05);
+          const big = w.classList.contains("r") || (w.classList.contains("b") && parseFloat(w.style.fontSize || 0) >= 120);
+          tl.fromTo(w, { opacity: 0, y: big ? 40 : 26, filter: big ? "blur(18px)" : "blur(12px)", scale: big ? 1.12 : 1 }, { opacity: 1, y: 0, filter: "blur(0px)", scale: 1, duration: big ? 0.6 : 0.45, ease: "power3.out", immediateRender: false }, t);
+        });
+        const out = (sel, at) => tl.to(sel, { opacity: 0, y: -40, filter: "blur(12px)", duration: 0.3, ease: "power2.in" }, at);
+        const fade = (sel, at, d) => tl.to(sel, { opacity: 0, filter: "blur(10px)", duration: d || 0.3, ease: "power2.in" }, at);
+        const popIn = (sel, at, from) => tl.fromTo(sel, Object.assign({ opacity: 0, y: 70, scale: 0.9, filter: "blur(14px)" }, from || {}), { opacity: 1, y: 0, scale: 1, filter: "blur(0px)", duration: 0.7, ease: "expo.out", immediateRender: false }, at);
+        const flash = (at, a) => tl.fromTo("#flash", { opacity: a || 0.35 }, { opacity: 0, duration: 0.3, ease: "power2.out", immediateRender: false }, at);
+        const shake = (at, amp) => tl.fromTo("#cam", { x: 0 }, { keyframes: { x: [0, amp, -amp * 0.75, amp * 0.4, 0] }, duration: 0.28, ease: "none", immediateRender: false }, at);
+
+        // block exits at each cut
+        out("#t01", A("l02", -0.3)); out("#t02a", W("l02", 5, -0.35)); out("#t02b", A("l03", -0.3)); out("#t03", A("l04", -0.3));
+        out("#t04", A("l05", -0.3)); out("#t05", A("l06", -0.3)); out("#t06", A("l07", -0.3));
+        out("#t07a", W("l07", 9, -0.3)); out("#t07b", A("l08", -0.3));
+
+        // camera settle only where the whole frame changes
+        const cuts = ["l02", "l03", "l04", "l05", "l06", "l07", "l08"].map((k) => A(k, -0.3));
+        cuts.forEach((t) => tl.fromTo("#cam", { scale: 1.03 }, { scale: 1, duration: 0.6, ease: "expo.out", immediateRender: false }, t + 0.1));
+
+        // scene counter + progress
+        const scenesAt = [0].concat(cuts);
+        const idx = $("#idx");
+        const idxEls = scenesAt.map((t, i) => {
+          const sp = document.createElement("span");
+          sp.className = "abs";
+          sp.style.cssText = "right:0;top:0;white-space:nowrap";
+          sp.textContent = String(i + 1).padStart(2, "0") + " / 08";
+          idx.appendChild(sp);
+          return sp;
+        });
+        gsap.set(idxEls, { opacity: 0 });
+        scenesAt.forEach((t, i) => {
+          tl.set(idxEls, { opacity: 0 }, t);
+          tl.set(idxEls[i], { opacity: 1 }, t);
+        });
+        tl.to("#pfill", { scaleX: 1, duration: DUR, ease: "none" }, 0);
+
+        // ===== 1. warning over real footage =====
+        tl.to(["#v1", "#c1"], { opacity: 1, clipPath: "inset(0% 0% 0% 0% round 30px)", duration: 0.9, ease: "power4.inOut" }, W("l01", 1, -0.4));
+        tl.to("#mix1", { opacity: 1, duration: 0.05 }, W("l01", 3, -0.1));
+        tl.fromTo(["#mix1 > div:nth-child(1)", "#mix1 > div:nth-child(2)"], { opacity: 0, y: 70, scale: 0.9, filter: "blur(12px)" }, { opacity: 1, y: 0, scale: 1, filter: "blur(0px)", duration: 0.7, ease: "expo.out", stagger: 0.12, immediateRender: false }, W("l01", 3, -0.05));
+        tl.fromTo("#mix1 > div:nth-child(3)", { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(2)", immediateRender: false }, W("l01", 3, 0.2));
+        const irr = W("l01", 5, -0.1);
+        tl.to("#c1-tint", { opacity: 1, duration: 0.5 }, irr);
+        tl.fromTo("#c1-ring", { opacity: 0, scale: 1.04 }, { opacity: 1, scale: 1, duration: 0.45, ease: "expo.out", transformOrigin: "50% 50%", immediateRender: false }, irr);
+        tl.fromTo("#c1-warn", { opacity: 0, scale: 0.3 }, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(2.5)", transformOrigin: "50% 50%", immediateRender: false }, irr + 0.1);
+        flash(irr + 0.05, 0.25);
+        shake(irr + 0.1, 10);
+        fade(["#v1", "#c1", "#c1-ring", "#c1-warn", "#mix1"], A("l02", -0.3));
+
+        // ===== 2. combo 1: retinol + acids =====
+        const gi = (id, at, outAt) => {
+          tl.fromTo(id, { opacity: 0, scale: 1.08, filter: "blur(16px)" }, { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.9, ease: "power3.out", immediateRender: false }, at);
+          tl.to(id, { opacity: 0, filter: "blur(12px)", duration: 0.35, ease: "power2.in" }, outAt);
+        };
+        gi("#g1", A("l02", -0.1), A("l03", -0.3));
+        tl.to("#chip", { opacity: 1, duration: 0.4 }, A("l02", 0.1));
+        popIn(tiles.a1, W("l02", 1, -0.1));
+        tl.fromTo("#plus", { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(2)", transformOrigin: "50% 50%", immediateRender: false }, W("l02", 2, 0));
+        popIn(tiles.b1, W("l02", 3, -0.1));
+        tl.to("#conflict", { opacity: 1, duration: 0.1 }, W("l02", 4, 0.2));
+        tl.to("#conf-r", { strokeDashoffset: 0, duration: 1.6, ease: "power2.inOut" }, W("l02", 4, 0.3));
+        const col = W("l02", 7, -0.15);
+        tl.to(tiles.a1, { x: 100, duration: 0.45, ease: "power3.in" }, col);
+        tl.to(tiles.b1, { x: -100, duration: 0.45, ease: "power3.in" }, col);
+        tl.to("#plus", { opacity: 0, duration: 0.2 }, col);
+        tl.to([tiles.a1, tiles.b1], { x: (i) => (i === 0 ? 70 : -70), duration: 0.4, ease: "power2.out" }, col + 0.5);
+        flash(col + 0.42, 0.35);
+        shake(col + 0.42, 12);
+        tl.fromTo("#pill-irr", { opacity: 0, y: 30, scale: 0.8 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "expo.out", immediateRender: false }, W("l02", 15, -0.1));
+        fade([tiles.a1, tiles.b1, "#conflict", "#pill-irr", "#chip"], A("l03", -0.3));
+
+        // ===== 3. combo 2: retinol + benzoyl peroxide =====
+        gi("#g2", A("l03", -0.1), A("l04", -0.3));
+        tl.set("#chip", { textContent: "Combo 2/3" }, A("l03", -0.3));
+        tl.to("#chip", { opacity: 1, filter: "blur(0px)", duration: 0.4 }, A("l03", -0.25));
+        popIn(tiles.a2, W("l03", 1, -0.1));
+        tl.fromTo("#plus", { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(2)", transformOrigin: "50% 50%", immediateRender: false }, W("l03", 2, 0));
+        popIn(tiles.b2, W("l03", 3, -0.1));
+        const sep = W("l03", 6, -0.1);
+        tl.to("#plus", { opacity: 0, duration: 0.2 }, sep);
+        tl.to(tiles.a2, { x: -30, duration: 0.7, ease: "expo.inOut" }, sep);
+        tl.to(tiles.b2, { x: 30, duration: 0.7, ease: "expo.inOut" }, sep);
+        tl.fromTo("#moon-i", { opacity: 0, y: 20, scale: 0.6 }, { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: "expo.out", transformOrigin: "50% 50%", immediateRender: false }, W("l03", 9, -0.05));
+        tl.fromTo("#sun-i", { opacity: 0, y: 20, scale: 0.6, rotation: -60 }, { opacity: 1, y: 0, scale: 1, rotation: 0, duration: 0.6, ease: "expo.out", transformOrigin: "50% 50%", immediateRender: false }, W("l03", 10, -0.05));
+        fade([tiles.a2, tiles.b2, "#moon-i", "#sun-i", "#chip"], A("l04", -0.3));
+
+        // ===== 4. combo 3: two exfoliants, same day =====
+        gi("#g3", A("l04", -0.1), A("l05", -0.3));
+        tl.set("#chip", { textContent: "Combo 3/3" }, A("l04", -0.3));
+        tl.to("#chip", { opacity: 1, filter: "blur(0px)", duration: 0.4 }, A("l04", -0.25));
+        popIn(tiles.a3, W("l04", 1, -0.1));
+        popIn(tiles.b3, W("l04", 2, -0.1));
+        tl.fromTo("#pill-day", { opacity: 0, y: 30, scale: 0.8 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "expo.out", immediateRender: false }, W("l04", 4, -0.1));
+        tl.fromTo("#xx", { opacity: 0, scale: 0.3, rotation: -12 }, { opacity: 1, scale: 1, rotation: -6, duration: 0.55, ease: "back.out(2.5)", transformOrigin: "50% 50%", immediateRender: false }, W("l04", 6, -0.1));
+        tl.to("#strike2", { opacity: 1, duration: 0.05 }, W("l04", 9, -0.1));
+        tl.to("#strike2-p", { strokeDashoffset: 0, duration: 0.35, ease: "power3.out" }, W("l04", 9, -0.05));
+        flash(W("l04", 9, -0.05), 0.2);
+        fade([tiles.a3, tiles.b3, "#xx", "#strike2", "#pill-day", "#chip"], A("l05", -0.3));
+
+        // ===== 5. the myth, over real footage =====
+        tl.to(["#v2", "#c2"], { opacity: 1, clipPath: "inset(0% 0% 0% 0% round 30px)", duration: 0.9, ease: "power4.inOut" }, A("l05", -0.2));
+        tl.to("#c2-pills", { opacity: 1, duration: 0.05 }, W("l05", 2, -0.1));
+        tl.fromTo("#c2-pills > div", { opacity: 0, y: 40, filter: "blur(10px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.6, ease: "expo.out", stagger: 0.18, immediateRender: false }, W("l05", 2, -0.05));
+        const my = W("l05", 9, -0.1);
+        tl.fromTo("#stamp", { opacity: 0, scale: 2.2, rotation: -2 }, { opacity: 1, scale: 1, rotation: -8, duration: 0.35, ease: "power4.in", transformOrigin: "50% 50%", immediateRender: false }, my);
+        flash(my + 0.33, 0.35);
+        shake(my + 0.33, 14);
+        const jt = W("l05", 11, -0.1);
+        tl.to("#stamp", { opacity: 0, scale: 0.9, filter: "blur(8px)", duration: 0.25, ease: "power2.in" }, jt - 0.2);
+        tl.fromTo("#okpill", { opacity: 0, y: 40, scale: 0.85 }, { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: "expo.out", immediateRender: false }, jt);
+        fade(["#v2", "#c2", "#c2-pills", "#okpill"], A("l06", -0.3));
+
+        // ===== 6. when in doubt: one product, ask a dermatologist =====
+        gi("#g4", A("l06", -0.1), A("l07", -0.3));
+        popIn(tiles.a4, W("l06", 4, -0.1));
+        tl.fromTo("#pill-doc", { opacity: 0, y: 30, scale: 0.8 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "expo.out", immediateRender: false }, W("l06", 8, -0.1));
+        fade([tiles.a4, "#pill-doc"], A("l07", -0.3));
+
+        // ===== 7. save + share =====
+        tl.fromTo("#bookmark", { opacity: 0 }, { opacity: 1, duration: 0.2, immediateRender: false }, A("l07", -0.1));
+        tl.to("#bm-line", { strokeDashoffset: 0, duration: 0.6, ease: "power3.inOut" }, W("l07", 0, 0));
+        tl.to("#bm-fill", { opacity: 1, duration: 0.25 }, W("l07", 2, 0.1));
+        tl.fromTo("#bookmark", { scale: 1 }, { scale: 1.08, duration: 0.15, ease: "power2.out", yoyo: true, repeat: 1, transformOrigin: "50% 50%", immediateRender: false }, W("l07", 2, 0.1));
+        tl.to("#bookmark", { opacity: 0, y: -40, filter: "blur(12px)", duration: 0.3, ease: "power2.in" }, W("l07", 9, -0.3));
+        const pt = W("l07", 10, -0.15);
+        tl.fromTo("#plane", { opacity: 0, x: -640, y: 520, rotation: -25 }, { opacity: 1, x: 0, y: 0, rotation: 0, duration: 0.9, ease: "expo.out", immediateRender: false }, pt);
+        tl.fromTo("#trail", { opacity: 0 }, { opacity: 1, duration: 0.4, immediateRender: false }, pt);
+        tl.fromTo("#trail-p", { strokeDashoffset: 0 }, { strokeDashoffset: -260, duration: 2.6, ease: "none", immediateRender: false }, pt);
+        tl.fromTo("#plane", { y: 0 }, { y: -14, duration: 0.9, ease: "sine.inOut", yoyo: true, repeat: 1, immediateRender: false }, pt + 1.0);
+        flash(W("l07", 17, -0.05), 0.25);
+        const pe = A("l08", -0.35);
+        tl.to("#plane", { x: 760, y: -760, rotation: 14, opacity: 0, filter: "blur(10px)", duration: 0.5, ease: "power3.in" }, pe);
+        tl.to("#trail", { opacity: 0, duration: 0.3 }, pe);
+
+        // ===== 8. brand end =====
+        tl.set("#endc", { opacity: 1 }, W("l08", 0, -0.1));
+        tl.fromTo("#lg-mark", { opacity: 0, y: 40, scale: 0.9, filter: "blur(16px)" }, { opacity: 1, y: 0, scale: 1, filter: "blur(0px)", duration: 0.8, ease: "expo.out", immediateRender: false }, W("l08", 3, -0.15));
+        tl.to("#lg-word-w", { clipPath: "inset(0% 0% 0% 0%)", duration: 0.8, ease: "power4.inOut" }, W("l08", 3, 0.2));
+        tl.to("#lg-rule", { scaleX: 1, duration: 0.7, ease: "power4.inOut" }, W("l08", 3, 0.45));
+        tl.to("#follow", { opacity: 1, y: 0, duration: 0.6 }, W("l08", 3, 0.6));
+        const tap = W("l08", 3, 0.9);
+        tl.to("#follow", { scale: 0.95, duration: 0.09, ease: "power2.in" }, tap);
+        tl.to("#follow", { scale: 1, backgroundColor: "#e5303a", duration: 0.45 }, tap + 0.09);
+        tl.set("#f-a", { opacity: 0 }, tap + 0.09);
+        tl.set("#f-b", { opacity: 1 }, tap + 0.09);
+
+        window.__timelines = window.__timelines || {};
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>
