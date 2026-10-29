@@ -113,6 +113,38 @@ const Hero: React.FC<{ text: string; frame: number }> = ({ text, frame }) => {
   );
 };
 
+const NUMERAL_IN = 18;
+
+// Giant hairline-outline number drifting behind a list point.
+const Numeral: React.FC<{ value: string; frame: number }> = ({
+  value,
+  frame,
+}) => {
+  const t = interpolate(frame, [0, NUMERAL_IN], [0, 1], {
+    extrapolateRight: "clamp",
+    easing: Easing.out(Easing.cubic),
+  });
+  return (
+    <div
+      style={{
+        position: "absolute",
+        top: 180,
+        fontFamily: SERIF,
+        fontStyle: "italic",
+        fontWeight: 500,
+        fontSize: 760,
+        lineHeight: 1,
+        color: "transparent",
+        WebkitTextStroke: "2px rgba(255,255,255,0.3)",
+        opacity: t,
+        transform: `translateY(${(1 - t) * 60 - frame * 0.4}px) scale(${1.12 - 0.12 * t})`,
+      }}
+    >
+      {value}
+    </div>
+  );
+};
+
 // Small centred serif lines; each word fades up out of a soft blur.
 export const Caption: React.FC<{
   card: Card;
@@ -148,6 +180,7 @@ export const Caption: React.FC<{
             "radial-gradient(ellipse, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.3) 45%, transparent 70%)",
         }}
       />
+      {card.numeral && <Numeral value={card.numeral} frame={frame} />}
       {card.lines.map((line) => {
         const lineFrame =
           card.instant && line.at === 0
@@ -179,7 +212,10 @@ export const Caption: React.FC<{
                 key={i}
                 word={w.word}
                 italic={w.italic}
-                frame={lineFrame - i * WORD_STAGGER}
+                frame={
+                  lineFrame -
+                  (line.words ? toFrames(line.words[i] ?? 0) : i * WORD_STAGGER)
+                }
               />
             ))}
           </div>

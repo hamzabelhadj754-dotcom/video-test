@@ -39,5 +39,31 @@
     "file": "https://cdn.coverr.co/audios/coverr-14-war-of-the-future-v7nXa9/preview.mp3",
     "segment": "44.07s-60.02s",
     "license": "Coverr free license (videos and music, commercial use, no attribution required)"
+  },
+  "31-phone-bed": {
+    "source": "https://coverr.co/videos/person-in-bed-on-their-iphone-prmnnhapxd",
+    "file": "https://cdn.coverr.co/videos/coverr-person-in-bed-on-their-iphone-3025/1080p.mp4",
+    "license": "Coverr free license (commercial use, no attribution required)"
+  },
+  "32-eggs": {
+    "source": "https://coverr.co/videos/eggs-frying-in-pan-9pwgvhanla",
+    "file": "https://cdn.coverr.co/videos/coverr-eggs-frying-in-pan-1083/1080p.mp4",
+    "license": "Coverr free license (commercial use, no attribution required)"
+  },
+  "33-steak": {
+    "source": "https://coverr.co/videos/grilled-steak-j4mpryv6n7",
+    "file": "https://cdn.coverr.co/videos/coverr-grilled-steak-8580/1080p.mp4",
+    "license": "Coverr free license (commercial use, no attribution required)"
+  },
+  "34-tire": {
+    "source": "https://coverr.co/videos/rolling-a-tire-in-the-gym-72zfa92tv3",
+    "file": "https://cdn.coverr.co/videos/coverr-rolling-a-tire-in-the-gym-5278/1080p.mp4",
+    "license": "Coverr free license (commercial use, no attribution required)"
+  },
+  "music:battle-of-sports-003": {
+    "source": "https://coverr.co/free-stock-music/moods/heavy-ponderous",
+    "file": "https://cdn.coverr.co/audios/18-the-battle-of-sports-WNtPY2/preview.mp3",
+    "segment": "1.00s-16.03s",
+    "license": "Coverr free license (videos and music, commercial use, no attribution required)"
   }
 }

@@ -30,7 +30,14 @@ export type Cut = {
 
 // `text` may wrap words in *asterisks* to set them in italic. A `hero` line
 // is set large in italic and revealed from behind a mask.
-export type Line = { text: string; at: number; hero?: boolean };
+export type Line = {
+  text: string;
+  at: number;
+  hero?: boolean;
+  // Per-word start times (beats, relative to `at`) so each word appears as it
+  // is spoken in a speech edit; otherwise words stagger by a few frames.
+  words?: number[];
+};
 
 export type Card = {
   from: number;
@@ -38,6 +45,7 @@ export type Card = {
   lines: Line[];
   instant?: boolean; // lines at beat 0 are fully shown on the first frame (the hook)
   hold?: boolean; // no exit animation (the loop point)
+  numeral?: string; // huge outline number behind the text (educational lists)
 };
 
 export type Episode = {
