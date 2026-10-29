@@ -177,7 +177,7 @@ export const Caption: React.FC<{
           height: 420,
           borderRadius: "50%",
           background:
-            "radial-gradient(ellipse, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.3) 45%, transparent 70%)",
+            "radial-gradient(ellipse, rgba(0,0,0,0.68) 0%, rgba(0,0,0,0.4) 45%, transparent 72%)",
         }}
       />
       {card.numeral && <Numeral value={card.numeral} frame={frame} />}
