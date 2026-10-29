@@ -21,6 +21,8 @@ const INSET_EXPAND = 12;
 const PANEL_GAP = 12;
 const PANEL_STAGGER = 2;
 const PANEL_SLIDE = 9;
+// Frames the previous shot keeps playing underneath a dissolve.
+export const DISSOLVE_FRAMES = 10;
 
 const Clip: React.FC<{ clip: string; trimSeconds?: number; rate?: number }> = ({
   clip,
@@ -116,6 +118,26 @@ export const Shot: React.FC<{
     blur += 14 * t;
   }
 
+  // Crossfades: this shot fades in over the previous one (which the
+  // composition extends underneath), sharpening out of a soft blur.
+  const dissolving = cut.entry === "dissolve" || cut.entry === "light";
+  const fadeIn = dissolving
+    ? interpolate(frame, [0, DISSOLVE_FRAMES], [0, 1], {
+        extrapolateRight: "clamp",
+        easing: Easing.inOut(Easing.cubic),
+      })
+    : 1;
+  if (dissolving) {
+    blur += 12 * (1 - fadeIn);
+    scale *= 1 + 0.04 * (1 - fadeIn);
+  }
+  const glow =
+    cut.entry === "light"
+      ? interpolate(frame, [0, 4, 16], [0.35, 0.7, 0], {
+          extrapolateRight: "clamp",
+        })
+      : 0;
+
   let frameOpacity = 0;
   if (cut.entry === "inset") {
     const hold = beatFrames(cut.insetBeats ?? 2);
@@ -133,7 +155,12 @@ export const Shot: React.FC<{
   }
 
   return (
-    <AbsoluteFill style={{ backgroundColor: "black" }}>
+    <AbsoluteFill
+      style={{
+        backgroundColor: dissolving ? undefined : "black",
+        opacity: fadeIn,
+      }}
+    >
       <AbsoluteFill
         style={{
           transform: `scale(${scale})`,
@@ -157,6 +184,16 @@ export const Shot: React.FC<{
           />
         )}
       </AbsoluteFill>
+      {glow > 0 && (
+        <AbsoluteFill
+          style={{
+            background:
+              "radial-gradient(ellipse at 50% 45%, rgba(255,250,240,1), rgba(255,250,240,0.6) 45%, rgba(255,250,240,0.2) 80%)",
+            opacity: glow,
+            mixBlendMode: "screen",
+          }}
+        />
+      )}
     </AbsoluteFill>
   );
 };

@@ -13,7 +13,9 @@
     "remotion": "4.0.465"
   },
   "devDependencies": {
+    "@fontsource/cinzel": "^5.2.6",
     "@fontsource/cormorant-garamond": "^5.2.6",
+    "@fontsource/inter": "^5.2.6",
     "@remotion/eslint-config-flat": "4.0.465",
     "@types/react": "19.2.7",
     "@types/web": "0.0.166",

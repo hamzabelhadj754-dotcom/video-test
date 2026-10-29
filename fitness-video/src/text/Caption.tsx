@@ -1,6 +1,6 @@
 import React from "react";
 import { AbsoluteFill, Easing, interpolate, useCurrentFrame } from "remotion";
-import { SERIF, WHITE } from "../constants";
+import { ROMAN, SANS, SERIF, WHITE } from "../constants";
 import { Card } from "../episode";
 
 const WORD_STAGGER = 3;
@@ -94,7 +94,8 @@ const Hero: React.FC<{ text: string; frame: number }> = ({ text, frame }) => {
             whiteSpace: "nowrap",
             letterSpacing: `${interpolate(t, [0, 1], [0.12, -0.01])}em`,
             transform: `translateY(${(1 - t) * 105}%)`,
-            textShadow: "0 4px 40px rgba(0,0,0,0.85)",
+            textShadow:
+              "0 4px 40px rgba(0,0,0,0.85), 0 0 28px rgba(255,255,255,0.18)",
           }}
         >
           {text.replace(/\*/g, "")}
@@ -109,6 +110,162 @@ const Hero: React.FC<{ text: string; frame: number }> = ({ text, frame }) => {
           opacity: 0.85,
         }}
       />
+    </div>
+  );
+};
+
+const READ_FADE = 8;
+const READ_LIGHT = 5;
+const READ_DIM = 0.3;
+
+// Read-along line: the whole sentence sits faintly in light sans caps and each
+// word lights up the moment it is spoken, so the eye follows the voice.
+const ReadLine: React.FC<{ text: string; frame: number; starts: number[] }> = ({
+  text,
+  frame,
+  starts,
+}) => {
+  const appear = interpolate(frame, [-READ_FADE, 0], [0, 1], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
+  return (
+    <div
+      style={{
+        position: "relative",
+        fontFamily: SANS,
+        fontWeight: 300,
+        fontSize: 42,
+        letterSpacing: "0.28em",
+        lineHeight: 1.7,
+        textTransform: "uppercase",
+        color: WHITE,
+        textAlign: "center",
+        maxWidth: 900,
+        marginRight: "-0.28em",
+        opacity: appear,
+        margin: "10px 0",
+      }}
+    >
+      {parseWords(text).map((w, i) => {
+        const lit = interpolate(
+          frame - (starts[i] ?? 0),
+          [0, READ_LIGHT],
+          [0, 1],
+          {
+            extrapolateLeft: "clamp",
+            extrapolateRight: "clamp",
+          },
+        );
+        return (
+          <span
+            key={i}
+            style={{
+              display: "inline-block",
+              marginRight: "0.5em",
+              opacity: READ_DIM + (1 - READ_DIM) * lit,
+              textShadow:
+                lit > 0
+                  ? `0 2px 20px rgba(0,0,0,0.9), 0 0 ${18 * lit}px rgba(255,255,255,${0.35 * lit})`
+                  : "0 2px 20px rgba(0,0,0,0.9)",
+            }}
+          >
+            {w.word}
+          </span>
+        );
+      })}
+    </div>
+  );
+};
+
+const POWER_LETTER_STAGGER = 1.5;
+const POWER_LETTER_IN = 9;
+const POWER_TRACK = 22;
+const POWER_LINE_DELAY = 6;
+const POWER_LINE_DRAW = 16;
+// Cinzel capitals with tracking run about 0.95em a glyph once settled.
+const powerSize = (text: string) =>
+  Math.min(150, Math.floor(900 / (text.length * 0.95)));
+
+// Huge Roman capitals revealed letter by letter, tracking closing in, with
+// hairlines drawing out above and below.
+const PowerWord: React.FC<{ text: string; frame: number }> = ({
+  text,
+  frame,
+}) => {
+  const track = interpolate(frame, [0, POWER_TRACK], [0.7, 0.25], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+    easing: Easing.out(Easing.cubic),
+  });
+  const line = interpolate(
+    frame,
+    [POWER_LINE_DELAY, POWER_LINE_DELAY + POWER_LINE_DRAW],
+    [0, 1],
+    {
+      extrapolateLeft: "clamp",
+      extrapolateRight: "clamp",
+      easing: Easing.inOut(Easing.cubic),
+    },
+  );
+  const hairline: React.CSSProperties = {
+    width: 420 * line,
+    height: 1.5,
+    background: WHITE,
+    opacity: 0.7,
+  };
+  return (
+    <div
+      style={{
+        position: "relative",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: 26,
+      }}
+    >
+      <div style={hairline} />
+      <div
+        style={{
+          fontFamily: ROMAN,
+          fontWeight: 500,
+          fontSize: powerSize(text),
+          lineHeight: 1,
+          letterSpacing: `${track}em`,
+          marginRight: `-${track}em`,
+          color: WHITE,
+          whiteSpace: "nowrap",
+          textShadow:
+            "0 4px 40px rgba(0,0,0,0.85), 0 0 30px rgba(255,255,255,0.2)",
+        }}
+      >
+        {text.split("").map((ch, i) => {
+          const t = interpolate(
+            frame - i * POWER_LETTER_STAGGER,
+            [0, POWER_LETTER_IN],
+            [0, 1],
+            {
+              extrapolateLeft: "clamp",
+              extrapolateRight: "clamp",
+              easing: Easing.out(Easing.cubic),
+            },
+          );
+          return (
+            <span
+              key={i}
+              style={{
+                display: "inline-block",
+                opacity: t,
+                filter: t < 1 ? `blur(${(1 - t) * 10}px)` : undefined,
+                whiteSpace: "pre",
+              }}
+            >
+              {ch}
+            </span>
+          );
+        })}
+      </div>
+      <div style={hairline} />
     </div>
   );
 };
@@ -188,6 +345,24 @@ export const Caption: React.FC<{
             : frame - toFrames(line.at);
         if (line.hero) {
           return <Hero key={line.text} text={line.text} frame={lineFrame} />;
+        }
+        if (line.style === "power") {
+          return (
+            <PowerWord key={line.text} text={line.text} frame={lineFrame} />
+          );
+        }
+        if (line.style === "read") {
+          const starts = parseWords(line.text).map((_, i) =>
+            line.words ? toFrames(line.words[i] ?? 0) : i * WORD_STAGGER,
+          );
+          return (
+            <ReadLine
+              key={line.text}
+              text={line.text}
+              frame={lineFrame}
+              starts={starts}
+            />
+          );
         }
         return (
           <div

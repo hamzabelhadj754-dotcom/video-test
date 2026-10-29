@@ -1,5 +1,10 @@
 import React from "react";
-import { AbsoluteFill, random, useCurrentFrame } from "remotion";
+import {
+  AbsoluteFill,
+  random,
+  useCurrentFrame,
+  useVideoConfig,
+} from "remotion";
 import { SERIF, WHITE } from "../constants";
 
 // Crushed edges so the eye locks on the centre text.
@@ -120,4 +125,24 @@ export const AccentFlash: React.FC<{ frames: number[] }> = ({ frames }) => {
   return opacity > 0 ? (
     <AbsoluteFill style={{ backgroundColor: "white", opacity }} />
   ) : null;
+};
+
+// Hairline under the top bar that fills across the video: a quiet cue that
+// the reel is worth watching to the end.
+export const ProgressLine: React.FC = () => {
+  const frame = useCurrentFrame();
+  const { durationInFrames, width } = useVideoConfig();
+  return (
+    <div
+      style={{
+        position: "absolute",
+        top: BAR_HEIGHT,
+        left: 0,
+        height: 2,
+        width: (width * (frame + 1)) / durationInFrames,
+        background: WHITE,
+        opacity: 0.55,
+      }}
+    />
+  );
 };

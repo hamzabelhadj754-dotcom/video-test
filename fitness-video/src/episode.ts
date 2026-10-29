@@ -22,7 +22,9 @@ export type Cut = {
   overlay?: BackdropKind; // procedural layer over the footage (dust, rain…)
   // How the shot arrives: hard cut (default), zoom-through with motion blur,
   // or "inset": starts as a small framed window on black, expands on a beat.
-  entry?: "cut" | "zoom" | "inset";
+  // "dissolve": blur crossfade from the previous shot; "light": crossfade
+  // through a white glow.
+  entry?: "cut" | "zoom" | "inset" | "dissolve" | "light";
   insetBeats?: number; // beats the inset stays small before expanding
   // Split screen: vertical panels of other clips slide in on the beat.
   panels?: { clip: string; trimSeconds?: number }[];
@@ -34,6 +36,9 @@ export type Line = {
   text: string;
   at: number;
   hero?: boolean;
+  // "read": light sans caps where each word lights up as it is spoken;
+  // "power": huge Roman capitals revealed letter by letter.
+  style?: "read" | "power";
   // Per-word start times (beats, relative to `at`) so each word appears as it
   // is spoken in a speech edit; otherwise words stagger by a few frames.
   words?: number[];
@@ -61,6 +66,8 @@ export type Episode = {
   streaks?: boolean; // anamorphic light streak on every accent
   burns?: number[]; // film-burn light sweeps (beats), e.g. at section changes
   clock?: { at: number; label: string }[]; // small timestamp that ticks on
+  calm?: boolean; // no camera shake or flicker, for a quiet premium feel
+  progress?: boolean; // hairline under the top bar that fills over the video
   cuts: Cut[];
   cards: Card[];
 };

@@ -15,10 +15,11 @@ import {
   Flicker,
   Grain,
   Letterbox,
+  ProgressLine,
   Vignette,
   Wordmark,
 } from "./fx/Overlays";
-import { Shot } from "./fx/Shot";
+import { DISSOLVE_FRAMES, Shot } from "./fx/Shot";
 import { framesSinceHit, shakeAt } from "./shake";
 import { Caption } from "./text/Caption";
 
@@ -27,7 +28,8 @@ export const GainsDomLoop: React.FC<{
   withAudio?: boolean;
 }> = ({ episode, withAudio }) => {
   const frame = useCurrentFrame();
-  const hits = hitsOf(episode);
+  // Calm episodes drop the camera shake and punch for a quieter, premium feel.
+  const hits = episode.calm ? [] : hitsOf(episode);
   // Subtle zoom punch on every hit, on top of a light camera nudge.
   const punch = interpolate(framesSinceHit(frame, hits), [0, 8], [1.025, 1], {
     extrapolateRight: "clamp",
@@ -41,7 +43,13 @@ export const GainsDomLoop: React.FC<{
         }}
       >
         {episode.cuts.map((cut, i) => {
-          const length = spanFrames(episode, cut.from, cut.length);
+          const next = episode.cuts[i + 1];
+          // Keep playing under the next shot while it dissolves in.
+          const tail =
+            next?.entry === "dissolve" || next?.entry === "light"
+              ? DISSOLVE_FRAMES
+              : 0;
+          const length = spanFrames(episode, cut.from, cut.length) + tail;
           return length > 0 ? (
             <Sequence
               key={`${cut.clip}-${cut.from}`}
@@ -90,12 +98,15 @@ export const GainsDomLoop: React.FC<{
       {episode.burns && (
         <FilmBurns frames={episode.burns.map((b) => atFrame(episode, b))} />
       )}
-      <AccentFlash
-        frames={(episode.accents ?? []).map((b) => atFrame(episode, b))}
-      />
-      <Flicker />
+      {!episode.calm && (
+        <AccentFlash
+          frames={(episode.accents ?? []).map((b) => atFrame(episode, b))}
+        />
+      )}
+      {!episode.calm && <Flicker />}
       <Grain />
       <Letterbox />
+      {episode.progress && <ProgressLine />}
     </AbsoluteFill>
   );
 };
