@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="es" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="assets/gsap.min.js"></script>
+    <script src="assets/timing.js"></script>
+    <style>
+      :root {
+        --bg: #f2f2f7;
+        --ink: #1c1c1e;
+        --grey: #6e6e73;
+        --card: #ffffff;
+        --dark: #1c1c1e;
+        --dark-2: #2c2c2e;
+        --blue: #0a84ff;
+        --green: #34c759;
+        --orange: #ff9f0a;
+        --yellow: #ffd60a;
+        --bubble: #e9e9eb;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: var(--bg);
+      }
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: var(--bg);
+        font-family: "Inter", sans-serif;
+        color: var(--ink);
+      }
+      .clip {
+        position: absolute;
+        inset: 0;
+      }
+      .abs {
+        position: absolute;
+      }
+      .full {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 1080px;
+        height: 1920px;
+      }
+      /* the one shape that becomes every UI element */
+      #M {
+        position: absolute;
+        overflow: hidden;
+        box-shadow:
+          0 30px 70px rgba(0, 0, 0, 0.12),
+          0 6px 18px rgba(0, 0, 0, 0.06);
+      }
+      .layer {
+        position: absolute;
+        inset: 0;
+      }
+      .center {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .hw {
+        display: inline-block;
+        margin: 0 0.13em;
+        font-weight: 700;
+        font-size: 96px;
+        letter-spacing: -0.035em;
+      }
+      .tw {
+        display: inline-block;
+        margin-right: 0.24em;
+      }
+      .ch {
+        display: inline-block;
+      }
+      .glow {
+        position: absolute;
+        left: 0;
+        width: 1080px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 34px;
+        font-weight: 800;
+        font-size: 118px;
+        letter-spacing: -0.04em;
+      }
+      .glow img {
+        width: 110px;
+        height: 110px;
+      }
+      .bub {
+        position: absolute;
+        height: 130px;
+        padding: 0 54px;
+        border-radius: 65px;
+        display: flex;
+        align-items: center;
+        font-size: 56px;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+      .sub {
+        font-size: 34px;
+        color: var(--grey);
+        font-weight: 500;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="26.82" data-width="1080" data-height="1920">
+      <div id="bg" class="clip" data-start="0" data-duration="26.82" data-track-index="0">
+        <div class="full" style="background: radial-gradient(ellipse 70% 55% at 50% 45%, #ffffff 0%, #f2f2f7 75%)"></div>
+      </div>
+
+      <div id="stage" class="clip" data-start="0" data-duration="26.82" data-track-index="1" data-layout-allow-overlap data-layout-allow-occlusion data-layout-allow-overflow>
+        <div id="cam" class="full">
+          <!-- 1. hook headline -->
+          <div id="hook" class="abs" style="left: 0; top: 760px; width: 1080px; text-align: center; line-height: 1.12">
+            <div><span class="hw" data-l="l01" data-i="0" style="transform: translateY(-14px)">¿Se</span><span class="hw" data-l="l01" data-i="1" style="font-size: 108px">puede</span><span class="hw" data-l="l01" data-i="2" style="transform: translateY(-24px); font-size: 82px">mejorar</span></div>
+            <div><span class="hw" data-l="l01" data-i="3" style="font-size: 82px">tu</span><span class="hw" data-l="l01" data-i="4" style="transform: translateY(10px)">piel</span><span class="hw" data-l="l01" data-i="5" style="transform: translateY(-18px); font-size: 78px">con</span><span class="hw" data-l="l01" data-i="6">solo</span></div>
+            <div><span class="hw" data-l="l01" data-i="7" style="color: var(--blue); font-size: 128px">tres</span><span class="hw" data-l="l01" data-i="8" style="color: var(--blue); font-size: 112px; transform: translateY(8px)">productos?</span></div>
+          </div>
+
+          <!-- 4. glowing steps -->
+          <div id="g1" class="glow" style="top: 860px; color: var(--blue); text-shadow: 0 0 34px rgba(10, 132, 255, 0.55)"><img src="assets/emoji/1f9fc.svg" alt="" />Limpiar</div>
+          <div id="g2" class="glow" style="top: 1060px; color: var(--green); text-shadow: 0 0 34px rgba(52, 199, 89, 0.55)"><img src="assets/emoji/1f4a7.svg" alt="" />Hidratar</div>
+          <div id="g3" class="glow" style="top: 1260px; color: var(--orange); text-shadow: 0 0 34px rgba(255, 159, 10, 0.55)"><img src="assets/emoji/2600.svg" alt="" />Proteger</div>
+
+          <!-- 5. chat bubbles (the first one is the morph shape) -->
+          <div id="b2" class="bub" style="left: 90px; top: 835px; background: var(--bubble)">¿Seca?</div>
+          <div id="b3" class="bub" style="left: 90px; top: 1005px; background: var(--bubble)">¿Sensible?</div>
+          <div id="b4" class="bub" style="right: 90px; top: 1215px; background: var(--blue); color: #fff">El método es el mismo <img src="assets/emoji/2728.svg" alt="" style="width: 58px; height: 58px; margin-left: 14px" /></div>
+
+          <!-- 7. headline + big word -->
+          <div id="h7" class="abs" style="left: 0; top: 760px; width: 1080px; text-align: center">
+            <div style="font-size: 64px; font-weight: 600; color: var(--grey)"><span class="tw" data-l="l07" data-i="0">El</span><span class="tw" data-l="l07" data-i="1">secreto</span><span class="tw" data-l="l07" data-i="2">no</span><span class="tw" data-l="l07" data-i="3">es</span><span class="tw" data-l="l07" data-i="4">el</span></div>
+            <div style="position: relative; display: inline-block; margin-top: 10px"><span class="tw" data-l="l07" data-i="5" style="font-size: 130px; font-weight: 800; letter-spacing: -0.04em; margin: 0">producto.</span><svg id="strike" class="abs" style="left: -10px; top: 50%; overflow: visible" width="620" height="40" viewBox="0 0 620 40"><path id="strike-p" d="M6 24 C 160 10, 420 8, 614 18" stroke="#ff9f0a" stroke-width="16" stroke-linecap="round" fill="none" /></svg></div>
+          </div>
+          <div id="big" class="abs" style="left: 0; top: 780px; width: 1080px; text-align: center; font-size: 150px; font-weight: 800; letter-spacing: -0.03em; white-space: nowrap"></div>
+
+          <!-- 8. outro brand -->
+          <div id="brand" class="abs" style="left: 0; top: 520px; width: 1080px; text-align: center">
+            <img id="br-mark" src="assets/obelcha-mark-black.png" alt="" style="width: 320px; height: 229px" />
+            <div id="br-word" style="margin: 26px auto 0; width: 360px; height: 64px; overflow: hidden; position: relative"><img src="assets/obelcha-word-black.png" alt="" style="position: absolute; left: 0; top: 0; width: 360px; height: 64px" /></div>
+          </div>
+          <div id="follow" class="abs center" style="left: 340px; top: 1250px; width: 400px; height: 116px; border-radius: 58px; background: var(--blue); color: #fff; font-weight: 700; font-size: 44px">
+            <span id="f-a" class="abs center" style="inset: 0">Seguir</span>
+            <span id="f-b" class="abs center" style="inset: 0">Siguiendo ✓</span>
+          </div>
+
+          <!-- ===== THE MORPH SHAPE ===== -->
+          <div id="M">
+            <!-- brand pill -->
+            <div id="c-brand" class="layer center" style="gap: 22px">
+              <img src="assets/obelcha-mark-black.png" alt="" style="width: 96px; height: 69px" />
+              <span style="font-size: 58px; font-weight: 700; letter-spacing: -0.02em">Skincare</span>
+            </div>
+            <!-- live activity pill -->
+            <div id="c-live" class="layer" style="color: var(--orange)">
+              <svg class="abs" style="left: 34px; top: 25px" width="180" height="180" viewBox="0 0 180 180"><circle cx="90" cy="90" r="80" fill="none" stroke="#3a2a10" stroke-width="10" /><circle id="ring" cx="90" cy="90" r="80" fill="none" stroke="#ff9f0a" stroke-width="10" stroke-linecap="round" transform="rotate(-90 90 90)" /></svg>
+              <div class="abs center" style="left: 34px; top: 25px; width: 180px; height: 180px; font-size: 44px; font-weight: 600; color: #fff">3:00</div>
+              <div id="si" class="abs" style="left: 270px; top: 40px; font-size: 130px; font-weight: 800; letter-spacing: -0.03em; line-height: 150px">Sí</div>
+              <div class="abs center" style="right: 40px; top: 70px; width: 90px; height: 90px; border-radius: 50%; background: #3a2a10"><svg width="34" height="34" viewBox="0 0 34 34"><rect x="7" y="5" width="7" height="24" rx="2" fill="#ff9f0a" /><rect x="20" y="5" width="7" height="24" rx="2" fill="#ff9f0a" /></svg></div>
+            </div>
+            <!-- timer picker widget -->
+            <div id="c-timer" class="layer" style="color: #fff">
+              <div class="abs" style="left: 40px; top: 210px; width: 680px; height: 110px; border-radius: 26px; background: var(--dark-2)"></div>
+              <div class="abs" style="left: 70px; top: 40px; width: 100px; height: 450px; overflow: hidden">
+                <div class="abs" style="left: 0; top: 0; width: 100px; text-align: center; font-size: 58px; line-height: 90px; color: #8e8e93">&nbsp;<br />&nbsp;<br /><span style="color: #fff">0</span><br />1<br /></div>
+              </div>
+              <div class="abs" style="left: 178px; top: 241px; font-size: 40px; font-weight: 600">h</div>
+              <div class="abs" style="left: 270px; top: 40px; width: 110px; height: 450px; overflow: hidden">
+                <div id="wheel" class="abs" style="left: 0; top: 0; width: 110px; text-align: center; font-size: 58px; line-height: 90px; color: #8e8e93"></div>
+              </div>
+              <div class="abs" style="left: 388px; top: 241px; font-size: 40px; font-weight: 600">min</div>
+              <div class="abs" style="left: 500px; top: 40px; width: 100px; height: 450px; overflow: hidden">
+                <div class="abs" style="left: 0; top: 0; width: 100px; text-align: center; font-size: 58px; line-height: 90px; color: #8e8e93">&nbsp;<br />&nbsp;<br /><span style="color: #fff">0</span><br />1<br /></div>
+              </div>
+              <div class="abs" style="left: 606px; top: 241px; font-size: 40px; font-weight: 600">s</div>
+              <div id="start" class="abs center" style="right: 50px; bottom: 50px; width: 150px; height: 150px; border-radius: 50%; background: #0f3d1c; color: var(--green); font-size: 34px; font-weight: 700">Iniciar</div>
+              <div class="abs" style="left: 54px; bottom: 74px; font-size: 34px; color: #8e8e93; font-weight: 600">Rutina</div>
+            </div>
+            <!-- notes card -->
+            <div id="c-notes" class="layer" style="color: #fff">
+              <div class="abs center" style="left: 40px; top: 40px; width: 96px; height: 96px; border-radius: 50%; background: var(--dark-2); font-size: 60px; line-height: 1">‹</div>
+              <div class="abs center" style="right: 156px; top: 40px; width: 190px; height: 96px; border-radius: 48px; background: var(--dark-2); font-size: 40px; letter-spacing: 6px">⋯</div>
+              <div class="abs center" style="right: 40px; top: 40px; width: 96px; height: 96px; border-radius: 50%; background: var(--yellow); color: #3a2e00; font-size: 50px; font-weight: 800">✓</div>
+              <div id="notes-text" class="abs" style="left: 56px; top: 190px; width: 670px; font-size: 64px; font-weight: 600; line-height: 1.18; letter-spacing: -0.02em; transform-origin: 0 0">
+                <span class="tw" data-l="l03" data-i="0">La</span><span class="tw" data-l="l03" data-i="1">mayoría</span><span class="tw" data-l="l03" data-i="2">no</span><span class="tw" data-l="l03" data-i="3">se</span><span class="tw" data-l="l03" data-i="4">da</span><span class="tw" data-l="l03" data-i="5">cuenta</span><span class="tw" data-l="l03" data-i="6">de</span><span class="tw" data-l="l03" data-i="7">lo</span><span class="tw" id="w-simple" data-l="l03" data-i="8">simple</span><span class="tw" data-l="l03" data-i="9">que</span><span class="tw" data-l="l03" data-i="10">es.</span>
+              </div>
+              <div class="abs" style="left: 40px; right: 40px; bottom: 40px; height: 96px; border-radius: 48px; background: var(--dark-2); display: flex; align-items: center; justify-content: space-around; font-size: 38px; color: #d1d1d6; font-weight: 600">
+                <span>Aa</span><span>☰</span><span>▦</span><span>⌁</span><span>✎</span>
+              </div>
+            </div>
+            <!-- search bar -->
+            <div id="c-search" class="layer">
+              <svg class="abs" style="left: 48px; top: 40px" width="60" height="60" viewBox="0 0 60 60"><circle cx="25" cy="25" r="17" fill="none" stroke="#8e8e93" stroke-width="6" /><path d="M38 38 L52 52" stroke="#8e8e93" stroke-width="6" stroke-linecap="round" /></svg>
+              <div id="q1" class="abs" style="left: 130px; top: 0; height: 140px; display: flex; align-items: center; font-size: 58px; font-weight: 600; white-space: nowrap"></div>
+              <div id="caret1" class="abs" style="left: 132px; top: 38px; width: 5px; height: 64px; border-radius: 3px; background: var(--blue)"></div>
+            </div>
+            <!-- first chat bubble -->
+            <div id="c-bub" class="layer" style="display: flex; align-items: center; padding-left: 54px; font-size: 56px; font-weight: 600; white-space: nowrap">¿Piel grasa?</div>
+            <!-- routine card -->
+            <div id="c-card" class="layer" style="padding: 48px">
+              <div style="display: flex; justify-content: space-between; align-items: baseline"><span style="font-size: 50px; font-weight: 800; letter-spacing: -0.02em">Mi rutina</span><span class="sub">2 productos</span></div>
+              <div id="row1" class="abs" style="left: 48px; top: 140px; right: 48px; height: 140px; display: flex; align-items: center; gap: 30px">
+                <div class="center" style="width: 130px; height: 130px; border-radius: 34px; background: #fff3df"><img src="assets/emoji/1f9f4.svg" alt="" style="width: 84px; height: 84px" /></div>
+                <div><div style="font-size: 48px; font-weight: 700; letter-spacing: -0.02em">Crema con ceramidas</div><div class="sub">Hidrata y repara</div></div>
+              </div>
+              <div id="row2" class="abs" style="left: 48px; top: 310px; right: 48px; height: 140px; display: flex; align-items: center; gap: 30px">
+                <div class="center" style="width: 130px; height: 130px; border-radius: 34px; background: #fff8d6"><img src="assets/emoji/2600.svg" alt="" style="width: 84px; height: 84px" /></div>
+                <div><div style="font-size: 48px; font-weight: 700; letter-spacing: -0.02em">Protector solar SPF 50</div><div class="sub">Cada mañana</div></div>
+              </div>
+              <div id="cta" class="abs center" style="left: 48px; right: 48px; bottom: 48px; height: 124px; border-radius: 62px; background: var(--ink); color: #fff; font-size: 44px; font-weight: 700">
+                <span id="cta-a" class="abs center" style="inset: 0">Añadir a mi rutina</span>
+                <span id="cta-b" class="abs center" style="inset: 0">Rutina lista ✓</span>
+              </div>
+            </div>
+            <!-- notification -->
+            <div id="c-notif" class="layer" style="display: flex; align-items: center; gap: 30px; padding: 0 40px">
+              <div class="center" style="width: 116px; height: 116px; border-radius: 28px; background: #fff; border: 2px solid #e5e5ea; flex: none"><img src="assets/obelcha-mark-black.png" alt="" style="width: 78px; height: 56px" /></div>
+              <div style="flex: 1">
+                <div style="display: flex; justify-content: space-between"><span style="font-size: 36px; font-weight: 800">OBELCHA</span><span class="sub">ahora</span></div>
+                <div style="font-size: 40px; font-weight: 600; margin-top: 6px; display: flex; align-items: center; gap: 12px"><img src="assets/emoji/23f0.svg" alt="" style="width: 44px; height: 44px" />Protector solar · 08:00</div>
+              </div>
+            </div>
+            <!-- habit tracker -->
+            <div id="c-track" class="layer" style="display: flex; align-items: center; justify-content: space-around; padding: 0 30px"></div>
+            <!-- outro search -->
+            <div id="c-ig" class="layer">
+              <svg class="abs" style="left: 48px; top: 40px" width="60" height="60" viewBox="0 0 60 60"><circle cx="25" cy="25" r="17" fill="none" stroke="#8e8e93" stroke-width="6" /><path d="M38 38 L52 52" stroke="#8e8e93" stroke-width="6" stroke-linecap="round" /></svg>
+              <div id="q2" class="abs" style="left: 130px; top: 0; height: 140px; display: flex; align-items: center; font-size: 58px; font-weight: 600; white-space: nowrap"></div>
+              <div id="caret2" class="abs" style="left: 132px; top: 38px; width: 5px; height: 64px; border-radius: 3px; background: var(--blue)"></div>
+            </div>
+          </div>
+
+          <!-- cursor -->
+          <svg id="cursor" class="abs" style="left: 0; top: 0; overflow: visible" width="70" height="90" viewBox="0 0 70 90"><path d="M6 4 L6 70 L22 56 L34 84 L46 78 L34 51 L56 51 Z" fill="#1c1c1e" stroke="#ffffff" stroke-width="5" stroke-linejoin="round" /></svg>
+        </div>
+      </div>
+
+      <div id="chrome" class="clip" data-start="0" data-duration="26.82" data-track-index="2">
+        <div class="abs" style="left: 0; bottom: 120px; width: 1080px; text-align: center; font-size: 22px; color: #aeaeb2" data-layout-ignore>Emoji: Twemoji (CC BY 4.0)</div>
+      </div>
+
+      <audio id="soundtrack" src="assets/soundtrack.wav" data-start="0" data-duration="26.82" data-track-index="3"></audio>
+    </div>
+
+    <script>
+      (function () {
+        const $ = (s) => document.querySelector(s);
+        const $$ = (s) => Array.from(document.querySelectorAll(s));
+        const L = window.T.lines;
+        const DUR = window.T.dur;
+        const A = (k, o) => L[k].start + (o || 0);
+        const W = (k, i, o) => L[k].words[i][1] + (o || 0);
+
+        // ---------- build ----------
+        // minutes wheel 0..6
+        $("#wheel").innerHTML = "&nbsp;<br />&nbsp;<br />" + [0, 1, 2, 3, 4, 5, 6].map((n) => '<span class="wn">' + n + "</span>").join("<br />");
+        // habit tracker days
+        "LMXJVSD".split("").forEach((d, i) => {
+          const c = document.createElement("div");
+          c.style.cssText = "display:flex;flex-direction:column;align-items:center;gap:14px";
+          c.innerHTML = '<span style="font-size:32px;font-weight:700;color:#8e8e93">' + d + '</span><span class="dayc" style="position:relative;width:86px;height:86px;border-radius:50%;background:#e5e5ea;display:block"><span class="dayf" style="position:absolute;inset:0;border-radius:50%;background:#34c759;color:#fff;font-size:44px;font-weight:800;display:flex;align-items:center;justify-content:center">✓</span></span>';
+          $("#c-track").appendChild(c);
+        });
+        // typed strings, one span per character
+        const typeInto = (sel, text) =>
+          text.split("").map((ch) => {
+            const s = document.createElement("span");
+            s.className = "ch";
+            s.textContent = ch === " " ? " " : ch;
+            $(sel).appendChild(s);
+            return s;
+          });
+        const q1 = typeInto("#q1", "3 pasos");
+        const q2 = typeInto("#q2", "@obelcha");
+        // big word, one span per letter
+        const bigL = "CONSTANCIA".split("").map((ch) => {
+          const s = document.createElement("span");
+          s.style.display = "inline-block";
+          s.textContent = ch;
+          $("#big").appendChild(s);
+          return s;
+        });
+
+        // ---------- timeline ----------
+        const tl = gsap.timeline({ paused: true, defaults: { ease: "power3.out", duration: 0.5 } });
+        const st = (cx, cy, w, h, r, bg) => ({ left: cx - w / 2, top: cy - h / 2, width: w, height: h, borderRadius: r, backgroundColor: bg });
+        const morph = (t, s, d, ease) => tl.to("#M", Object.assign({ duration: d || 0.7, ease: ease || "expo.inOut" }, s), t);
+        const layers = ["#c-brand", "#c-live", "#c-timer", "#c-notes", "#c-search", "#c-bub", "#c-card", "#c-notif", "#c-track", "#c-ig"];
+        // a layer's hide never starts before its show has finished (overlapping tweens on one property render order-dependently when seeking)
+        const shownUntil = {};
+        const show = (sel, t) => {
+          shownUntil[sel] = t + 0.45;
+          return tl.fromTo(sel, { opacity: 0, scale: 0.94, filter: "blur(12px)" }, { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.45, ease: "power3.out", immediateRender: false }, t);
+        };
+        const hide = (sel, t) => tl.to(sel, { opacity: 0, filter: "blur(10px)", duration: 0.2, ease: "power2.in" }, Math.max(t, (shownUntil[sel] || 0) + 0.01));
+        const popIn = (sel, t, d) => tl.fromTo(sel, { opacity: 0, scale: 0.6, y: 30, filter: "blur(10px)" }, { opacity: 1, scale: 1, y: 0, filter: "blur(0px)", duration: d || 0.55, ease: "back.out(1.8)", immediateRender: false }, t);
+        const out = (sel, t) => tl.to(sel, { opacity: 0, y: -30, filter: "blur(12px)", duration: 0.3, ease: "power2.in" }, t);
+        const tap = (t, x, y) => {
+          tl.to("#cursor", { x: x, y: y, duration: 0.45, ease: "power3.inOut" }, t - 0.5);
+          tl.to("#cursor", { scale: 0.82, duration: 0.08, yoyo: true, repeat: 1, ease: "power2.inOut", transformOrigin: "10% 5%" }, t - 0.05);
+        };
+
+        // initial states
+        gsap.set("#M", Object.assign(st(540, 960, 40, 40, 20, "#ffffff"), { opacity: 0, scale: 0.4 }));
+        gsap.set(layers, { opacity: 0 });
+        gsap.set(["#g1", "#g2", "#g3", "#b2", "#b3", "#b4", "#h7", "#big", "#brand", "#follow", "#f-b", "#cta-b", "#cursor", "#caret1", "#caret2"], { opacity: 0 });
+        gsap.set([...q1, ...q2], { opacity: 0 });
+        gsap.set(".dayf", { scale: 0, opacity: 0 });
+        gsap.set("#strike-p", { strokeDasharray: 640, strokeDashoffset: 640 });
+        gsap.set("#ring", { strokeDasharray: 503, strokeDashoffset: 0 });
+        gsap.set("#wheel", { y: 0 });
+        gsap.set("#cursor", { x: 1180, y: 1500 });
+        gsap.set("#br-word", { clipPath: "inset(0% 100% 0% 0%)" });
+        const tws = $$(".tw[data-l]");
+        gsap.set(tws, { opacity: 0, y: 14, filter: "blur(8px)" });
+
+        // ===== 1. hook: words bounce in =====
+        const hw = $$(".hw");
+        gsap.set(hw.slice(1), { opacity: 0 });
+        hw.slice(1).forEach((w) => {
+          tl.fromTo(w, { opacity: 0, y: 60, scale: 0.7, filter: "blur(10px)" }, { opacity: 1, y: 0, scale: 1, filter: "blur(0px)", duration: 0.5, ease: "back.out(2.2)", immediateRender: false }, W("l01", +w.dataset.i, -0.06));
+        });
+        const hookOut = Math.min(W("l01", 8, 0.4), W("l02", 0, -0.75));
+        tl.to(hw, { opacity: 0, y: -50, scale: 0.9, filter: "blur(14px)", duration: 0.3, stagger: 0.015, ease: "power2.in" }, hookOut);
+
+        // ===== 2. brand pill → live activity → timer =====
+        const t3 = hookOut + 0.4;
+        tl.to("#M", { opacity: 1, scale: 1, duration: 0.45, ease: "back.out(1.6)" }, t3);
+        morph(t3, st(540, 960, 820, 230, 115, "#1c1c1e"), 0.6, "back.out(1.2)");
+        show("#c-live", t3 + 0.2);
+        gsap.set("#si", { opacity: 0 });
+        tl.fromTo("#si", { opacity: 0, scale: 0.5, filter: "blur(10px)" }, { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.45, ease: "back.out(2.4)", transformOrigin: "0% 50%", immediateRender: false }, W("l02", 0, -0.05));
+        tl.to("#ring", { strokeDashoffset: 60, duration: 1.4, ease: "none" }, t3 + 0.3);
+
+        const t4 = Math.max(W("l02", 3, -0.25), W("l02", 0, 0.45));
+        hide("#c-live", t4 - 0.05);
+        morph(t4, st(540, 960, 760, 620, 72, "#1c1c1e"), 0.65, "expo.inOut");
+        show("#c-timer", t4 + 0.25);
+        tl.to("#wheel", { y: -270, duration: 0.7, ease: "power3.out" }, t4 + 0.25);
+        tl.to("#wheel .wn:nth-child(4)", { color: "#ffffff", duration: 0.2 }, t4 + 0.8);
+        tl.set("#cursor", { opacity: 1 }, W("l02", 6, -0.6));
+        tap(W("l02", 6, 0.05), 740, 1130);
+        tl.to("#start", { scale: 0.9, duration: 0.1, yoyo: true, repeat: 1 }, W("l02", 6, 0));
+        tl.to("#start", { backgroundColor: "#34c759", color: "#ffffff", duration: 0.2 }, W("l02", 6, 0.1));
+        tl.to("#cursor", { x: 1180, y: 1500, duration: 0.5, ease: "power3.in" }, W("l02", 6, 0.3));
+
+        // ===== 3. notes card → full screen =====
+        const t5 = A("l03", -0.3);
+        hide("#c-timer", t5 - 0.05);
+        morph(t5, st(540, 960, 780, 900, 64, "#1c1c1e"), 0.65, "expo.inOut");
+        show("#c-notes", t5 + 0.2);
+        $$('.tw[data-l="l03"]').forEach((w) => tl.to(w, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.25, ease: "power2.out" }, W("l03", +w.dataset.i, -0.04)));
+        const tExp = W("l03", 8, -0.15);
+        morph(tExp, st(540, 960, 1080, 1920, 0, "#1c1c1e"), 0.7, "expo.inOut");
+        tl.to("#notes-text", { scale: 1.32, x: 6, y: 120, duration: 0.7, ease: "expo.inOut" }, tExp);
+        tl.to("#w-simple", { color: "#ff9f0a", textShadow: "0 0 30px rgba(255,159,10,0.7)", duration: 0.3 }, W("l03", 8, 0.05));
+
+        // ===== 4. collapse into a search bar, glowing steps =====
+        const t6 = A("l04", -0.3);
+        hide("#c-notes", t6 - 0.02);
+        morph(t6, st(540, 640, 860, 140, 70, "#ffffff"), 0.75, "expo.inOut");
+        show("#c-search", t6 + 0.35);
+        tl.to("#caret1", { opacity: 1, duration: 0.05 }, t6 + 0.45);
+        const ty1 = W("l04", 2, -0.05);
+        q1.forEach((c, i) => tl.set(c, { opacity: 1 }, ty1 + i * 0.06));
+        // caret follows the text
+        tl.fromTo("#caret1", { x: 0 }, { x: 205, duration: q1.length * 0.06, ease: "steps(7)", immediateRender: false }, ty1);
+        tl.fromTo("#caret1", { opacity: 1 }, { opacity: 0, duration: 0.3, repeat: 5, yoyo: true, ease: "steps(1)", immediateRender: false }, ty1 + 0.5);
+        [["#g1", 4], ["#g2", 5], ["#g3", 7]].forEach(([g, i]) => {
+          tl.fromTo(g, { opacity: 0, y: 40, filter: "blur(18px)", scale: 0.9 }, { opacity: 1, y: 0, filter: "blur(0px)", scale: 1, duration: 0.55, ease: "power3.out", immediateRender: false }, W("l04", i, -0.08));
+        });
+
+        // ===== 5. chat bubbles =====
+        const t7 = A("l05", -0.3);
+        out(["#g1", "#g2", "#g3"], t7);
+        hide("#c-search", t7);
+        morph(t7, st(90 + 210, 730, 420, 130, 65, "#e9e9eb"), 0.6, "expo.inOut");
+        show("#c-bub", t7 + 0.25);
+        popIn("#b2", W("l05", 2, -0.08));
+        popIn("#b3", W("l05", 4, -0.08));
+        popIn("#b4", W("l05", 5, -0.08));
+
+        // ===== 6. routine card + tap =====
+        const t8 = A("l06", -0.3);
+        out(["#b2", "#b3", "#b4"], t8);
+        hide("#c-bub", t8);
+        morph(t8, st(540, 980, 880, 660, 56, "#ffffff"), 0.7, "expo.inOut");
+        show("#c-card", t8 + 0.3);
+        gsap.set(["#row1", "#row2"], { opacity: 0 });
+        tl.fromTo("#row1", { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.45, immediateRender: false }, W("l06", 1, -0.05));
+        tl.fromTo("#row2", { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.45, immediateRender: false }, W("l06", 5, -0.05));
+        tl.set("#cursor", { opacity: 1 }, W("l06", 8, -0.7));
+        const tp = W("l06", 8, 0.1);
+        tap(tp, 560, 1210);
+        tl.to("#cta", { scale: 0.96, duration: 0.08, yoyo: true, repeat: 1 }, tp - 0.02);
+        tl.to("#cta", { backgroundColor: "#34c759", duration: 0.25 }, tp + 0.06);
+        tl.set("#cta-a", { opacity: 0 }, tp + 0.08);
+        tl.set("#cta-b", { opacity: 1 }, tp + 0.08);
+        tl.to("#cursor", { x: 1180, y: 1500, duration: 0.5, ease: "power3.in" }, tp + 0.3);
+
+        // ===== 7. notification, "producto" struck, CONSTANCIA, tracker =====
+        const t9 = A("l07", -0.3);
+        hide("#c-card", t9);
+        morph(t9, st(540, 470, 920, 190, 48, "#ffffff"), 0.7, "expo.inOut");
+        show("#c-notif", t9 + 0.3);
+        tl.to("#h7", { opacity: 1, duration: 0.05 }, t9);
+        $$('.tw[data-l="l07"]').forEach((w) => tl.to(w, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.3, ease: "power2.out" }, W("l07", +w.dataset.i, -0.05)));
+        tl.to("#strike-p", { strokeDashoffset: 0, duration: 0.4, ease: "power3.out" }, W("l07", 5, 0.35));
+        const t10 = W("l07", 6, -0.1);
+        out("#h7", t10);
+        hide("#c-notif", t10);
+        morph(t10, st(540, 1200, 920, 250, 50, "#ffffff"), 0.7, "expo.inOut");
+        show("#c-track", t10 + 0.3);
+        tl.to("#big", { opacity: 1, duration: 0.05 }, W("l07", 8, -0.1));
+        tl.fromTo(bigL, { opacity: 0, scaleY: 2.4, scaleX: 0.6, y: 40, filter: "blur(14px)" }, { opacity: 1, scaleY: 1, scaleX: 1, y: 0, filter: "blur(0px)", duration: 0.55, stagger: 0.035, ease: "expo.out", immediateRender: false }, W("l07", 8, -0.08));
+        tl.to(".dayf", { scale: 1, opacity: 1, duration: 0.3, stagger: 0.09, ease: "back.out(2.2)" }, W("l07", 8, 0.15));
+
+        // ===== 8. outro: search "@obelcha" + follow =====
+        const t11 = A("l08", -0.3);
+        out("#big", t11);
+        hide("#c-track", t11);
+        morph(t11, st(540, 1080, 860, 140, 70, "#ffffff"), 0.7, "expo.inOut");
+        show("#c-ig", t11 + 0.3);
+        tl.to("#caret2", { opacity: 1, duration: 0.05 }, t11 + 0.4);
+        tl.fromTo("#brand", { opacity: 0, y: 40, filter: "blur(14px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.6, ease: "expo.out", immediateRender: false }, W("l08", 0, 0));
+        tl.to("#br-word", { clipPath: "inset(0% 0% 0% 0%)", duration: 0.7, ease: "power4.inOut" }, W("l08", 0, 0.3));
+        const ty2 = W("l08", 2, -0.1);
+        q2.forEach((c, i) => tl.set(c, { opacity: 1 }, ty2 + i * 0.055));
+        tl.fromTo("#caret2", { x: 0 }, { x: 250, duration: q2.length * 0.055, ease: "steps(8)", immediateRender: false }, ty2);
+        popIn("#follow", W("l08", 3, 0));
+        tl.set("#cursor", { opacity: 1 }, W("l08", 4, -0.3));
+        const tf = W("l08", 6, 0);
+        tap(tf, 560, 1320);
+        tl.to("#follow", { backgroundColor: "#e5e5ea", color: "#1c1c1e", duration: 0.25 }, tf + 0.06);
+        tl.set("#f-a", { opacity: 0 }, tf + 0.08);
+        tl.set("#f-b", { opacity: 1 }, tf + 0.08);
+        tl.to("#cursor", { x: 1180, y: 1500, duration: 0.6, ease: "power3.in" }, tf + 0.5);
+
+        window.__timelines = window.__timelines || {};
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>
