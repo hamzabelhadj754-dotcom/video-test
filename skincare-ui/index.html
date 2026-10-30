@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=1080, height=1920" />
     <script src="assets/gsap.min.js"></script>
+    <script src="assets/CustomEase.min.js"></script>
     <script src="assets/timing.js"></script>
     <style>
       :root {
@@ -331,25 +332,39 @@
           tl.to("#cursor", { x: x + 200, y: y + 260, opacity: 0, duration: 0.45, ease: "power3.in" }, t + 0.3);
         };
 
-        // ---- camera rig: world point (cx, cy) at screen centre, zoom z ----
+        // ---- camera rig ----
+        // The camera is a critically damped spring chasing "intent" framings (world point cx,cy at
+        // screen centre, zoom z). The path is simulated here once and baked into per-frame keyframes,
+        // so it is deterministic and seek-safe, and moves never stop-start between targets.
         const camAt = (cx, cy, z) => ({ x: 540 - cx * z, y: 960 - cy * z, scale: z });
-        let cam = { cx: hookCx[0] + 250, cy: HOOK_Y + 70, z: 1, t: 0 };
-        gsap.set("#world", Object.assign({ transformOrigin: "0 0" }, camAt(cam.cx, cam.cy, cam.z)));
-        const drift = (until) => {
-          if (until - cam.t < 0.08) return;
-          const z2 = cam.z * 1.018;
-          tl.fromTo("#world", camAt(cam.cx, cam.cy, cam.z), Object.assign(camAt(cam.cx, cam.cy, z2), { duration: until - cam.t, ease: "sine.inOut", immediateRender: false }), cam.t);
-          cam.z = z2;
-          cam.t = until;
+        const intents = [{ t: 0, cx: hookCx[0] + 250, cy: HOOK_Y + 70, z: 1 }];
+        let cam = { t: 0 };
+        // shot(arrive, ...): the camera should be settled on this framing around `arrive`
+        const shot = (arrive, cx, cy, z, dur) => {
+          const lead = Math.min(dur || 0.6, 0.6);
+          intents.push({ t: Math.max(arrive - lead, intents[intents.length - 1].t + 0.05), cx: cx, cy: cy, z: z });
+          cam = { t: arrive };
         };
-        // camera moves are sequential tweens that never overlap
-        const shot = (arrive, cx, cy, z, dur, ease) => {
-          let start = Math.max(arrive - dur, cam.t);
-          if (arrive <= start + 0.05) arrive = start + 0.25;
-          drift(start);
-          tl.fromTo("#world", camAt(cam.cx, cam.cy, cam.z), Object.assign(camAt(cx, cy, z), { duration: arrive - start, ease: ease || "power2.inOut", immediateRender: false }), start);
-          cam = { cx: cx, cy: cy, z: z, t: arrive };
+        const bakeCamera = () => {
+          const OMEGA = 7.5, DT = 1 / 240, FPS = 60;
+          let px = intents[0].cx, py = intents[0].cy, pz = Math.log(intents[0].z);
+          let vx = 0, vy = 0, vz = 0, k = 0;
+          const frames = [];
+          for (let step = 0, t = 0; t <= DUR + 1e-6; step++, t = step * DT) {
+            while (k + 1 < intents.length && intents[k + 1].t <= t) k++;
+            const it = intents[k];
+            // a slow push-in while holding a framing, so the frame is never dead still
+            const tz = Math.log(it.z * (1 + 0.012 * Math.min(t - it.t, 3)));
+            vx += (OMEGA * OMEGA * (it.cx - px) - 2 * OMEGA * vx) * DT; px += vx * DT;
+            vy += (OMEGA * OMEGA * (it.cy - py) - 2 * OMEGA * vy) * DT; py += vy * DT;
+            vz += (OMEGA * OMEGA * (tz - pz) - 2 * OMEGA * vz) * DT; pz += vz * DT;
+            if (step % (240 / FPS) === 0) frames.push(camAt(px, py, Math.exp(pz)));
+          }
+          gsap.set("#world", Object.assign({ transformOrigin: "0 0" }, frames[0]));
+          tl.to("#world", { keyframes: frames.slice(1).map((f) => Object.assign({ duration: 1 / FPS, ease: "none" }, f)) }, 0);
         };
+        // elements the camera has left behind fade away
+        const leave = (sel, t) => tl.to(sel, { opacity: 0, y: -30, scale: 0.96, filter: "blur(12px)", duration: 0.45, ease: "power2.in", stagger: 0.02 }, t);
 
         // initial states
         gsap.set("#M", Object.assign(st(1950, 1250, 40, 40, 20, "#1c1c1e"), { opacity: 0, scale: 0.4 }));
@@ -370,16 +385,15 @@
           const i = k + 1;
           tl.fromTo(w, { opacity: 0, y: 60, scale: 0.7, filter: "blur(10px)" }, { opacity: 1, y: 0, scale: 1, filter: "blur(0px)", duration: 0.5, ease: "back.out(2.2)", immediateRender: false }, W("l01", i, -0.06));
         });
-        for (let i = 1; i < hookWords.length; i++) shot(W("l01", i, 0.16), hookCx[i] + 90, HOOK_Y + 70, 1, 0.42, "power2.inOut");
-        // pull back to show the whole sentence, then tilt down to the next element
-        shot(W("l01", 8, 0.62), hookMid + 300, 760, 0.36, 0.42, "power2.inOut");
+        for (let i = 1; i < hookWords.length; i++) intents.push({ t: W("l01", i, -0.22), cx: hookCx[i] + 60, cy: HOOK_Y + 70, z: 1 });
+        leave(hw, W("l01", 8, 0.45));
 
         // ===== 2. live activity → timer =====
         const t3 = W("l01", 8, 0.5);
         tl.to("#M", { opacity: 1, scale: 1, duration: 0.45, ease: "back.out(1.6)" }, t3);
         morph(t3, st(1950, 1250, 820, 230, 115, "#1c1c1e"), 0.6, "back.out(1.2)");
         show("#c-live", t3 + 0.2);
-        shot(Math.max(W("l02", 0, 0.1), cam.t + 0.55), 1950, 1250, 1, 0.65, "expo.inOut");
+        shot(Math.max(W("l02", 0, 0.1), W("l01", 8, 0.75)), 1950, 1250, 1, 0.6);
         tl.fromTo("#si", { opacity: 0, scale: 0.5, filter: "blur(10px)" }, { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.45, ease: "back.out(2.4)", transformOrigin: "0% 50%", immediateRender: false }, W("l02", 0, -0.05));
         tl.to("#ring", { strokeDashoffset: 60, duration: 1.4, ease: "none" }, t3 + 0.3);
 
@@ -389,9 +403,9 @@
         show("#c-timer", t4 + 0.25);
         tl.to("#wheel", { y: -270, duration: 0.7, ease: "power3.out" }, t4 + 0.25);
         tl.to("#wheel .wn:nth-child(4)", { color: "#ffffff", duration: 0.2 }, t4 + 0.8);
-        shot(t4 + 0.75, 1900, 1215, 1.32, 0.6, "power2.inOut");
+        shot(t4 + 0.75, 1900, 1215, 1.22, 0.6);
         const tapT = Math.max(W("l02", 6, 0.05), t4 + 1.2);
-        shot(tapT - 0.1, 2120, 1370, 1.3, 0.45, "power2.inOut");
+        shot(tapT - 0.1, 1990, 1330, 1.15, 0.5);
         tap(tapT, 2190, 1420);
         tl.to("#start", { scale: 0.9, duration: 0.1, yoyo: true, repeat: 1 }, tapT - 0.05);
         tl.to("#start", { backgroundColor: "#34c759", color: "#ffffff", duration: 0.2 }, tapT + 0.05);
@@ -403,8 +417,8 @@
         show("#c-notes", t5 + 0.25);
         shot(t5 + 0.75, 1300, 2470, 1.0, 0.75, "expo.inOut");
         $$('.tw[data-l="l03"]').forEach((w) => tl.to(w, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.25, ease: "power2.out" }, W("l03", +w.dataset.i, -0.04)));
-        shot(Math.max(W("l03", 3, 0.2), cam.t + 0.3), 1250, 2330, 1.32, 0.5);
-        shot(Math.max(W("l03", 6, 0.1), cam.t + 0.3), 1300, 2410, 1.32, 0.45);
+        shot(Math.max(W("l03", 3, 0.2), cam.t + 0.3), 1270, 2340, 1.2, 0.5);
+        shot(Math.max(W("l03", 6, 0.1), cam.t + 0.3), 1300, 2400, 1.2, 0.5);
         const tExp = Math.max(W("l03", 8, -0.15), cam.t);
         morph(tExp, st(1300, 2500, 1100, 1955, 0, "#1c1c1e"), 0.7, "expo.inOut");
         tl.to("#notes-text", { scale: 1.32, x: 6, y: 120, duration: 0.7, ease: "expo.inOut" }, tExp);
@@ -422,7 +436,7 @@
         q1.forEach((c, i) => tl.set(c, { opacity: 1 }, ty1 + i * 0.06));
         tl.fromTo("#caret1", { x: 0 }, { x: 205, duration: q1.length * 0.06, ease: "steps(7)", immediateRender: false }, ty1);
         tl.fromTo("#caret1", { opacity: 1 }, { opacity: 0, duration: 0.3, repeat: 5, yoyo: true, ease: "steps(1)", immediateRender: false }, ty1 + 0.5);
-        shot(Math.max(ty1 + 0.45, cam.t + 0.3), 1540, 3800, 1.2, 0.4);
+        shot(Math.max(ty1 + 0.45, cam.t + 0.3), 1500, 3820, 1.15, 0.4);
         [["#g1", 4, 4040], ["#g2", 5, 4240], ["#g3", 7, 4440]].forEach(([g, i, top]) => {
           tl.fromTo(g, { opacity: 0, y: 40, filter: "blur(18px)", scale: 0.9 }, { opacity: 1, y: 0, filter: "blur(0px)", scale: 1, duration: 0.55, ease: "power3.out", immediateRender: false }, W("l04", i, -0.08));
           shot(Math.max(W("l04", i, 0.12), cam.t + 0.3), 1500, top + 30, 0.95, 0.45);
@@ -431,6 +445,7 @@
 
         // ===== 5. chat: the camera scrolls with the conversation =====
         const t7 = Math.max(A("l05", -0.3), cam.t);
+        leave(["#g1", "#g2", "#g3"], t7);
         hide("#c-search", t7);
         morph(t7, st(1200, 5100, 420, 130, 65, "#e9e9eb"), 0.7, "expo.inOut");
         show("#c-bub", t7 + 0.3);
@@ -443,6 +458,7 @@
 
         // ===== 6. routine card + tap =====
         const t8 = Math.max(A("l06", -0.3), cam.t);
+        leave(["#b2", "#b3", "#b4"], t8);
         hide("#c-bub", t8);
         morph(t8, st(1500, 6350, 880, 660, 56, "#ffffff"), 0.8, "expo.inOut");
         show("#c-card", t8 + 0.35);
@@ -466,8 +482,9 @@
         shot(t9 + 0.8, 1500, 7290, 0.95, 0.8, "expo.inOut");
         $$('.tw[data-l="l07"]').forEach((w) => tl.to(w, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.3, ease: "power2.out" }, W("l07", +w.dataset.i, -0.05)));
         tl.to("#strike-p", { strokeDashoffset: 0, duration: 0.4, ease: "power3.out" }, W("l07", 5, 0.35));
-        shot(Math.max(W("l07", 5, 0.55), cam.t + 0.3), 1500, 7440, 1.25, 0.5);
+        shot(Math.max(W("l07", 5, 0.55), cam.t + 0.3), 1500, 7400, 1.08, 0.5);
         const t10 = Math.max(W("l07", 6, -0.1), cam.t);
+        leave("#h7", t10);
         hide("#c-notif", t10);
         morph(t10, st(1500, 8100, 920, 250, 50, "#ffffff"), 0.75, "expo.inOut");
         show("#c-track", t10 + 0.35);
@@ -478,6 +495,7 @@
 
         // ===== 8. outro: search "@obelcha" + follow =====
         const t11 = Math.max(A("l08", -0.3), cam.t);
+        leave("#big", t11);
         hide("#c-track", t11);
         morph(t11, st(1500, 9150, 860, 140, 70, "#ffffff"), 0.8, "expo.inOut");
         show("#c-ig", t11 + 0.35);
@@ -494,7 +512,7 @@
         tl.to("#follow", { backgroundColor: "#e5e5ea", color: "#1c1c1e", duration: 0.25 }, tf + 0.06);
         tl.set("#f-a", { opacity: 0 }, tf + 0.08);
         tl.set("#f-b", { opacity: 1 }, tf + 0.08);
-        drift(DUR);
+        bakeCamera();
 
         window.__timelines = window.__timelines || {};
         window.__timelines["main"] = tl;
