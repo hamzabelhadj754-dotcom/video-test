@@ -122,15 +122,16 @@
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="main" data-start="0" data-duration="26.82" data-width="1080" data-height="1920">
-      <div id="bg" class="clip" data-start="0" data-duration="26.82" data-track-index="0">
+    <div id="root" data-composition-id="main" data-start="0" data-duration="27.93" data-width="1080" data-height="1920">
+      <div id="bg" class="clip" data-start="0" data-duration="27.93" data-track-index="0">
         <div class="full" style="background: radial-gradient(ellipse 70% 55% at 50% 45%, #ffffff 0%, #f2f2f7 75%)"></div>
       </div>
 
-      <div id="stage" class="clip" data-start="0" data-duration="26.82" data-track-index="1" data-layout-allow-overlap data-layout-allow-occlusion data-layout-allow-overflow>
-        <div id="cam" class="full" style="overflow: hidden">
+      <div id="stage" class="clip" data-start="0" data-duration="27.93" data-track-index="1" data-layout-allow-overlap data-layout-allow-occlusion data-layout-allow-overflow>
+        <svg width="0" height="0" style="position: absolute" aria-hidden="true"><filter id="mb" x="-5%" y="-5%" width="110%" height="110%" color-interpolation-filters="sRGB"><feGaussianBlur id="mbg" in="SourceGraphic" stdDeviation="0 0" /></filter></svg>
+        <div id="cam" class="full" style="overflow: hidden; filter: url(#mb)">
           <!-- the world the camera travels through -->
-          <div id="world" class="abs" style="left: 0; top: 0; width: 3600px; height: 9800px">
+          <div id="world" class="abs" style="left: 0; top: 0; width: 7000px; height: 7000px">
             <!-- 1. hook: one long line, written word by word -->
             <div id="hook" class="abs" style="left: 0; top: 0; width: 3600px; height: 700px"></div>
 
@@ -250,11 +251,11 @@
         </div>
       </div>
 
-      <div id="chrome" class="clip" data-start="0" data-duration="26.82" data-track-index="2">
+      <div id="chrome" class="clip" data-start="0" data-duration="27.93" data-track-index="2">
         <div class="abs" style="left: 0; bottom: 120px; width: 1080px; text-align: center; font-size: 22px; color: #aeaeb2" data-layout-ignore>Emoji: Twemoji (CC BY 4.0)</div>
       </div>
 
-      <audio id="soundtrack" src="assets/soundtrack.wav" data-start="0" data-duration="26.82" data-track-index="3"></audio>
+      <audio id="soundtrack" src="assets/soundtrack.wav" data-start="0" data-duration="27.93" data-track-index="3"></audio>
     </div>
 
     <script>
@@ -265,30 +266,13 @@
         const DUR = window.T.dur;
         const A = (k, o) => L[k].start + (o || 0);
         const W = (k, i, o) => L[k].words[i][1] + (o || 0);
+        const px = (el, x, y) => {
+          el.style.left = x + "px";
+          el.style.top = y + "px";
+        };
 
-        // ---------- build ----------
-        // hook: one long line laid out on fixed slots (widths estimated, so camera targets are constants)
-        const HOOK_FS = 130, HOOK_Y = 340, CH = 0.6;
-        const hookWords = [["¿Se", 0, 0], ["puede", -18, 0], ["mejorar", 12, 0], ["tu", -10, 0], ["piel", 8, 0], ["con", -16, 0], ["solo", 6, 0], ["tres", 0, 1], ["productos?", 10, 1]];
-        let hx = 260;
-        const hookCx = [];
-        const hw = hookWords.map(([w, dy, blue], i) => {
-          const width = w.length * CH * HOOK_FS;
-          const s = document.createElement("span");
-          s.className = "abs hw";
-          s.dataset.l = "l01";
-          s.dataset.i = String(i);
-          s.style.cssText = "left:" + hx + "px;top:" + (HOOK_Y + dy) + "px;margin:0;font-size:" + HOOK_FS + "px;white-space:nowrap;" + (blue ? "color:#0a84ff;" : "");
-          s.textContent = w;
-          $("#hook").appendChild(s);
-          hookCx.push(hx + width / 2);
-          hx += width + 46;
-          return s;
-        });
-        const hookMid = (260 + hx) / 2;
-        // minutes wheel 0..6
+        // ---------- static build (no measurement needed) ----------
         $("#wheel").innerHTML = "&nbsp;<br />&nbsp;<br />" + [0, 1, 2, 3, 4, 5, 6].map((n) => '<span class="wn">' + n + "</span>").join("<br />");
-        // habit tracker days
         "LMXJVSD".split("").forEach((d) => {
           const c = document.createElement("div");
           c.style.cssText = "display:flex;flex-direction:column;align-items:center;gap:14px";
@@ -312,230 +296,271 @@
           $("#big").appendChild(s);
           return s;
         });
+        // hook words (measured after fonts load)
+        const HOOK_FS = 124, HOOK_Y = 470;
+        const hookDefs = [["¿Se", 0], ["puede", -26], ["mejorar", 18], ["tu", -14], ["piel", 10], ["con", -22], ["solo", 8], ["tres", -4, 1], ["productos?", 14, 1]];
+        const hw = hookDefs.map(([w, dy, blue], i) => {
+          const s = document.createElement("span");
+          s.className = "abs hw";
+          s.dataset.l = "l01";
+          s.dataset.i = String(i);
+          s.style.cssText = "left:0;top:" + (HOOK_Y + dy) + "px;margin:0;font-size:" + HOOK_FS + "px;white-space:nowrap;" + (blue ? "color:#0a84ff;" : "");
+          s.textContent = w;
+          $("#hook").appendChild(s);
+          return s;
+        });
 
-        // ---------- timeline ----------
-        // Motion language: physically based springs (assets/eases.js, generated with the `motion`
-        // spring solver), small travel, light blur, no bounce on text. One thing moves at a time.
-        const tl = gsap.timeline({ paused: true, defaults: { ease: "springSoft", duration: 0.7 } });
-        const st = (cx, cy, w, h, r, bg) => ({ left: cx - w / 2, top: cy - h / 2, width: w, height: h, borderRadius: r, backgroundColor: bg });
-        const morph = (t, s) => tl.to("#M", Object.assign({ duration: 0.5, ease: "springMorph" }, s), t);
-        const layers = ["#c-live", "#c-timer", "#c-notes", "#c-search", "#c-bub", "#c-card", "#c-notif", "#c-track", "#c-ig"];
-        // a layer's hide never starts before its show has finished (overlapping tweens on one property render order-dependently when seeking)
-        const shownUntil = {};
-        const show = (sel, t) => {
-          shownUntil[sel] = t + 0.32;
-          return tl.fromTo(sel, { opacity: 0, scale: 0.985, filter: "blur(6px)" }, { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.32, ease: "springSoft", immediateRender: false }, t);
-        };
-        const hide = (sel, t) => tl.to(sel, { opacity: 0, filter: "blur(4px)", duration: 0.16, ease: "sine.inOut" }, Math.max(t, (shownUntil[sel] || 0) + 0.01));
-        const enter = (sel, t, from) => tl.fromTo(sel, Object.assign({ opacity: 0, y: 22, filter: "blur(6px)" }, from || {}), { opacity: 1, x: 0, y: 0, scale: 1, filter: "blur(0px)", duration: 0.38, ease: "springSoft", immediateRender: false }, t);
-        const pop = (sel, t) => tl.fromTo(sel, { opacity: 0, y: 16, scale: 0.96, filter: "blur(5px)" }, { opacity: 1, y: 0, scale: 1, filter: "blur(0px)", duration: 0.36, ease: "springPop", immediateRender: false }, t);
-        // elements the camera has left behind fade away
-        const leave = (sel, t) => tl.to(sel, { opacity: 0, y: -16, filter: "blur(6px)", duration: 0.3, ease: "sine.inOut", stagger: 0.01 }, t);
-        // cursor: glides in, taps, leaves
-        const tap = (t, x, y) => {
-          tl.fromTo("#cursor", { x: x + 200, y: y + 240, opacity: 0 }, { x: x, y: y, opacity: 1, duration: 0.42, ease: "springSoft", immediateRender: false }, t - 0.46);
-          tl.to("#cursor", { scale: 0.9, duration: 0.12, yoyo: true, repeat: 1, ease: "sine.inOut", transformOrigin: "10% 5%" }, t - 0.06);
-          tl.to("#cursor", { x: x + 160, y: y + 200, opacity: 0, duration: 0.32, ease: "sine.in" }, t + 0.22);
-        };
+        const build = () => {
+          // ---------- layout from real metrics ----------
+          let hx = 300;
+          const wl = [], wr = [];
+          hw.forEach((s) => {
+            s.style.left = hx + "px";
+            wl.push(hx);
+            hx += s.offsetWidth;
+            wr.push(hx);
+            hx += 44;
+          });
+          const lineCy = HOOK_Y + HOOK_FS * 0.6;
+          const P = { x: hx + 760, y: lineCy }; // live pill / timer / notes
+          const S = { x: P.x, y: P.y + 1500 }; // search bar
+          const SY = S.y + 330, SX = [P.x, P.x + 900, P.x + 1800]; // steps row
+          const X3 = SX[2];
+          const CY = SY + 1200; // chat
+          const CL = X3 - 420; // chat left edge
+          const CARD = { x: X3, y: CY + 230 };
+          const Y7 = CARD.y + 1250;
+          const NOTIF = { x: X3, y: Y7 - 430 }, TRACK = { x: X3, y: Y7 + 560 };
+          const OUT = { x: X3, y: Y7 + 1650 };
+          [["#g1", SX[0]], ["#g2", SX[1]], ["#g3", SX[2]]].forEach(([g, x]) => px($(g), x - 540, SY - 70));
+          px($("#b2"), CL, CY + 95);
+          px($("#b3"), CL, CY + 265);
+          $("#b4").style.right = 7000 - (X3 + 420) + "px";
+          $("#b4").style.top = CY + 455 + "px";
+          px($("#h7"), X3 - 540, Y7 - 250);
+          px($("#big"), X3 - 540, Y7 + 170);
+          px($("#brand"), X3 - 540, OUT.y - 560);
+          px($("#follow"), X3 - 200, OUT.y + 140);
 
-        // ---- camera ----
-        // Framing keys. `move` = quintic ease (zero velocity and acceleration at both ends).
-        // `glide` keys form a chain the camera travels through with smooth (Hermite) velocity, used to
-        // follow writing. Scene changes use travel(): the UI shape and the camera share the same curve,
-        // start and duration, so the element stays steady on screen while the world flows past.
-        // The path is baked into per-frame keyframes (deterministic, seek-safe).
-        const camAt = (cx, cy, z) => ({ x: 540 - cx * z, y: 960 - cy * z, scale: z });
-        const keys = [{ T: 0, cx: hookCx[0] + 200, cy: HOOK_Y + 70, z: 1 }];
-        const lastT = () => keys[keys.length - 1].T;
-        const addKey = (k) => {
-          k.T = Math.max(k.T, lastT() + 0.3);
-          keys.push(k);
-        };
-        const move = (T, cx, cy, z, dur) => addKey({ T: T, cx: cx, cy: cy, z: z, dur: dur || 0.6 });
-        const glide = (T, cx, cy, z) => addKey({ T: T, cx: cx, cy: cy, z: z, glide: true });
-        const smoother = (u) => u * u * u * (u * (u * 6 - 15) + 10);
-        CustomEase.create("snap", "M0,0 C0.32,0 0.08,1 1,1");
-        const snap = gsap.parseEase("snap");
-        const holdZ = (p, t) => Math.log(p.z) + Math.log(1 + 0.015 * Math.min(Math.max(t - p.T, 0), 2.5));
-        // tangent at a glide-chain key (finite difference; zero at chain ends so it starts/ends at rest)
-        const tangent = (k, prop) => {
-          const p = keys[k - 1], q = keys[k + 1];
-          if (!keys[k].glide || !q || !q.glide || !p) return 0;
-          return (q[prop] - p[prop]) / (q.T - p.T);
-        };
-        const hermite = (k, prop, u, h) => {
-          const a = keys[k - 1][prop], b = keys[k][prop];
-          const ma = keys[k - 1].glide || k - 1 === 0 ? tangent(k - 1, prop) * h : 0, mb = tangent(k, prop) * h;
-          const u2 = u * u, u3 = u2 * u;
-          return (2 * u3 - 3 * u2 + 1) * a + (u3 - 2 * u2 + u) * ma + (-2 * u3 + 3 * u2) * b + (u3 - u2) * mb;
-        };
-        const targetAt = (t) => {
-          let p = keys[0];
-          for (let k = 1; k < keys.length; k++) {
-            const q = keys[k];
-            const start = q.glide ? p.T : Math.max(q.T - q.dur, p.T);
-            if (t < start) break;
-            if (t < q.T) {
-              const h = q.T - start, u = (t - start) / h;
-              if (q.glide) return { cx: hermite(k, "cx", u, h), cy: hermite(k, "cy", u, h), lz: Math.log(p.z) + (Math.log(q.z) - Math.log(p.z)) * smoother(u) };
-              const e = snap(u), z0 = holdZ(p, start);
-              return { cx: p.cx + (q.cx - p.cx) * e, cy: p.cy + (q.cy - p.cy) * e, lz: z0 + (Math.log(q.z) - z0) * e };
+          // ---------- timeline ----------
+          const tl = gsap.timeline({ paused: true, defaults: { ease: "expo.out", duration: 0.42 } });
+          const st = (c, w, h, r, bg) => ({ left: c.x - w / 2, top: c.y - h / 2, width: w, height: h, borderRadius: r, backgroundColor: bg });
+          const morph = (t, s, d, ease) => tl.to("#M", Object.assign({ duration: d || 0.55, ease: ease || "springMorph" }, s), t);
+          const layers = ["#c-live", "#c-timer", "#c-notes", "#c-search", "#c-bub", "#c-card", "#c-notif", "#c-track", "#c-ig"];
+          const shownUntil = {};
+          const show = (sel, t) => {
+            shownUntil[sel] = t + 0.38;
+            return tl.fromTo(sel, { opacity: 0, scale: 0.97, filter: "blur(6px)" }, { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.38, ease: "expo.out", immediateRender: false }, t);
+          };
+          const hide = (sel, t) => tl.to(sel, { opacity: 0, filter: "blur(5px)", duration: 0.16, ease: "power1.in" }, Math.max(t, (shownUntil[sel] || 0) + 0.01));
+          const enter = (sel, t, from) => tl.fromTo(sel, Object.assign({ opacity: 0, y: 14, filter: "blur(5px)" }, from || {}), { opacity: 1, x: 0, y: 0, scale: 1, filter: "blur(0px)", duration: 0.42, ease: "expo.out", immediateRender: false }, t);
+          const pop = (sel, t) => tl.fromTo(sel, { opacity: 0, y: 10, scale: 0.92, filter: "blur(4px)" }, { opacity: 1, y: 0, scale: 1, filter: "blur(0px)", duration: 0.42, ease: "springPop", immediateRender: false }, t);
+          const leave = (sel, t) => tl.to(sel, { opacity: 0, y: -14, filter: "blur(6px)", duration: 0.3, ease: "power2.in", stagger: 0.01 }, t);
+          const tap = (t, x, y) => {
+            tl.fromTo("#cursor", { x: x + 180, y: y + 220, opacity: 0 }, { x: x, y: y, opacity: 1, duration: 0.42, ease: "expo.out", immediateRender: false }, t - 0.45);
+            tl.to("#cursor", { scale: 0.88, duration: 0.09, yoyo: true, repeat: 1, ease: "power1.inOut", transformOrigin: "10% 5%" }, t - 0.05);
+            tl.to("#cursor", { x: x + 150, y: y + 190, opacity: 0, duration: 0.3, ease: "power2.in" }, t + 0.25);
+          };
+
+          // ---- camera: legs on one state, baked per frame with velocity motion blur + micro-drift ----
+          const legs = [];
+          const cam0 = { cx: (wl[0] + wr[0]) / 2 + 120, cy: lineCy, z: 1 };
+          const evalLegs = (t, upto) => {
+            let s = cam0;
+            for (let i = 0; i < upto; i++) {
+              const g = legs[i];
+              if (t < g.start) break;
+              const u = Math.min(1, (t - g.start) / g.dur), e = g.ease(u);
+              s = { cx: g.from.cx + (g.cx - g.from.cx) * e, cy: g.from.cy + (g.cy - g.from.cy) * e, z: Math.exp(Math.log(g.from.z) + (Math.log(g.z) - Math.log(g.from.z)) * e) };
             }
-            p = q;
-          }
-          return { cx: p.cx, cy: p.cy, lz: holdZ(p, t) };
+            return s;
+          };
+          // leg(start, dur, ease, cx, cy, z): a later leg may interrupt an earlier one; it starts from the live pose
+          const leg = (start, dur, ease, cx, cy, z) => {
+            legs.push({ start: start, dur: dur, ease: gsap.parseEase(ease), cx: cx, cy: cy, z: z, from: evalLegs(start, legs.length) });
+          };
+          const camAt = (c) => ({ x: 540 - c.cx * c.z, y: 960 - c.cy * c.z, scale: c.z });
+          const bake = () => {
+            const FPS = 60, k = 0.0024;
+            const frames = [], blurs = [];
+            let prev = evalLegs(0, legs.length);
+            for (let f = 0; f / FPS <= DUR + 1e-6; f++) {
+              const t = f / FPS;
+              const c = evalLegs(t, legs.length);
+              // screen-space speed of the frame centre -> directional blur, zero when still
+              const vx = (c.cx - prev.cx) * c.z * FPS, vy = (c.cy - prev.cy) * c.z * FPS, vz = Math.abs(Math.log(c.z / prev.z)) * FPS;
+              prev = c;
+              const bx = Math.min(11, Math.abs(vx) * k + vz * 1.8), by = Math.min(11, Math.abs(vy) * k + vz * 1.8);
+              blurs.push({ attr: { stdDeviation: (bx < 0.15 ? 0 : bx).toFixed(2) + " " + (by < 0.15 ? 0 : by).toFixed(2) } });
+              // Lissajous micro-drift + breathing so holds are never dead still
+              const T = camAt(c);
+              T.x += 5 * Math.sin(2 * Math.PI * 0.21 * t);
+              T.y += 5 * Math.sin(2 * Math.PI * 0.21 * 1.3 * t + 1.1);
+              T.scale *= 1 + 0.004 * Math.sin(2 * Math.PI * 0.15 * t);
+              frames.push(T);
+            }
+            gsap.set("#world", Object.assign({ transformOrigin: "0 0" }, frames[0]));
+            gsap.set("#mbg", blurs[0]);
+            tl.to("#world", { keyframes: frames.slice(1).map((f) => Object.assign({ duration: 1 / FPS, ease: "none" }, f)) }, 0);
+            tl.to("#mbg", { keyframes: blurs.slice(1).map((b) => Object.assign({ duration: 1 / FPS, ease: "none" }, b)) }, 0);
+          };
+
+          // ---------- initial states ----------
+          gsap.set("#M", Object.assign(st(P, 60, 60, 30, "#1c1c1e"), { opacity: 0, scale: 0.5 }));
+          gsap.set(layers, { opacity: 0 });
+          gsap.set(["#g1", "#g2", "#g3", "#b2", "#b3", "#b4", "#big", "#brand", "#follow", "#f-b", "#cta-b", "#cursor", "#caret1", "#caret2", "#si", "#row1", "#row2"], { opacity: 0 });
+          gsap.set([...q1, ...q2], { opacity: 0 });
+          gsap.set(".dayf", { scale: 0.5, opacity: 0 });
+          gsap.set("#strike-p", { strokeDasharray: 640, strokeDashoffset: 640 });
+          gsap.set("#ring", { strokeDasharray: 503, strokeDashoffset: 0 });
+          gsap.set("#wheel", { y: 0 });
+          gsap.set("#br-word", { clipPath: "inset(0% 100% 0% 0%)" });
+          gsap.set($$(".tw[data-l]"), { opacity: 0, y: 10, filter: "blur(4px)" });
+          gsap.set(hw.slice(1), { opacity: 0 });
+
+          // ===== 1. hook: words land on staggered baselines, the camera re-centres on the writing =====
+          hw.slice(1).forEach((w, k) => enter(w, W("l01", k + 1, -0.06), { y: 26 }));
+          for (let i = 1; i < hw.length; i++) leg(W("l01", i, -0.04), 0.4, "power3.out", (wl[i - 1] + wr[i]) / 2, lineCy, 1);
+          // lateral pan to the next element; the line leaves as we go
+          const tPan = A("si", -0.5);
+          leg(tPan, 0.55, "power2.inOut", P.x, P.y, 1);
+          leave(hw, tPan);
+
+          // ===== 2. "Sí": live activity lands =====
+          const tSi = W("si", 0, -0.12);
+          tl.to("#M", { opacity: 1, scale: 1, duration: 0.4, ease: "expo.out" }, tSi);
+          morph(tSi, st(P, 820, 230, 115, "#1c1c1e"), 0.5);
+          show("#c-live", tSi + 0.1);
+          tl.fromTo("#si", { opacity: 0, scale: 0.8, filter: "blur(6px)" }, { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.42, ease: "springPop", transformOrigin: "0% 50%", immediateRender: false }, W("si", 0, -0.05));
+          leg(W("si", 0, -0.04), 0.5, "power4.out", P.x, P.y, 1.06);
+          tl.to("#ring", { strokeDashoffset: 120, duration: 1.1, ease: "none" }, tSi + 0.2);
+
+          // ===== 3. "Y en tres minutos al día": timer, wheel lands on 3, tap Iniciar =====
+          const t4 = A("l02", -0.08);
+          hide("#c-live", t4 - 0.05);
+          morph(t4, st(P, 760, 620, 72, "#1c1c1e"), 0.5);
+          show("#c-timer", t4 + 0.12);
+          leg(t4, 0.5, "power4.out", P.x, P.y, 1);
+          tl.to("#wheel", { y: -270, duration: 0.45, ease: "expo.out" }, W("l02", 2, -0.12));
+          tl.to($$("#wheel .wn")[3], { color: "#ffffff", duration: 0.15 }, W("l02", 2, 0.1));
+          leg(W("l02", 2, -0.06), 0.45, "power4.out", P.x - 40, P.y - 30, 1.18);
+          const tapT = W("l02", 5, 0.02);
+          leg(tapT - 0.42, 0.45, "power2.inOut", P.x + 70, P.y + 80, 1.1);
+          tap(tapT, P.x + 255, P.y + 185);
+          tl.to("#start", { scale: 0.92, duration: 0.09, yoyo: true, repeat: 1, ease: "power1.inOut" }, tapT - 0.04);
+          tl.to("#start", { backgroundColor: "#34c759", color: "#ffffff", duration: 0.2 }, tapT + 0.04);
+
+          // ===== 4. notes: dive in, typed with her words, fills the screen on "simple" =====
+          const t5 = A("l03", -0.22);
+          hide("#c-timer", t5 - 0.04);
+          morph(t5, st(P, 780, 900, 64, "#1c1c1e"), 0.5);
+          show("#c-notes", t5 + 0.14);
+          leg(t5, 0.5, "power4.out", P.x, P.y + 20, 0.98);
+          $$('.tw[data-l="l03"]').forEach((w) => tl.to(w, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.3, ease: "expo.out" }, W("l03", +w.dataset.i, -0.05)));
+          leg(W("l03", 1, 0), 1.3, "sine.inOut", P.x, P.y - 40, 1.06);
+          const tE = W("l03", 8, -0.18);
+          morph(tE, st(P, 1100, 1955, 0, "#1c1c1e"), 0.55, "power4.out");
+          tl.to("#notes-text", { scale: 1.32, x: 6, y: 120, duration: 0.55, ease: "power4.out" }, tE);
+          leg(tE, 0.55, "power4.out", P.x, P.y, 1920 / 1955);
+          tl.to("#w-simple", { color: "#ff9f0a", textShadow: "0 0 30px rgba(255,159,10,0.6)", duration: 0.3 }, W("l03", 8, 0));
+
+          // ===== 5. search "3 pasos", push in, whip across the three steps =====
+          const t6 = A("l04", -0.25);
+          hide("#c-notes", t6 - 0.02);
+          tl.to("#M", Object.assign({ duration: 0.6, ease: "power2.inOut" }, st(S, 860, 140, 70, "#ffffff")), t6);
+          leg(t6, 0.6, "power2.inOut", S.x, S.y, 1.05);
+          show("#c-search", t6 + 0.32);
+          tl.to("#caret1", { opacity: 1, duration: 0.1 }, t6 + 0.4);
+          const ty1 = W("l04", 2, -0.08);
+          q1.forEach((c, i) => tl.set(c, { opacity: 1 }, ty1 + i * 0.05));
+          tl.fromTo("#caret1", { x: 0 }, { x: 205, duration: q1.length * 0.05, ease: "steps(7)", immediateRender: false }, ty1);
+          tl.fromTo("#caret1", { opacity: 1 }, { opacity: 0, duration: 0.3, repeat: 3, yoyo: true, ease: "steps(1)", immediateRender: false }, ty1 + 0.4);
+          leg(W("l04", 2, -0.04), 0.5, "power4.out", S.x, S.y, 1.18);
+          [["#g1", "s1", 0], ["#g2", "s2", 1], ["#g3", "s3", 2]].forEach(([g, key, i]) => {
+            const wi = key === "s3" ? 1 : 0;
+            leg(A(key, -0.34), 0.42, "power3.inOut", SX[i], SY, i === 0 ? 1.0 : 1.0);
+            enter(g, W(key, wi, -0.08), { y: 18, scale: 0.94, filter: "blur(10px)" });
+          });
+
+          // ===== 6. chat: bubbles on her words, the thread scrolls =====
+          const t7 = A("l05", -0.3);
+          leave(["#g1", "#g2", "#g3"], t7);
+          hide("#c-search", t7);
+          const B1 = { x: CL + 210, y: CY };
+          tl.to("#M", Object.assign({ duration: 0.6, ease: "power2.inOut" }, st(B1, 420, 130, 65, "#e9e9eb")), t7);
+          leg(t7, 0.6, "power2.inOut", X3, CY + 40, 1);
+          show("#c-bub", W("l05", 0, -0.06));
+          pop("#b2", W("l05", 2, -0.06));
+          leg(W("l05", 2, -0.04), 0.4, "power3.out", X3, CY + 120, 1);
+          pop("#b3", W("l05", 4, -0.06));
+          leg(W("l05", 4, -0.04), 0.4, "power3.out", X3, CY + 200, 1);
+          pop("#b4", A("l05b", -0.05));
+          leg(A("l05b", -0.03), 0.42, "power3.out", X3, CY + 290, 1);
+
+          // ===== 7. routine card + tap on "mañana" =====
+          const t8 = A("l06", -0.28);
+          leave(["#b2", "#b3", "#b4"], t8);
+          hide("#c-bub", t8);
+          tl.to("#M", Object.assign({ duration: 0.55, ease: "power4.out" }, st(CARD, 880, 660, 56, "#ffffff")), t8);
+          leg(t8, 0.55, "power4.out", CARD.x, CARD.y, 1);
+          show("#c-card", t8 + 0.18);
+          enter("#row1", W("l06", 1, -0.06), { x: -20, y: 0 });
+          enter("#row2", W("l06", 5, -0.06), { x: -20, y: 0 });
+          const tp = W("l06", 8, 0.04);
+          leg(tp - 0.5, 0.5, "power3.inOut", CARD.x, CARD.y + 170, 1.12);
+          tap(tp, CARD.x + 20, CARD.y + 215);
+          tl.to("#cta", { scale: 0.97, duration: 0.09, yoyo: true, repeat: 1, ease: "power1.inOut" }, tp - 0.03);
+          tl.to("#cta", { backgroundColor: "#34c759", duration: 0.25 }, tp + 0.05);
+          tl.set("#cta-a", { opacity: 0 }, tp + 0.06);
+          tl.set("#cta-b", { opacity: 1 }, tp + 0.06);
+
+          // ===== 8. notification, "producto" struck, then CONSTANCIA + week =====
+          const t9 = A("l07", -0.3);
+          hide("#c-card", t9);
+          tl.to("#M", Object.assign({ duration: 0.6, ease: "power2.inOut" }, st(NOTIF, 920, 190, 48, "#ffffff")), t9);
+          leg(t9, 0.6, "power2.inOut", X3, Y7 - 250, 0.98);
+          show("#c-notif", t9 + 0.3);
+          $$('.tw[data-l="l07"]').forEach((w) => tl.to(w, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.32, ease: "expo.out" }, W("l07", +w.dataset.i, -0.05)));
+          tl.to("#strike-p", { strokeDashoffset: 0, duration: 0.35, ease: "power3.out" }, W("l07", 5, 0.3));
+          leg(W("l07", 5, -0.02), 0.5, "power4.out", X3, Y7 - 150, 1.1);
+          const t10 = A("l07b", -0.22);
+          leave("#h7", t10);
+          hide("#c-notif", t10);
+          tl.to("#M", Object.assign({ duration: 0.55, ease: "power4.out" }, st(TRACK, 920, 250, 50, "#ffffff")), t10);
+          leg(t10, 0.55, "power4.out", X3, Y7 + 380, 0.98);
+          show("#c-track", t10 + 0.2);
+          tl.to("#big", { opacity: 1, duration: 0.05 }, W("l07b", 2, -0.12));
+          tl.fromTo(bigL, { opacity: 0, y: 26, filter: "blur(8px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.42, stagger: 0.02, ease: "expo.out", immediateRender: false }, W("l07b", 2, -0.08));
+          tl.to(".dayf", { scale: 1, opacity: 1, duration: 0.32, stagger: 0.05, ease: "springPop" }, W("l07b", 2, 0.2));
+
+          // ===== 9. outro: "@obelcha" typed on "Obelcha", follow tap, settle =====
+          const t11 = A("l08", -0.28);
+          leave("#big", t11);
+          hide("#c-track", t11);
+          tl.to("#M", Object.assign({ duration: 0.6, ease: "power2.inOut" }, st(OUT, 860, 140, 70, "#ffffff")), t11);
+          leg(t11, 0.6, "power2.inOut", X3, OUT.y - 170, 0.92);
+          show("#c-ig", t11 + 0.3);
+          tl.to("#caret2", { opacity: 1, duration: 0.1 }, t11 + 0.35);
+          enter("#brand", A("l08", 0), { y: 24 });
+          tl.to("#br-word", { clipPath: "inset(0% 0% 0% 0%)", duration: 0.55, ease: "power3.inOut" }, A("l08", 0.2));
+          const ty2 = W("l08", 2, -0.08);
+          q2.forEach((c, i) => tl.set(c, { opacity: 1 }, ty2 + i * 0.045));
+          tl.fromTo("#caret2", { x: 0 }, { x: 250, duration: q2.length * 0.045, ease: "steps(8)", immediateRender: false }, ty2);
+          pop("#follow", W("l08", 3, 0));
+          const tf = W("l08", 6, 0);
+          tap(tf, X3 + 20, OUT.y + 200);
+          tl.to("#follow", { backgroundColor: "#e5e5ea", color: "#1c1c1e", duration: 0.25 }, tf + 0.05);
+          tl.set("#f-a", { opacity: 0 }, tf + 0.06);
+          tl.set("#f-b", { opacity: 1 }, tf + 0.06);
+          leg(tf + 0.3, Math.max(0.6, DUR - tf - 0.3), "sine.inOut", X3, OUT.y - 170, 0.86);
+
+          bake();
+          window.__timelines = window.__timelines || {};
+          window.__timelines["main"] = tl;
         };
-        const bakeCamera = () => {
-          const FPS = 60;
-          const frames = [];
-          for (let f = 0; f / FPS <= DUR + 1e-6; f++) {
-            const g = targetAt(f / FPS);
-            frames.push(camAt(g.cx, g.cy, Math.exp(g.lz)));
-          }
-          gsap.set("#world", Object.assign({ transformOrigin: "0 0" }, frames[0]));
-          tl.to("#world", { keyframes: frames.slice(1).map((f) => Object.assign({ duration: 1 / FPS, ease: "none" }, f)) }, 0);
-        };
-        // scene change: shape and camera travel together on the same curve
-        const TRAVEL = 0.6;
-        const travel = (t, state, cx, cy, z) => {
-          const start = Math.max(t, lastT());
-          tl.to("#M", Object.assign({ duration: TRAVEL, ease: "snap" }, state), start);
-          move(start + TRAVEL, cx, cy, z, TRAVEL);
-          return start;
-        };
-
-        // initial states
-        gsap.set("#M", Object.assign(st(1950, 1250, 40, 40, 20, "#1c1c1e"), { opacity: 0, scale: 0.6 }));
-        gsap.set(layers, { opacity: 0 });
-        gsap.set(["#g1", "#g2", "#g3", "#b2", "#b3", "#b4", "#big", "#brand", "#follow", "#f-b", "#cta-b", "#cursor", "#caret1", "#caret2", "#si"], { opacity: 0 });
-        gsap.set([...q1, ...q2], { opacity: 0 });
-        gsap.set(".dayf", { scale: 0.6, opacity: 0 });
-        gsap.set("#strike-p", { strokeDasharray: 640, strokeDashoffset: 640 });
-        gsap.set("#ring", { strokeDasharray: 503, strokeDashoffset: 0 });
-        gsap.set("#wheel", { y: 0 });
-        gsap.set("#br-word", { clipPath: "inset(0% 100% 0% 0%)" });
-        const tws = $$(".tw[data-l]");
-        gsap.set(tws, { opacity: 0, y: 12, filter: "blur(5px)" });
-
-        // ===== 1. hook: each word rises in softly, the camera glides along the line =====
-        gsap.set(hw.slice(1), { opacity: 0 });
-        hw.slice(1).forEach((w, k) => enter(w, W("l01", k + 1, -0.08), { y: 28 }));
-        for (let i = 1; i < hookWords.length; i++) glide(W("l01", i, 0.05), hookCx[i] + 40, HOOK_Y + 70, 1);
-        leave(hw, W("l01", 8, 0.55));
-
-        // ===== 2. live activity → timer =====
-        const t3 = W("l01", 8, 0.45);
-        tl.to("#M", { opacity: 1, scale: 1, duration: 0.36, ease: "springSoft" }, t3);
-        morph(t3, st(1950, 1250, 820, 230, 115, "#1c1c1e"));
-        show("#c-live", t3 + 0.15);
-        move(Math.max(W("l02", 0, 0.1), W("l01", 8, 0.9)), 1950, 1250, 1, 0.6);
-        tl.fromTo("#si", { opacity: 0, scale: 0.9, filter: "blur(6px)" }, { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.7, ease: "springPop", transformOrigin: "0% 50%", immediateRender: false }, W("l02", 0, -0.05));
-        tl.to("#ring", { strokeDashoffset: 60, duration: 1.6, ease: "none" }, t3 + 0.3);
-
-        const t4 = Math.max(W("l02", 3, -0.25), W("l02", 0, 0.5));
-        hide("#c-live", t4 - 0.05);
-        morph(t4, st(1950, 1250, 760, 620, 72, "#1c1c1e"));
-        show("#c-timer", t4 + 0.2);
-        tl.to("#wheel", { y: -270, duration: 0.5, ease: "springSoft" }, t4 + 0.2);
-        tl.to("#wheel .wn:nth-child(4)", { color: "#ffffff", duration: 0.3, ease: "sine.inOut" }, t4 + 0.9);
-        move(t4 + 0.9, 1960, 1255, 1.05, 0.55);
-        const tapT = Math.max(W("l02", 6, 0.05), t4 + 1.3);
-        move(tapT - 0.05, 2000, 1300, 1.1, 0.5);
-        tap(tapT, 2190, 1420);
-        tl.to("#start", { scale: 0.94, duration: 0.12, yoyo: true, repeat: 1, ease: "sine.inOut" }, tapT - 0.05);
-        tl.to("#start", { backgroundColor: "#34c759", color: "#ffffff", duration: 0.3, ease: "sine.inOut" }, tapT + 0.05);
-
-        // ===== 3. notes card: the camera reads along, then the note fills the screen =====
-        const t5 = Math.max(A("l03", -0.3), tapT + 0.4);
-        hide("#c-timer", t5 - 0.05);
-        travel(t5, st(1300, 2500, 780, 900, 64, "#1c1c1e"), 1300, 2480, 1.0);
-        show("#c-notes", t5 + 0.22);
-        glide(Math.max(W("l03", 6, 0.1), lastT() + 0.6), 1300, 2420, 1.06);
-        $$('.tw[data-l="l03"]').forEach((w) => tl.to(w, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.45, ease: "springSoft" }, W("l03", +w.dataset.i, -0.05)));
-        const tExp = Math.max(W("l03", 8, -0.15), lastT() + 0.2);
-        const tE = travel(tExp, st(1300, 2500, 1100, 1955, 0, "#1c1c1e"), 1300, 2500, 1920 / 1955);
-        tl.to("#notes-text", { scale: 1.32, x: 6, y: 120, duration: TRAVEL, ease: "snap" }, tE);
-        tl.to("#w-simple", { color: "#ff9f0a", textShadow: "0 0 30px rgba(255,159,10,0.6)", duration: 0.5, ease: "sine.inOut" }, W("l03", 8, 0.05));
-
-        // ===== 4. search bar, then the camera eases down the three steps =====
-        const t6 = Math.max(A("l04", -0.3), lastT());
-        hide("#c-notes", t6 - 0.02);
-        travel(t6, st(1500, 3800, 860, 140, 70, "#ffffff"), 1500, 3810, 1.08);
-        show("#c-search", t6 + 0.3);
-        tl.to("#caret1", { opacity: 1, duration: 0.2 }, t6 + 0.55);
-        const ty1 = Math.max(W("l04", 2, -0.05), t6 + 0.7);
-        q1.forEach((c, i) => tl.set(c, { opacity: 1 }, ty1 + i * 0.06));
-        tl.fromTo("#caret1", { x: 0 }, { x: 205, duration: q1.length * 0.06, ease: "steps(7)", immediateRender: false }, ty1);
-        tl.fromTo("#caret1", { opacity: 1 }, { opacity: 0, duration: 0.35, repeat: 5, yoyo: true, ease: "steps(1)", immediateRender: false }, ty1 + 0.5);
-        [["#g1", 4], ["#g2", 5], ["#g3", 7]].forEach(([g, i]) => enter(g, W("l04", i, -0.08), { y: 26 }));
-        move(Math.max(W("l04", 5, 0.25), lastT() + 0.4), 1500, 4170, 0.9, 0.6);
-
-        // ===== 5. chat =====
-        const t7 = Math.max(A("l05", -0.3), lastT());
-        leave(["#g1", "#g2", "#g3"], t7 - 0.2);
-        hide("#c-search", t7);
-        travel(t7, st(1200, 5100, 420, 130, 65, "#e9e9eb"), 1460, 5300, 1.0);
-        show("#c-bub", t7 + 0.3);
-        pop("#b2", W("l05", 2, -0.08));
-        pop("#b3", W("l05", 4, -0.08));
-        pop("#b4", W("l05", 5, -0.08));
-        glide(Math.max(W("l05", 5, 0.5), lastT() + 0.4), 1460, 5390, 0.98);
-
-        // ===== 6. routine card + tap =====
-        const t8 = Math.max(A("l06", -0.3), lastT());
-        leave(["#b2", "#b3", "#b4"], t8 - 0.2);
-        hide("#c-bub", t8);
-        travel(t8, st(1500, 6350, 880, 660, 56, "#ffffff"), 1500, 6360, 1.0);
-        show("#c-card", t8 + 0.3);
-        gsap.set(["#row1", "#row2"], { opacity: 0 });
-        enter("#row1", W("l06", 1, -0.05), { x: -24, y: 0 });
-        enter("#row2", W("l06", 5, -0.05), { x: -24, y: 0 });
-        const tp = Math.max(W("l06", 8, 0.1), lastT() + 0.6);
-        move(tp - 0.05, 1500, 6460, 1.08, 0.5);
-        tap(tp, 1520, 6560);
-        tl.to("#cta", { scale: 0.97, duration: 0.12, yoyo: true, repeat: 1, ease: "sine.inOut" }, tp - 0.04);
-        tl.to("#cta", { backgroundColor: "#34c759", duration: 0.35, ease: "sine.inOut" }, tp + 0.06);
-        tl.set("#cta-a", { opacity: 0 }, tp + 0.08);
-        tl.set("#cta-b", { opacity: 1 }, tp + 0.08);
-
-        // ===== 7. notification, "producto" struck, CONSTANCIA, tracker =====
-        const t9 = Math.max(A("l07", -0.3), tp + 0.45);
-        hide("#c-card", t9);
-        travel(t9, st(1500, 7100, 920, 190, 48, "#ffffff"), 1500, 7280, 0.97);
-        show("#c-notif", t9 + 0.3);
-        $$('.tw[data-l="l07"]').forEach((w) => tl.to(w, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.5, ease: "springSoft" }, W("l07", +w.dataset.i, -0.05)));
-        tl.to("#strike-p", { strokeDashoffset: 0, duration: 0.6, ease: "power2.inOut" }, W("l07", 5, 0.35));
-        const t10 = Math.max(W("l07", 6, -0.1), lastT());
-        leave("#h7", t10 - 0.2);
-        hide("#c-notif", t10);
-        travel(t10, st(1500, 8100, 920, 250, 50, "#ffffff"), 1500, 7960, 0.96);
-        show("#c-track", t10 + 0.3);
-        tl.to("#big", { opacity: 1, duration: 0.05 }, W("l07", 8, -0.1));
-        tl.fromTo(bigL, { opacity: 0, y: 30, filter: "blur(8px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.4, stagger: 0.02, ease: "springSoft", immediateRender: false }, W("l07", 8, -0.08));
-        tl.to(".dayf", { scale: 1, opacity: 1, duration: 0.32, stagger: 0.05, ease: "springPop" }, W("l07", 8, 0.2));
-
-        // ===== 8. outro: search "@obelcha" + follow =====
-        const t11 = Math.max(A("l08", -0.3), lastT());
-        leave("#big", t11 - 0.2);
-        hide("#c-track", t11);
-        travel(t11, st(1500, 9150, 860, 140, 70, "#ffffff"), 1500, 8960, 0.9);
-        show("#c-ig", t11 + 0.3);
-        tl.to("#caret2", { opacity: 1, duration: 0.2 }, t11 + 0.5);
-        enter("#brand", W("l08", 0, 0), { y: 30 });
-        tl.to("#br-word", { clipPath: "inset(0% 0% 0% 0%)", duration: 0.9, ease: "power2.inOut" }, W("l08", 0, 0.3));
-        const ty2 = Math.max(W("l08", 2, -0.1), t11 + 0.6);
-        q2.forEach((c, i) => tl.set(c, { opacity: 1 }, ty2 + i * 0.055));
-        tl.fromTo("#caret2", { x: 0 }, { x: 250, duration: q2.length * 0.055, ease: "steps(8)", immediateRender: false }, ty2);
-        pop("#follow", W("l08", 3, 0));
-        const tf = Math.max(W("l08", 6, 0), ty2 + 0.9);
-        tap(tf, 1520, 9370);
-        tl.to("#follow", { backgroundColor: "#e5e5ea", color: "#1c1c1e", duration: 0.35, ease: "sine.inOut" }, tf + 0.06);
-        tl.set("#f-a", { opacity: 0 }, tf + 0.08);
-        tl.set("#f-b", { opacity: 1 }, tf + 0.08);
-        bakeCamera();
-
-        window.__timelines = window.__timelines || {};
-        window.__timelines["main"] = tl;
+        // measure real text metrics before laying out the world
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(build);
+        else build();
       })();
     </script>
   </body>

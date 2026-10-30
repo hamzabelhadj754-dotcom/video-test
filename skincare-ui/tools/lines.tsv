@@ -1,8 +1,14 @@
 l01	¿Se puede mejorar tu piel con solo tres productos?
-l02	Sí. Y en tres minutos al día.
+si	Sí.
+l02	Y en tres minutos al día.
 l03	La mayoría no se da cuenta de lo simple que es.
-l04	Solo necesitas tres pasos: limpiar, hidratar y proteger.
-l05	Piel grasa, seca o sensible: el método es el mismo.
+l04	Solo necesitas tres pasos:
+s1	limpiar,
+s2	hidratar
+s3	y proteger.
+l05	Piel grasa, seca o sensible:
+l05b	el método es el mismo.
 l06	Una crema con ceramidas, y protector solar cada mañana.
-l07	El secreto no es el producto. Es la constancia.
+l07	El secreto no es el producto.
+l07b	Es la constancia.
 l08	Sigue a Obelcha para verlo paso a paso.

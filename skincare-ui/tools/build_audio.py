@@ -105,7 +105,7 @@ for (k, _, _), ws, s, e in zip(bounds, rwords, starts, ends):
         "words": [[w, round(sc(x) + OFFSET, 3), round(sc(y) + OFFSET, 3)] for w, x, y in wv],
     }
 
-DUR = round(last + OFFSET + 2.8, 2)
+DUR = round(last + OFFSET + 1.4, 2)
 N = int(DUR * SR)
 voice = np.zeros(N)
 voice[int(OFFSET * SR): int(OFFSET * SR) + len(rec)] = rec[: N - int(OFFSET * SR)]
@@ -207,6 +207,14 @@ def s_click():
 W = lambda k, i, o=0.0: out[k]["words"][i][1] + o
 A = lambda k, o=0.0: out[k]["start"] + o
 SFX = []
+for t in [A("si", -0.5), A("l03", -0.22), A("l04", -0.25), A("s1", -0.34), A("s2", -0.34), A("s3", -0.34), A("l05", -0.3), A("l06", -0.28), A("l07", -0.3), A("l07b", -0.22), A("l08", -0.28)]:
+    SFX.append(("whoosh", t))
+SFX += [("pop", W("si", 0, -0.05)), ("pop", W("l05", 2, -0.06)), ("pop", W("l05", 4, -0.06)), ("pop", A("l05b", -0.05)),
+        ("pop", W("l06", 1, -0.06)), ("pop", W("l06", 5, -0.06)), ("pop", W("l08", 3, 0))]
+SFX += [("click", W("l02", 5, 0.02)), ("click", W("l06", 8, 0.04)), ("click", W("l08", 6, 0))]
+SFX += [("click", W("l04", 2, -0.08) + 0.1 * i) for i in range(4)]
+SFX += [("click", W("l08", 2, -0.08) + 0.09 * i) for i in range(4)]
+SFX += [("chime", W("l06", 8, 0.1)), ("chime", W("l07b", 2, 0)), ("chime", A("l08", 0.1))]
 SYN = dict(impact=s_impact, whoosh=s_whoosh, stamp=s_stamp, pop=s_pop, chime=s_chime, click=s_click)
 fx = np.zeros(N)
 for name, at in SFX:
