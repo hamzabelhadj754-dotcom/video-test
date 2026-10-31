@@ -1,0 +1,1168 @@
+<!doctype html>
+<html lang="en" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="assets/lib/gsap.min.js"></script>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "./assets/lib/three.module.js",
+          "three/addons/": "./assets/lib/addons/"
+        }
+      }
+    </script>
+    <style>
+      @font-face {
+        font-family: "Geist";
+        src: url("assets/fonts/geist-var.woff2") format("woff2");
+        font-weight: 100 900;
+      }
+      @font-face {
+        font-family: "Geist Mono";
+        src: url("assets/fonts/geist-mono-var.woff2") format("woff2");
+        font-weight: 100 900;
+      }
+      :root {
+        --ink: #f5f5f7;
+        --mute: #86868b;
+        --dim: #3a3a3c;
+        --card: #131315;
+        --edge: #2c2c31;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #000;
+      }
+      #root {
+        position: relative;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: radial-gradient(1100px 1100px at 540px 760px, #0f0f11 0%, #070708 45%, #000 78%);
+        font-family: "Geist", sans-serif;
+        color: var(--ink);
+      }
+      #world {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 1080px;
+        height: 1920px;
+        z-index: 2;
+      }
+      .layer {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 1080px;
+        height: 1920px;
+      }
+      #cam {
+        z-index: 5;
+        transform-origin: 540px 780px;
+      }
+      #stage {
+        perspective: 2200px;
+        perspective-origin: 540px 880px;
+      }
+      #rig {
+        transform-origin: 540px 880px;
+      }
+      /* The one morphing shape: a full-frame fill clipped to a rounded rect. */
+      .sh {
+        clip-path: inset(50% 50% 50% 50%);
+      }
+      #sh-edge {
+        background: var(--edge);
+      }
+      #sh-fill {
+        background: linear-gradient(180deg, #19191c 0%, #121214 55%, #0f0f11 100%);
+      }
+
+      /* Kinetic lines: words arrive one by one, the phrase re-centres as it grows. */
+      .kwrap {
+        position: absolute;
+        left: 0;
+        width: 1080px;
+      }
+      .kline {
+        position: absolute;
+        left: 0;
+        top: 0;
+        white-space: nowrap;
+        font-weight: 600;
+        letter-spacing: -0.025em;
+      }
+      .w {
+        display: inline-block;
+        opacity: 0;
+      }
+      .w + .w {
+        padding-left: 0.26em;
+      }
+      .g {
+        color: var(--mute);
+        font-weight: 500;
+      }
+      .glow {
+        text-shadow: 0 0 34px rgba(255, 255, 255, 0.32);
+      }
+      .hl {
+        font-size: 62px;
+        line-height: 72px;
+        height: 72px;
+      }
+
+      /* Search pill */
+      .stext {
+        position: absolute;
+        left: 206px;
+        top: 722px;
+        height: 56px;
+        font-size: 40px;
+        line-height: 56px;
+        font-weight: 500;
+        letter-spacing: -0.01em;
+        display: flex;
+        align-items: center;
+        white-space: nowrap;
+      }
+      #ph {
+        color: var(--mute);
+        opacity: 0;
+      }
+      #caret {
+        display: inline-block;
+        width: 3px;
+        height: 44px;
+        margin-left: 4px;
+        border-radius: 2px;
+        background: var(--ink);
+        opacity: 0;
+      }
+      #mag {
+        position: absolute;
+        left: 840px;
+        top: 728px;
+        width: 44px;
+        height: 44px;
+        opacity: 0;
+      }
+
+      /* Three pills */
+      .pc {
+        position: absolute;
+        top: 694px;
+        width: 290px;
+        height: 112px;
+        border-radius: 56px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 34px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        opacity: 0;
+      }
+      .pc.solid {
+        background: var(--card);
+        box-shadow: 0 0 0 1.5px var(--edge);
+      }
+      .pn {
+        font-family: "Geist Mono", monospace;
+        font-size: 24px;
+        font-weight: 500;
+        letter-spacing: 0.06em;
+        color: var(--mute);
+        margin-right: 14px;
+      }
+
+      /* Card furniture */
+      .clabel {
+        position: absolute;
+        left: 186px;
+        top: 500px;
+        font-family: "Geist Mono", monospace;
+        font-size: 26px;
+        font-weight: 500;
+        letter-spacing: 0.16em;
+        opacity: 0;
+      }
+      .clabel .pn {
+        font-size: 26px;
+      }
+      .cnum {
+        position: absolute;
+        left: 694px;
+        width: 200px;
+        top: 478px;
+        font-family: "Geist Mono", monospace;
+        font-size: 112px;
+        line-height: 112px;
+        font-weight: 500;
+        text-align: right;
+        transform-origin: 100% 50%;
+        opacity: 0;
+      }
+      .cunit {
+        position: absolute;
+        left: 594px;
+        width: 300px;
+        top: 596px;
+        text-align: right;
+        font-family: "Geist Mono", monospace;
+        font-size: 26px;
+        letter-spacing: 0.16em;
+        color: var(--mute);
+        opacity: 0;
+      }
+      #dots {
+        position: absolute;
+        left: 305px;
+        top: 1186px;
+        width: 470px;
+        height: 20px;
+        display: flex;
+        gap: 30px;
+      }
+      .dot {
+        position: relative;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.28);
+        opacity: 0;
+      }
+      .dfill {
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        background: var(--ink);
+        box-shadow: 0 0 14px rgba(255, 255, 255, 0.55);
+        opacity: 0;
+      }
+      .dhalo {
+        position: absolute;
+        inset: -6px;
+        border-radius: 50%;
+        box-shadow: 0 0 0 2px var(--ink);
+        opacity: 0;
+      }
+      .ccap {
+        position: absolute;
+        left: 0;
+        width: 1080px;
+        top: 1234px;
+        text-align: center;
+        font-family: "Geist Mono", monospace;
+        font-size: 28px;
+        letter-spacing: 0.22em;
+        color: var(--ink);
+        opacity: 0;
+      }
+      .blbl {
+        position: absolute;
+        top: 1166px;
+        font-family: "Geist Mono", monospace;
+        font-size: 26px;
+        letter-spacing: 0.16em;
+        color: var(--mute);
+        opacity: 0;
+      }
+      .track {
+        position: absolute;
+        top: 1210px;
+        height: 12px;
+        border-radius: 6px;
+        background: #26262a;
+        overflow: hidden;
+        opacity: 0;
+      }
+      .fill {
+        position: absolute;
+        inset: 0;
+        border-radius: 6px;
+        background: var(--ink);
+        transform-origin: 0 50%;
+        transform: scaleX(0);
+      }
+
+      /* Timer picker */
+      #band {
+        position: absolute;
+        left: 170px;
+        top: 732px;
+        width: 740px;
+        height: 76px;
+        border-radius: 22px;
+        background: rgba(255, 255, 255, 0.07);
+        opacity: 0;
+      }
+      .wheel {
+        perspective: 700px;
+        opacity: 0;
+      }
+      .wi {
+        position: absolute;
+        width: 120px;
+        height: 70px;
+        line-height: 70px;
+        text-align: center;
+        font-size: 58px;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        font-variant-numeric: tabular-nums;
+        backface-visibility: hidden;
+      }
+      .wunit {
+        position: absolute;
+        top: 750px;
+        font-size: 30px;
+        line-height: 40px;
+        font-weight: 500;
+        opacity: 0;
+      }
+      #startbtn {
+        position: absolute;
+        left: 410px;
+        top: 942px;
+        width: 260px;
+        height: 88px;
+        border-radius: 44px;
+        background: var(--ink);
+        color: #0b0b0c;
+        font-size: 34px;
+        font-weight: 600;
+        line-height: 88px;
+        text-align: center;
+        opacity: 0;
+      }
+
+      /* Rest timer */
+      #ringsvg {
+        opacity: 0;
+        transform-origin: 260px 780px;
+      }
+      #tdig {
+        position: absolute;
+        left: 352px;
+        top: 724px;
+        height: 112px;
+        font-family: "Geist Mono", monospace;
+        font-size: 104px;
+        line-height: 112px;
+        font-weight: 500;
+        letter-spacing: -0.02em;
+        opacity: 0;
+      }
+      .tlbl {
+        position: absolute;
+        left: 610px;
+        width: 262px;
+        top: 765px;
+        text-align: right;
+        font-family: "Geist Mono", monospace;
+        font-size: 24px;
+        letter-spacing: 0.18em;
+        opacity: 0;
+      }
+      #tl1 {
+        color: var(--mute);
+      }
+
+      /* Dots of light and taps */
+      .lite {
+        position: absolute;
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: var(--ink);
+        box-shadow: 0 0 34px rgba(255, 255, 255, 0.7);
+        opacity: 0;
+      }
+      .tap,
+      .rip {
+        position: absolute;
+        width: 66px;
+        height: 66px;
+        border-radius: 50%;
+        opacity: 0;
+      }
+      .tap {
+        background: rgba(255, 255, 255, 0.26);
+        box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.9);
+      }
+      .rip {
+        box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.9);
+      }
+
+      /* End card */
+      #wm {
+        position: absolute;
+        left: 0;
+        width: 1080px;
+        top: 1032px;
+        text-align: center;
+        font-size: 40px;
+        line-height: 48px;
+        letter-spacing: 0.42em;
+        padding-left: 0.42em;
+        font-weight: 200;
+        opacity: 0;
+      }
+      #cta {
+        position: absolute;
+        left: 0;
+        width: 1080px;
+        top: 1112px;
+        text-align: center;
+        font-size: 30px;
+        line-height: 40px;
+        font-weight: 400;
+        color: var(--mute);
+        opacity: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="31" data-width="1080" data-height="1920">
+      <canvas id="world" width="1080" height="1920"></canvas>
+
+      <div id="cam" class="layer">
+        <div id="stage" class="layer">
+          <!-- The other two pills sit under the morphing shape and slide out from it. -->
+          <div id="g-pills" class="clip layer" data-start="7.55" data-duration="2.1" data-track-index="4" data-layout-allow-overlap>
+            <div id="pc2" class="pc solid" style="left: 395px"><span class="pn">02</span>TEMPO</div>
+            <div id="pc3" class="pc solid" style="left: 715px"><span class="pn">03</span>REST</div>
+          </div>
+
+          <div id="rig" class="layer">
+            <div id="sh-edge" class="sh layer"></div>
+            <div id="sh-fill" class="sh layer"></div>
+
+            <!-- 01 REPS: front of the card -->
+            <div id="g-front" class="clip layer" data-start="9.6" data-duration="5.96" data-track-index="6" data-layout-allow-overlap>
+              <div id="fr" class="layer">
+                <div class="clabel" id="fr-lbl"><span class="pn">01</span>REPS</div>
+                <div class="cnum" id="fr-num">0</div>
+                <div id="dots">
+                  <div class="dot"><div class="dfill"></div><div class="dhalo"></div></div>
+                  <div class="dot"><div class="dfill"></div><div class="dhalo"></div></div>
+                  <div class="dot"><div class="dfill"></div><div class="dhalo"></div></div>
+                  <div class="dot"><div class="dfill"></div><div class="dhalo"></div></div>
+                  <div class="dot"><div class="dfill"></div><div class="dhalo"></div></div>
+                  <div class="dot"><div class="dfill"></div><div class="dhalo"></div></div>
+                  <div class="dot"><div class="dfill"></div><div class="dhalo"></div></div>
+                  <div class="dot"><div class="dfill"></div><div class="dhalo"></div></div>
+                  <div class="dot"><div class="dfill"></div><div class="dhalo"></div></div>
+                  <div class="dot"><div class="dfill"></div><div class="dhalo"></div></div>
+                </div>
+                <div class="ccap" id="fr-cap">2 LEFT IN THE TANK</div>
+              </div>
+            </div>
+
+            <!-- 02 TEMPO: back of the card -->
+            <div id="g-back" class="clip layer" data-start="15.5" data-duration="5.5" data-track-index="7" data-layout-allow-overlap>
+              <div id="bk" class="layer" style="opacity: 0">
+                <div class="clabel" id="bk-lbl" style="opacity: 1"><span class="pn">02</span>TEMPO</div>
+                <div class="cnum" id="bk-num">0</div>
+                <div class="cunit" id="bk-u1">SEC DOWN</div>
+                <div class="cunit" id="bk-u2">SEC UP</div>
+                <div class="blbl" id="bl-dn" style="left: 230px; opacity: 1">DOWN · 3S</div>
+                <div class="blbl" id="bl-up" style="left: 650px; width: 200px; text-align: right; opacity: 1">UP · 1S</div>
+                <div class="track" style="left: 230px; width: 456px; opacity: 1"><div class="fill" id="fill-dn"></div></div>
+                <div class="track" style="left: 698px; width: 152px; opacity: 1"><div class="fill" id="fill-up"></div></div>
+              </div>
+            </div>
+
+            <!-- Stick figure (barbell squat, side view) -->
+            <div id="g-fig" class="clip layer" data-start="9.6" data-duration="11.35" data-track-index="5" data-layout-allow-overlap>
+              <div id="figw" class="layer" style="opacity: 0">
+                <svg class="layer" viewBox="0 0 1080 1920" width="1080" height="1920">
+                  <ellipse id="f-shadow" cx="545" cy="1136" rx="120" ry="8" fill="rgba(255,255,255,0.07)" />
+                  <line x1="250" y1="1136" x2="830" y2="1136" stroke="rgba(255,255,255,0.14)" stroke-width="2" />
+                  <circle id="f-plate" r="52" fill="#0d0d0f" stroke="#f5f5f7" stroke-opacity="0.9" stroke-width="7" />
+                  <circle id="f-ring" r="30" fill="none" stroke="#f5f5f7" stroke-opacity="0.25" stroke-width="3" />
+                  <circle id="f-hub" r="8" fill="#f5f5f7" />
+                  <g fill="none" stroke="#f5f5f7" stroke-linecap="round" stroke-linejoin="round">
+                    <path id="f-foot" stroke-width="18" />
+                    <path id="f-leg" stroke-width="20" />
+                    <path id="f-torso" stroke-width="26" />
+                    <path id="f-arm" stroke-width="15" />
+                  </g>
+                  <circle id="f-head" r="30" fill="#f5f5f7" stroke="#131315" stroke-width="6" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Search pill contents -->
+          <div id="g-search" class="clip layer" data-start="4.3" data-duration="2.5" data-track-index="3" data-layout-allow-overlap>
+            <div id="srch" class="layer">
+              <div id="ph" class="stext">Search</div>
+              <div id="qrow" class="stext"><span id="q"></span><span id="caret"></span></div>
+              <svg id="mag" viewBox="0 0 44 44">
+                <circle cx="19" cy="19" r="12" fill="none" stroke="#f5f5f7" stroke-width="4" />
+                <line x1="28" y1="28" x2="38" y2="38" stroke="#f5f5f7" stroke-width="4" stroke-linecap="round" />
+              </svg>
+            </div>
+          </div>
+
+          <!-- Answer inside the pill -->
+          <div id="g-ans" class="clip layer" data-start="6.4" data-duration="1.35" data-track-index="3" data-layout-allow-overlap>
+            <div class="kwrap" id="kw-ans" style="top: 722px; height: 56px">
+              <div class="kline" id="k-ans" style="font-size: 46px; line-height: 56px"><span class="w g">It's</span><span class="w g">just</span><span class="w glow">3</span><span class="w glow">numbers.</span></div>
+            </div>
+          </div>
+
+          <!-- REPS label riding on the morphing shape -->
+          <div id="g-pl1" class="clip layer" data-start="7.9" data-duration="1.3" data-track-index="4">
+            <div id="pl1" class="pc" style="left: 75px"><span class="pn">01</span>REPS</div>
+          </div>
+
+          <!-- Timer picker -->
+          <div id="g-picker" class="clip layer" data-start="21" data-duration="2.4" data-track-index="8" data-layout-allow-overlap>
+            <div id="pk" class="layer">
+              <div class="clabel" id="pk-lbl" style="top: 556px"><span class="pn">03</span>REST</div>
+              <div id="band"></div>
+              <div class="wheel layer" id="wh-min" style="perspective-origin: 400px 770px">
+                <div class="wi" style="left: 340px; top: 735px">0</div>
+                <div class="wi" style="left: 340px; top: 735px">1</div>
+                <div class="wi" style="left: 340px; top: 735px">2</div>
+                <div class="wi" style="left: 340px; top: 735px">3</div>
+                <div class="wi" style="left: 340px; top: 735px">4</div>
+                <div class="wi" style="left: 340px; top: 735px">5</div>
+                <div class="wi" style="left: 340px; top: 735px">6</div>
+                <div class="wi" style="left: 340px; top: 735px">7</div>
+                <div class="wi" style="left: 340px; top: 735px">8</div>
+                <div class="wi" style="left: 340px; top: 735px">9</div>
+              </div>
+              <div class="wheel layer" id="wh-sec" style="perspective-origin: 650px 770px">
+                <div class="wi" style="left: 590px; top: 735px">58</div>
+                <div class="wi" style="left: 590px; top: 735px">59</div>
+                <div class="wi" style="left: 590px; top: 735px">00</div>
+                <div class="wi" style="left: 590px; top: 735px">01</div>
+                <div class="wi" style="left: 590px; top: 735px">02</div>
+              </div>
+              <div class="wunit" id="wu1" style="left: 454px">min</div>
+              <div class="wunit" id="wu2" style="left: 712px">sec</div>
+              <div id="startbtn">Start</div>
+            </div>
+          </div>
+
+          <!-- Rest timer (the island) -->
+          <div id="g-timer" class="clip layer" data-start="23.2" data-duration="3.55" data-track-index="9" data-layout-allow-overlap>
+            <div id="tm" class="layer">
+              <svg id="ringsvg" class="layer" viewBox="0 0 1080 1920" width="1080" height="1920">
+                <circle cx="260" cy="780" r="62" fill="none" stroke="#26262a" stroke-width="10" />
+                <circle id="ring" cx="260" cy="780" r="62" fill="none" stroke="#f5f5f7" stroke-width="10" stroke-linecap="round" transform="rotate(-90 260 780)" stroke-dasharray="389.56" stroke-dashoffset="0" />
+                <circle id="ringdone" cx="260" cy="780" r="62" fill="none" stroke="#f5f5f7" stroke-width="10" opacity="0" />
+              </svg>
+              <div id="tdig">2:00</div>
+              <div class="tlbl" id="tl1">REST</div>
+              <div class="tlbl" id="tl2">NEXT SET</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hook -->
+        <div id="g-hook" class="clip layer" data-start="0" data-duration="4" data-track-index="1" data-track-kind="graphics">
+          <div class="kwrap" id="kw-h1a" style="top: 880px; height: 72px">
+            <div class="kline hl" id="k-h1a"><span class="w">You</span><span class="w">train</span><span class="w">hard.</span></div>
+          </div>
+          <div class="kwrap" id="kw-h1b" style="top: 962px; height: 72px">
+            <div class="kline hl" id="k-h1b"><span class="w g">So</span><span class="w g">why</span><span class="w g">aren't</span><span class="w g">you</span><span class="w glow">growing?</span></div>
+          </div>
+        </div>
+
+        <!-- Section headlines -->
+        <div id="g-hrep" class="clip layer" data-start="9.5" data-duration="5.9" data-track-index="2" data-track-kind="graphics">
+          <div class="kwrap" id="kw-r1" style="top: 236px; height: 72px">
+            <div class="kline hl" id="k-r1"><span class="w">Stop</span><span class="w glow">1–2</span><span class="w">reps</span></div>
+          </div>
+          <div class="kwrap" id="kw-r2" style="top: 318px; height: 72px">
+            <div class="kline hl" id="k-r2"><span class="w g">before</span><span class="w g">failure.</span></div>
+          </div>
+        </div>
+        <div id="g-htempo" class="clip layer" data-start="15.5" data-duration="5.5" data-track-index="2" data-track-kind="graphics">
+          <div class="kwrap" id="kw-t1" style="top: 236px; height: 72px">
+            <div class="kline hl" id="k-t1"><span class="w">Lower</span><span class="w">it</span><span class="w glow">slowly.</span></div>
+          </div>
+          <div class="kwrap" id="kw-t2" style="top: 318px; height: 72px">
+            <div class="kline hl" id="k-t2"><span class="w g">3</span><span class="w g">seconds</span><span class="w g">down.</span></div>
+          </div>
+        </div>
+        <div id="g-hrest" class="clip layer" data-start="20.9" data-duration="5.8" data-track-index="2" data-track-kind="graphics">
+          <div class="kwrap" id="kw-s1" style="top: 300px; height: 72px">
+            <div class="kline hl" id="k-s1"><span class="w">Rest</span><span class="w glow">2–3</span><span class="w">minutes</span></div>
+          </div>
+          <div class="kwrap" id="kw-s2" style="top: 382px; height: 72px">
+            <div class="kline hl" id="k-s2"><span class="w g">on</span><span class="w g">big</span><span class="w g">lifts.</span></div>
+          </div>
+        </div>
+        <div id="g-sub" class="clip layer" data-start="23.9" data-duration="2.8" data-track-index="10" data-track-kind="graphics">
+          <div class="kwrap" id="kw-sub" style="top: 930px; height: 48px">
+            <div class="kline" id="k-sub" style="font-size: 38px; line-height: 48px"><span class="w g">Longer</span><span class="w g">rest.</span><span class="w g">Heavier</span><span class="w g">sets.</span><span class="w">More</span><span class="w glow">growth.</span></div>
+          </div>
+        </div>
+
+        <!-- End -->
+        <div id="g-end" class="clip layer" data-start="27.3" data-duration="3.7" data-track-index="11" data-track-kind="graphics">
+          <div class="kwrap" id="kw-e1" style="top: 900px; height: 72px">
+            <div class="kline hl" id="k-e1"><span class="w">Reps.</span><span class="w">Tempo.</span><span class="w glow">Rest.</span></div>
+          </div>
+          <div id="wm">GAINS DOM</div>
+          <div id="cta">Save this for your next session.</div>
+        </div>
+
+        <!-- Points of light and taps -->
+        <div id="g-dot1" class="clip layer" data-start="3.9" data-duration="0.9" data-track-index="12">
+          <div id="dot1" class="lite" style="left: 523px; top: 733px"></div>
+        </div>
+        <div id="g-dot2" class="clip layer" data-start="26.6" data-duration="0.7" data-track-index="12">
+          <div id="dot2" class="lite" style="left: 523px; top: 603px"></div>
+        </div>
+        <div id="g-tap1" class="clip layer" data-start="5.8" data-duration="0.9" data-track-index="13">
+          <div id="tap1" class="tap" style="left: 829px; top: 717px"></div>
+          <div id="rip1" class="rip" style="left: 829px; top: 717px"></div>
+        </div>
+        <div id="g-tap2" class="clip layer" data-start="22.4" data-duration="0.9" data-track-index="13">
+          <div id="tap2" class="tap" style="left: 507px; top: 953px"></div>
+          <div id="rip2" class="rip" style="left: 507px; top: 953px"></div>
+        </div>
+      </div>
+    </div>
+
+    <script type="module">
+      import * as THREE from "three";
+
+      const W = 1080;
+      const H = 1920;
+      const DUR = 31;
+      const $ = (id) => document.getElementById(id);
+      const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
+      const lerp = (a, b, k) => a + (b - a) * k;
+      const sstep = (a, b, x) => {
+        const t = clamp((x - a) / (b - a), 0, 1);
+        return t * t * t * (t * (t * 6 - 15) + 10);
+      };
+      const backOut = (x, s = 1.5) => 1 + (s + 1) * Math.pow(x - 1, 3) + s * Math.pow(x - 1, 2);
+      // A plain object whose setters repaint: seek-safe, because GSAP calls them on every render.
+      function proxy(init, onSet) {
+        const o = {};
+        for (const k of Object.keys(init)) {
+          let v = init[k];
+          Object.defineProperty(o, k, {
+            get() {
+              return v;
+            },
+            set(x) {
+              v = x;
+              onSet(o, k);
+            },
+            enumerable: true,
+          });
+        }
+        return o;
+      }
+
+      const tl = gsap.timeline({ paused: true });
+      const NI = { immediateRender: false };
+      const inn = (el, t, d = 0.5, y = 16, extra = {}) =>
+        tl.fromTo(el, { opacity: 0, y, filter: "blur(10px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: d, ease: "power3.out", ...NI, ...extra }, t);
+      const out = (el, t, d = 0.3, y = -14) =>
+        tl.to(el, { opacity: 0, y, filter: "blur(10px)", duration: d, ease: "power2.in" }, t);
+
+      // ---------- kinetic lines ----------
+      const LINES = {};
+      function paintWord(el, e) {
+        e = clamp(e, 0, 1);
+        el.style.opacity = e.toFixed(4);
+        el.style.transform = `translate(${((1 - e) * 38).toFixed(2)}px, ${((1 - e) * 16).toFixed(2)}px)`;
+        el.style.filter = e > 0.995 ? "none" : `blur(${((1 - e) * 9).toFixed(2)}px)`;
+      }
+      function layoutLine(L) {
+        let w = 0;
+        for (const wd of L.words) w += wd.el.offsetWidth * clamp(wd.p.e, 0, 1);
+        L.el.style.transform = `translateX(${(L.cx - w / 2).toFixed(2)}px)`;
+      }
+      for (const el of document.querySelectorAll(".kline")) {
+        const L = { el, cx: 540, words: [] };
+        for (const w of el.querySelectorAll(".w")) {
+          const p = proxy({ e: 0 }, () => {
+            paintWord(w, p.e);
+            layoutLine(L);
+          });
+          L.words.push({ el: w, p });
+          paintWord(w, 0);
+        }
+        LINES[el.id] = L;
+      }
+      const layoutAll = () => {
+        for (const id in LINES) layoutLine(LINES[id]);
+      };
+      function kin(id, t0, gap = 0.11, dur = 0.55) {
+        LINES[id].words.forEach((wd, i) => {
+          tl.fromTo(wd.p, { e: 0 }, { e: 1, duration: dur, ease: "power3.out", ...NI }, t0 + i * gap);
+        });
+      }
+
+      // ---------- the morphing shape ----------
+      const shFill = $("sh-fill");
+      const shEdge = $("sh-edge");
+      function inset(cx, cy, w, h, r, g) {
+        const t = cy - h / 2 - g;
+        const l = cx - w / 2 - g;
+        const b = H - (cy + h / 2) - g;
+        const ri = W - (cx + w / 2) - g;
+        const rr = Math.max(0, Math.min(r + g, (w + 2 * g) / 2, (h + 2 * g) / 2));
+        return `inset(${t.toFixed(2)}px ${ri.toFixed(2)}px ${b.toFixed(2)}px ${l.toFixed(2)}px round ${rr.toFixed(2)}px)`;
+      }
+      const M = proxy({ cx: 540, cy: 750, w: 0, h: 0, r: 0 }, () => paintM());
+      function paintM() {
+        if (M.w < 0.5 || M.h < 0.5) {
+          shFill.style.clipPath = "inset(50% 50% 50% 50%)";
+          shEdge.style.clipPath = "inset(50% 50% 50% 50%)";
+          return;
+        }
+        shFill.style.clipPath = inset(M.cx, M.cy, M.w, M.h, M.r, 0);
+        shEdge.style.clipPath = inset(M.cx, M.cy, M.w, M.h, M.r, 1.5);
+      }
+      const morph = (t, to, d, ease = "expo.inOut") => tl.to(M, { ...to, duration: d, ease }, t);
+
+      // ---------- stick figure: barbell squat, side view ----------
+      const FG = { ax: 540, ay: 1126, L1: 140, L2: 140, L3: 170 };
+      const fEl = {
+        foot: $("f-foot"),
+        leg: $("f-leg"),
+        torso: $("f-torso"),
+        arm: $("f-arm"),
+        head: $("f-head"),
+        plate: $("f-plate"),
+        ring: $("f-ring"),
+        hub: $("f-hub"),
+        shadow: $("f-shadow"),
+      };
+      const P = (p) => `${p[0].toFixed(2)} ${p[1].toFixed(2)}`;
+      function drawFigure(d) {
+        const R = Math.PI / 180;
+        const ts = (3 + 31 * d) * R; // shin leans forward
+        const tt = (5 + 77 * d) * R; // thigh folds back to parallel
+        const tb = (5 + 35 * d) * R; // torso hinges forward
+        const A = [FG.ax, FG.ay];
+        const K = [A[0] + FG.L1 * Math.sin(ts), A[1] - FG.L1 * Math.cos(ts)];
+        const Hp = [K[0] - FG.L2 * Math.sin(tt), K[1] - FG.L2 * Math.cos(tt)];
+        const u = [Math.sin(tb), -Math.cos(tb)];
+        const n = [-Math.cos(tb), -Math.sin(tb)];
+        const S = [Hp[0] + FG.L3 * u[0], Hp[1] + FG.L3 * u[1]];
+        const Hd = [S[0] + 58 * u[0] - 12 * n[0], S[1] + 58 * u[1] - 12 * n[1]];
+        const B = [S[0] + 16 * n[0] + 4 * u[0], S[1] + 16 * n[1] + 4 * u[1]];
+        const E = [S[0] - 58 * u[0] - 22 * n[0], S[1] - 58 * u[1] - 22 * n[1]];
+        const Hn = [B[0] - 2 * n[0], B[1] - 2 * n[1]];
+        fEl.foot.setAttribute("d", `M ${A[0] - 24} ${A[1]} L ${A[0] + 48} ${A[1]}`);
+        fEl.leg.setAttribute("d", `M ${P(A)} L ${P(K)} L ${P(Hp)}`);
+        fEl.torso.setAttribute("d", `M ${P(Hp)} L ${P(S)}`);
+        fEl.arm.setAttribute("d", `M ${P(S)} L ${P(E)} L ${P(Hn)}`);
+        fEl.head.setAttribute("cx", Hd[0].toFixed(2));
+        fEl.head.setAttribute("cy", Hd[1].toFixed(2));
+        for (const el of [fEl.plate, fEl.ring, fEl.hub]) {
+          el.setAttribute("cx", B[0].toFixed(2));
+          el.setAttribute("cy", B[1].toFixed(2));
+        }
+        fEl.shadow.setAttribute("rx", (120 + 34 * d).toFixed(2));
+      }
+      const F = proxy({ d: 0 }, () => drawFigure(F.d));
+
+      // ---------- counters ----------
+      const frNum = $("fr-num");
+      const RC = proxy({ n: 0 }, () => (frNum.textContent = String(Math.round(RC.n))));
+      const bkNum = $("bk-num");
+      const TC = proxy({ n: 0 }, () => (bkNum.textContent = String(Math.round(TC.n))));
+      const QUERY = "why am i not growing";
+      const qEl = $("q");
+      const TY = proxy({ n: 0 }, () => (qEl.textContent = QUERY.slice(0, Math.floor(TY.n))));
+
+      // ---------- picker wheels (real 3D drum) ----------
+      const WR = 130;
+      const WA = 28;
+      const minItems = [...$("wh-min").children];
+      const secItems = [...$("wh-sec").children];
+      function paintWheel(items, v) {
+        items.forEach((el, i) => {
+          const d = i - v;
+          const a = d * WA;
+          if (Math.abs(a) > 80) {
+            el.style.opacity = "0";
+            return;
+          }
+          const sel = 1 - clamp(Math.abs(d) * 1.6, 0, 1);
+          el.style.opacity = (Math.pow(Math.cos((a * Math.PI) / 180), 1.4) * (0.34 + 0.66 * sel)).toFixed(3);
+          el.style.transform = `translateZ(${-WR}px) rotateX(${(-a).toFixed(2)}deg) translateZ(${WR}px)`;
+        });
+      }
+      const WV = proxy({ v: 0 }, () => paintWheel(minItems, WV.v));
+
+      // ---------- rest timer ----------
+      const ring = $("ring");
+      const tdig = $("tdig");
+      const RING_C = 389.56;
+      function paintTimer(rem) {
+        const s = Math.max(0, Math.ceil(rem - 1e-6));
+        tdig.textContent = `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+        ring.setAttribute("stroke-dashoffset", (RING_C * (1 - clamp(rem / 120, 0, 1))).toFixed(2));
+      }
+      const TM = proxy({ rem: 120 }, () => paintTimer(TM.rem));
+
+      // ---------- wordmark weight ----------
+      const wm = $("wm");
+      const WM = proxy({ w: 200 }, () => (wm.style.fontVariationSettings = `"wght" ${WM.w.toFixed(1)}`));
+
+      // ---------- 3D dumbbell ----------
+      const canvas = $("world");
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: true });
+      renderer.setPixelRatio(1);
+      renderer.setSize(W, H, false);
+      renderer.setClearColor(0x000000, 0);
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.0;
+      const scene = new THREE.Scene();
+      const FOV = 30;
+      const CZ = 10;
+      const camera = new THREE.PerspectiveCamera(FOV, W / H, 0.1, 100);
+      camera.position.set(0, 0, CZ);
+      camera.lookAt(0, 0, 0);
+      const UPP = (2 * CZ * Math.tan((FOV * Math.PI) / 360)) / H;
+
+      // Studio: black room with a few strip lights, so black lacquer reads as white edges.
+      const envScene = new THREE.Scene();
+      const strip = (w, h, pos, k) => {
+        const m = new THREE.Mesh(
+          new THREE.PlaneGeometry(w, h),
+          new THREE.MeshBasicMaterial({ color: new THREE.Color(k, k, k), side: THREE.DoubleSide }),
+        );
+        m.position.set(pos[0], pos[1], pos[2]);
+        m.lookAt(0, 0, 0);
+        envScene.add(m);
+      };
+      strip(1.4, 9, [-6, 1, 3], 7);
+      strip(1.0, 9, [6, 0.5, 2], 4);
+      strip(9, 2.5, [0, 7, 0], 2.5);
+      strip(4, 7, [1, 1, -7], 3.5);
+      const pmrem = new THREE.PMREMGenerator(renderer);
+      scene.environment = pmrem.fromScene(envScene, 0.02).texture;
+      const key = new THREE.DirectionalLight(0xffffff, 1.6);
+      key.position.set(-3, 5, 6);
+      scene.add(key);
+      const rim = new THREE.DirectionalLight(0xffffff, 2.4);
+      rim.position.set(4, 3, -5);
+      scene.add(rim);
+
+      const V2 = (x, y) => new THREE.Vector2(x, y);
+      function arc(pts, cx, cy, rad, a0, a1, n) {
+        for (let i = 0; i <= n; i++) {
+          const a = a0 + ((a1 - a0) * i) / n;
+          pts.push(V2(cx + rad * Math.cos(a), cy + rad * Math.sin(a)));
+        }
+      }
+      function roundCyl(r, len, b) {
+        const h = len / 2;
+        const p = [V2(0, -h)];
+        arc(p, r - b, -h + b, b, -Math.PI / 2, 0, 8);
+        arc(p, r - b, h - b, b, 0, Math.PI / 2, 8);
+        p.push(V2(0, h));
+        return new THREE.LatheGeometry(p, 96);
+      }
+      function plateGeo(R, T, r0) {
+        const h = T / 2;
+        const b = 0.045;
+        const p = [V2(r0, -h + 0.012), V2(R - 0.13, -h + 0.012), V2(R - 0.11, -h)];
+        arc(p, R - b, -h + b, b, -Math.PI / 2, 0, 10);
+        arc(p, R - b, h - b, b, 0, Math.PI / 2, 10);
+        p.push(V2(R - 0.11, h), V2(R - 0.13, h - 0.012), V2(r0, h - 0.012), V2(r0, -h + 0.012));
+        return new THREE.LatheGeometry(p, 128);
+      }
+      function knurlGeo(r, len) {
+        const p = [];
+        const n = 46;
+        for (let i = 0; i <= n; i++) p.push(V2(i % 2 ? r * 0.955 : r, -len / 2 + (len * i) / n));
+        return new THREE.LatheGeometry(p, 64);
+      }
+      const lacquer = new THREE.MeshPhysicalMaterial({
+        color: 0x0c0c0d,
+        roughness: 0.38,
+        metalness: 0,
+        clearcoat: 1,
+        clearcoatRoughness: 0.07,
+        side: THREE.DoubleSide,
+      });
+      const chrome = new THREE.MeshStandardMaterial({ color: 0xdddddd, metalness: 1, roughness: 0.16, side: THREE.DoubleSide });
+      const db = new THREE.Group();
+      db.add(new THREE.Mesh(knurlGeo(0.1, 1.16), chrome));
+      for (const s of [-1, 1]) {
+        const c1 = new THREE.Mesh(roundCyl(0.17, 0.1, 0.02), chrome);
+        c1.position.y = s * 0.63;
+        const p1 = new THREE.Mesh(plateGeo(0.64, 0.2, 0.1), lacquer);
+        p1.position.y = s * 0.79;
+        const p2 = new THREE.Mesh(plateGeo(0.53, 0.15, 0.1), lacquer);
+        p2.position.y = s * 0.97;
+        const c2 = new THREE.Mesh(roundCyl(0.16, 0.12, 0.03), chrome);
+        c2.position.y = s * 1.11;
+        db.add(c1, p1, p2, c2);
+      }
+      db.rotation.z = Math.PI / 2;
+      const spinG = new THREE.Group();
+      spinG.add(db);
+      const tiltG = new THREE.Group();
+      tiltG.add(spinG);
+      tiltG.rotation.set(0.34, 0, -0.22);
+      const posG = new THREE.Group();
+      posG.add(tiltG);
+      scene.add(posG);
+
+      // Hook: it turns in the light, then spins down into a point. End: it comes back out of one.
+      function worldState(t) {
+        if (t < 4.3) {
+          const intro = 0.9 + 0.1 * (1 - Math.pow(1 - clamp(t / 1.6, 0, 1), 3));
+          const k = sstep(3.5, 4.25, t);
+          return {
+            vis: intro * (1 - k) > 0.002,
+            s: intro * (1 - k),
+            py: lerp(600 + 8 * Math.sin(t * 1.4), 750, k),
+            spin: 0.6 * t + 7.0 * k * k,
+          };
+        }
+        if (t > 26.95) {
+          const u = t - 26.95;
+          const g = clamp(u / 0.85, 0, 1);
+          return {
+            vis: true,
+            s: backOut(g, 1.4),
+            py: 620 + 8 * g * Math.sin(t * 1.4),
+            spin: 0.6 * t - 6.0 * Math.pow(1 - clamp(u / 1.4, 0, 1), 3),
+          };
+        }
+        return { vis: false };
+      }
+      let lastVis = true;
+      function render(t) {
+        const st = worldState(t);
+        if (!st.vis) {
+          if (lastVis) {
+            renderer.clear();
+            lastVis = false;
+          }
+          return;
+        }
+        lastVis = true;
+        posG.position.set(0, (960 - st.py) * UPP, 0);
+        posG.scale.setScalar(Math.max(0.0001, st.s * 0.8));
+        spinG.rotation.y = st.spin;
+        renderer.render(scene, camera);
+      }
+
+      // ================= TIMELINE =================
+      const cam = $("cam");
+      const rig = $("rig");
+
+      // --- 0.0  Hook: the line is readable on frame 0 ---
+      {
+        const a = LINES["k-h1a"].words;
+        tl.fromTo(a[0].p, { e: 0.85 }, { e: 1, duration: 0.35, ease: "power2.out", ...NI }, 0);
+        tl.fromTo(a[1].p, { e: 0.55 }, { e: 1, duration: 0.45, ease: "power3.out", ...NI }, 0);
+        tl.fromTo(a[2].p, { e: 0.2 }, { e: 1, duration: 0.5, ease: "power3.out", ...NI }, 0);
+      }
+      kin("k-h1b", 1.0, 0.115);
+      out($("kw-h1a"), 3.45, 0.32);
+      out($("kw-h1b"), 3.52, 0.32);
+      tl.fromTo(cam, { scale: 1 }, { scale: 1.03, duration: 4, ease: "sine.inOut", ...NI }, 0);
+      tl.set(cam, { scale: 1 }, 4.0);
+
+      // --- 4.0  A point of light becomes a search bar ---
+      tl.fromTo($("dot1"), { opacity: 1, scale: 0 }, { scale: 1, duration: 0.3, ease: "back.out(2.5)", ...NI }, 4.02);
+      tl.to($("dot1"), { opacity: 0, duration: 0.18, ease: "power1.in" }, 4.4);
+      morph(4.05, { w: 34, h: 34, r: 17 }, 0.3, "back.out(2)");
+      morph(4.34, { w: 780 }, 0.62, "back.out(1.1)");
+      morph(4.34, { h: 124, r: 62 }, 0.48, "power3.inOut");
+      tl.fromTo($("ph"), { opacity: 0 }, { opacity: 1, duration: 0.2, ...NI }, 4.6);
+      tl.to($("ph"), { opacity: 0, duration: 0.1 }, 4.83);
+      tl.fromTo($("mag"), { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(2)", ...NI }, 4.66);
+      tl.set($("caret"), { opacity: 1 }, 4.62);
+      tl.fromTo(TY, { n: 0 }, { n: QUERY.length, duration: 1.1, ease: "none", ...NI }, 4.86);
+      tl.set($("caret"), { opacity: 0 }, 6.02);
+      tl.set($("caret"), { opacity: 1 }, 6.16);
+      // tap the magnifier
+      tl.fromTo($("tap1"), { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.22, ease: "power3.out", ...NI }, 5.86);
+      tl.to($("tap1"), { scale: 0.78, duration: 0.08, ease: "power2.in" }, 6.12);
+      tl.to($("tap1"), { scale: 1, opacity: 0, duration: 0.2, ease: "power2.out" }, 6.2);
+      tl.fromTo($("rip1"), { opacity: 0.8, scale: 1 }, { opacity: 0, scale: 2.4, duration: 0.45, ease: "power2.out", ...NI }, 6.2);
+      morph(6.12, { w: 764, h: 118 }, 0.08, "power2.in");
+      morph(6.2, { w: 780, h: 124 }, 0.16, "back.out(2)");
+      out($("srch"), 6.3, 0.22, 0);
+      // the answer
+      morph(6.38, { w: 720, h: 150, r: 75 }, 0.55);
+      kin("k-ans", 6.62, 0.1);
+      out($("kw-ans"), 7.42, 0.25, 0);
+
+      // --- 7.6  One pill becomes three ---
+      morph(7.62, { cx: 220, w: 290, h: 112, r: 56 }, 0.6);
+      tl.fromTo($("pc2"), { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.6, ease: "expo.out", ...NI }, 7.7);
+      tl.fromTo($("pc3"), { opacity: 0, x: -320, scale: 0.7 }, { opacity: 1, x: 0, scale: 1, duration: 0.7, ease: "expo.out", ...NI }, 7.7);
+      inn($("pl1"), 8.0, 0.4, 10);
+      tl.fromTo(cam, { scale: 1 }, { scale: 1.025, duration: 1.0, ease: "sine.inOut", ...NI }, 7.9);
+      // REPS opens; the others step back
+      tl.to($("pl1"), { opacity: 0, duration: 0.18, ease: "power1.in" }, 8.95);
+      tl.to([$("pc2"), $("pc3")], { opacity: 0, scale: 0.9, filter: "blur(8px)", duration: 0.32, ease: "power2.in", stagger: 0.04 }, 8.92);
+      morph(9.05, { cx: 540, cy: 880, w: 820, h: 860, r: 64 }, 0.8);
+      tl.to(cam, { scale: 1, duration: 0.8, ease: "expo.inOut" }, 9.05);
+
+      // --- 9.6  01 REPS ---
+      kin("k-r1", 9.6, 0.1);
+      kin("k-r2", 10.0, 0.1);
+      inn($("fr-lbl"), 9.78, 0.45, 10);
+      inn($("fr-num"), 9.84, 0.45, 10);
+      inn($("figw"), 9.86, 0.55, 22);
+      $("dots")
+        .querySelectorAll(".dot")
+        .forEach((d, i) => {
+          tl.fromTo(d, { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2)", ...NI }, 9.95 + i * 0.03);
+        });
+      {
+        const reps = [0.38, 0.38, 0.38, 0.4, 0.42, 0.46, 0.54, 0.64];
+        const fills = [...document.querySelectorAll("#dots .dfill")];
+        let t = 10.2;
+        reps.forEach((r, k) => {
+          tl.to(F, { d: 1, duration: r * 0.45, ease: "sine.inOut" }, t);
+          tl.to(F, { d: 0, duration: r * 0.55, ease: "sine.inOut" }, t + r * 0.45);
+          t += r;
+          tl.set(RC, { n: k + 1 }, t - 0.04);
+          tl.fromTo(fills[k], { opacity: 0, scale: 1.7 }, { opacity: 1, scale: 1, duration: 0.25, ease: "power3.out", ...NI }, t - 0.04);
+          tl.fromTo($("fr-num"), { scale: 1.12 }, { scale: 1, duration: 0.25, ease: "power2.out", ...NI }, t - 0.04);
+        });
+        const halos = [...document.querySelectorAll("#dots .dhalo")];
+        for (const [i, at] of [
+          [8, t + 0.08],
+          [9, t + 0.16],
+          [8, t + 0.62],
+          [9, t + 0.7],
+        ]) {
+          tl.fromTo(halos[i], { opacity: 0.9, scale: 0.7 }, { opacity: 0, scale: 1.9, duration: 0.7, ease: "power2.out", ...NI }, at);
+        }
+        inn($("fr-cap"), t + 0.1, 0.5, 10);
+      }
+      tl.fromTo(cam, { scale: 1 }, { scale: 1.025, duration: 5.4, ease: "sine.inOut", ...NI }, 9.85);
+      out($("kw-r1"), 15.05, 0.3);
+      out($("kw-r2"), 15.1, 0.3);
+
+      // --- 15.25  The card flips: 02 TEMPO ---
+      tl.to(rig, { rotationY: 90, duration: 0.3, ease: "power2.in" }, 15.25);
+      tl.to(cam, { scale: 1, duration: 0.72, ease: "power2.inOut" }, 15.25);
+      tl.set($("fr"), { opacity: 0 }, 15.55);
+      tl.set($("bk"), { opacity: 1 }, 15.55);
+      tl.set(rig, { rotationY: -90 }, 15.55);
+      tl.to(rig, { rotationY: 0, duration: 0.45, ease: "power3.out" }, 15.55);
+      kin("k-t1", 15.65, 0.1);
+      kin("k-t2", 16.0, 0.1);
+      tl.set(TC, { n: 1 }, 16.2);
+      tl.fromTo($("bk-num"), { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.3, ease: "power3.out", ...NI }, 16.2);
+      tl.fromTo($("bk-u1"), { opacity: 0 }, { opacity: 1, duration: 0.3, ...NI }, 16.25);
+      tl.to(F, { d: 1, duration: 3.0, ease: "sine.inOut" }, 16.2);
+      tl.to($("fill-dn"), { scaleX: 1, duration: 3.0, ease: "none" }, 16.2);
+      for (const [n, at] of [
+        [2, 17.2],
+        [3, 18.2],
+      ]) {
+        tl.set(TC, { n }, at);
+        tl.fromTo($("bk-num"), { scale: 1.14 }, { scale: 1, duration: 0.3, ease: "power2.out", ...NI }, at);
+      }
+      tl.set(TC, { n: 1 }, 19.2);
+      tl.fromTo($("bk-num"), { scale: 1.14 }, { scale: 1, duration: 0.3, ease: "power2.out", ...NI }, 19.2);
+      tl.to($("bk-u1"), { opacity: 0, duration: 0.12 }, 19.2);
+      tl.fromTo($("bk-u2"), { opacity: 0 }, { opacity: 1, duration: 0.2, ...NI }, 19.26);
+      tl.to(F, { d: 0, duration: 0.7, ease: "power2.out" }, 19.2);
+      tl.to($("fill-up"), { scaleX: 1, duration: 0.7, ease: "power2.out" }, 19.2);
+      tl.fromTo(cam, { scale: 1 }, { scale: 1.025, duration: 4.8, ease: "sine.inOut", ...NI }, 15.97);
+      out($("kw-t1"), 20.62, 0.3);
+      out($("kw-t2"), 20.67, 0.3);
+      out($("bk"), 20.72, 0.3, 0);
+      out($("figw"), 20.62, 0.3, 0);
+
+      // --- 20.85  03 REST: the card becomes a timer picker ---
+      morph(20.85, { cy: 800, h: 560, r: 60 }, 0.62);
+      tl.to(cam, { scale: 1, duration: 0.62, ease: "expo.inOut" }, 20.85);
+      kin("k-s1", 21.05, 0.1);
+      kin("k-s2", 21.45, 0.1);
+      inn($("pk-lbl"), 21.15, 0.4, 10);
+      tl.fromTo($("band"), { opacity: 0, scaleX: 0.8 }, { opacity: 1, scaleX: 1, duration: 0.45, ease: "power3.out", ...NI }, 21.2);
+      inn($("wh-min"), 21.25, 0.45, 0);
+      inn($("wh-sec"), 21.3, 0.45, 0);
+      tl.fromTo([$("wu1"), $("wu2")], { opacity: 0 }, { opacity: 1, duration: 0.4, ...NI }, 21.35);
+      inn($("startbtn"), 21.45, 0.45, 18);
+      tl.fromTo(WV, { v: 0 }, { v: 2, duration: 1.05, ease: "back.out(1.5)", ...NI }, 21.6);
+      tl.fromTo($("tap2"), { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.22, ease: "power3.out", ...NI }, 22.45);
+      tl.to($("tap2"), { scale: 0.78, duration: 0.08, ease: "power2.in" }, 22.68);
+      tl.to($("tap2"), { scale: 1, opacity: 0, duration: 0.2, ease: "power2.out" }, 22.76);
+      tl.fromTo($("rip2"), { opacity: 0.8, scale: 1 }, { opacity: 0, scale: 2.4, duration: 0.45, ease: "power2.out", ...NI }, 22.76);
+      tl.to($("startbtn"), { scale: 0.94, duration: 0.08, ease: "power2.in" }, 22.68);
+      tl.to($("startbtn"), { scale: 1, duration: 0.16, ease: "back.out(2)" }, 22.76);
+      out($("pk"), 22.92, 0.24, 0);
+
+      // --- 23.0  ...and the picker collapses into a running rest timer ---
+      morph(23.0, { cy: 780, w: 760, h: 200, r: 100 }, 0.62);
+      tl.fromTo($("ringsvg"), { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.6)", ...NI }, 23.38);
+      inn($("tdig"), 23.44, 0.45, 12);
+      tl.fromTo($("tl1"), { opacity: 0 }, { opacity: 1, duration: 0.4, ...NI }, 23.5);
+      tl.fromTo(TM, { rem: 120 }, { rem: 0, duration: 2.3, ease: "power2.in", ...NI }, 23.75);
+      tl.to($("tl1"), { opacity: 0, duration: 0.15 }, 26.06);
+      tl.fromTo($("tl2"), { opacity: 0, x: 10 }, { opacity: 1, x: 0, duration: 0.3, ease: "power3.out", ...NI }, 26.1);
+      tl.fromTo($("ringdone"), { opacity: 0 }, { opacity: 1, duration: 0.25, ...NI }, 26.06);
+      morph(26.06, { w: 778, h: 210 }, 0.12, "power2.out");
+      morph(26.18, { w: 760, h: 200 }, 0.3, "back.out(2)");
+      kin("k-sub", 23.95, 0.1);
+      tl.fromTo(cam, { scale: 1 }, { scale: 1.02, duration: 4.9, ease: "sine.inOut", ...NI }, 21.5);
+      out($("kw-s1"), 26.32, 0.3);
+      out($("kw-s2"), 26.36, 0.3);
+      out($("kw-sub"), 26.36, 0.3);
+      out($("tm"), 26.38, 0.25, 0);
+
+      // --- 26.5  Collapse to a point; the dumbbell comes back out of it ---
+      morph(26.5, { cy: 620, w: 30, h: 30, r: 15 }, 0.48);
+      tl.to(cam, { scale: 1, duration: 0.6, ease: "expo.inOut" }, 26.4);
+      tl.fromTo($("dot2"), { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.2, ease: "power2.out", ...NI }, 26.75);
+      morph(26.95, { w: 0, h: 0, r: 0 }, 0.12, "power2.in");
+      tl.to($("dot2"), { opacity: 0, scale: 0, duration: 0.24, ease: "power2.in" }, 26.98);
+      kin("k-e1", 27.5, 0.13);
+      tl.fromTo(wm, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.7, ease: "power3.out", ...NI }, 28.3);
+      tl.fromTo(WM, { w: 200 }, { w: 700, duration: 1.2, ease: "power2.inOut", ...NI }, 28.3);
+      tl.fromTo($("cta"), { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out", ...NI }, 28.85);
+
+      // World clock + per-frame re-layout of the kinetic lines.
+      const DR = proxy({ t: 0 }, () => {
+        render(DR.t);
+        layoutAll();
+      });
+      tl.fromTo(DR, { t: 0 }, { t: DUR, duration: DUR, ease: "none", ...NI }, 0);
+
+      // initial paint
+      paintM();
+      drawFigure(0);
+      paintWheel(minItems, 0);
+      paintWheel(secItems, 2);
+      paintTimer(120);
+      WM.w = 200;
+      layoutAll();
+      render(0);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
