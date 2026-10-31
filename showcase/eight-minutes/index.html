@@ -1,0 +1,562 @@
+<!doctype html>
+<html lang="en" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="assets/lib/gsap.min.js"></script>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "./assets/lib/three.module.js",
+          "three/addons/": "./assets/lib/addons/"
+        }
+      }
+    </script>
+    <style>
+      :root {
+        --ground: #03040a;
+        --ink: #f4f1ea;
+        --sun: #ffb547;
+        --cool: #8fb8ff;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: var(--ground);
+      }
+      #root {
+        position: relative;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: var(--ground);
+      }
+      #world {
+        position: absolute;
+        inset: 0;
+        width: 1080px;
+        height: 1920px;
+        z-index: 0;
+      }
+      /* Distance diagram labels: positioned each frame from the 3D projection. */
+      #dist {
+        position: absolute;
+        inset: 0;
+        z-index: 5;
+        font-family: "JetBrains Mono", monospace;
+        color: var(--ink);
+      }
+      #dist-lines {
+        position: absolute;
+        inset: 0;
+        width: 1080px;
+        height: 1920px;
+      }
+      .dist-label {
+        position: absolute;
+        left: 0;
+        top: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        white-space: nowrap;
+      }
+      .dist-name {
+        font-size: 30px;
+        letter-spacing: 0.3em;
+        opacity: 0.7;
+      }
+      .dist-time {
+        font-family: "Inter", sans-serif;
+        font-weight: 900;
+        font-size: 64px;
+        letter-spacing: -0.02em;
+      }
+      .dist-time b {
+        color: var(--sun);
+        font-weight: 900;
+      }
+      #dist-note {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 1295px;
+        text-align: center;
+        font-size: 26px;
+        letter-spacing: 0.4em;
+        opacity: 0.45;
+      }
+      #vignette {
+        position: absolute;
+        inset: 0;
+        z-index: 20;
+        pointer-events: none;
+        background: radial-gradient(ellipse at 50% 46%, transparent 52%, rgba(0, 0, 0, 0.55) 100%);
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="16"
+      data-width="1080"
+      data-height="1920"
+    >
+      <canvas id="world" width="1080" height="1920"></canvas>
+
+      <div id="dist" class="clip" data-start="9.6" data-duration="3.1" data-track-index="2" data-layout-allow-overlap>
+        <svg id="dist-lines" viewBox="0 0 1080 1920">
+          <line id="dist-line-sun" stroke="#f4f1ea" stroke-opacity="0.55" stroke-width="2" stroke-dasharray="6 10" />
+          <line id="dist-line-moon" stroke="#f4f1ea" stroke-opacity="0.55" stroke-width="2" stroke-dasharray="6 10" />
+        </svg>
+        <div id="dist-sun" class="dist-label">
+          <span class="dist-name">THE SUN</span>
+          <span class="dist-time"><b>8 min 19 s</b></span>
+        </div>
+        <div id="dist-moon" class="dist-label">
+          <span class="dist-name">THE MOON</span>
+          <span class="dist-time"><b>1.3 s</b></span>
+        </div>
+        <div id="dist-earth" class="dist-label">
+          <span class="dist-name">YOU</span>
+        </div>
+        <div id="dist-note">NOT TO SCALE · TRAVEL TIME OF LIGHT</div>
+      </div>
+
+      <div id="s1" data-composition-id="s1" data-composition-src="compositions/s1.html" data-start="0" data-duration="3" data-track-index="10" data-track-kind="graphics" data-width="1080" data-height="1920"></div>
+      <div id="s2" data-composition-id="s2" data-composition-src="compositions/s2.html" data-start="3" data-duration="3.6" data-track-index="11" data-track-kind="graphics" data-width="1080" data-height="1920"></div>
+      <div id="s3" data-composition-id="s3" data-composition-src="compositions/s3.html" data-start="6.6" data-duration="3" data-track-index="12" data-track-kind="graphics" data-width="1080" data-height="1920"></div>
+      <div id="s4" data-composition-id="s4" data-composition-src="compositions/s4.html" data-start="9.6" data-duration="3.1" data-track-index="13" data-track-kind="graphics" data-width="1080" data-height="1920"></div>
+      <div id="s5" data-composition-id="s5" data-composition-src="compositions/s5.html" data-start="12.7" data-duration="3.3" data-track-index="14" data-track-kind="graphics" data-width="1080" data-height="1920"></div>
+
+      <div id="vignette"></div>
+    </div>
+
+    <script type="module">
+      import * as THREE from "three";
+      import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
+      import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
+      import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
+      import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
+
+      const W = 1080;
+      const H = 1920;
+      const DUR = 16;
+
+      // ---------- deterministic helpers ----------
+      function mulberry32(a) {
+        return function () {
+          a |= 0;
+          a = (a + 0x6d2b79f5) | 0;
+          let t = Math.imul(a ^ (a >>> 15), 1 | a);
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+          return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        };
+      }
+      const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
+      const sstep = (a, b, x) => {
+        const t = clamp((x - a) / (b - a), 0, 1);
+        return t * t * t * (t * (t * 6 - 15) + 10);
+      };
+      const lerp = (a, b, k) => a + (b - a) * k;
+      const v3 = (x, y, z) => new THREE.Vector3(x, y, z);
+
+      // ---------- renderer ----------
+      const canvas = document.getElementById("world");
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true });
+      renderer.setPixelRatio(1);
+      renderer.setSize(W, H, false);
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.0;
+
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x03040a);
+      const camera = new THREE.PerspectiveCamera(50, W / H, 0.1, 3000);
+
+      // ---------- layout (world units, not to scale) ----------
+      const SUN = v3(0, 0, 0);
+      const SUN_R = 6;
+      const EARTH = v3(0, 0, 95);
+      const EARTH_R = 3;
+      const MOON = v3(7.5, 1.4, 102);
+      const MOON_R = 0.8;
+      const GALAXY = v3(-260, 140, -260);
+
+      // ---------- Sun: boiling granulation shader + corona ----------
+      const sunMat = new THREE.ShaderMaterial({
+        uniforms: { uTime: { value: 0 } },
+        vertexShader: `
+          varying vec3 vPos; varying vec3 vNormal; varying vec3 vView;
+          void main() {
+            vPos = position;
+            vNormal = normalize(normalMatrix * normal);
+            vec4 mv = modelViewMatrix * vec4(position, 1.0);
+            vView = normalize(-mv.xyz);
+            gl_Position = projectionMatrix * mv;
+          }`,
+        fragmentShader: `
+          uniform float uTime; varying vec3 vPos; varying vec3 vNormal; varying vec3 vView;
+          vec3 hash3(vec3 p){ p = vec3(dot(p,vec3(127.1,311.7,74.7)), dot(p,vec3(269.5,183.3,246.1)), dot(p,vec3(113.5,271.9,124.6)));
+            return -1.0 + 2.0*fract(sin(p)*43758.5453123); }
+          float noise(vec3 p){ vec3 i=floor(p); vec3 f=fract(p); vec3 u=f*f*(3.0-2.0*f);
+            return mix(mix(mix(dot(hash3(i),f), dot(hash3(i+vec3(1,0,0)),f-vec3(1,0,0)),u.x),
+                           mix(dot(hash3(i+vec3(0,1,0)),f-vec3(0,1,0)), dot(hash3(i+vec3(1,1,0)),f-vec3(1,1,0)),u.x),u.y),
+                       mix(mix(dot(hash3(i+vec3(0,0,1)),f-vec3(0,0,1)), dot(hash3(i+vec3(1,0,1)),f-vec3(1,0,1)),u.x),
+                           mix(dot(hash3(i+vec3(0,1,1)),f-vec3(0,1,1)), dot(hash3(i+vec3(1,1,1)),f-vec3(1,1,1)),u.x),u.y),u.z); }
+          float fbm(vec3 p){ float a=0.5, s=0.0; for(int i=0;i<5;i++){ s+=a*noise(p); p*=2.03; a*=0.5; } return s; }
+          void main(){
+            vec3 p = normalize(vPos) * 2.2;
+            float n = fbm(p + vec3(0.0, uTime*0.12, uTime*0.08));
+            float cells = fbm(p*3.5 - vec3(uTime*0.25));
+            float heat = clamp(0.42 + n*1.5 + cells*0.6, 0.0, 1.0);
+            float limb = pow(clamp(dot(vNormal, vView), 0.0, 1.0), 0.45);
+            vec3 deep = vec3(0.75, 0.14, 0.01);
+            vec3 mid = vec3(1.0, 0.48, 0.07);
+            vec3 hot = vec3(1.0, 0.86, 0.55);
+            vec3 col = mix(deep, mid, smoothstep(0.2, 0.6, heat));
+            col = mix(col, hot, smoothstep(0.6, 0.95, heat));
+            gl_FragColor = vec4(col * (0.35 + 0.85*limb) * 1.15, 1.0);
+          }`,
+      });
+      const sun = new THREE.Mesh(new THREE.SphereGeometry(SUN_R, 128, 96), sunMat);
+      scene.add(sun);
+
+      function glowTexture(inner, outer) {
+        const c = document.createElement("canvas");
+        c.width = c.height = 256;
+        const g = c.getContext("2d");
+        const grd = g.createRadialGradient(128, 128, 0, 128, 128, 128);
+        grd.addColorStop(0, inner);
+        grd.addColorStop(0.25, inner);
+        grd.addColorStop(1, outer);
+        g.fillStyle = grd;
+        g.fillRect(0, 0, 256, 256);
+        const tex = new THREE.CanvasTexture(c);
+        tex.colorSpace = THREE.SRGBColorSpace;
+        return tex;
+      }
+      const corona = new THREE.Sprite(
+        new THREE.SpriteMaterial({
+          map: glowTexture("rgba(255,170,70,0.28)", "rgba(255,110,20,0)"),
+          blending: THREE.AdditiveBlending,
+          depthWrite: false,
+          transparent: true,
+        }),
+      );
+      corona.scale.set(SUN_R * 3.4, SUN_R * 3.4, 1);
+      scene.add(corona);
+
+      // ---------- photon + light trail ----------
+      const photon = new THREE.Sprite(
+        new THREE.SpriteMaterial({
+          map: glowTexture("rgba(255,255,250,1)", "rgba(255,200,120,0)"),
+          blending: THREE.AdditiveBlending,
+          depthWrite: false,
+          transparent: true,
+        }),
+      );
+      photon.scale.set(0.55, 0.55, 1);
+      scene.add(photon);
+      const TRAIL_LEN = 26;
+      const trailMat = new THREE.ShaderMaterial({
+        transparent: true,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending,
+        uniforms: { uAlpha: { value: 1 } },
+        vertexShader: `varying float vY; void main(){ vY = uv.y; gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.0); }`,
+        fragmentShader: `uniform float uAlpha; varying float vY;
+          void main(){ float a = pow(vY, 2.2) * uAlpha; gl_FragColor = vec4(vec3(1.0,0.82,0.55)*2.0*a, a); }`,
+      });
+      const trailGeo = new THREE.CylinderGeometry(0.09, 0.0, TRAIL_LEN, 12, 1, true);
+      trailGeo.rotateX(-Math.PI / 2); // along +z, uv.y = 1 at the head (+z end)
+      trailGeo.translate(0, 0, -TRAIL_LEN / 2);
+      const trail = new THREE.Mesh(trailGeo, trailMat);
+      scene.add(trail);
+
+      // ---------- Earth, atmosphere, Moon ----------
+      const loader = new THREE.TextureLoader();
+      const earthTex = loader.load("assets/textures/earth_atmos_2048.jpg");
+      earthTex.colorSpace = THREE.SRGBColorSpace;
+      const moonTex = loader.load("assets/textures/moon_1024.jpg");
+      moonTex.colorSpace = THREE.SRGBColorSpace;
+      const earth = new THREE.Mesh(
+        new THREE.SphereGeometry(EARTH_R, 96, 64),
+        new THREE.MeshStandardMaterial({ map: earthTex, roughness: 0.85, metalness: 0 }),
+      );
+      earth.position.copy(EARTH);
+      earth.rotation.z = 0.41;
+      scene.add(earth);
+      const atmo = new THREE.Mesh(
+        new THREE.SphereGeometry(EARTH_R * 1.025, 64, 48),
+        new THREE.ShaderMaterial({
+          transparent: true,
+          depthWrite: false,
+          blending: THREE.AdditiveBlending,
+          vertexShader: `varying vec3 vN; varying vec3 vV; void main(){ vN = normalize(normalMatrix*normal);
+            vec4 mv = modelViewMatrix*vec4(position,1.0); vV = normalize(-mv.xyz); gl_Position = projectionMatrix*mv; }`,
+          fragmentShader: `varying vec3 vN; varying vec3 vV; void main(){ float f = pow(1.0 - abs(dot(vN, vV)), 4.0);
+            gl_FragColor = vec4(vec3(0.35,0.6,1.0)*f*0.7, f*0.6); }`,
+        }),
+      );
+      atmo.position.copy(EARTH);
+      scene.add(atmo);
+      const moon = new THREE.Mesh(
+        new THREE.SphereGeometry(MOON_R, 64, 48),
+        new THREE.MeshStandardMaterial({ map: moonTex, roughness: 1 }),
+      );
+      moon.position.copy(MOON);
+      scene.add(moon);
+
+      // Sunlight on the planets (light comes from the Sun at the origin).
+      const sunLight = new THREE.PointLight(0xfff1dd, 2.6, 0, 0);
+      sunLight.position.copy(SUN);
+      scene.add(sunLight);
+      scene.add(new THREE.AmbientLight(0x223355, 0.12));
+
+      // Ring the photon traces around Earth: 7.5 laps in one second.
+      const RING_R = EARTH_R * 1.45;
+      const ringMat = new THREE.MeshBasicMaterial({
+        color: 0xffd28a,
+        transparent: true,
+        opacity: 0,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+      });
+      const ring = new THREE.Mesh(new THREE.TorusGeometry(RING_R, 0.035, 8, 256), ringMat);
+      ring.position.copy(EARTH);
+      ring.rotation.set(Math.PI / 2 - 0.35, 0.2, 0);
+      scene.add(ring);
+
+      // ---------- starfield, speed dust, Andromeda ----------
+      const dotTex = glowTexture("rgba(255,255,255,1)", "rgba(255,255,255,0)");
+      function points(count, gen, size, opacity) {
+        const pos = new Float32Array(count * 3);
+        const col = new Float32Array(count * 3);
+        const rnd = mulberry32(count * 7 + 3);
+        for (let i = 0; i < count; i++) gen(i, rnd, pos, col);
+        const g = new THREE.BufferGeometry();
+        g.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+        g.setAttribute("color", new THREE.BufferAttribute(col, 3));
+        const m = new THREE.PointsMaterial({
+          size,
+          vertexColors: true,
+          map: dotTex,
+          transparent: true,
+          opacity,
+          depthWrite: false,
+          blending: THREE.AdditiveBlending,
+          sizeAttenuation: true,
+        });
+        return new THREE.Points(g, m);
+      }
+      const stars = points(
+        5000,
+        (i, r, p, c) => {
+          const u = r() * 2 - 1, th = r() * Math.PI * 2, rad = 700 + r() * 500;
+          const s = Math.sqrt(1 - u * u);
+          p.set([Math.cos(th) * s * rad, u * rad, Math.sin(th) * s * rad], i * 3);
+          const w = 0.6 + r() * 0.4, b = r();
+          c.set([w * (0.85 + 0.15 * b), w * 0.9, w * (0.9 + 0.1 * (1 - b))], i * 3);
+        },
+        3.4,
+        0.9,
+      );
+      scene.add(stars);
+      const dust = points(
+        900,
+        (i, r, p, c) => {
+          const a = r() * Math.PI * 2, rad = 1.5 + r() * 9;
+          p.set([Math.cos(a) * rad, Math.sin(a) * rad, 8 + r() * 82], i * 3);
+          const w = 0.5 + r() * 0.5;
+          c.set([w, w * 0.85, w * 0.65], i * 3);
+        },
+        0.16,
+        0.0,
+      );
+      scene.add(dust);
+      const GAL_R = 95;
+      const galaxy = points(
+        14000,
+        (i, r, p, c) => {
+          const arm = i % 2;
+          const d = Math.pow(r(), 0.7);
+          const rad = d * GAL_R;
+          const ang = rad * 0.055 + arm * Math.PI + (r() - 0.5) * (0.9 - d * 0.5);
+          const h = (r() - 0.5) * (1 - d) * 14;
+          p.set([Math.cos(ang) * rad, h, Math.sin(ang) * rad], i * 3);
+          const core = 1 - d;
+          c.set([0.55 + 0.45 * core, 0.55 + 0.3 * core, 0.95 - 0.35 * core], i * 3);
+        },
+        1.4,
+        0.5,
+      );
+      galaxy.position.copy(GALAXY);
+      galaxy.rotation.set(1.15, 0.3, 0.5);
+      scene.add(galaxy);
+      const galCore = new THREE.Sprite(
+        new THREE.SpriteMaterial({
+          map: glowTexture("rgba(255,225,180,0.55)", "rgba(255,180,120,0)"),
+          blending: THREE.AdditiveBlending,
+          depthWrite: false,
+          transparent: true,
+        }),
+      );
+      galCore.scale.set(45, 45, 1);
+      galCore.position.copy(GALAXY);
+      scene.add(galCore);
+
+      // ---------- post: bloom ----------
+      const composer = new EffectComposer(renderer);
+      composer.setPixelRatio(1);
+      composer.setSize(W, H);
+      composer.addPass(new RenderPass(scene, camera));
+      const bloom = new THREE.Vector2(W / 2, H / 2);
+      composer.addPass(new UnrealBloomPass(bloom, 0.55, 0.4, 0.92));
+      composer.addPass(new OutputPass());
+
+      // ---------- the story, as positions over time ----------
+      const T_LAUNCH = 3.0;
+      const T_ARRIVE = 6.4;
+      const PHOTON_START = SUN.z + SUN_R + 0.1;
+      const PHOTON_END = EARTH.z - EARTH_R - 0.05;
+      function photonZ(t) {
+        return lerp(PHOTON_START, PHOTON_END, clamp((t - T_LAUNCH) / (T_ARRIVE - T_LAUNCH), 0, 1));
+      }
+      const LAP_T0 = 7.1;
+      const LAP_T1 = 8.1;
+      function photonPos(t) {
+        if (t < LAP_T0) return v3(0, 0, photonZ(t));
+        // circle Earth: 7.5 laps in exactly one second, then hold on the ring
+        const k = clamp((t - LAP_T0) / (LAP_T1 - LAP_T0), 0, 1);
+        const ang = -Math.PI / 2 + k * Math.PI * 2 * 7.5;
+        const local = v3(Math.cos(ang) * RING_R, Math.sin(ang) * RING_R, 0);
+        local.applyEuler(ring.rotation);
+        return local.add(EARTH);
+      }
+
+      // Camera poses.
+      // Sun fills the lower half; dark sky above holds the hook text.
+      const HOOK_A = { pos: v3(0, -2, 30), look: v3(0, 7, 0), up: v3(0, 1, 0) };
+      const HOOK_B = { pos: v3(-4, -1, 24), look: v3(0, 5, 0), up: v3(0, 1, 0) };
+      function chasePose(t) {
+        const z = photonZ(t);
+        return { pos: v3(1.0, 1.6, z - 8), look: v3(0, 0, z + 30), up: v3(0, 1, 0) };
+      }
+      function earthPose(t) {
+        const a = 0.55 + (t - 6.4) * 0.07; // slow orbit
+        return {
+          pos: v3(Math.sin(a) * 16, 3.2, EARTH.z - Math.cos(a) * 16),
+          look: v3(EARTH.x, EARTH.y + 3.6, EARTH.z),
+          up: v3(0, 1, 0),
+        };
+      }
+      // Side view where the Sun sits at the top of the frame and Earth below.
+      const DIAGRAM = { pos: v3(350, 6, 57.8), look: v3(0, 0, 57.8), up: v3(0, 0, -1) };
+      const GAL_LOOK = GALAXY.clone().add(v3(0, 62, 0));
+      const FINAL_A = { pos: v3(150, 30, 160), look: GAL_LOOK, up: v3(0, 1, 0) };
+      const FINAL_B = { pos: v3(118, 26, 150), look: GAL_LOOK, up: v3(0, 1, 0) };
+
+      function mixPose(a, b, k) {
+        return {
+          pos: a.pos.clone().lerp(b.pos, k),
+          look: a.look.clone().lerp(b.look, k),
+          up: a.up.clone().lerp(b.up, k).normalize(),
+        };
+      }
+      function poseAt(t) {
+        if (t < 2.5) return mixPose(HOOK_A, HOOK_B, sstep(0, 2.5, t));
+        if (t < 3.6) return mixPose(HOOK_B, chasePose(t), sstep(2.5, 3.6, t));
+        if (t < 6.2) return chasePose(t);
+        if (t < 7.2) return mixPose(chasePose(Math.min(t, T_ARRIVE)), earthPose(t), sstep(6.2, 7.2, t));
+        if (t < 8.9) return earthPose(t);
+        if (t < 10.1) return mixPose(earthPose(t), DIAGRAM, sstep(8.9, 10.1, t));
+        if (t < 12.4) return DIAGRAM;
+        if (t < 13.7) return mixPose(DIAGRAM, FINAL_A, sstep(12.4, 13.7, t));
+        return mixPose(FINAL_A, FINAL_B, sstep(13.7, 16, t));
+      }
+
+      // Distance diagram labels follow the projected bodies.
+      const elSun = document.getElementById("dist-sun");
+      const elMoon = document.getElementById("dist-moon");
+      const elEarth = document.getElementById("dist-earth");
+      const lineSun = document.getElementById("dist-line-sun");
+      const lineMoon = document.getElementById("dist-line-moon");
+      function screen(p) {
+        const v = p.clone().project(camera);
+        return { x: (v.x * 0.5 + 0.5) * W, y: (-v.y * 0.5 + 0.5) * H };
+      }
+
+      function render(t) {
+        sunMat.uniforms.uTime.value = t;
+        corona.material.opacity = 1;
+        sun.rotation.y = t * 0.03;
+        earth.rotation.y = 1.9 + t * 0.12;
+        moon.rotation.y = t * 0.05;
+
+        // photon visibility: gathers on the surface, flies, circles, then fades
+        const pp = photonPos(t);
+        photon.position.copy(pp);
+        const on = sstep(2.4, 3.0, t) * (1 - sstep(8.3, 8.9, t));
+        photon.material.opacity = on;
+        const flying = t >= T_LAUNCH - 0.05 && t < T_ARRIVE;
+        trail.position.copy(pp);
+        trail.visible = flying;
+        trailMat.uniforms.uAlpha.value = flying ? 1 : 0;
+        ringMat.opacity = clamp((t - LAP_T0) / (LAP_T1 - LAP_T0), 0, 1) * 0.9 * (1 - sstep(9.2, 10.0, t));
+        dust.material.opacity = sstep(2.8, 3.4, t) * (1 - sstep(6.0, 6.6, t)) * 0.9;
+
+        const pose = poseAt(t);
+        camera.position.copy(pose.pos);
+        camera.up.copy(pose.up);
+        camera.lookAt(pose.look);
+        camera.updateMatrixWorld();
+
+        // diagram labels
+        const s = screen(SUN), e = screen(EARTH), m = screen(MOON);
+        elSun.style.transform = `translate(${s.x + 90}px, ${s.y - 50}px)`;
+        elEarth.style.transform = `translate(${e.x + 60}px, ${e.y - 20}px)`;
+        elMoon.style.transform = `translate(${m.x - 330}px, ${m.y - 40}px)`;
+        lineSun.setAttribute("x1", s.x); lineSun.setAttribute("y1", s.y + 60);
+        lineSun.setAttribute("x2", e.x); lineSun.setAttribute("y2", e.y - 40);
+        lineMoon.setAttribute("x1", e.x + 40); lineMoon.setAttribute("y1", e.y);
+        lineMoon.setAttribute("x2", m.x - 30); lineMoon.setAttribute("y2", m.y + 30);
+
+        composer.render();
+      }
+
+      // Textures must be decoded before the first captured frame.
+      const texturesReady = new Promise((resolve) => {
+        THREE.DefaultLoadingManager.onLoad = resolve;
+      });
+      window.__hf = window.__hf || {};
+      window.__hf.buildReady = window.__hf.buildReady || {};
+      window.__hf.buildReady.world = texturesReady.then(() => render(0));
+
+      // Repaint from a property setter so every seek draws its frame (see cosmic-orb).
+      const tl = gsap.timeline({ paused: true });
+      const driver = { _t: 0 };
+      Object.defineProperty(driver, "t", {
+        get() { return this._t; },
+        set(v) { this._t = v; render(v); },
+      });
+      tl.to(driver, { t: DUR, duration: DUR, ease: "none" }, 0);
+      tl.fromTo("#dist-sun", { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "power2.out" }, 10.0);
+      tl.fromTo("#dist-moon", { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "power2.out" }, 10.35);
+      tl.fromTo("#dist-earth", { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "power2.out" }, 10.2);
+      tl.fromTo("#dist-lines", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power2.out" }, 9.9);
+      tl.fromTo("#dist-note", { opacity: 0 }, { opacity: 0.45, duration: 0.4, ease: "power2.out" }, 10.6);
+      render(0);
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

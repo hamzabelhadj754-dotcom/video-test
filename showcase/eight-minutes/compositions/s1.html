@@ -1,0 +1,23 @@
+<template>
+  <style>
+    #root { position: absolute; inset: 0; }
+    #s1-wrap { position: absolute; left: 0; right: 0; top: 300px; display: flex; flex-direction: column; align-items: center; text-align: center; color: #f4f1ea; }
+    #s1-lead { font-family: "Inter", sans-serif; font-weight: 700; font-size: 58px; letter-spacing: -0.01em; }
+    .s1-hero { font-family: "Inter", sans-serif; font-weight: 900; font-size: 180px; line-height: 0.95; letter-spacing: -0.045em; }
+    #s1-mins { color: #ffb547; margin-top: 18px; }
+    .s1-w { display: inline-block; }
+  </style>
+  <div id="root" data-composition-id="s1" data-width="1080" data-height="1920">
+    <div id="s1-wrap" class="clip" data-start="0" data-duration="3" data-layout-allow-overlap>
+      <div id="s1-lead"><span class="s1-w">The light on</span> <span class="s1-w">your skin is</span></div>
+      <div id="s1-mins" class="s1-hero s1-w">8 minutes</div>
+      <div id="s1-old" class="s1-hero s1-w">old.</div>
+    </div>
+  </div>
+  <script>
+    // The hook is fully on screen at frame 0 (thumbnail); it leaves word by word.
+    const tl = gsap.timeline({ paused: true });
+    tl.fromTo(".s1-w", { opacity: 1, filter: "blur(0px)" }, { opacity: 0, filter: "blur(10px)", duration: 0.2, stagger: 0.06, ease: "power3.in" }, 2.55);
+    window.__timelines["s1"] = tl;
+  </script>
+</template>

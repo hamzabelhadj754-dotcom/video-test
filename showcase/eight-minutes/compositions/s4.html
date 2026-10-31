@@ -1,0 +1,17 @@
+<template>
+  <style>
+    #root { position: absolute; inset: 0; }
+    #s4-head { position: absolute; left: 0; right: 0; top: 240px; text-align: center; font-family: "EB Garamond", serif; font-size: 104px; color: #f4f1ea; letter-spacing: -0.01em; }
+    #s4-head span { display: inline-block; }
+    #s4-head em { font-style: normal; color: #ffb547; }
+  </style>
+  <div id="root" data-composition-id="s4" data-width="1080" data-height="1920">
+    <div id="s4-head" class="clip" data-start="0" data-duration="3.1"><span>Distance</span> <span>is</span> <span><em>time.</em></span></div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    tl.fromTo("#s4-head span", { opacity: 0.12 }, { opacity: 1, duration: 0.2, stagger: 0.1, ease: "power2.out" }, 0.45);
+    tl.fromTo("#s4-head span", { opacity: 1, filter: "blur(0px)" }, { opacity: 0, filter: "blur(10px)", duration: 0.2, stagger: 0.05, ease: "power3.in" }, 2.75);
+    window.__timelines["s4"] = tl;
+  </script>
+</template>
