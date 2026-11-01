@@ -273,5 +273,74 @@
     "file": "https://cdn.coverr.co/audios/coverr-10-the-final-scene-BiU7PD/preview.mp3",
     "segment": "33.95s-49.15s",
     "license": "Coverr free license (videos and music, commercial use, no attribution required)"
+  },
+  "72-squat-rack-bw": {
+    "source": "Pinterest (downloaded at the owner's request via scripts/pinterest-download.sh)",
+    "search": "heavy bench press dark gym video",
+    "file": "e1_AfqPShyd9vtnoxjIe3kHimgklsb75Iofwkr-olFDyReh8Kl1HZ67.mp4",
+    "license": "Owned by the original creator \u2014 no license; used at the owner's request and risk",
+    "segment": "0s\u20139.5s of the original"
+  },
+  "73-squat-rack-color": {
+    "source": "Pinterest (downloaded at the owner's request via scripts/pinterest-download.sh)",
+    "search": "heavy bench press dark gym video",
+    "file": "e1_AfqPShyd9vtnoxjIe3kHimgklsb75Iofwkr-olFDyReh8Kl1HZ67.mp4",
+    "license": "Owned by the original creator \u2014 no license; used at the owner's request and risk",
+    "segment": "12s\u201327.5s of the original"
+  },
+  "74-plate-floor": {
+    "source": "Pinterest (downloaded at the owner's request via scripts/pinterest-download.sh)",
+    "search": "heavy bench press dark gym video",
+    "file": "e1_AfqPShzuEs0NQqxCBE5TFiHw2TOntqvGSKl4zGFkaP1cuLOR7w2J9g.mp4",
+    "license": "Owned by the original creator \u2014 no license; used at the owner's request and risk",
+    "segment": "1.6s\u20136.5s of the original"
+  },
+  "75-incline-press": {
+    "source": "Pinterest (downloaded at the owner's request via scripts/pinterest-download.sh)",
+    "search": "heavy bench press dark gym video",
+    "file": "e1_AfqPShyqWekSP__oYD7FF6j4HJllPiRVjSikwCf6f47B89hdUh7B8w.mp4",
+    "license": "Owned by the original creator \u2014 no license; used at the owner's request and risk",
+    "segment": "0s\u20137.5s of the original"
+  },
+  "76-dumbbell-rack": {
+    "source": "Pinterest (downloaded at the owner's request via scripts/pinterest-download.sh)",
+    "search": "heavy bench press dark gym video",
+    "file": "e1_AfqPShwgYd4OIrj-Ee9f4wpt6X_ts3iVWFo4f5OcIxQySVXhpo2_.mp4",
+    "license": "Owned by the original creator \u2014 no license; used at the owner's request and risk",
+    "segment": "0s\u20136.0s of the original"
+  },
+  "78-bench-dark": {
+    "source": "Pinterest (downloaded at the owner's request via scripts/pinterest-download.sh)",
+    "search": "dark gym workout video cinematic",
+    "file": "e1_AfqPShycLAsBTHcIHCsxosbfIxvYYVlyAM-7Z7ViUDmtBzzrZ7Wc.mp4",
+    "license": "Owned by the original creator \u2014 no license; used at the owner's request and risk",
+    "segment": "5.0s\u20139.6s of the original"
+  },
+  "79-gym-door-night": {
+    "source": "Pinterest (downloaded at the owner's request via scripts/pinterest-download.sh)",
+    "search": "dark gym workout video cinematic",
+    "file": "e1_AfqPShycLAsBTHcIHCsxosbfIxvYYVlyAM-7Z7ViUDmtBzzrZ7Wc.mp4",
+    "license": "Owned by the original creator \u2014 no license; used at the owner's request and risk",
+    "segment": "10.1s\u201312.6s of the original"
+  },
+  "80-teal-gym-walk": {
+    "source": "Pinterest (downloaded at the owner's request via scripts/pinterest-download.sh)",
+    "search": "dark gym workout video cinematic",
+    "file": "e1_AfqPShxiUxFZH1FsgdhDXS4qqf5V6ALzik9eiNXDBRSBOWTOoaA4.mp4",
+    "license": "Owned by the original creator \u2014 no license; used at the owner's request and risk",
+    "segment": "2.4s\u201310.0s of the original"
+  },
+  "81-dumbbell-row": {
+    "source": "Pinterest (downloaded at the owner's request via scripts/pinterest-download.sh)",
+    "search": "dark gym workout video cinematic",
+    "file": "e1_AfqPShx00TnrggXKMmWCAMF0dELUl70TVwIFNclRvwXE11g5WZ8l.mp4",
+    "license": "Owned by the original creator \u2014 no license; used at the owner's request and risk",
+    "segment": "0s\u201311.5s of the original"
+  },
+  "music:never-satisfied-006": {
+    "source": "https://coverr.co/free-stock-music/genres/hip-hop",
+    "file": "https://cdn.coverr.co/audios/13-never-satisfied-Ojg85N/preview.mp3",
+    "segment": "56.00s-73.00s",
+    "license": "Coverr free license (videos and music, commercial use, no attribution required)"
   }
 }
