@@ -23,7 +23,7 @@ W, H = 1080, 1920
 FONT = "/usr/share/fonts/opentype/inter/Inter-Medium.otf"
 
 
-def frame_for(path: Path, rng: random.Random) -> Image.Image:
+def frame_for(path: Path, rng: random.Random, brightness: float = 0.8) -> Image.Image:
     img = Image.open(path).convert("RGB")
     a = img.width / img.height
     canvas = Image.new("RGB", (W, H), (0, 0, 0))
@@ -41,7 +41,7 @@ def frame_for(path: Path, rng: random.Random) -> Image.Image:
         canvas.paste(img, (0, (H - h) // 2))
     # Dark, desaturated grade.
     canvas = ImageEnhance.Color(canvas).enhance(0.35)
-    canvas = ImageEnhance.Brightness(canvas).enhance(0.8)
+    canvas = ImageEnhance.Brightness(canvas).enhance(brightness)
     canvas = ImageEnhance.Contrast(canvas).enhance(1.08)
     # Fine grain, seeded, so every build is identical.
     noise = Image.frombytes("L", (W // 2, H // 2), rng.randbytes((W // 2) * (H // 2)))
@@ -69,6 +69,7 @@ def main() -> None:
     ap.add_argument("--text-size", type=int, default=30)
     ap.add_argument("--text-y", type=float, default=0.5)
     ap.add_argument("--frames", type=int, default=3, help="frames per photo at 30 fps")
+    ap.add_argument("--brightness", type=float, default=0.8, help="grade brightness (darker photo sets want ~0.9)")
     args = ap.parse_args()
 
     paths = [
@@ -80,7 +81,7 @@ def main() -> None:
     rng = random.Random(7)
     with tempfile.TemporaryDirectory() as tmp:
         for i, p in enumerate(paths):
-            f = frame_for(p, rng)
+            f = frame_for(p, rng, args.brightness)
             if args.text:
                 draw_text(f, args.text, args.text_size, args.text_y)
             f.save(f"{tmp}/{i:04d}.png")
