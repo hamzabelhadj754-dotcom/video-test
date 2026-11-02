@@ -380,7 +380,7 @@
       <!-- ===================== 3D WORLD ===================== -->
       <div id="w3" class="layer" data-layout-allow-overlap data-layout-allow-overflow>
         <!-- HOOK -->
-        <div class="w3 el dec" data-sec="h" data-lx="0" data-ly="-120" data-lz="-760" data-blur="1"><div class="in"><img src="assets/elements/statue-back.png" style="width: 940px; filter: brightness(0.8) drop-shadow(0 0 40px rgba(255, 90, 74, 0.55))" /></div></div>
+        <div class="w3 el dec" data-sec="h" data-lx="0" data-ly="-120" data-lz="-760" data-blur="1"><div class="in"><img src="assets/elements/statue-back.png" style="width: 940px; -webkit-mask-image: linear-gradient(180deg, #000 55%, transparent 96%); mask-image: linear-gradient(180deg, #000 55%, transparent 96%); filter: brightness(0.8) drop-shadow(0 0 40px rgba(255, 90, 74, 0.55))" /></div></div>
         <div class="w3 el dec" data-sec="h" data-lx="400" data-ly="-560" data-lz="-260"><div class="in"><img src="assets/elements/chrome-star.png" style="width: 230px; filter: drop-shadow(0 0 24px rgba(255, 90, 74, 0.6))" /></div></div>
         <div class="w3" id="hcW" data-sec="h" data-lx="0" data-ly="60" data-lz="0" data-face="1">
           <div class="in" id="hcIn" style="opacity: 1">
@@ -458,7 +458,7 @@
         <div class="w3 ct" id="mirW" data-sec="o" data-lx="0" data-ly="10" data-lz="420" data-face="1">
           <div class="in" id="mir">
             <div class="glass" style="width: 340px; height: 480px; overflow: hidden; background: linear-gradient(170deg, rgba(58, 58, 64, 0.96), rgba(16, 16, 18, 0.96) 55%, rgba(34, 34, 38, 0.96))">
-              <img src="assets/elements/statue-head.png" style="position: absolute; left: 15px; top: 86px; width: 310px; opacity: 0.85; filter: grayscale(1) brightness(0.85)" />
+              <img src="assets/elements/statue-head.png" style="position: absolute; left: 15px; top: 86px; width: 310px; -webkit-mask-image: radial-gradient(ellipse 48% 50% at 50% 46%, #000 52%, transparent 100%); mask-image: radial-gradient(ellipse 48% 50% at 50% 46%, #000 52%, transparent 100%); opacity: 0.85; filter: grayscale(1) brightness(0.85)" />
               <div id="mirSw"></div>
               <div class="mono lbl" style="position: absolute; left: 0; width: 340px; top: 34px; text-align: center">Mirror</div>
               <div id="mirNo" class="mono" style="position: absolute; left: 0; width: 340px; top: 418px; text-align: center; font-size: 26px; color: var(--amber); text-shadow: 0 0 24px rgba(255, 154, 60, 0.6); opacity: 0">No change</div>
@@ -514,7 +514,7 @@
         </div>
 
         <!-- OUTRO -->
-        <div class="w3 el ct" id="xStatW" data-sec="x" data-lx="0" data-ly="-170" data-lz="-900" data-blur="1"><div class="in" id="xStat"><img src="assets/elements/statue-head.png" style="width: 1020px; filter: brightness(0.62) drop-shadow(0 0 50px rgba(255, 154, 60, 0.45))" /></div></div>
+        <div class="w3 el ct" id="xStatW" data-sec="x" data-lx="0" data-ly="-170" data-lz="-900" data-blur="1"><div class="in" id="xStat"><img src="assets/elements/statue-head.png" style="width: 1020px; -webkit-mask-image: radial-gradient(ellipse 48% 50% at 50% 46%, #000 52%, transparent 100%); mask-image: radial-gradient(ellipse 48% 50% at 50% 46%, #000 52%, transparent 100%); filter: brightness(0.62) drop-shadow(0 0 50px rgba(255, 154, 60, 0.45))" /></div></div>
         <div class="w3 ct" id="ksW" data-sec="x" data-lx="0" data-ly="40" data-lz="0" data-face="1">
           <div class="in" id="ks" style="opacity: 1">
             <div id="k0" class="ks">Train with intent.</div>

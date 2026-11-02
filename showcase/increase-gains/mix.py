@@ -25,10 +25,9 @@ PEAK = {
 CUES = [
     # hook: low drift under the opening, riser into "Here's why", then the flight
     ("cinematic-wind", 0.55, -20, 2500),
-    ("trailer-riser", W[8] + 0.05, -14, None),
-    ("short-bass-hit", W[8], -9, None),
-    ("whoosh-deep-impact", 4.62, -10, None),
-    ("drum-deep-impact", W[10], -11, 3000),
+    ("short-bass-hit", W[8], -13, 1200),
+    ("air-zoom", 4.62, -14, None),
+    ("drum-deep-impact", W[10], -17, 1800),
     # 01: counters and fills get tiny ticks
     ("click-box-check", W[11] - 0.05, -22, None),
     ("classic-click", W[16] + 0.1, -21, None),
@@ -37,31 +36,31 @@ CUES = [
     ("classic-click", W[20], -22, None),
     ("short-bass-hit", W[29], -16, 1500),
     # flight to 02 (swing right)
-    ("air-woosh", 14.12, -13, None),
-    ("drum-deep-impact", W[32] + 0.05, -12, 3000),
+    ("air-woosh", 14.12, -15, None),
+    ("drum-deep-impact", W[32] + 0.05, -17, 1800),
     ("click-box-check", W[33], -22, None),
     ("click-box-check", W[36], -22, None),
     ("click-box-check", W[37], -22, None),
     ("click-box-check", W[38], -21, None),
-    ("tape-rewind", W[46] + 0.55, -19, 5000),  # the progress collapses
+    ("air-sweep", W[46] + 0.4, -24, 5000),  # the progress collapses
     ("wind-swoosh", W[52] + 0.2, -19, 7000),  # push to the mirror
     # flight to 03 (crane up)
-    ("air-zoom", 23.45, -13, None),
-    ("drum-deep-impact", W[57] + 0.05, -12, 3000),
+    ("air-zoom", 23.45, -15, None),
+    ("drum-deep-impact", W[57] + 0.05, -17, 1800),
     ("classic-click", W[62] + 0.75, -20, None),
     ("air-sweep", W[69] + 0.6, -25, 6000),
     # flight to 04 (swing left)
-    ("air-woosh", 30.66, -13, None),
-    ("drum-deep-impact", W[72] + 0.05, -12, 3000),
+    ("air-woosh", 30.66, -15, None),
+    ("drum-deep-impact", W[72] + 0.05, -17, 1800),
     ("wind-swoosh", W[73], -21, 6000),
     ("classic-click", W[76], -21, None),
     ("click-box-check", W[88], -20, None),
     # finale
-    ("air-zoom", 37.15, -12, None),
-    ("short-bass-hit", W[94], -13, None),
-    ("movie-impact-intro", W[95] + 0.05, -12, None),
-    ("whoosh-deep-impact", 44.9, -12, None),
-    ("short-bass-hit", 45.08, -11, None),
+    ("air-zoom", 37.15, -15, None),
+    ("short-bass-hit", W[94], -17, 1200),
+    ("short-bass-hit", W[95], -15, 900),
+    ("wind-swoosh", 44.95, -18, 7000),
+    ("short-bass-hit", 45.08, -15, 1200),
 ]
 
 
