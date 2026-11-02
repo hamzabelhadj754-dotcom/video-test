@@ -120,6 +120,13 @@
       .el img {
         display: block;
       }
+      .gnum {
+        font-size: 820px;
+        line-height: 820px;
+        font-weight: 700;
+        letter-spacing: -0.06em;
+        color: transparent;
+      }
       .dust {
         position: absolute;
         left: 0;
@@ -544,6 +551,15 @@
         <div class="w3 el dec" data-sec="w" data-wx="3300" data-wy="-1300" data-wz="-6600"><div class="in"><img src="assets/elements/chrome-swirl.png" style="width: 380px" /></div></div>
         <div class="w3 el dec" data-sec="w" data-wx="1700" data-wy="-2500" data-wz="-9300"><div class="in"><img src="assets/elements/chrome-blob.png" style="width: 340px" /></div></div>
         <div class="w3 el dec" data-sec="w" data-wx="-760" data-wy="-3500" data-wz="-12500"><div class="in"><img src="assets/elements/chrome-star.png" style="width: 300px" /></div></div>
+        <!-- ghost section numerals and orbit rings (depth layers) -->
+        <div class="w3 dec" data-sec="e" data-lx="-60" data-ly="-120" data-lz="-1100"><div class="in"><div class="gnum" style="-webkit-text-stroke: 4px rgba(255, 90, 74, 0.75)">01</div></div></div>
+        <div class="w3 dec" data-sec="o" data-lx="60" data-ly="-80" data-lz="-1100"><div class="in"><div class="gnum" style="-webkit-text-stroke: 4px rgba(255, 154, 60, 0.75)">02</div></div></div>
+        <div class="w3 dec" data-sec="p" data-lx="0" data-ly="-80" data-lz="-1100"><div class="in"><div class="gnum" style="-webkit-text-stroke: 4px rgba(47, 227, 180, 0.7)">03</div></div></div>
+        <div class="w3 dec" data-sec="s" data-lx="0" data-ly="-120" data-lz="-1100"><div class="in"><div class="gnum" style="-webkit-text-stroke: 4px rgba(110, 140, 255, 0.75)">04</div></div></div>
+        <div class="w3 dec" data-sec="e" data-lx="0" data-ly="-150" data-lz="-420"><div class="in"><svg id="orbE" class="orb" width="1000" height="1000" viewBox="0 0 1000 1000"><circle cx="500" cy="500" r="470" fill="none" stroke="rgba(255,90,74,0.4)" stroke-width="2" /><circle cx="500" cy="500" r="420" fill="none" stroke="rgba(255,90,74,0.55)" stroke-width="2" stroke-dasharray="4 18" /><circle cx="500" cy="30" r="9" fill="#ff5a4a" style="filter: drop-shadow(0 0 10px #ff5a4a)" /></svg></div></div>
+        <div class="w3 dec" data-sec="o" data-lx="0" data-ly="140" data-lz="-420"><div class="in"><svg id="orbO" class="orb" width="1100" height="1100" viewBox="0 0 1100 1100"><circle cx="550" cy="550" r="520" fill="none" stroke="rgba(255,154,60,0.38)" stroke-width="2" /><circle cx="550" cy="550" r="470" fill="none" stroke="rgba(255,154,60,0.5)" stroke-width="2" stroke-dasharray="4 18" /><circle cx="550" cy="30" r="9" fill="#ff9a3c" style="filter: drop-shadow(0 0 10px #ff9a3c)" /></svg></div></div>
+        <div class="w3 dec" data-sec="p" data-lx="0" data-ly="-40" data-lz="-420"><div class="in"><svg id="orbP" class="orb" width="1100" height="1100" viewBox="0 0 1100 1100"><circle cx="550" cy="550" r="520" fill="none" stroke="rgba(47,227,180,0.35)" stroke-width="2" /><circle cx="550" cy="550" r="470" fill="none" stroke="rgba(47,227,180,0.5)" stroke-width="2" stroke-dasharray="4 18" /><circle cx="550" cy="30" r="9" fill="#2fe3b4" style="filter: drop-shadow(0 0 10px #2fe3b4)" /></svg></div></div>
+        <div class="w3 dec" data-sec="s" data-lx="0" data-ly="40" data-lz="-300"><div class="in"><svg id="orbS" class="orb" width="900" height="900" viewBox="0 0 900 900"><circle cx="450" cy="450" r="420" fill="none" stroke="rgba(110,140,255,0.38)" stroke-width="2" /><circle cx="450" cy="450" r="372" fill="none" stroke="rgba(138,92,255,0.5)" stroke-width="2" stroke-dasharray="4 18" /><circle cx="450" cy="30" r="9" fill="#6b8cff" style="filter: drop-shadow(0 0 10px #4c7dff)" /></svg></div></div>
         <div id="dustBox"></div>
       </div>
       <canvas id="world" width="1080" height="1920"></canvas>
@@ -574,6 +590,12 @@
 <div id="cap17" class="clip layer capl" data-start="33.78" data-duration="1.62" data-track-index="20"><div class="capline"><span class="cw" id="w78">You</span> <span class="cw" id="w79">don't</span> <span class="cw" id="w80">grow</span> <span class="cw" id="w81">in</span> <span class="cw" id="w82">the</span> <span class="cw" id="w83">gym.</span></div></div>
 <div id="cap18" class="clip layer capl" data-start="35.38" data-duration="2.22" data-track-index="20"><div class="capline"><span class="cw" id="w84">You</span> <span class="cw" id="w85">grow</span> <span class="cw" id="w86">when</span> <span class="cw" id="w87">you</span> <span class="cw acc" id="w88" style="color:#7d9bff;text-shadow:0 0 26px #7d9bff88,0 4px 24px rgba(0,0,0,0.85)">recover.</span></div></div>
 
+      <div id="fx" class="layer" data-layout-ignore style="z-index: 7">
+        <div id="rip" style="position: absolute; left: 340px; top: 560px; width: 400px; height: 400px; border-radius: 50%; border: 2px solid #ffffff; opacity: 0"></div>
+        <div id="rip2" style="position: absolute; left: 340px; top: 560px; width: 400px; height: 400px; border-radius: 50%; border: 1px solid #ffffff; opacity: 0"></div>
+        <div id="flr" style="position: absolute; left: -200px; top: 757px; width: 1480px; height: 6px; border-radius: 3px; opacity: 0"></div>
+        <div id="flrCore" style="position: absolute; left: 340px; top: 740px; width: 400px; height: 40px; border-radius: 50%; opacity: 0"></div>
+      </div>
       <div id="flash" class="layer" data-layout-ignore></div>
       <div id="vig" class="layer" data-layout-ignore></div>
       <div id="grain" class="layer" data-layout-ignore></div>
@@ -672,13 +694,52 @@
         [45.3, pose("x", 110, 0), "outCubic"],
         [46.0, pose("x", 150, 0), "sine"],
       ];
+      // Smooth camera: monotone cubic spline through every key, so speed is continuous
+      // across transitions (no frame where the camera lurches or stops dead).
+      const KT = K.map((k) => k[0]);
+      const COMP = ["x", "y", "z", "yaw", "focus"];
+      const TAN = {};
+      for (const c of COMP) {
+        const v = K.map((k) => k[1][c]);
+        const n = v.length;
+        const d = [];
+        for (let i = 0; i < n - 1; i++) d.push((v[i + 1] - v[i]) / (KT[i + 1] - KT[i]));
+        const m = new Array(n).fill(0);
+        m[0] = d[0];
+        m[n - 1] = d[n - 2];
+        for (let i = 1; i < n - 1; i++) m[i] = d[i - 1] * d[i] <= 0 ? 0 : (d[i - 1] + d[i]) / 2;
+        for (let i = 0; i < n - 1; i++) {
+          if (d[i] === 0) {
+            m[i] = 0;
+            m[i + 1] = 0;
+            continue;
+          }
+          const a1 = m[i] / d[i];
+          const b1 = m[i + 1] / d[i];
+          const h = Math.hypot(a1, b1);
+          if (h > 3) {
+            m[i] = (3 * a1 * d[i]) / h;
+            m[i + 1] = (3 * b1 * d[i]) / h;
+          }
+        }
+        TAN[c] = { v, m };
+      }
       function camAt(t) {
+        t = clamp(t, KT[0], KT[KT.length - 1]);
         let i = 0;
-        while (i < K.length - 2 && t >= K[i + 1][0]) i++;
-        const [t0, a] = K[i];
-        const [t1, b, ease] = K[i + 1];
-        const k = E[ease](clamp((t - t0) / (t1 - t0), 0, 1));
-        return { x: lerp(a.x, b.x, k), y: lerp(a.y, b.y, k), z: lerp(a.z, b.z, k), yaw: lerp(a.yaw, b.yaw, k), focus: lerp(a.focus, b.focus, k) };
+        while (i < KT.length - 2 && t >= KT[i + 1]) i++;
+        const h = KT[i + 1] - KT[i];
+        const u = (t - KT[i]) / h;
+        const h00 = 2 * u ** 3 - 3 * u ** 2 + 1;
+        const h10 = u ** 3 - 2 * u ** 2 + u;
+        const h01 = -2 * u ** 3 + 3 * u ** 2;
+        const h11 = u ** 3 - u ** 2;
+        const o = {};
+        for (const c of COMP) {
+          const { v, m } = TAN[c];
+          o[c] = h00 * v[i] + h10 * h * m[i] + h01 * v[i + 1] + h11 * h * m[i + 1];
+        }
+        return o;
       }
       function project(cam, P) {
         const d = [P[0] - cam.x, P[1] - cam.y, P[2] - cam.z];
@@ -892,7 +953,29 @@
         tl.fromTo("#" + id + " .sw", { x: 0 }, { x: 720, duration: 0.9, ease: "power2.inOut", ...NI }, at + 0.15);
         tl.to("#" + id, { opacity: 0, y: -14, filter: "blur(10px)", duration: 0.3, ease: "power2.in" }, end);
       };
-      tl.set(["#tFill", "#recFill", "#ll"], { scaleX: 0 }, 0);
+      tl.set(["#tFill", "#recFill", "#ll", "#flr"], { scaleX: 0 }, 0);
+      const COL = { coral: "255,90,74", amber: "255,154,60", teal: "47,227,180", blue: "110,140,255" };
+      const landing = (at, c) => {
+        const rgb = COL[c];
+        tl.set(["#rip", "#rip2"], { borderColor: `rgba(${rgb},0.95)`, boxShadow: `0 0 30px rgba(${rgb},0.7), inset 0 0 30px rgba(${rgb},0.4)` }, at - 0.01);
+        tl.set("#flr", { background: `linear-gradient(90deg, rgba(${rgb},0), rgba(${rgb},0.9) 30%, #ffffff 50%, rgba(${rgb},0.9) 70%, rgba(${rgb},0))`, boxShadow: `0 0 24px rgba(${rgb},0.9), 0 0 60px rgba(${rgb},0.6)` }, at - 0.01);
+        tl.set("#flrCore", { background: `radial-gradient(ellipse, rgba(255,255,255,0.95), rgba(${rgb},0.6) 40%, rgba(0,0,0,0) 70%)` }, at - 0.01);
+        tl.fromTo("#rip", { opacity: 0.9, scale: 0.25 }, { opacity: 0, scale: 2.6, duration: 1.1, ease: "power2.out", ...NI }, at);
+        tl.fromTo("#rip2", { opacity: 0.6, scale: 0.15 }, { opacity: 0, scale: 1.9, duration: 1.3, ease: "power2.out", ...NI }, at + 0.08);
+        tl.fromTo("#flr", { opacity: 1, scaleX: 0 }, { scaleX: 1, duration: 0.45, ease: "expo.out", ...NI }, at);
+        tl.to("#flr", { opacity: 0, scaleY: 0.3, duration: 0.6, ease: "power2.in" }, at + 0.45);
+        tl.fromTo("#flrCore", { opacity: 0.95, scaleX: 0.4 }, { opacity: 0, scaleX: 2.2, duration: 0.8, ease: "power2.out", ...NI }, at);
+      };
+      landing(WT[10], "coral");
+      landing(WT[32], "amber");
+      landing(WT[57], "teal");
+      landing(WT[72], "blue");
+      landing(WT[95], "amber");
+      landing(45.05, "amber");
+      tl.to("#orbE", { rotation: 70, duration: 10, ease: "none" }, 4.2);
+      tl.to("#orbO", { rotation: -70, duration: 10, ease: "none" }, 13.6);
+      tl.to("#orbP", { rotation: 60, duration: 8, ease: "none" }, 23.0);
+      tl.to("#orbS", { rotation: -60, duration: 8, ease: "none" }, 30.2);
 
       // ---- colour fields per section ----
       tl.set("#bl-h", { opacity: 1 }, 0);
