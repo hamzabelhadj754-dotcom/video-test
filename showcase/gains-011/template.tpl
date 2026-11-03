@@ -279,7 +279,7 @@
         <div id="sc-s3" class="scene">
           <div class="cam layer" id="cam-s3">
             <div class="glow" style="top: -200px; background: radial-gradient(circle, rgba(76, 125, 255, 0.3), rgba(138, 92, 255, 0.1) 40%, rgba(0, 0, 0, 0) 64%)"></div>
-            <div class="el" data-par="1.08" style="left: 540px; top: 840px"><div class="in" id="s3-moon"><img src="assets/renders/barbell.png" style="width: 1000px; filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.85))" /></div></div>
+            <div class="el" data-par="1.08" style="left: 540px; top: 840px"><div class="in" id="s3-moon"><img src="assets/renders/barbell.png" style="width: 1280px; filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.85))" /></div></div>
             <div class="el" data-par="0.8" style="left: 540px; top: 520px"><div class="in"><img class="fade-r" src="assets/elements/statue-head.png" style="width: 700px; filter: brightness(0.42) drop-shadow(0 0 40px rgba(76, 125, 255, 0.4))" /></div></div>
             <div class="el" data-par="1.7" style="left: 170px; top: 300px"><div class="in"><img src="assets/elements/chrome-star.png" style="width: 230px; filter: blur(2.5px) drop-shadow(0 0 24px rgba(76, 125, 255, 0.7))" /></div></div>
             <div id="s3-tx" class="layer">
