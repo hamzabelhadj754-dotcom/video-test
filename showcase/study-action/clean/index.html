@@ -1,0 +1,518 @@
+<!doctype html>
+<html lang="en" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="assets/lib/gsap.min.js"></script>
+    <style>
+      @font-face {
+        font-family: "Archivo";
+        src: url("assets/fonts/archivo-var.woff2") format("woff2");
+        font-weight: 100 900;
+        font-stretch: 62% 125%;
+      }
+      @font-face {
+        font-family: "Inter";
+        src: url("assets/fonts/inter-var.woff2") format("woff2");
+        font-weight: 300 700;
+      }
+      :root {
+        --bg: #080808;
+        --ink: #f2f0ea;
+        --gray: #777777;
+        --red: #ff3b30;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: var(--bg);
+      }
+      #root {
+        position: relative;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: "Inter", sans-serif;
+      }
+      .abs {
+        position: absolute;
+        left: 0;
+        top: 0;
+      }
+      .plane {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 1080px;
+        height: 1920px;
+        transform-origin: 0 0;
+      }
+      .ui {
+        font-family: "Inter", sans-serif;
+        font-weight: 500;
+        font-size: 28px;
+        line-height: 32px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+      .disp {
+        font-family: "Archivo", sans-serif;
+        font-weight: 800;
+        line-height: 0.9;
+        letter-spacing: -0.01em;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+      .mask {
+        position: absolute;
+        overflow: hidden;
+      }
+      .brk {
+        position: absolute;
+        width: 26px;
+        height: 26px;
+        border: 0 solid var(--red);
+      }
+      .tag {
+        position: absolute;
+        padding: 12px 20px 10px;
+        background: #0d0d0d;
+        border: 2px solid rgba(242, 240, 234, 0.85);
+        font-family: "Archivo", sans-serif;
+        font-weight: 700;
+        font-stretch: 78%;
+        font-size: 52px;
+        line-height: 1;
+        text-transform: uppercase;
+        white-space: nowrap;
+        opacity: 0;
+      }
+      .acard {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 630px;
+        height: 150px;
+        background: #0e0e0e;
+        border: 2px solid rgba(242, 240, 234, 0.22);
+      }
+      .acard .n {
+        position: absolute;
+        left: 104px;
+        top: 20px;
+        font-family: "Inter", sans-serif;
+        font-weight: 500;
+        font-size: 28px;
+        letter-spacing: 0.16em;
+        color: var(--gray);
+      }
+      .acard .tx {
+        position: absolute;
+        left: 104px;
+        top: 58px;
+        font-family: "Archivo", sans-serif;
+        font-weight: 800;
+        font-stretch: 68%;
+        font-size: 60px;
+        line-height: 1;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+      .acard .box {
+        position: absolute;
+        left: 30px;
+        top: 52px;
+        width: 46px;
+        height: 46px;
+        border: 3px solid var(--ink);
+      }
+      .acard .chk {
+        position: absolute;
+        left: 7px;
+        top: 2px;
+        width: 26px;
+        height: 14px;
+        border-left: 5px solid #080808;
+        border-bottom: 5px solid #080808;
+        transform: rotate(-45deg) translate(2px, 8px);
+      }
+      .safe {
+        position: absolute;
+        background: rgba(255, 59, 48, 0.16);
+        border: 2px dashed rgba(255, 59, 48, 0.75);
+        color: #ff8a80;
+        font: 600 22px/1.2 Inter, sans-serif;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        padding: 10px 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" style="--paper: 0.012; --grain: 0.015; --scan: 0; --dust: 0" data-composition-id="main" data-start="0" data-duration="20" data-width="1080" data-height="1920" data-layout-allow-overlap data-layout-allow-overflow>
+      <svg width="0" height="0" style="position: absolute">
+        <filter id="ink" x="-2%" y="-5%" width="104%" height="110%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="3" result="n" />
+          <feDisplacementMap in="SourceGraphic" in2="n" scale="1.3" xChannelSelector="R" yChannelSelector="G" />
+        </filter>
+        <filter id="paper" x="0" y="0" width="100%" height="100%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.012 0.05" numOctaves="4" seed="8" />
+          <feColorMatrix type="matrix" values="0 0 0 0 0.95  0 0 0 0 0.93  0 0 0 0 0.9  0 0 0 0.9 -0.42" />
+        </filter>
+        <filter id="wipe" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur id="wipeG" stdDeviation="0 0" /></filter>
+      </svg>
+
+      <!-- BACKGROUND -->
+      <div id="bg" class="plane">
+        <svg class="abs" width="1080" height="1920" style="opacity: var(--paper, 0.05)"><rect x="-200" y="-200" width="1480" height="2320" filter="url(#paper)" /></svg>
+        <svg id="grid" class="abs" width="1320" height="2160" style="left: -120px; top: -120px"></svg>
+      </div>
+
+      <!-- MIDGROUND: system UI -->
+      <div id="mid" class="plane">
+        <div id="gV" class="abs" style="left: 150px; top: 380px; width: 1px; height: 1100px; background: rgba(242, 240, 234, 0.09); transform-origin: 0 0"></div>
+        <div id="lblIn" class="abs ui" style="left: 170px; top: 440px; color: var(--gray)">Task input / unclear</div>
+        <div id="lblSt" class="abs ui" style="left: 170px; top: 1238px; color: var(--red); opacity: 0"><span style="display: inline-block; width: 12px; height: 12px; background: var(--red); margin-right: 14px; vertical-align: 2px"></span><span id="lblStT">Friction / high</span></div>
+        <div id="railL" class="abs ui" style="left: 170px; top: 1430px; color: var(--gray)">Cognitive load</div>
+        <div id="railR" class="abs ui" style="left: 170px; top: 1430px; width: 580px; text-align: right; color: var(--gray)"><span id="loadV">92</span>%</div>
+        <div class="abs" style="left: 170px; top: 1476px; width: 580px; height: 1px; background: #2a2a2a"></div>
+        <div id="load" class="abs" style="left: 170px; top: 1475px; width: 580px; height: 3px; background: var(--ink); transform-origin: 0 50%"></div>
+        <div id="eta" class="abs ui" style="left: 170px; top: 1290px; color: var(--gray)">Est. time / <span id="etaV">??</span></div>
+      </div>
+
+      <!-- FOREGROUND -->
+      <div id="fgP" class="plane" style="perspective: 1400px; perspective-origin: 440px 880px">
+        <div id="fg" class="plane" style="transform-origin: 440px 880px">
+          <!-- act 2 headline -->
+          <div id="hA" class="mask" style="left: 170px; top: 380px; width: 640px; height: 78px"><div class="disp abs" style="left: 0; top: 4px; font-size: 76px; font-stretch: 78%">“Study” is</div></div>
+          <div id="hB" class="mask" style="left: 170px; top: 458px; width: 640px; height: 78px"><div class="disp abs" style="left: 0; top: 4px; font-size: 76px; font-stretch: 78%"><span style="border-bottom: 5px solid var(--ink)">not</span> an action.</div></div>
+
+          <!-- the heavy task card -->
+          <div id="card" class="abs" style="left: 170px; top: 520px; width: 580px; height: 640px; transform-origin: 290px 360px">
+            <div id="cardIn" class="abs" style="left: 0; top: 0; width: 580px; height: 640px; background: #121212; border: 6px solid var(--ink); box-shadow: 0 50px 90px rgba(0, 0, 0, 0.85)">
+              <div class="ui abs" style="left: 34px; top: 30px; color: var(--gray); font-size: 28px">Task / 01</div>
+              <div class="ui abs" style="left: 34px; top: 30px; width: 476px; text-align: right; color: var(--gray); font-size: 28px">Weight</div>
+              <div id="study" class="disp abs" style="left: 0; top: 214px; width: 512px; text-align: center; font-size: 190px; font-weight: 900; font-stretch: 62%">Study</div>
+              <div class="abs" style="left: 34px; top: 500px; width: 470px; height: 2px; background: #333"></div>
+              <div class="ui abs" style="left: 34px; top: 530px; color: var(--gray); font-size: 28px">Progress / 0%</div>
+              <div id="wbar" class="abs" style="left: 524px; top: 80px; width: 14px; height: 500px; background: #2a2a2a">
+                <div id="wfill" class="abs" style="left: 0; top: 0; width: 14px; height: 500px; background: var(--ink); transform-origin: 50% 100%"></div>
+              </div>
+            </div>
+          </div>
+          <div id="p1" class="tag" data-layout-allow-overlap style="left: 196px; top: 668px">What subject?</div>
+          <div id="p2" class="tag" data-layout-allow-overlap style="left: 372px; top: 1012px">Which page?</div>
+          <div id="p3" class="tag" data-layout-allow-overlap style="left: 196px; top: 1104px">For how long?</div>
+
+          <!-- act 4 -->
+          <div id="dA" class="mask" style="left: 170px; top: 690px; width: 660px; height: 58px"><div class="disp abs" style="left: 0; top: 4px; font-size: 50px; font-stretch: 80%; color: var(--gray)">Don’t start the project.</div></div>
+          <div id="dB" class="mask" style="left: 170px; top: 770px; width: 680px; height: 128px"><div class="disp abs" style="left: 0; top: 4px; font-size: 136px; font-weight: 900; font-stretch: 66%">Start the</div></div>
+          <div id="dC" class="mask" style="left: 170px; top: 898px; width: 680px; height: 128px"><div id="fm" class="disp abs" style="left: 0; top: 4px; font-size: 136px; font-weight: 900; font-stretch: 66%">First move.</div></div>
+          <div id="fmLine" class="abs" style="left: 170px; top: 1038px; height: 4px; background: var(--red); transform-origin: 0 50%; transform: scaleX(0)"></div>
+
+          <!-- act 5 -->
+          <div id="eA" class="mask" style="left: 170px; top: 730px; width: 680px; height: 84px"><div class="disp abs" style="left: 0; top: 4px; font-size: 84px; font-stretch: 72%">Make it so small</div></div>
+          <div id="eB" class="mask" style="left: 170px; top: 814px; width: 680px; height: 84px"><div class="disp abs" style="left: 0; top: 4px; font-size: 84px; font-stretch: 72%">your brain can’t</div></div>
+          <div id="eC" class="mask" style="left: 170px; top: 898px; width: 680px; height: 84px"><div class="disp abs" style="left: 0; top: 4px; font-size: 84px; font-stretch: 72%">negotiate.</div></div>
+          <div id="na" class="abs ui" style="left: 170px; top: 1040px; font-size: 30px; opacity: 0"><span style="color: var(--red)">Next action:</span> open the book<span id="cur" style="display: inline-block; width: 14px; height: 30px; margin-left: 10px; background: var(--red); vertical-align: -4px; opacity: 0"></span></div>
+
+          <div id="b0" class="brk" style="border-top-width: 3px; border-left-width: 3px; opacity: 0"></div>
+          <div id="b1" class="brk" style="border-top-width: 3px; border-right-width: 3px; opacity: 0"></div>
+          <div id="b2" class="brk" style="border-bottom-width: 3px; border-left-width: 3px; opacity: 0"></div>
+          <div id="b3" class="brk" style="border-bottom-width: 3px; border-right-width: 3px; opacity: 0"></div>
+        </div>
+      </div>
+
+      <!-- act 3: action cards, each on its own depth -->
+      <div id="cardsL" class="plane">
+        <div id="ac3P" class="plane"><div id="ac3" class="acard" style="left: 170px; top: 1000px"><div class="box"><div class="chk" style="opacity: 0"></div></div><div class="n">03 / action</div><div class="tx">Read one paragraph</div></div></div>
+        <div id="ac2P" class="plane"><div id="ac2" class="acard" style="left: 170px; top: 820px"><div class="box"><div class="chk" style="opacity: 0"></div></div><div class="n">02 / action</div><div class="tx">Page 42</div></div></div>
+        <div id="ac1P" class="plane"><div id="ac1" class="acard" style="left: 170px; top: 640px"><div class="box"><div class="chk" style="opacity: 0"></div></div><div class="n">01 / action</div><div class="tx">Open the book</div></div></div>
+      </div>
+
+      <div id="flash" class="plane" style="background: var(--red); opacity: 0"></div>
+      <div id="scanPass" class="abs" style="left: 0; width: 1080px; height: 140px; background: linear-gradient(180deg, rgba(242, 240, 234, 0), rgba(242, 240, 234, 0.06), rgba(242, 240, 234, 0)); opacity: 0"></div>
+
+      <svg class="abs" width="1080" height="1920" style="opacity: var(--grain, 0.06); mix-blend-mode: overlay"><filter id="gr"><feTurbulence id="grT" type="fractalNoise" baseFrequency="0.95" numOctaves="2" seed="1" stitchTiles="stitch" /><feColorMatrix type="saturate" values="0" /></filter><rect width="1080" height="1920" filter="url(#gr)" /></svg>
+      <div class="abs" style="width: 1080px; height: 1920px; opacity: var(--scan, 1); background: repeating-linear-gradient(180deg, rgba(255, 255, 255, 0.02) 0 1px, rgba(0, 0, 0, 0) 1px 3px)"></div>
+      <div id="dustL" class="abs" style="width: 1080px; height: 1920px; opacity: var(--dust, 1)"></div>
+      <div class="abs" style="width: 1080px; height: 1920px; background: radial-gradient(120% 80% at 42% 46%, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, 0.55) 100%)"></div>
+
+      
+    </div>
+
+    <script>
+      const FPS = 30;
+      const DUR = 20;
+      const INK = false;
+      const $ = (id) => document.getElementById(id);
+      const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
+      const lerp = (a, b, k) => a + (b - a) * k;
+      const seg = (t, a, b) => clamp((t - a) / (b - a), 0, 1);
+      const c3 = (x) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
+      const p4o = (x) => 1 - Math.pow(1 - x, 4);
+      const p4i = (x) => x * x * x * x;
+      const p2io = (x) => (x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2);
+      const F = (n) => n / FPS;
+
+      const grid = $("grid");
+      for (let i = 0; i <= 20; i++) {
+        const l = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        const x = 40 + i * 64;
+        Object.entries({ x1: x, x2: x, y1: 0, y2: 2160, stroke: "rgba(242,240,234,0.028)", "stroke-width": 1 }).forEach(([k, v]) => l.setAttribute(k, v));
+        grid.appendChild(l);
+      }
+      let seed = 7;
+      const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+      const dust = [];
+      for (let i = 0; i < 12; i++) {
+        const e = document.createElement("div");
+        const s = 1.5 + rnd() * 2;
+        Object.assign(e.style, { position: "absolute", width: s + "px", height: s + "px", borderRadius: "50%", background: "#d8d4ca", opacity: 0, left: rnd() * 1080 + "px", top: rnd() * 1920 + "px" });
+        $("dustL").appendChild(e);
+        dust.push({ e, ph: Math.floor(rnd() * 89) });
+      }
+      if (INK) document.querySelectorAll(".disp, .tag, .acard .tx").forEach((e) => (e.style.filter = "url(#ink)"));
+
+      // ================= CAMERA: one forward direction =================
+      const CX = 440;
+      const CY = 880;
+      function camS(t) {
+        if (t < 3.0) return lerp(1.0, 1.05, c3(seg(t, 0, 3.0)));
+        if (t < 3.27) return 1.05 - 0.005 * Math.sin(Math.PI * seg(t, 3.0, 3.27)); // anticipation
+        if (t < 7.4) return lerp(1.05, 1.08, c3(seg(t, 3.27, 7.0)));
+        if (t < 8.0) return lerp(1.08, 1.16, p2io(seg(t, 7.4, 8.0))); // push-through
+        if (t < 8.6) return lerp(1.16, 1.1, c3(seg(t, 8.0, 8.6)));
+        if (t < 17.0) return lerp(1.1, 1.13, c3(seg(t, 8.6, 17.0)));
+        return lerp(1.13, 1.0, c3(seg(t, 17.0, 20.0))); // back to the opening frame for the loop
+      }
+      function tiltZ(t) {
+        return t < 3.27 ? 0 : t < 7.4 ? 1.0 * c3(seg(t, 3.27, 5.0)) : 1.0 * (1 - c3(seg(t, 7.4, 8.0)));
+      }
+      function planeTf(S, k, driftX = 0) {
+        const s = 1 + (S - 1) * k;
+        return `translate(${(CX - CX * s + driftX).toFixed(2)}px, ${(CY - CY * s).toFixed(2)}px) scale(${s.toFixed(5)})`;
+      }
+      const vis = (el, on) => (el.style.visibility = on ? "visible" : "hidden");
+      const maskRise = (id, a, d = 0.32, h) => {
+        const m = $(id);
+        const c = m.firstElementChild;
+        const u = p4o(seg(window.__t, a, a + d));
+        c.style.transform = `translateY(${((1 - u) * (h || m.offsetHeight)).toFixed(2)}px)`;
+      };
+      const wipeIn = (el, a, d, t) => {
+        const u = p4o(seg(t, a, a + d));
+        el.style.clipPath = `inset(0 ${((1 - u) * 100).toFixed(2)}% 0 0)`;
+        return u;
+      };
+      const exitLeft = (el, a, t, d = 0.2) => (t >= a ? -1100 * p4i(seg(t, a, a + d)) : 0);
+
+      const BR = [0, 1, 2, 3].map((i) => $("b" + i));
+      let brLag = null;
+
+      function render(t) {
+        window.__t = t;
+        const f = Math.round(t * FPS);
+        const S = camS(t);
+        $("bg").style.transform = planeTf(S, 0.35, -8 * c3(seg(t, 0, 20)));
+        $("mid").style.transform = planeTf(S, 0.7);
+        $("fg").style.transform = planeTf(S, 1) + ` rotate(${tiltZ(t).toFixed(3)}deg)`;
+        ["ac1P", "ac2P", "ac3P"].forEach((id, i) => ($(id).style.transform = planeTf(S, [1, 0.9, 0.8][i])));
+
+        // ---------- ACT 1-2: the heavy task card ----------
+        const act12 = t < 8.0 || t >= 19.4;
+        const card = $("card");
+        vis(card, act12);
+        let cy = 8 * c3(seg(t, 0, 3.0)); // the card sinks under its weight
+        let cs = 1;
+        let cx = 0;
+        if (t >= 3.0 && t < 3.27) cx = 4 * Math.sin(Math.PI * 4 * seg(t, 3.0, 3.27)) * (1 - seg(t, 3.0, 3.27));
+        if (t >= 3.27 && t < 8.0) {
+          const u = p4o(seg(t, 3.27, 3.7));
+          cy = lerp(8, 110, u);
+          cs = lerp(1, 0.86, u);
+        }
+        // collapse 7.4-8.0: the card squeezes into a horizontal bar on the centre line
+        let csy = 1;
+        if (t >= 7.4 && t < 8.0) {
+          const u = p4i(seg(t, 7.4, 7.85));
+          csy = lerp(1, 0.012, u);
+          cy = lerp(110, 880 - 880, u) + lerp(0, 0, u);
+        }
+        // loop return 19.4-20: the card wipes in from the right to its frame-0 pose
+        let cxl = 0;
+        if (t >= 19.4) {
+          cy = 0;
+          cs = 1;
+          csy = 1;
+          cxl = 900 * (1 - p4o(seg(t, 19.45, 20.0)));
+        }
+        card.style.transform = `translate(${(cx + cxl).toFixed(2)}px, ${cy.toFixed(2)}px) scale(${cs.toFixed(4)}, ${(cs * csy).toFixed(4)})`;
+        $("wfill").style.transform = `scaleY(${t < 8.0 || t >= 19.4 ? 0.92 : 0.1})`;
+        $("lblIn").style.opacity = t < 7.4 || t >= 19.6 ? 1 : 0;
+        $("lblIn").style.transform = `translateY(${(t >= 3.27 && t < 8.0 ? 110 * p4o(seg(t, 3.27, 3.7)) : 0).toFixed(1)}px)`;
+        $("study").style.opacity = 1;
+
+        // headline + prompts (3.3-7.4)
+        const a2 = t >= 3.3 && t < 8.0;
+        ["hA", "hB"].forEach((id) => vis($(id), a2));
+        if (a2) {
+          maskRise("hA", 3.3);
+          maskRise("hB", 3.5);
+          const sq = t >= 7.4 ? p4i(seg(t, 7.4, 7.85)) : 0;
+          ["hA", "hB"].forEach((id) => {
+            $(id).style.transform = `translateY(${(sq * 420).toFixed(1)}px) scaleY(${(1 - sq).toFixed(4)})`;
+            $(id).style.transformOrigin = "0 0";
+          });
+        }
+        [["p1", 3.9, -40], ["p2", 4.4, 40], ["p3", 4.9, -30]].forEach(([id, at, dx], i) => {
+          const el = $(id);
+          const on = t >= at && t < 7.85;
+          el.style.opacity = on ? 1 : 0;
+          if (!on) return;
+          const u = p4o(seg(t, at, at + 0.4));
+          // pressure: the tags creep inward as the friction builds
+          const crowd = c3(seg(t, 5.2, 7.0));
+          const tight = [[14, 6], [-16, 0], [14, -6]][i];
+          const sq = t >= 7.4 ? p4i(seg(t, 7.4, 7.8)) : 0;
+          const tx = lerp(dx * 3, 0, u) + crowd * tight[0];
+          const ty = (1 - u) * 30 + crowd * tight[1];
+          el.style.transform = `translate(${tx.toFixed(1)}px, ${ty.toFixed(1)}px) scale(${(1 - sq).toFixed(4)})`;
+          el.style.filter = u < 0.98 ? `blur(${((1 - u) * 8).toFixed(2)}px)${INK ? " url(#ink)" : ""}` : INK ? "url(#ink)" : "none";
+        });
+
+        // status label + ETA + load rail
+        const st = $("lblSt");
+        st.style.opacity = (t >= 4.2 && t < 13.0) || false ? 1 : 0;
+        $("lblStT").textContent = t >= 8.2 ? "Next action / found" : "Friction / high";
+        st.style.transform = `translateY(${t >= 8.2 ? -716 : 0}px)`;
+        $("etaV").textContent = t >= 8.2 && t < 19.4 ? "2 min" : "??";
+        $("eta").style.opacity = t < 13.0 || t >= 19.6 ? 1 : 0;
+        let load = 0.92;
+        if (t >= 8.2 && t < 19.4) load = lerp(0.92, 0.12, p4o(seg(t, 8.2, 8.8)));
+        $("load").style.transform = `scaleX(${load.toFixed(4)})`;
+        $("loadV").textContent = String(Math.round(load * 100));
+
+        // ---------- ACT 3: three action cards, each locking into the grid ----------
+        const cards = [["ac1", 8.2], ["ac2", 9.4], ["ac3", 10.6]];
+        cards.forEach(([id, at]) => {
+          const el = $(id);
+          const on = t >= at && t < 13.25;
+          vis(el, on);
+          if (!on) return;
+          const u = wipeIn(el, at, 0.3, t);
+          const lock = at + 0.3;
+          let y = 0;
+          if (t >= lock && t < lock + F(3)) y = 0; // 3-frame impact hold
+          else if (t >= lock + F(3)) y = -5 * Math.sin(Math.PI * seg(t, lock + F(3), lock + F(9)));
+          const x = (1 - u) * -60 + exitLeft(el, 13.0, t);
+          el.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px)`;
+          el.style.borderColor = t >= lock ? "rgba(242,240,234,0.55)" : "rgba(242,240,234,0.22)";
+          const box = el.querySelector(".box");
+          box.style.background = t >= lock + F(4) ? "#f2f0ea" : "transparent";
+          el.querySelector(".chk").style.opacity = t >= lock + F(4) ? 1 : 0;
+        });
+        $("flash").style.opacity = t >= 8.2 && t < 8.2 + F(2) ? 0.12 : 0;
+
+        // ---------- ACT 4 ----------
+        const a4 = t >= 13.2 && t < 17.2;
+        ["dA", "dB", "dC", "fmLine"].forEach((id) => vis($(id), a4));
+        if (a4) {
+          maskRise("dA", 13.2);
+          const ub = wipeIn($("dB"), 13.7, 0.3, t);
+          const uc = wipeIn($("dC"), 13.85, 0.35, t);
+          $("dB").firstElementChild.style.transform = `translateX(${((1 - ub) * -50).toFixed(1)}px)`;
+          // lock at 14.4: tiny overshoot after a 3-frame hold
+          let ly = 0;
+          if (t >= 14.4 + F(3)) ly = -6 * Math.sin(Math.PI * seg(t, 14.4 + F(3), 14.4 + F(10)));
+          $("dC").firstElementChild.style.transform = `translate(${((1 - uc) * -50).toFixed(1)}px, ${ly.toFixed(1)}px)`;
+          const fmW = $("fm").getBoundingClientRect().width / S;
+          $("fmLine").style.width = fmW.toFixed(1) + "px";
+          $("fmLine").style.transform = `scaleX(${p4o(seg(t, 14.3, 14.7)).toFixed(4)})`;
+          const ex = exitLeft($("dA"), 17.0, t);
+          ["dA", "dB", "dC", "fmLine"].forEach((id) => ($(id).style.translate = `${ex.toFixed(1)}px 0`));
+        }
+
+        // ---------- ACT 5 ----------
+        const a5 = t >= 17.2 && t < 19.65;
+        ["eA", "eB", "eC", "na"].forEach((id) => vis($(id), a5));
+        if (a5) {
+          maskRise("eA", 17.2);
+          maskRise("eB", 17.35);
+          maskRise("eC", 17.5);
+          $("na").style.opacity = p4o(seg(t, 17.6, 17.9));
+          $("cur").style.opacity = t >= 18.6 && t < 18.6 + F(6) ? 1 : 0;
+          const ex = exitLeft($("eA"), 19.4, t);
+          ["eA", "eB", "eC", "na"].forEach((id) => ($(id).style.translate = `${ex.toFixed(1)}px 0`));
+        }
+
+        // ---------- brackets lock onto whatever is in focus ----------
+        let tgt = null;
+        if (t < 3.3 || t >= 19.6) tgt = $("study");
+        else if (t < 7.4) tgt = $("cardIn");
+        else if (t >= 8.5 && t < 13.0) tgt = t >= 10.9 ? $("ac3") : t >= 9.7 ? $("ac2") : $("ac1");
+        else if (t >= 14.4 && t < 17.0) tgt = $("fm");
+        else if (t >= 17.6 && t < 19.4) tgt = $("na");
+        const fgR = $("fg").getBoundingClientRect();
+        if (tgt) {
+          const r = tgt.getBoundingClientRect();
+          const want = { l: r.left - 18, r: r.right + 18, t: r.top - 14, b: r.bottom + 10 };
+          if (!brLag) brLag = { ...want };
+          for (const k of ["l", "r", "t", "b"]) brLag[k] = lerp(brLag[k], want[k], 0.5);
+        }
+        const bOn = tgt ? 1 : 0;
+        // brackets are drawn in screen space (they belong to the camera's HUD)
+        const pts = brLag ? [[brLag.l, brLag.t], [brLag.r - 26, brLag.t], [brLag.l, brLag.b - 26], [brLag.r - 26, brLag.b - 26]] : [];
+        BR.forEach((b, i) => {
+          b.style.opacity = bOn && brLag ? 1 : 0;
+          if (brLag) {
+            const S2 = S;
+            const x = (pts[i][0] - fgR.left) / S2;
+            const y = (pts[i][1] - fgR.top) / S2;
+            b.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px)`;
+          }
+        });
+
+        // scan pass on the two locks
+        const sp = Math.max(seg(t, 8.2 + F(2), 8.2 + F(9)), seg(t, 14.4, 14.4 + F(7)) * (t >= 14.4 ? 1 : 0));
+        const spOn = (t >= 8.2 + F(2) && t < 8.2 + F(9)) || (t >= 14.4 && t < 14.4 + F(7));
+        $("scanPass").style.opacity = spOn ? 1 : 0;
+        $("scanPass").style.transform = `translateY(${lerp(600, 1150, t >= 14.4 ? seg(t, 14.4, 14.4 + F(7)) : seg(t, 8.2 + F(2), 8.2 + F(9))).toFixed(1)}px)`;
+
+        $("grT").setAttribute("seed", String((f % 12) + 1));
+        dust.forEach((d) => (d.e.style.opacity = (f + d.ph) % 23 < 2 ? 0.5 : 0));
+      }
+
+      function renderSeek(t) {
+        brLag = null;
+        const n = Math.round(t * FPS);
+        for (let i = Math.max(0, n - 10); i <= n; i++) render(Math.min(t, i / FPS));
+      }
+      const tl = gsap.timeline({ paused: true });
+      const DR = { _t: 0 };
+      Object.defineProperty(DR, "t", {
+        get() {
+          return this._t;
+        },
+        set(v) {
+          this._t = v;
+          renderSeek(v);
+        },
+      });
+      tl.fromTo(DR, { t: 0 }, { t: DUR, duration: DUR, ease: "none", immediateRender: false }, 0);
+      renderSeek(0);
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
