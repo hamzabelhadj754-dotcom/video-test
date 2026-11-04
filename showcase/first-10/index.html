@@ -1,0 +1,469 @@
+<!doctype html>
+<html lang="en" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="assets/lib/gsap.min.js"></script>
+    <style>
+      @font-face {
+        font-family: "Archivo";
+        src: url("assets/fonts/archivo-var.woff2") format("woff2");
+        font-weight: 100 900;
+        font-stretch: 62% 125%;
+      }
+      @font-face {
+        font-family: "Inter";
+        src: url("assets/fonts/inter-var.woff2") format("woff2");
+        font-weight: 300 700;
+      }
+      :root {
+        --bg: #080808;
+        --ink: #f2f0ea;
+        --gray: #777777;
+        --red: #ff3b30;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: var(--bg);
+      }
+      #root {
+        position: relative;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: "Inter", sans-serif;
+      }
+      .abs {
+        position: absolute;
+        left: 0;
+        top: 0;
+      }
+      .ui {
+        font-family: "Inter", sans-serif;
+        font-weight: 500;
+        font-size: 28px;
+        line-height: 32px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+      .disp {
+        font-family: "Archivo", sans-serif;
+        font-weight: 800;
+        line-height: 0.86;
+        letter-spacing: -0.01em;
+        text-transform: uppercase;
+        white-space: nowrap;
+        filter: url(#ink);
+      }
+      .mask {
+        position: absolute;
+        overflow: hidden;
+      }
+      #status .sec {
+        display: inline-block;
+        width: 2.2ch;
+      }
+      #sdot {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        margin-left: 14px;
+        background: var(--red);
+        vertical-align: 2px;
+      }
+      #rail {
+        left: 72px;
+        top: 1690px;
+        width: 936px;
+        height: 1px;
+        background: #2a2a2a;
+      }
+      #prog {
+        left: 0;
+        top: -1px;
+        width: 936px;
+        height: 3px;
+        background: var(--ink);
+        transform-origin: 0 50%;
+      }
+      .tick {
+        position: absolute;
+        top: 0;
+        width: 2px;
+        height: 18px;
+        background: #3a3a3a;
+      }
+      .slab {
+        position: absolute;
+        left: 0;
+        top: 0;
+        white-space: nowrap;
+      }
+      .slab.inv {
+        background: var(--ink);
+        color: var(--bg);
+        padding: 0 14px;
+      }
+      .brk {
+        position: absolute;
+        width: 34px;
+        height: 34px;
+        border-color: var(--red);
+        border-style: solid;
+        border-width: 0;
+      }
+      #grain {
+        opacity: 0.07;
+        mix-blend-mode: overlay;
+        pointer-events: none;
+      }
+      #scan {
+        width: 1080px;
+        height: 1920px;
+        background: repeating-linear-gradient(180deg, rgba(255, 255, 255, 0.028) 0 1px, rgba(0, 0, 0, 0) 1px 3px);
+        pointer-events: none;
+      }
+      .dust {
+        position: absolute;
+        border-radius: 50%;
+        background: #d8d4ca;
+        opacity: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="11" data-width="1080" data-height="1920" data-layout-allow-overlap>
+      <svg width="0" height="0" style="position: absolute">
+        <filter id="ink" x="-2%" y="-5%" width="104%" height="110%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="3" result="n" />
+          <feDisplacementMap in="SourceGraphic" in2="n" scale="1.6" xChannelSelector="R" yChannelSelector="G" />
+        </filter>
+        <filter id="smear" x="-20%" y="-5%" width="140%" height="110%"><feGaussianBlur id="smearG" stdDeviation="0 0" /></filter>
+      </svg>
+
+      <!-- system UI -->
+      <div id="status" class="abs ui" style="left: 72px; top: 176px; color: var(--gray)">Mental status / 07:42:<span class="sec" id="sec">11</span><span id="sdot"></span></div>
+      <div id="ind" class="abs ui" style="left: 0; top: 176px; width: 1008px; text-align: right; color: var(--red); opacity: 0"><span id="indSq" style="display: inline-block; width: 12px; height: 12px; background: var(--red); margin-right: 14px; vertical-align: 2px"></span>Delay loop / active</div>
+      <div id="rail" class="abs"><div id="prog" class="abs"></div></div>
+      <div id="railL" class="abs ui" style="left: 72px; top: 1712px; color: var(--gray); font-size: 28px">Action</div>
+      <div id="railR" class="abs ui" style="left: 0; top: 1712px; width: 1008px; text-align: right; color: var(--gray)"><span id="pct">0</span>%</div>
+
+      <!-- act 1-2 -->
+      <div id="m1" class="mask" style="left: 60px; top: 772px; width: 1000px; height: 160px"><div id="l1" class="disp abs" style="left: 12px; top: 8px; font-size: 168px">You are</div></div>
+      <div id="m2" class="mask" style="left: 60px; top: 936px; width: 1000px; height: 160px">
+        <div id="l2" class="disp abs" style="left: 12px; top: 8px; font-size: 168px">Not lazy<span id="cur" style="display: inline-block; width: 26px; height: 128px; margin-left: 22px; background: var(--red); vertical-align: -6px; opacity: 0; filter: none"></span></div>
+      </div>
+      <div id="negW" class="abs" style="left: 0; top: 0; width: 1080px; height: 1920px">
+        <div id="e1" class="disp abs" style="color: var(--ink); opacity: 0">Negotiating</div>
+        <div id="e2" class="disp abs" style="color: var(--ink); opacity: 0">Negotiating</div>
+        <div id="neg" class="disp abs" style="opacity: 0">Negotiating</div>
+        <div id="b0" class="brk" style="border-top-width: 4px; border-left-width: 4px; opacity: 0"></div>
+        <div id="b1" class="brk" style="border-top-width: 4px; border-right-width: 4px; opacity: 0"></div>
+        <div id="b2" class="brk" style="border-bottom-width: 4px; border-left-width: 4px; opacity: 0"></div>
+        <div id="b3" class="brk" style="border-bottom-width: 4px; border-right-width: 4px; opacity: 0"></div>
+        <div id="ruler" class="abs" style="width: 936px; height: 18px; opacity: 0"></div>
+        <div id="dec" class="abs ui" style="color: var(--red); opacity: 0">Decision / <span id="decV">pending</span></div>
+      </div>
+
+      <!-- act 3 -->
+      <div id="stack" class="abs" style="left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 960px"></div>
+
+      <!-- act 4 -->
+      <div id="act4" class="abs" style="left: 0; top: 0; width: 1080px; height: 1920px">
+        <div id="sb" class="disp abs" style="left: 0; width: 1080px; text-align: center; top: 540px; font-size: 104px; font-weight: 700; font-stretch: 100%; opacity: 0">Start before</div>
+        <div id="slash" class="abs" style="left: 0; top: 680px; width: 1080px; height: 6px; background: var(--red); transform-origin: 0 50%; transform: scaleX(0)"></div>
+        <div id="cmd" class="abs" style="left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 980px; opacity: 0">
+          <div id="ten" class="disp abs" style="left: 0; width: 1080px; text-align: center; top: 716px; font-size: 600px; font-weight: 900; font-stretch: 62%; color: var(--red); letter-spacing: -0.04em">10</div>
+          <div id="secs" class="disp abs" style="left: 0; width: 1080px; text-align: center; top: 1210px; font-weight: 900; font-stretch: 62%">Seconds</div>
+        </div>
+      </div>
+
+      <!-- texture, last -->
+      <svg id="grain" class="abs" width="1080" height="1920" viewBox="0 0 1080 1920"><filter id="gr"><feTurbulence id="grT" type="fractalNoise" baseFrequency="0.95" numOctaves="2" seed="1" stitchTiles="stitch" /><feColorMatrix type="saturate" values="0" /></filter><rect width="1080" height="1920" filter="url(#gr)" /></svg>
+      <div id="scan" class="abs"></div>
+      <div id="dustL" class="abs" style="width: 1080px; height: 1920px"></div>
+    </div>
+
+    <script>
+      const FPS = 30;
+      const DUR = 11;
+      const $ = (id) => document.getElementById(id);
+      const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
+      const lerp = (a, b, k) => a + (b - a) * k;
+      const seg = (t, a, b) => clamp((t - a) / (b - a), 0, 1);
+      const p4o = (x) => 1 - Math.pow(1 - x, 4);
+      const p4i = (x) => x * x * x * x;
+      const p3o = (x) => 1 - Math.pow(1 - x, 3);
+      const expo = (x) => (x >= 1 ? 1 : 1 - Math.pow(2, -10 * x));
+      const sine = (x) => -(Math.cos(Math.PI * x) - 1) / 2;
+      const F = (n) => n / FPS;
+      let seed = 11;
+      const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+
+      // ---------- elements ----------
+      const L1 = $("l1"), L2 = $("l2"), CUR = $("cur"), NEG = $("neg"), E1 = $("e1"), E2 = $("e2");
+      const DEC = $("dec"), RUL = $("ruler"), B = [0, 1, 2, 3].map((i) => $("b" + i));
+      for (let i = 0; i < 24; i++) {
+        const k = document.createElement("div");
+        k.className = "tick";
+        k.style.left = (i * (934 / 23)).toFixed(1) + "px";
+        RUL.appendChild(k);
+      }
+      const TICKS = [...RUL.children];
+      const MARK = [4, 15, 7, 19, 10, 2, 17, 12, 21];
+
+      // ---------- excuses ----------
+      const EX = [
+        ["Tomorrow", 5.1, "smooth", 0, 0],
+        ["After this", 5.55, "cut", 1, 1],
+        ["When I feel ready", 5.95, "smooth", 0, 0],
+        ["Just five minutes", 6.3, "cut", 0, 2],
+        ["Tomorrow", 6.62, "cut", 1, 3],
+        ["After this", 6.85, "smooth", 0, 1],
+        ["Just five", 7.05, "cut", 0, 4],
+        ["Tomorrow", 7.22, "cut", 0, 2],
+        ["When I feel", 7.36, "cut", 1, 0],
+        ["After this", 7.48, "cut", 0, 3],
+      ];
+      const stack = $("stack");
+      const slabs = EX.map(([txt, at, kind, inv, col]) => {
+        const d = document.createElement("div");
+        d.className = "slab disp" + (inv ? " inv" : "");
+        d.textContent = txt;
+        d.style.fontSize = "116px";
+        d.style.fontStretch = "68%";
+        d.style.opacity = "0";
+        stack.appendChild(d);
+        return { d, at, kind, x0: 72 + col * 26, h: 0 };
+      });
+
+      // ---------- dust ----------
+      const dustL = $("dustL");
+      const dust = [];
+      for (let i = 0; i < 14; i++) {
+        const e = document.createElement("div");
+        e.className = "dust";
+        const s = 1.5 + rnd() * 2.5;
+        e.style.width = e.style.height = s + "px";
+        e.style.left = (rnd() * 1080).toFixed(0) + "px";
+        e.style.top = (rnd() * 1920).toFixed(0) + "px";
+        dustL.appendChild(e);
+        dust.push({ e, ph: Math.floor(rnd() * 97) });
+      }
+      const grT = $("grT");
+      const smearG = $("smearG");
+
+      function fitSize(el, width, base = 200) {
+        el.style.fontSize = base + "px";
+        const w = el.getBoundingClientRect().width;
+        return w > 0 ? (base * width) / w : base;
+      }
+      function wd(el, w) {
+        el.style.fontStretch = w.toFixed(2) + "%";
+      }
+
+      // ================= render(t): every pixel is a function of time =================
+      function render(t) {
+        const f = Math.round(t * FPS);
+
+        // ---- status clock + dot ----
+        $("sec").textContent = String(t >= 10.6 ? 11 : Math.min(59, 11 + Math.floor(t)));
+        $("sdot").style.opacity = t < 2.0 || t >= 10.6 ? 1 : 0;
+
+        // ---- progress rail: loads, stalls, drains, completes, resets ----
+        let pr = 0;
+        if (t >= 1.0) pr = 0.18;
+        if (t >= 2.0) pr = 0.34;
+        if (t >= 2.67 && t < 5.0) pr = [0.34, 0.31, 0.35, 0.3, 0.33, 0.29, 0.32, 0.3, 0.31][Math.floor((t - 2.67) / F(8)) % 9];
+        if (t >= 5.0 && t < 8.0) pr = lerp(0.3, 0.06, sine(seg(t, 5.0, 7.6)));
+        if (t >= 8.53) pr = 1;
+        if (t >= 10.6) pr = 0;
+        $("prog").style.transform = `scaleX(${pr.toFixed(4)})`;
+        $("pct").textContent = String(Math.round(pr * 100));
+
+        // ---- act 1: YOU ARE / NOT LAZY rise out of their baselines ----
+        const r1 = p3o(seg(t, F(4), F(24)));
+        const r2 = p3o(seg(t, F(10), F(30)));
+        L1.style.transform = `translateY(${((1 - r1) * 168).toFixed(2)}px)`;
+        wd(L1, lerp(70, 76, p3o(seg(t, F(4), F(54)))));
+        // seam 1: NOT LAZY leans right (anticipation), then leaves left mid-motion
+        let x2 = 0;
+        if (t >= F(56)) x2 = 8 * sine(seg(t, F(56), F(60)));
+        if (t >= 2.0) x2 = 8 - 1300 * p4i(seg(t, 2.0, 2.18));
+        L2.style.transform = `translate(${x2.toFixed(2)}px, ${((1 - r2) * 168).toFixed(2)}px)`;
+        wd(L2, lerp(70, 76, p3o(seg(t, F(10), F(60)))));
+        L2.style.opacity = t >= 2.18 ? 0 : 1;
+        const blink = (t >= F(36) && t < F(41)) || (t >= F(46) && t < F(51)) || (t >= F(54) && t < F(59));
+        CUR.style.opacity = blink ? 1 : 0;
+        // YOU ARE holds as the carrier, then leaves with NEGOTIATING at seam 2
+        let x1 = 0;
+        if (t >= 4.95) x1 = -1300 * p4i(seg(t, 4.95, 5.13));
+        $("m1").style.transform = `translateX(${x1.toFixed(2)}px)`;
+        $("m1").style.opacity = t >= 5.13 ? 0 : 1;
+
+        // ---- act 2: NEGOTIATING ----
+        const negOn = t >= 2.18 && t < 5.2;
+        [NEG, E1, E2].forEach((e) => (e.style.visibility = negOn ? "visible" : "hidden"));
+        if (negOn) {
+          const size = fitSize(NEG, 936);
+          [NEG, E1, E2].forEach((e) => (e.style.fontSize = size.toFixed(2) + "px"));
+          const top = 960;
+          const SY = 2.1;
+          // entry from the right, mid-flight (seam 1), then the impact lands at 2.50
+          let x = 72;
+          if (t < 2.5) x = 72 + 620 * (1 - p4o(seg(t, 2.18, 2.5)));
+          // indecision: steps every 8 frames, 2-frame moves
+          let w = 74;
+          let dx = 0;
+          const OFF = [6, -4, 9, -7, 3, -5, 8, -2, 0];
+          const WD = [74, 68, 74, 64, 72, 66, 74, 70, 74];
+          let stepI = -1;
+          if (t >= 2.67 && t < 4.93) {
+            stepI = Math.floor((t - 2.67) / F(8));
+            const u = clamp(((t - 2.67) % F(8)) / F(2), 0, 1);
+            const a = stepI > 0 ? stepI - 1 : 0;
+            dx = lerp(stepI > 0 ? OFF[a] : 0, OFF[stepI % 9], u);
+            w = lerp(stepI > 0 ? WD[a] : 74, WD[stepI % 9], u);
+          }
+          // seam 2: compress fully, then leave left mid-motion
+          if (t >= 4.93) w = lerp(74, 62, p3o(seg(t, 4.93, 5.0)));
+          if (t >= 5.0) x = 72 - 1400 * p4i(seg(t, 5.0, 5.18));
+          wd(NEG, w);
+          const imp = t >= 2.5 ? 1 + 0.05 * (1 - p3o(seg(t, 2.5, 2.7))) : 1;
+          NEG.style.transform = `translate(${(x + dx).toFixed(2)}px, ${top}px) scale(${imp.toFixed(4)}, ${(imp * SY).toFixed(4)})`;
+          NEG.style.transformOrigin = "0 0";
+          NEG.style.opacity = 1;
+          // echoes trail each step at 14 %
+          [E1, E2].forEach((e, k) => {
+            const lag = (k + 1) * 2;
+            const show = stepI >= 0 && ((t - 2.67) % F(8)) < F(6);
+            wd(e, w);
+            e.style.opacity = show ? (0.14 - k * 0.05).toFixed(3) : 0;
+            e.style.transform = `translate(${(x + dx - (k ? -14 : 14)).toFixed(2)}px, ${top + (k ? 8 : -8)}px) scale(1, ${SY})`;
+            e.style.transformOrigin = "0 0";
+          });
+          // red markers from the impact
+          const nb = NEG.getBoundingClientRect();
+          const mk = t >= 2.5 && t < 5.0;
+          const g = p4o(seg(t, 2.5, 2.7));
+          const pad = 26 + 30 * (1 - g);
+          const L = 72 + dx - pad, R = 72 + dx + nb.width / imp + pad, T = top + 10 - pad, Bt = top + nb.height / imp - 18 + pad;
+          const pos = [[L, T], [R - 34, T], [L, Bt - 34], [R - 34, Bt - 34]];
+          B.forEach((b, i) => {
+            b.style.opacity = mk ? g : 0;
+            b.style.transform = `translate(${pos[i][0].toFixed(1)}px, ${pos[i][1].toFixed(1)}px)`;
+          });
+          RUL.style.opacity = mk ? g : 0;
+          RUL.style.transform = `translate(72px, ${(Bt + 34).toFixed(1)}px)`;
+          const mi = stepI >= 0 ? MARK[stepI % MARK.length] : 11;
+          TICKS.forEach((k, i) => {
+            k.style.background = i === mi ? "#ff3b30" : "#3a3a3a";
+            k.style.height = i === mi ? "30px" : "18px";
+          });
+          DEC.style.opacity = mk ? g : 0;
+          DEC.style.transform = `translate(72px, ${(Bt + 88).toFixed(1)}px)`;
+          $("decV").textContent = stepI >= 0 && stepI % 2 ? "re-evaluating" : "pending";
+        } else {
+          B.forEach((b) => (b.style.opacity = 0));
+          RUL.style.opacity = DEC.style.opacity = 0;
+        }
+
+        // ---- act 3: the excuses stack until the layout suffocates ----
+        const ov = t >= 5.0 && t < 8.25;
+        stack.style.visibility = ov ? "visible" : "hidden";
+        if (ov) {
+          const press = sine(seg(t, 5.1, 7.6));
+          const gap = lerp(34, -30, press);
+          const collapse = p4i(seg(t, 8.0, 8.2));
+          // the visible stack is centred on the frame and grows outward as it crowds in
+          let total = 0;
+          slabs.forEach((s) => {
+            if (!s.h) s.h = s.d.getBoundingClientRect().height || 100;
+            if (t >= s.at) total += s.h + gap;
+          });
+          let y = 960 - (total - gap) / 2;
+          slabs.forEach((s) => {
+            if (!s.h) s.h = s.d.getBoundingClientRect().height || 114;
+            const on = t >= s.at;
+            s.d.style.opacity = on ? 1 : 0;
+            if (!on) return;
+            let x = s.x0;
+            const u = t - s.at;
+            let blur = 0;
+            if (s.kind === "smooth") x = s.x0 + 700 * (1 - expo(clamp(u / 0.42, 0, 1)));
+            else if (u < F(2)) {
+              x = s.x0 + (u < F(1) ? 90 : 30);
+              blur = u < F(1) ? 14 : 6;
+            }
+            const yy = lerp(y, 960 - s.h / 2, collapse);
+            const sy = 1 - collapse;
+            s.d.style.transform = `translate(${lerp(x, 540 - s.d.offsetWidth / 2, collapse).toFixed(2)}px, ${yy.toFixed(2)}px) scaleY(${Math.max(0.001, sy).toFixed(4)})`;
+            s.d.style.filter = blur ? `url(#ink) blur(${blur}px)` : "url(#ink)";
+            y += s.h + gap;
+          });
+          // forward camera push through the overload; frozen in the stillness 7.60-8.00
+          const push = lerp(1, 1.1, sine(seg(t, 5.1, 7.6)));
+          stack.style.transform = `scale(${push.toFixed(4)})`;
+        }
+        $("ind").style.opacity = t >= 5.2 && t < 8.0 ? 1 : 0;
+        $("indSq").style.opacity = t >= 5.2 && t < 8.0 && Math.floor((t - 5.2) / F(9)) % 2 === 0 ? 1 : 0;
+
+        // ---- act 4: breakthrough ----
+        const out4 = t >= 10.4 ? -1400 * p4i(seg(t, 10.4, 10.6)) : 0;
+        const a4 = $("act4");
+        a4.style.transform = `translateX(${out4.toFixed(2)}px)`;
+        a4.style.visibility = t >= 8.1 && t < 10.6 ? "visible" : "hidden";
+        $("slash").style.transform = `scaleX(${p4o(seg(t, 8.2, 8.33)).toFixed(4)})`;
+        const sbU = p3o(seg(t, 8.4, 8.65));
+        $("sb").style.opacity = sbU;
+        $("sb").style.transform = `translateY(${((1 - sbU) * 40).toFixed(2)}px)`;
+        const secs = $("secs");
+        secs.style.fontSize = fitSize(secs, 936).toFixed(2) + "px";
+        // 10 SECONDS: forward push 1.5 -> 0.97 -> 1, then a 3-frame hold, then a slow push
+        let sc = 1;
+        const c0 = 8.53;
+        if (t < c0) sc = 1.5;
+        else if (t < c0 + 0.22) sc = lerp(1.5, 0.97, expo(seg(t, c0, c0 + 0.22)));
+        else if (t < c0 + 0.3) sc = lerp(0.97, 1, sine(seg(t, c0 + 0.22, c0 + 0.3)));
+        else if (t < c0 + 0.4) sc = 1;
+        else sc = lerp(1, 1.03, sine(seg(t, c0 + 0.4, 10.4)));
+        const cmd = $("cmd");
+        cmd.style.opacity = t >= c0 ? 1 : 0;
+        cmd.style.transform = `scale(${sc.toFixed(4)})`;
+        smearG.setAttribute("stdDeviation", t >= c0 && t < c0 + 0.1 ? "0 10" : "0 0");
+        cmd.style.filter = t >= c0 && t < c0 + 0.1 ? "url(#smear)" : "none";
+
+        // ---- texture: grain re-seeded per frame, dust flicks ----
+        grT.setAttribute("seed", String((f % 12) + 1));
+        dust.forEach((d) => (d.e.style.opacity = (f + d.ph) % 23 < 2 ? 0.55 : (f + d.ph) % 23 < 4 ? 0.2 : 0));
+      }
+
+      const tl = gsap.timeline({ paused: true });
+      const DR = { _t: 0 };
+      Object.defineProperty(DR, "t", {
+        get() {
+          return this._t;
+        },
+        set(v) {
+          this._t = v;
+          render(v);
+        },
+      });
+      tl.fromTo(DR, { t: 0 }, { t: DUR, duration: DUR, ease: "none", immediateRender: false }, 0);
+      render(0);
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
