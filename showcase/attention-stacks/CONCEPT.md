@@ -55,11 +55,7 @@
 | 17–20 | Settles on the single sharp pane | A new tab tries to open (+) and is held back | **Close one tab / before you open another.** |
 
 ## Sound
-- **Bed:** one tiny synthesized loop per open tab, each with its own pitch and tick rate. The hum thickens as tabs open and thins out as they close.
-- **Glass:** an air shimmer whenever a pane passes the lens.
-- **Tabs:** a soft pop and a rising blip when one opens; a clean click when one closes.
-- **Locks:** a sub touch when the counter locks, and a sub drop on "Attention stacks."
-- **Ending:** near silence when the frame is sharp.
+- No sound effects. The video is delivered silent so the owner can add a motivational track in the app.
 
 ## The 3-second proof (rendered)
 - 0.0–0.5 s: five tabs pass the lens as huge red-glowing glass smears.

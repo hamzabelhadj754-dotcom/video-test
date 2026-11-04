@@ -185,27 +185,148 @@
           0 40px 90px rgba(0, 0, 0, 0.55),
           0 0 120px rgba(255, 69, 58, 0.6);
       }
-      #head {
+      .hd {
         position: absolute;
         left: 0;
         top: 0;
-        width: 760px;
         transform-origin: 0 0;
-        will-change: transform, filter;
+        will-change: transform, filter, opacity;
       }
       .hl {
         display: block;
-        font: 620 100px/1.02 "Geist", sans-serif;
+        font-family: "Geist", sans-serif;
+        font-weight: 620;
+        line-height: 1.04;
         letter-spacing: -0.035em;
         white-space: nowrap;
         will-change: transform, filter, opacity;
       }
-      .hl .n {
+      .hl.dim {
+        color: rgba(238, 241, 245, 0.62);
+        font-weight: 520;
+        letter-spacing: -0.02em;
+      }
+      .hl .n,
+      .hl .r {
         color: var(--red);
         font-variant-numeric: tabular-nums;
         text-shadow:
           0 0 28px rgba(255, 69, 58, 0.75),
           0 0 80px rgba(255, 69, 58, 0.45);
+      }
+      .hl .g {
+        color: rgba(238, 241, 245, 0.42);
+      }
+      .frag {
+        position: absolute;
+        left: 0;
+        top: 0;
+        transform-origin: 0 0;
+        font-family: "Geist", sans-serif;
+        font-weight: 640;
+        line-height: 1;
+        letter-spacing: -0.04em;
+        white-space: nowrap;
+        color: var(--ink);
+        text-shadow: 0 0 40px rgba(238, 241, 245, 0.18);
+        will-change: transform, filter, opacity;
+      }
+      .pane .ok {
+        position: absolute;
+        right: 36px;
+        top: 9px;
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: var(--green);
+        box-shadow: 0 0 18px rgba(50, 215, 75, 0.8);
+        opacity: 0;
+      }
+      .pane .ok::after {
+        content: "";
+        position: absolute;
+        left: 8px;
+        top: 5px;
+        width: 7px;
+        height: 12px;
+        border-right: 3px solid #07080a;
+        border-bottom: 3px solid #07080a;
+        transform: rotate(40deg);
+      }
+      .pane .ghost {
+        position: absolute;
+        left: 352px;
+        top: 16px;
+        width: 150px;
+        height: 44px;
+        border-radius: 14px 14px 4px 4px;
+        border: 1.5px dashed rgba(255, 69, 58, 0.7);
+        background: rgba(255, 69, 58, 0.08);
+        opacity: 0;
+      }
+      .en3 {
+        display: block;
+        margin-top: 0.55em;
+      }
+      .en3 .lab {
+        font: 500 1em/1 "Geist Mono", monospace;
+        letter-spacing: 0.12em;
+        color: var(--dim);
+      }
+      .en3 .val {
+        font: 560 3.1em/1 "Geist Mono", monospace;
+        letter-spacing: -0.04em;
+        color: var(--red);
+        text-shadow: 0 0 30px rgba(255, 69, 58, 0.6);
+        font-variant-numeric: tabular-nums;
+      }
+      .en3 .trk {
+        position: relative;
+        margin-top: 0.5em;
+        width: 21em;
+        height: 0.36em;
+        border-radius: 0.18em;
+        background: rgba(255, 255, 255, 0.08);
+      }
+      .en3 .fill {
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 100%;
+        border-radius: 0.18em;
+        background: var(--red);
+        box-shadow: 0 0 1.2em rgba(255, 69, 58, 0.8);
+        transform-origin: 0 50%;
+      }
+      #en {
+        position: absolute;
+        left: 132px;
+        top: 418px;
+        font: 500 28px/1 "Geist Mono", monospace;
+        letter-spacing: 0.08em;
+        color: var(--dim);
+        white-space: nowrap;
+        opacity: 0;
+      }
+      #en .mini {
+        display: inline-block;
+        position: relative;
+        width: 150px;
+        height: 8px;
+        margin: 0 14px 0 10px;
+        border-radius: 4px;
+        background: rgba(255, 255, 255, 0.1);
+        vertical-align: 4px;
+      }
+      #en .mini i {
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 8px;
+        width: 150px;
+        border-radius: 4px;
+        transform-origin: 0 50%;
       }
       #sys {
         position: absolute;
@@ -229,204 +350,11 @@
       <div class="abs" data-layout-ignore style="width: 1080px; height: 1920px; background: radial-gradient(60% 34% at 62% 40%, rgba(255, 69, 58, 0.13), rgba(255, 69, 58, 0) 70%), radial-gradient(70% 40% at 20% 85%, rgba(120, 40, 36, 0.12), rgba(0, 0, 0, 0) 70%)"></div>
       <div id="world" data-layout-ignore></div>
       <div id="sys"><b id="sysDot">●</b> <span id="sysTx">OPEN TABS</span> <span id="sysN">41</span></div>
+      <div id="en">ENERGY<span class="mini"><i id="enBar"></i></span><span id="enV">9%</span></div>
       <svg class="abs" width="1080" height="1920" data-layout-ignore style="opacity: 0.075; mix-blend-mode: overlay"><filter id="gr"><feTurbulence id="grT" type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="1" stitchTiles="stitch" /><feColorMatrix type="saturate" values="0" /></filter><rect width="1080" height="1920" filter="url(#gr)" /></svg>
       <div class="abs" data-layout-ignore style="width: 1080px; height: 1920px; background: radial-gradient(115% 75% at 44% 47%, rgba(0, 0, 0, 0) 52%, rgba(0, 0, 0, 0.7) 100%)"></div>
     </div>
 
-    <script>
-      const FPS = 30;
-      const DUR = 20;
-      const $ = (id) => document.getElementById(id);
-      const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
-      const lerp = (a, b, k) => a + (b - a) * k;
-      const seg = (t, a, b) => clamp((t - a) / (b - a), 0, 1);
-      const eo = (x) => 1 - Math.pow(1 - x, 4); // fast type ease
-      const sst = (x) => x * x * x * (x * (x * 6 - 15) + 10);
-      function mulberry(a) {
-        return () => {
-          a |= 0;
-          a = (a + 0x6d2b79f5) | 0;
-          let t = Math.imul(a ^ (a >>> 15), 1 | a);
-          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-          return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-        };
-      }
-      const rnd = mulberry(47);
-
-      // ================= camera =================
-      const CX = 470; // optical centre sits left of the frame centre: the safe zone's centre
-      const CY = 900;
-      const FL = 1000; // focal length in px: an element 1000 px in front of the lens is drawn at scale 1
-      function cam(t) {
-        // rush through the open tabs, then land softly on the headline (never fully stops)
-        const z = 1150 * (1 - Math.exp(-t / 0.55)) + 60 * t;
-        return { x: -70 + 36 * t, y: -20 + 14 * t, z, roll: -1.6 + 0.45 * t };
-      }
-
-      // ================= the 47 tabs =================
-      const TITLES = ["reply to coach", "meal prep list", "that email", "finish the set", "call mom back", "taxes 2026", "form check video", "the essay", "book the dentist", "return the package", "budget sheet", "protein order", "job application", "fix the bike", "read ch. 4", "gym playlist", "renew passport", "pay rent", "group chat", "edit the video", "cancel that sub", "laundry", "learn spanish", "update CV"];
-      const ZH = 2475; // the headline's depth
-      const panes = [];
-      const world = $("world");
-      function makePane(i, x, y, z, opensAt) {
-        const e = document.createElement("div");
-        e.className = "pane";
-        const p = Math.round(18 + rnd() * 66);
-        const lines = [0, 1, 2, 3]
-          .map((k) => `<div class="ln" style="top:${136 + k * 32}px;width:${Math.round(180 + rnd() * 300)}px"></div>`)
-          .join("");
-        e.innerHTML = `<div class="bar"><div class="fav"></div><div class="ttl">${TITLES[i % TITLES.length]}</div><div class="spin"></div><div class="x">×</div></div><div class="plus">+</div><div class="load"></div><div class="addr"></div>${lines}<div class="pct">${p}%</div><div class="prog"><i style="width:${p}%"></i></div>`;
-        world.appendChild(e);
-        const o = { e, x, y, z, opensAt, ph: rnd() * 360, spin: e.querySelector(".spin"), load: e.querySelector(".load"), lp: rnd() };
-        panes.push(o);
-        return o;
-      }
-      // 41 tabs already open, on a golden-angle spiral around the camera path: a tunnel of tabs.
-      // Far ones converge on the vanishing point; near ones stream outward past the lens.
-      const PS = 1.3; // pane size multiplier (world units)
-      const PW = 560 * PS;
-      const PH = 352 * PS;
-      const LAND = cam(3);
-      const TXT = { l: CX - 380, r: CX + 380, t: CY - 190, b: CY + 210 }; // headline box on screen
-      for (let i = 0; i < 41; i++) {
-        const z = i < 5 ? 280 + i * 150 + rnd() * 50 : 1050 + (i - 5) * 190 + rnd() * 90;
-        const th = i * 2.39996 + rnd() * 0.5;
-        let r = i < 5 ? 150 + rnd() * 120 : 560 + rnd() * 420;
-        const place = () => ({ x: Math.cos(th) * r - PW / 2, y: Math.sin(th) * r * 1.55 - PH / 2 });
-        let q = place();
-        // tabs in front of the headline once it lands must never cover it
-        for (let k = 0; k < 12 && z > LAND.z + 80 && z < ZH + 60; k++) {
-          const dz = z - LAND.z;
-          const sc = FL / dz;
-          const X0 = CX + (q.x - LAND.x) * sc;
-          const Y0 = CY + (q.y - LAND.y) * sc;
-          const hit = X0 < TXT.r && X0 + PW * sc > TXT.l && Y0 < TXT.b && Y0 + PH * sc > TXT.t;
-          if (!hit) break;
-          r *= 1.18;
-          q = place();
-        }
-        makePane(i, q.x, q.y, z, -1);
-      }
-      // six tabs open during the hook (41 -> 47): they burst out of the deep field
-      const OPEN = [0.32, 0.58, 0.84, 1.1, 1.36, 1.62];
-      OPEN.forEach((at, k) => {
-        const th = 0.6 + k * 2.39996;
-        const rr = 380 + (k % 3) * 120;
-        const o = makePane(41 + k, Math.cos(th) * rr - PW / 2, Math.sin(th) * rr * 1.55 - PH / 2, 3000 + k * 230, at);
-        o.e.classList.add("new");
-      });
-
-      // ================= headline (lives in the world, at depth ZH) =================
-      const head = document.createElement("div");
-      head.id = "head";
-      head.innerHTML = `<span class="hl" id="l1">Your brain has</span><span class="hl" id="l2"><span class="n" id="cnt">41</span> tabs open.</span>`;
-      world.appendChild(head);
-      const HX = -340; // headline left edge in world x
-      const HY = -112;
-
-      // ================= render =================
-      function proj(c, x, y, z) {
-        const dz = z - c.z;
-        const s = FL / dz;
-        return { dz, s, X: CX + (x - c.x) * s, Y: CY + (y - c.y) * s };
-      }
-      function focusAt(t, c) {
-        // the lens starts focused deep in the field, then racks onto the headline as it arrives
-        const deep = 2600;
-        const onHead = ZH - c.z;
-        return lerp(deep, onHead, sst(seg(t, 0.85, 1.45)));
-      }
-      function coc(dz, fd) {
-        // circle of confusion in screen px: strong in front of the focus plane, softer behind
-        if (dz < fd) return clamp(30 * (fd / dz - 1), 0, 46);
-        return clamp(30 * (1 - fd / dz), 0, 24);
-      }
-      function render(t) {
-        const f = Math.round(t * FPS);
-        const c = cam(t);
-        world.style.transform = `rotate(${c.roll.toFixed(3)}deg)`;
-        const fd = focusAt(t, c);
-        let opened = 0;
-        for (const p of panes) {
-          let z = p.z;
-          let pop = 1;
-          let glow = 0;
-          if (p.opensAt >= 0) {
-            if (t < p.opensAt) {
-              p.e.style.visibility = "hidden";
-              continue;
-            }
-            opened++;
-            const u = seg(t, p.opensAt, p.opensAt + 0.55);
-            z = p.z + (1 - eo(u)) * 2600; // shoots forward out of the deep field
-            pop = eo(seg(t, p.opensAt, p.opensAt + 0.3));
-            glow = 1 - seg(t, p.opensAt + 0.2, p.opensAt + 1.2);
-          }
-          const q = proj(c, p.x, p.y, z);
-          if (q.dz < 70 || q.X > 2600 || q.X + PW * q.s < -1500 || q.Y > 3400 || q.Y + PH * q.s < -1500) {
-            p.e.style.visibility = "hidden";
-            continue;
-          }
-          const fog = clamp((7000 - q.dz) / 3000, 0, 1) * (q.dz > fd ? lerp(1, 0.55, clamp((q.dz - fd) / 3000, 0, 1)) : 1);
-          const near = clamp((q.dz - 70) / 120, 0, 1);
-          const op = fog * near * pop;
-          if (op < 0.01) {
-            p.e.style.visibility = "hidden";
-            continue;
-          }
-          p.e.style.visibility = "visible";
-          const b = coc(q.dz, fd);
-          const opB = lerp(1, 0.5, clamp(b / 46, 0, 1)); // defocused glass sinks toward black; only its glow survives
-          p.e.style.transform = `translate(${q.X.toFixed(2)}px, ${q.Y.toFixed(2)}px) scale(${(q.s * PS).toFixed(5)})`;
-          p.e.style.opacity = (op * opB).toFixed(3);
-          p.e.style.filter = b > 0.35 ? `blur(${(b / (q.s * PS)).toFixed(2)}px)` : "none";
-          const lu = (p.lp + t * 0.55) % 1; // indeterminate loading sweep: it never finishes
-          p.load.style.width = `${(120 + 140 * Math.sin(lu * Math.PI)).toFixed(1)}px`;
-          p.load.style.transform = `translateX(${(-260 + lu * 820).toFixed(1)}px)`;
-          p.e.style.zIndex = String(Math.round(20000 - q.dz));
-          p.spin.style.transform = `rotate(${(p.ph + t * 400).toFixed(1)}deg)`;
-          p.e.style.setProperty("--g", glow.toFixed(3));
-          if (p.opensAt >= 0) p.e.classList.toggle("new", glow > 0.02);
-        }
-        // headline
-        const hq = proj(c, HX, HY, ZH);
-        const hb = coc(hq.dz, fd);
-        head.style.transform = `translate(${hq.X.toFixed(2)}px, ${hq.Y.toFixed(2)}px) scale(${hq.s.toFixed(5)})`;
-        head.style.zIndex = String(Math.round(20000 - hq.dz));
-        head.style.filter = hb > 0.35 ? `blur(${(hb / hq.s).toFixed(2)}px)` : "none";
-        [
-          ["l1", 1.05],
-          ["l2", 1.3],
-        ].forEach(([id, at]) => {
-          const u = eo(seg(t, at, at + 0.7));
-          const el = $(id);
-          el.style.opacity = u.toFixed(3);
-          el.style.filter = u < 0.999 ? `blur(${((1 - u) * 22).toFixed(2)}px)` : "none";
-          el.style.transform = `translate(${((1 - u) * -26).toFixed(2)}px, ${((1 - u) * 34).toFixed(2)}px)`;
-        });
-        const n = 41 + opened;
-        $("cnt").textContent = String(n);
-        $("sysN").textContent = String(n);
-        $("sys").style.opacity = eo(seg(t, 0.15, 0.6)).toFixed(3);
-        $("sysDot").style.opacity = f % 20 < 12 ? 1 : 0.35;
-        $("grT").setAttribute("seed", String((f % 24) + 1));
-      }
-
-      const tl = gsap.timeline({ paused: true });
-      const DR = { _t: 0 };
-      Object.defineProperty(DR, "t", {
-        get() {
-          return this._t;
-        },
-        set(v) {
-          this._t = v;
-          render(v);
-        },
-      });
-      tl.fromTo(DR, { t: 0 }, { t: DUR, duration: DUR, ease: "none", immediateRender: false }, 0);
-      render(0);
-      window.__timelines = window.__timelines || {};
-      window.__timelines["main"] = tl;
-    </script>
+    <script src="assets/engine.js"></script>
   </body>
 </html>
