@@ -69,8 +69,7 @@
       import * as THREE from "three";
       import { Font } from "three/addons/loaders/FontLoader.js";
       import { TextGeometry } from "three/addons/geometries/TextGeometry.js";
-      import { Reflector } from "three/addons/objects/Reflector.js";
-      import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
+            import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
       import { ShaderPass } from "three/addons/postprocessing/ShaderPass.js";
       import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
       import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
@@ -109,6 +108,7 @@
       scene.background = new THREE.Color(0x030303);
       scene.fog = new THREE.FogExp2(0x030303, 0.017);
       const camera = new THREE.PerspectiveCamera(42, W / H, 0.1, 400);
+      const fx = new THREE.Scene(); // additive light effects, drawn after the main pass so the mirror never touches them
 
       // ================= procedural concrete =================
       function noiseCanvas(size, seed, oct, base, amp) {
@@ -226,11 +226,21 @@
       scene.add(DARK.group);
 
       // ================= wet floor =================
-      const mirror = new Reflector(new THREE.PlaneGeometry(400, 400), { textureWidth: 540, textureHeight: 960, color: 0x3c3c3c, clipBias: 0.003 });
-      mirror.rotation.x = -Math.PI / 2;
-      mirror.position.y = 0;
-      scene.add(mirror);
-      const floorMat = new THREE.MeshStandardMaterial({ color: 0x0c0c0c, roughness: 0.9, roughnessMap: rough, transparent: true, opacity: 0.8 });
+      // reflection: a mirrored copy of each standing word under a semi-transparent wet floor
+      // (no nested Reflector render, so every frame is exact and independent)
+      function addReflection(word) {
+        const m = new THREE.Group();
+        m.scale.y = -1;
+        word.letters.forEach((l) => {
+          const c = new THREE.Mesh(l.geometry, l.material);
+          c.position.copy(l.position);
+          m.add(c);
+        });
+        word.group.add(m);
+      }
+      addReflection(BUILT);
+      addReflection(DARK);
+      const floorMat = new THREE.MeshStandardMaterial({ color: 0x0a0a0a, roughness: 0.88, roughnessMap: rough, transparent: true, opacity: 0.74 });
       const floor = new THREE.Mesh(new THREE.PlaneGeometry(400, 400), floorMat);
       floor.rotation.x = -Math.PI / 2;
       floor.position.y = 0.004;
@@ -282,9 +292,30 @@
         g.translate(0, 0, 0);
         const m = new THREE.Mesh(g, coneMat(col));
         m.frustumCulled = false;
-        scene.add(m);
+        fx.add(m);
         return m;
       }
+      // the red pool on the wet floor in front of DARK.: explicit, so it never depends on draw order
+      const pool = new THREE.Mesh(
+        new THREE.PlaneGeometry(1, 1),
+        new THREE.ShaderMaterial({
+          uniforms: { uI: { value: 0 } },
+          vertexShader: `varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.0); }`,
+          fragmentShader: `uniform float uI; varying vec2 vUv;
+            void main(){ vec2 c = (vUv - 0.5) * 2.0; float r = length(c);
+            float g = pow(clamp(1.0 - r, 0.0, 1.0), 1.7);
+            gl_FragColor = vec4(vec3(1.0, 0.09, 0.05) * g * uI, 1.0); }`,
+          transparent: true,
+          blending: THREE.AdditiveBlending,
+          depthWrite: false,
+          fog: false,
+        }),
+      );
+      pool.rotation.x = -Math.PI / 2;
+      pool.scale.set(44, 30, 1);
+      pool.position.set(PD.x, 0.02, PD.z + 9);
+      pool.renderOrder = 3;
+      fx.add(pool);
       const keyCone = makeCone(0xffe2b8, 24);
       const rimCone = makeCone(0xff2a1f, 30);
       const _up = new THREE.Vector3(0, 1, 0);
@@ -398,10 +429,12 @@
         aimCone(keyCone, kp, kt, t < 9.6 ? kl * 0.16 : 0);
 
         // red rims: BUILT gets a faint rim in shot 1, DARK. lives on red alone until the slam
-        rimB.intensity = 260 * (t < 3.6 ? (t < 0.1 ? 0 : 1) : 1 - seg(t, 3.6, 4.2));
+        rimB.intensity = 150 * (t < 3.6 ? (t < 0.1 ? 0 : 1) : 1 - seg(t, 3.6, 4.2));
         const rd = t < 6.8 ? 0 : t < 13.8 ? sst(seg(t, 6.8, 7.15)) : 1 - seg(t, 13.8, 13.92);
         rimD.intensity = 900 * rd;
-        aimCone(rimCone, rimD.position, new THREE.Vector3(PD.x, 0, PD.z + 6), 0.11 * rd);
+        aimCone(rimCone, rimD.position, new THREE.Vector3(PD.x, 0, PD.z + 6), 0.06 * rd);
+        pool.material.uniforms.uI.value = 0.2 * rd;
+        pool.visible = rd > 0.001;
 
         // each word goes dark once its moment has passed; DARK. stays hidden until its own shot
         BUILT.group.visible = t < 4.6;
@@ -495,6 +528,9 @@
           renderer.setClearColor(0x030303, 1);
           renderer.clear(true, true, true);
           renderer.render(scene, camera);
+          renderer.autoClear = false;
+          renderer.render(fx, camera);
+          renderer.autoClear = true;
           renderer.setRenderTarget(rtAcc);
           accQuad.render(renderer);
         }

@@ -8,7 +8,7 @@
   - Then bloom, ACES tone mapping, and a lens pass (edge chromatic fringe, vignette, grain).
 - **Type:** Anton (OFL), extruded into real geometry with bevels.
   - The surface is procedural concrete: mottled albedo, bump and roughness maps, all generated from seeded noise.
-- **World:** a wet black floor with a real mirror reflection and a dark overlay, plus exponential fog.
+- **World:** a wet black floor (a mirrored copy of each standing word under a semi-transparent floor, so every frame is exact) plus exponential fog. The red pool and the light cones are drawn in their own additive pass.
 - **Lights:**
   - A warm tungsten key spot casting soft shadows, with an additive volumetric cone.
   - Two red rim spots.
