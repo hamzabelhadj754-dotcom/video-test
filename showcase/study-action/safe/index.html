@@ -446,7 +446,7 @@
           const fmW = $("fm").getBoundingClientRect().width / S;
           $("fmLine").style.width = fmW.toFixed(1) + "px";
           $("fmLine").style.transform = `scaleX(${p4o(seg(t, 14.3, 14.7)).toFixed(4)})`;
-          const ex = exitLeft($("dA"), 17.0, t);
+          const ex = exitLeft($("dA"), 16.9, t, 0.3);
           ["dA", "dB", "dC", "fmLine"].forEach((id) => ($(id).style.translate = `${ex.toFixed(1)}px 0`));
         }
 
