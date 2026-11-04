@@ -1,0 +1,526 @@
+<!doctype html>
+<html lang="en" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="assets/lib/gsap.min.js"></script>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "./assets/lib/three.module.js",
+          "three/addons/": "./assets/lib/addons/"
+        }
+      }
+    </script>
+    <style>
+      @font-face {
+        font-family: "Inter";
+        src: url("assets/fonts/inter-var.woff2") format("woff2");
+        font-weight: 300 700;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #050505;
+      }
+      #root {
+        position: relative;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #050505;
+      }
+      #world {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 1080px;
+        height: 1920px;
+      }
+      #tag {
+        position: absolute;
+        left: 110px;
+        top: 1352px;
+        width: 720px;
+        text-align: center;
+        font: 600 30px/1 "Inter", sans-serif;
+        letter-spacing: 0.34em;
+        text-transform: uppercase;
+        color: #e9e4da;
+        opacity: 0;
+        white-space: nowrap;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="14" data-width="1080" data-height="1920" data-layout-allow-overlap>
+      <canvas id="world" width="1080" height="1920" data-layout-ignore></canvas>
+      <div id="tag">Nobody watches the work.</div>
+    </div>
+
+    <script type="module">
+      import * as THREE from "three";
+      import { Font } from "three/addons/loaders/FontLoader.js";
+      import { TextGeometry } from "three/addons/geometries/TextGeometry.js";
+      import { Reflector } from "three/addons/objects/Reflector.js";
+      import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
+      import { ShaderPass } from "three/addons/postprocessing/ShaderPass.js";
+      import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
+      import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
+      import { Pass, FullScreenQuad } from "three/addons/postprocessing/Pass.js";
+      import ANTON from "./assets/fonts/anton-typeface.js";
+
+      const W = 1080;
+      const H = 1920;
+      const FPS = 30;
+      const DUR = 14;
+      const SUB = 5; // motion-blur sub-frames
+      const SHUTTER = 0.5 / FPS; // 180 degree shutter
+      const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
+      const seg = (t, a, b) => clamp((t - a) / (b - a), 0, 1);
+      const sst = (x) => x * x * x * (x * (x * 6 - 15) + 10); // smootherstep
+      const lerp = (a, b, k) => a + (b - a) * k;
+      function mulberry(a) {
+        return () => {
+          a |= 0;
+          a = (a + 0x6d2b79f5) | 0;
+          let t = Math.imul(a ^ (a >>> 15), 1 | a);
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+          return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        };
+      }
+
+      // ================= renderer =================
+      const canvas = document.getElementById("world");
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, preserveDrawingBuffer: true, powerPreference: "high-performance" });
+      renderer.setPixelRatio(1);
+      renderer.setSize(W, H, false);
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      renderer.shadowMap.autoUpdate = true;
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x030303);
+      scene.fog = new THREE.FogExp2(0x030303, 0.017);
+      const camera = new THREE.PerspectiveCamera(42, W / H, 0.1, 400);
+
+      // ================= procedural concrete =================
+      function noiseCanvas(size, seed, oct, base, amp) {
+        const c = document.createElement("canvas");
+        c.width = c.height = size;
+        const g = c.getContext("2d");
+        const img = g.createImageData(size, size);
+        const r = mulberry(seed);
+        const grids = [];
+        for (let o = 0; o < oct; o++) {
+          const n = 4 << o;
+          const v = new Float32Array((n + 1) * (n + 1));
+          for (let i = 0; i < v.length; i++) v[i] = r();
+          // wrap edges so the texture tiles
+          for (let i = 0; i <= n; i++) {
+            v[i * (n + 1) + n] = v[i * (n + 1)];
+            v[n * (n + 1) + i] = v[i];
+          }
+          grids.push({ n, v });
+        }
+        for (let y = 0; y < size; y++)
+          for (let x = 0; x < size; x++) {
+            let s = 0;
+            let w = 0;
+            grids.forEach(({ n, v }, o) => {
+              const fx = (x / size) * n;
+              const fy = (y / size) * n;
+              const ix = Math.floor(fx);
+              const iy = Math.floor(fy);
+              const ux = sst(fx - ix);
+              const uy = sst(fy - iy);
+              const a = v[iy * (n + 1) + ix];
+              const b = v[iy * (n + 1) + ix + 1];
+              const c2 = v[(iy + 1) * (n + 1) + ix];
+              const d = v[(iy + 1) * (n + 1) + ix + 1];
+              const amp2 = Math.pow(0.55, o);
+              s += lerp(lerp(a, b, ux), lerp(c2, d, ux), uy) * amp2;
+              w += amp2;
+            });
+            const val = clamp(base + (s / w - 0.5) * amp, 0, 1) * 255;
+            const k = (y * size + x) * 4;
+            img.data[k] = img.data[k + 1] = img.data[k + 2] = val;
+            img.data[k + 3] = 255;
+          }
+        g.putImageData(img, 0, 0);
+        const tex = new THREE.CanvasTexture(c);
+        tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+        return tex;
+      }
+      const rough = noiseCanvas(256, 11, 6, 0.78, 0.5);
+      const bump = noiseCanvas(256, 23, 6, 0.5, 1.4);
+      const puddle = noiseCanvas(256, 37, 3, 0.8, 0.45);
+      const albedo = noiseCanvas(256, 51, 6, 0.74, 0.62);
+      albedo.repeat.set(0.22, 0.22);
+      albedo.colorSpace = THREE.SRGBColorSpace;
+      [rough, bump].forEach((t) => t.repeat.set(0.35, 0.35));
+      puddle.repeat.set(0.03, 0.03);
+
+      // ================= type =================
+      const font = new Font(ANTON);
+      function buildWord(text, height, depth, seed) {
+        const group = new THREE.Group();
+        const letters = [];
+        const probe = new TextGeometry("H", { font, size: 1, depth: 0.01, curveSegments: 2 });
+        probe.computeBoundingBox();
+        const capH = probe.boundingBox.max.y - probe.boundingBox.min.y;
+        const size = height / capH;
+        const scale = size / font.data.resolution;
+        let x = 0;
+        for (const ch of text) {
+          const gl = font.data.glyphs[ch];
+          if (ch !== " ") {
+            const geo = new TextGeometry(ch, {
+              font,
+              size,
+              depth,
+              curveSegments: 10,
+              bevelEnabled: true,
+              bevelThickness: height * 0.012,
+              bevelSize: height * 0.008,
+              bevelSegments: 3,
+            });
+            geo.translate(0, 0, -depth / 2);
+            const mat = new THREE.MeshStandardMaterial({ color: 0x8a8378, map: albedo, roughness: 0.8, metalness: 0, roughnessMap: rough, bumpMap: bump, bumpScale: 4.5 });
+            const m = new THREE.Mesh(geo, mat);
+            m.position.x = x;
+            m.castShadow = true;
+            m.receiveShadow = true;
+            m.userData.base = 0x3a3834;
+            group.add(m);
+            letters.push(m);
+          }
+          x += gl.ha * scale;
+        }
+        const box = new THREE.Box3().setFromObject(group);
+        group.children.forEach((m) => (m.position.x -= (box.min.x + box.max.x) / 2));
+        group.userData.width = box.max.x - box.min.x;
+        return { group, letters, width: group.userData.width };
+      }
+      const BUILT = buildWord("BUILT", 4.6, 1.6, 1);
+      scene.add(BUILT.group);
+      const INW = buildWord("IN", 3.4, 0.45, 2);
+      const THEW = buildWord("THE", 3.4, 0.45, 3);
+      const P2 = new THREE.Vector3(22, 0, 1);
+      [INW, THEW].forEach((w, i) => {
+        w.group.rotation.x = -Math.PI / 2;
+        w.group.position.set(P2.x, 0, P2.z - (i === 0 ? 2.15 : -2.15) + (i === 0 ? 0 : 0));
+        scene.add(w.group);
+      });
+      INW.group.position.z = P2.z - 2.2; // IN above (farther)
+      THEW.group.position.z = P2.z + 2.2; // THE below (nearer)
+      const DARK = buildWord("DARK.", 4.4, 1.8, 4);
+      const PD = new THREE.Vector3(22, 0, -28);
+      DARK.group.position.copy(PD);
+      scene.add(DARK.group);
+
+      // ================= wet floor =================
+      const mirror = new Reflector(new THREE.PlaneGeometry(400, 400), { textureWidth: 540, textureHeight: 960, color: 0x3c3c3c, clipBias: 0.003 });
+      mirror.rotation.x = -Math.PI / 2;
+      mirror.position.y = 0;
+      scene.add(mirror);
+      const floorMat = new THREE.MeshStandardMaterial({ color: 0x0c0c0c, roughness: 0.9, roughnessMap: rough, transparent: true, opacity: 0.8 });
+      const floor = new THREE.Mesh(new THREE.PlaneGeometry(400, 400), floorMat);
+      floor.rotation.x = -Math.PI / 2;
+      floor.position.y = 0.004;
+      floor.receiveShadow = true;
+      scene.add(floor);
+
+      // ================= lights =================
+      scene.add(new THREE.HemisphereLight(0x2a2622, 0x000000, 0.05));
+      const key = new THREE.SpotLight(0xffe2b8, 0, 90, THREE.MathUtils.degToRad(26), 0.55, 1.6);
+      key.castShadow = true;
+      key.shadow.mapSize.set(1024, 1024);
+      key.shadow.camera.near = 1;
+      key.shadow.camera.far = 90;
+      key.shadow.bias = -0.0004;
+      key.shadow.normalBias = 0.03;
+      scene.add(key, key.target);
+      const rimB = new THREE.SpotLight(0xff2a1f, 0, 60, THREE.MathUtils.degToRad(32), 0.7, 1.4);
+      rimB.position.set(0, 11, -11);
+      rimB.target.position.set(0, 2.5, 0);
+      scene.add(rimB, rimB.target);
+      const rimD = new THREE.SpotLight(0xff2a1f, 0, 70, THREE.MathUtils.degToRad(34), 0.7, 1.3);
+      rimD.position.set(PD.x, 12, PD.z - 12);
+      rimD.target.position.set(PD.x, 2.5, PD.z + 2);
+      scene.add(rimD, rimD.target);
+
+      // volumetric cone: additive, soft at the edges, fading along its length
+      const coneMat = (col) =>
+        new THREE.ShaderMaterial({
+          uniforms: { uColor: { value: new THREE.Color(col) }, uI: { value: 0 } },
+          vertexShader: `varying float vL; varying vec3 vN; varying vec3 vV;
+            void main(){ vL = -position.y; vec4 mv = modelViewMatrix*vec4(position,1.0);
+            vN = normalize(normalMatrix*normal); vV = normalize(-mv.xyz); gl_Position = projectionMatrix*mv; }`,
+          fragmentShader: `uniform vec3 uColor; uniform float uI; varying float vL; varying vec3 vN; varying vec3 vV;
+            void main(){ float edge = pow(abs(dot(normalize(vN), normalize(vV))), 2.2);
+            float along = pow(clamp(1.0 - vL, 0.0, 1.0), 1.6) * smoothstep(0.0, 0.06, vL);
+            gl_FragColor = vec4(uColor * uI * edge * along, 1.0); }`,
+          transparent: true,
+          blending: THREE.AdditiveBlending,
+          depthWrite: false,
+          side: THREE.DoubleSide,
+          fog: false,
+        });
+      function makeCone(col, angleDeg) {
+        // unit length along -y, apex at origin; scaled to the light distance each frame
+        const r = Math.tan(THREE.MathUtils.degToRad(angleDeg));
+        const g = new THREE.ConeGeometry(r, 1, 64, 1, true);
+        g.translate(0, -0.5, 0);
+        g.rotateX(Math.PI); // apex at origin, opening toward -y
+        g.translate(0, 0, 0);
+        const m = new THREE.Mesh(g, coneMat(col));
+        m.frustumCulled = false;
+        scene.add(m);
+        return m;
+      }
+      const keyCone = makeCone(0xffe2b8, 24);
+      const rimCone = makeCone(0xff2a1f, 30);
+      const _up = new THREE.Vector3(0, 1, 0);
+      function aimCone(cone, from, to, intensity) {
+        const d = new THREE.Vector3().subVectors(to, from);
+        const len = d.length() * 1.25;
+        cone.position.copy(from);
+        cone.quaternion.setFromUnitVectors(new THREE.Vector3(0, -1, 0), d.normalize());
+        cone.scale.set(len, len, len);
+        cone.material.uniforms.uI.value = intensity;
+        cone.visible = intensity > 0.001;
+      }
+
+      // ================= camera path (Hermite in time, C1 continuous) =================
+      const B = BUILT.width;
+      const K = [
+        // t, position, target, fov, up, stop
+        { t: 0.0, p: [-B / 2 + 0.9, 1.1, 3.1], q: [-B / 2 + 1.8, 2.3, 0], f: 44 },
+        { t: 1.25, p: [-B / 2 + B * 0.45, 1.7, 8.0], q: [-B / 2 + B * 0.62, 2.4, 0], f: 48 },
+        { t: 2.45, p: [8.6, 2.6, 21.5], q: [0.3, 2.5, 0], f: 50 },
+        { t: 3.2, p: [10.2, 2.8, 23.2], q: [-0.4, 2.5, -1], f: 50 },
+        { t: 3.55, p: [11.2, 2.9, 23.6], q: [P2.x, 0.6, P2.z - 3], f: 50 },
+        { t: 5.1, p: [P2.x + 1.5, 12, P2.z + 11], q: [P2.x, 0, P2.z], f: 44, u: [0, 0.6, -0.8] },
+        { t: 6.8, p: [P2.x, 22.5, P2.z + 0.4], q: [P2.x, 0, P2.z], f: 42, u: [0, 0, -1], stop: 1 },
+        { t: 7.2, p: [P2.x, 22.3, P2.z + 0.3], q: [P2.x, 0, P2.z - 0.1], f: 42, u: [0, 0, -1], stop: 1 },
+        { t: 8.45, p: [PD.x, 4.6, PD.z + 50], q: [PD.x, 2.6, PD.z], f: 28 },
+        { t: 9.6, p: [PD.x, 3.0, PD.z + 22.5], q: [PD.x, 2.3, PD.z], f: 58, stop: 1 },
+        { t: 9.7, p: [PD.x, 3.0, PD.z + 22.4], q: [PD.x, 2.3, PD.z], f: 58, stop: 1 },
+        { t: 12.4, p: [PD.x + 4.0, 15.5, PD.z + 34], q: [PD.x, 1.6, PD.z], f: 40 },
+        { t: 14.0, p: [PD.x + 4.5, 16.4, PD.z + 36], q: [PD.x, 1.5, PD.z], f: 40, stop: 1 },
+      ];
+      const UP0 = [0, 1, 0];
+      K.forEach((k) => (k.u = k.u || UP0));
+      function tangent(i, key) {
+        const k = K[i];
+        if (k.stop || i === 0 || i === K.length - 1) return K[0][key].length ? K[0][key].map(() => 0) : 0;
+        const a = K[i - 1];
+        const b = K[i + 1];
+        const dt = b.t - a.t;
+        return Array.isArray(k[key]) ? k[key].map((_, j) => (b[key][j] - a[key][j]) / dt) : (b[key] - a[key]) / dt;
+      }
+      const TAN = K.map((_, i) => ({ p: tangent(i, "p"), q: tangent(i, "q"), u: tangent(i, "u"), f: (() => {
+        const k = K[i];
+        if (k.stop || i === 0 || i === K.length - 1) return 0;
+        return (K[i + 1].f - K[i - 1].f) / (K[i + 1].t - K[i - 1].t);
+      })() }));
+      function herm(p0, m0, p1, m1, s, h) {
+        const s2 = s * s;
+        const s3 = s2 * s;
+        return (2 * s3 - 3 * s2 + 1) * p0 + (s3 - 2 * s2 + s) * h * m0 + (-2 * s3 + 3 * s2) * p1 + (s3 - s2) * h * m1;
+      }
+      function camAt(t) {
+        let i = 0;
+        while (i < K.length - 2 && t > K[i + 1].t) i++;
+        const a = K[i];
+        const b = K[i + 1];
+        const h = b.t - a.t;
+        const s = clamp((t - a.t) / h, 0, 1);
+        const v = (key) => a[key].map((x, j) => herm(x, TAN[i][key][j], b[key][j], TAN[i + 1][key][j], s, h));
+        return { p: v("p"), q: v("q"), u: v("u"), f: herm(a.f, TAN[i].f, b.f, TAN[i + 1].f, s, h) };
+      }
+
+      // ================= the state of the world at time t =================
+      const vA = new THREE.Vector3();
+      const vB = new THREE.Vector3();
+      function keyLevel(t) {
+        // ignition flicker on frames 1-3, on until 6.8, dark, slam at 9.6, dies at 13.8
+        const f = Math.floor(t * FPS + 1e-6);
+        if (f === 0) return 0;
+        if (f === 1) return 0.45;
+        if (f === 2) return 0.05;
+        if (t < 6.8) return 1;
+        if (t < 9.6) return 0;
+        if (t < 9.6 + 3 / FPS) return 2.6; // the slam, 3-frame hold
+        if (t < 13.8) return lerp(2.6, 1.15, sst(seg(t, 9.7, 10.4)));
+        return 1.15 * (1 - seg(t, 13.8, 13.92));
+      }
+      const DIE = [12.95, 13.15, 13.35, 13.55, 13.72];
+      function setState(t) {
+        const c = camAt(t);
+        camera.position.set(...c.p);
+        camera.up.set(...c.u).normalize();
+        camera.lookAt(...c.q);
+        camera.fov = c.f;
+        camera.updateProjectionMatrix();
+
+        const kl = keyLevel(t);
+        // key position: rides the camera rig (shot 1), orbits IN THE (shot 2), slams from behind the camera (shot 3)
+        const rig = vA.set(c.p[0] - 1.5, c.p[1] + 7.5, c.p[2] + 2.5);
+        const rigT = vB.set(c.q[0], Math.max(0, c.q[1] - 1.5), c.q[2]);
+        const ang = lerp(Math.PI * 1.15, Math.PI * 1.95, sst(seg(t, 3.5, 6.8)));
+        const orb = new THREE.Vector3(P2.x + Math.cos(ang) * 10, 13, P2.z + Math.sin(ang) * 10);
+        const slam = new THREE.Vector3(PD.x - 5, 14, PD.z + 26);
+        let kp;
+        let kt;
+        if (t < 3.3) {
+          kp = rig.clone();
+          kt = rigT.clone();
+        } else if (t < 7.2) {
+          const k = sst(seg(t, 3.3, 3.9));
+          kp = rig.clone().lerp(orb, k);
+          kt = rigT.clone().lerp(new THREE.Vector3(P2.x, 0, P2.z), k);
+        } else {
+          kp = slam;
+          kt = new THREE.Vector3(PD.x, 2.2, PD.z);
+        }
+        key.position.copy(kp);
+        key.target.position.copy(kt);
+        key.target.updateMatrixWorld();
+        key.intensity = kl * (t < 9.6 ? lerp(420, 1500, sst(seg(t, 0.6, 2.4))) : 2100);
+        aimCone(keyCone, kp, kt, t < 9.6 ? kl * 0.16 : 0);
+
+        // red rims: BUILT gets a faint rim in shot 1, DARK. lives on red alone until the slam
+        rimB.intensity = 260 * (t < 3.6 ? (t < 0.1 ? 0 : 1) : 1 - seg(t, 3.6, 4.2));
+        const rd = t < 6.8 ? 0 : t < 13.8 ? sst(seg(t, 6.8, 7.15)) : 1 - seg(t, 13.8, 13.92);
+        rimD.intensity = 900 * rd;
+        aimCone(rimCone, rimD.position, new THREE.Vector3(PD.x, 0, PD.z + 6), 0.11 * rd);
+
+        // each word goes dark once its moment has passed; DARK. stays hidden until its own shot
+        BUILT.group.visible = t < 4.6;
+        DARK.group.visible = t >= 6.7;
+        const inLit = 1 - sst(seg(t, 7.3, 8.1));
+        [INW, THEW].forEach((w) => {
+          w.group.visible = t < 8.2;
+          w.letters.forEach((m) => m.material.color.setHex(0x8a8378).multiplyScalar(inLit));
+        });
+        // DARK. dies letter by letter
+        DARK.letters.forEach((m, i) => {
+          const d = DIE[i];
+          let lit = 1;
+          if (t >= d) lit = 0;
+          else if (t >= d - 2 / FPS && t < d - 1 / FPS) lit = 0.15; // one flicker frame
+          m.material.color.setHex(0x8a8378).multiplyScalar(lit);
+          m.material.emissive.setHex(0x000000);
+        });
+      }
+
+      // ================= post: accumulate sub-frames, bloom, tone map, lens =================
+      const rtOpts = { type: THREE.HalfFloatType, depthBuffer: true };
+      const rtSub = new THREE.WebGLRenderTarget(W, H, rtOpts);
+      const rtAcc = new THREE.WebGLRenderTarget(W, H, { type: THREE.HalfFloatType, depthBuffer: false });
+      const accQuad = new FullScreenQuad(
+        new THREE.ShaderMaterial({
+          uniforms: { tSrc: { value: rtSub.texture }, uW: { value: 1 } },
+          vertexShader: `varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }`,
+          fragmentShader: `uniform sampler2D tSrc; uniform float uW; varying vec2 vUv; void main(){ gl_FragColor = vec4(texture2D(tSrc, vUv).rgb * uW, 1.0); }`,
+          blending: THREE.AdditiveBlending,
+          depthTest: false,
+          depthWrite: false,
+        }),
+      );
+      class AccumPass extends Pass {
+        constructor() {
+          super();
+          this.needsSwap = true;
+          this.copy = new FullScreenQuad(
+            new THREE.ShaderMaterial({
+              uniforms: { tSrc: { value: rtAcc.texture } },
+              vertexShader: `varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }`,
+              fragmentShader: `uniform sampler2D tSrc; varying vec2 vUv; void main(){ gl_FragColor = vec4(texture2D(tSrc, vUv).rgb, 1.0); }`,
+              depthTest: false,
+            }),
+          );
+        }
+        render(r, writeBuffer) {
+          r.setRenderTarget(writeBuffer);
+          this.copy.render(r);
+        }
+      }
+      const composer = new EffectComposer(renderer, new THREE.WebGLRenderTarget(W, H, { type: THREE.HalfFloatType }));
+      composer.setPixelRatio(1);
+      composer.setSize(W, H);
+      composer.addPass(new AccumPass());
+      const bloom = new UnrealBloomPass(new THREE.Vector2(W / 2, H / 2), 0.55, 0.6, 0.82);
+      composer.addPass(bloom);
+      const out = new OutputPass();
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.2;
+      composer.addPass(out);
+      const lens = new ShaderPass({
+        uniforms: { tDiffuse: { value: null }, uSeed: { value: 0 }, uGrain: { value: 0.045 } },
+        vertexShader: `varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.0); }`,
+        fragmentShader: `uniform sampler2D tDiffuse; uniform float uSeed; uniform float uGrain; varying vec2 vUv;
+          float h(vec2 p){ return fract(sin(dot(p, vec2(12.9898, 78.233)) + uSeed) * 43758.5453); }
+          void main(){
+            vec2 c = vUv - 0.5; float r2 = dot(c * vec2(0.5625, 1.0), c * vec2(0.5625, 1.0));
+            vec2 off = c * r2 * 0.012;
+            vec3 col = vec3(texture2D(tDiffuse, vUv + off).r, texture2D(tDiffuse, vUv).g, texture2D(tDiffuse, vUv - off).b);
+            col *= mix(1.0, 0.42, smoothstep(0.06, 0.42, r2));
+            float g = h(gl_FragCoord.xy) - 0.5;
+            col += g * uGrain * (0.35 + 0.65 * (1.0 - dot(col, vec3(0.33))));
+            gl_FragColor = vec4(max(col, 0.0), 1.0);
+          }`,
+      });
+      composer.addPass(lens);
+
+      const tag = document.getElementById("tag");
+      function render(t) {
+        t = clamp(t, 0, DUR - 1e-4);
+        renderer.setRenderTarget(rtAcc);
+        renderer.setClearColor(0x000000, 1);
+        renderer.clear(true, true, true);
+        accQuad.material.uniforms.uW.value = 1 / SUB;
+        for (let i = 0; i < SUB; i++) {
+          const ts = Math.max(0, t - SHUTTER * (i / (SUB - 1)));
+          setState(ts);
+          renderer.setRenderTarget(rtSub);
+          renderer.setClearColor(0x030303, 1);
+          renderer.clear(true, true, true);
+          renderer.render(scene, camera);
+          renderer.setRenderTarget(rtAcc);
+          accQuad.render(renderer);
+        }
+        setState(t);
+        lens.uniforms.uSeed.value = (Math.floor(t * FPS) % 24) * 1.37;
+        composer.render();
+        const ta = sst(seg(t, 10.9, 11.5)) * (1 - seg(t, 13.72, 13.9));
+        tag.style.opacity = ta.toFixed(3);
+        tag.style.transform = `translateY(${((1 - sst(seg(t, 10.9, 11.6))) * 14).toFixed(2)}px)`;
+      }
+
+      const tl = gsap.timeline({ paused: true });
+      const DR = { _t: 0 };
+      Object.defineProperty(DR, "t", {
+        get() {
+          return this._t;
+        },
+        set(v) {
+          this._t = v;
+          render(v);
+        },
+      });
+      tl.fromTo(DR, { t: 0 }, { t: DUR, duration: DUR, ease: "none", immediateRender: false }, 0);
+      render(0);
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
