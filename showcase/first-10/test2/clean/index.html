@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="en" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="assets/lib/gsap.min.js"></script>
+    <style>
+      @font-face {
+        font-family: "Archivo";
+        src: url("assets/fonts/archivo-var.woff2") format("woff2");
+        font-weight: 100 900;
+        font-stretch: 62% 125%;
+      }
+      @font-face {
+        font-family: "Inter";
+        src: url("assets/fonts/inter-var.woff2") format("woff2");
+        font-weight: 300 700;
+      }
+      :root {
+        --bg: #080808;
+        --ink: #f2f0ea;
+        --gray: #777777;
+        --red: #ff3b30;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: var(--bg);
+      }
+      #root {
+        position: relative;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: "Inter", sans-serif;
+      }
+      .abs {
+        position: absolute;
+        left: 0;
+        top: 0;
+      }
+      .plane {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 1080px;
+        height: 1920px;
+        transform-origin: 0 0;
+      }
+      .ui {
+        font-family: "Inter", sans-serif;
+        font-weight: 500;
+        font-size: 24px;
+        line-height: 28px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+      .disp {
+        font-family: "Archivo", sans-serif;
+        font-weight: 800;
+        line-height: 0.88;
+        letter-spacing: -0.012em;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+      .mask {
+        position: absolute;
+        overflow: hidden;
+      }
+      .brk {
+        position: absolute;
+        width: 26px;
+        height: 26px;
+        border: 0 solid var(--red);
+      }
+      .safe {
+        position: absolute;
+        background: rgba(255, 59, 48, 0.16);
+        border: 2px dashed rgba(255, 59, 48, 0.75);
+        color: #ff8a80;
+        font: 600 22px/1.2 Inter, sans-serif;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        padding: 10px 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" style="--paper: 0.012; --grain: 0.015; --scan: 0; --dust: 0" data-composition-id="main" data-start="0" data-duration="3" data-width="1080" data-height="1920" data-layout-allow-overlap data-layout-allow-overflow>
+      <svg width="0" height="0" style="position: absolute">
+        <filter id="ink" x="-2%" y="-5%" width="104%" height="110%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="3" result="n" />
+          <feDisplacementMap in="SourceGraphic" in2="n" scale="1.3" xChannelSelector="R" yChannelSelector="G" />
+        </filter>
+        <filter id="paper" x="0" y="0" width="100%" height="100%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.012 0.05" numOctaves="4" seed="8" />
+          <feColorMatrix type="matrix" values="0 0 0 0 0.95  0 0 0 0 0.93  0 0 0 0 0.9  0 0 0 0.9 -0.42" />
+        </filter>
+        <filter id="wipe" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur id="wipeG" stdDeviation="0 0" /></filter>
+      </svg>
+
+      <!-- BACKGROUND (deepest): paper/ink + almost invisible vertical grid -->
+      <div id="bg" class="plane">
+        <svg class="abs" width="1080" height="1920" style="opacity: var(--paper, 0.05)"><rect x="-200" y="-200" width="1480" height="2320" filter="url(#paper)" /></svg>
+        <svg id="grid" class="abs" width="1080" height="1920" viewBox="0 0 1080 1920" style="left: -120px; top: -120px; width: 1320px; height: 2160px"></svg>
+      </div>
+
+      <!-- MIDGROUND: guides, labels, reticle, red scan line, ghost of the old phrase -->
+      <div id="mid" class="plane">
+        <div id="gH1" class="abs" style="left: 110px; width: 760px; height: 1px; background: rgba(242, 240, 234, 0.12)"></div>
+        <div id="gH2" class="abs" style="left: 110px; width: 760px; height: 1px; background: rgba(242, 240, 234, 0.12)"></div>
+        <div id="gV" class="abs" style="top: 540px; width: 1px; height: 900px; background: rgba(242, 240, 234, 0.1)"></div>
+        <div id="status" class="abs ui" style="left: 150px; top: 540px; color: var(--gray)">Mental status / 07:42:<span id="sec">11</span></div>
+        <div id="lblDec" class="abs ui" style="left: 150px; color: var(--red); opacity: 0">Decision / pending</div>
+        <div id="lblLoop" class="abs ui" style="left: 150px; color: var(--gray); opacity: 0">Delay loop / active</div>
+        <svg id="ret" class="abs" width="64" height="64" viewBox="0 0 64 64" style="opacity: 0">
+          <circle cx="32" cy="32" r="14" fill="none" stroke="#ff3b30" stroke-width="2" />
+          <path d="M32 4 V18 M32 46 V60 M4 32 H18 M46 32 H60" stroke="#ff3b30" stroke-width="2" />
+        </svg>
+        <div id="redScan" class="abs" style="left: 90px; width: 820px; height: 2px; background: linear-gradient(90deg, rgba(255, 59, 48, 0), rgba(255, 59, 48, 0.9) 20%, rgba(255, 59, 48, 0.9) 80%, rgba(255, 59, 48, 0)); opacity: 0"></div>
+        <div id="ghost" class="abs" style="opacity: 0">
+          <div class="disp abs" style="left: 0; top: 0; font-size: 124px; font-stretch: 76%">You are</div>
+          <div class="disp abs" style="left: 0; top: 118px; font-size: 140px; font-stretch: 76%">Not lazy</div>
+        </div>
+      </div>
+
+      <!-- FOREGROUND: the typography (hero), one red cursor, one red line, brackets -->
+      <div id="fgP" class="plane" style="perspective: 1400px; perspective-origin: 440px 880px">
+        <div id="fg" class="plane" style="transform-origin: 440px 880px">
+          <div id="mA" class="mask" style="left: 170px; top: 760px; width: 700px; height: 118px"><div id="tA" class="disp abs" style="left: 0; top: 4px; font-size: 124px">You are</div></div>
+          <div id="mB" class="mask" style="left: 170px; top: 878px; width: 700px; height: 134px"><div id="tB" class="disp abs" style="left: 0; top: 4px; font-size: 140px">Not lazy</div></div>
+          <div id="cur" class="abs" style="width: 20px; height: 104px; background: var(--red); opacity: 0"></div>
+          <div id="rline" class="abs" style="left: 170px; height: 3px; width: 600px; background: var(--red); transform-origin: 0 50%"></div>
+          <div id="mA2" class="mask" style="left: 170px; top: 770px; width: 700px; height: 106px"><div id="tA2" class="disp abs" style="left: 0; top: 4px; font-size: 110px; font-stretch: 74%">You are</div></div>
+          <div id="mN" class="mask" style="left: 170px; top: 878px; width: 700px; height: 112px"><div id="tN" class="disp abs" style="left: 0; top: 4px; font-size: 116px; font-weight: 900">Negotiating</div></div>
+          <div id="b0" class="brk" style="border-top-width: 3px; border-left-width: 3px; opacity: 0"></div>
+          <div id="b1" class="brk" style="border-top-width: 3px; border-right-width: 3px; opacity: 0"></div>
+          <div id="b2" class="brk" style="border-bottom-width: 3px; border-left-width: 3px; opacity: 0"></div>
+          <div id="b3" class="brk" style="border-bottom-width: 3px; border-right-width: 3px; opacity: 0"></div>
+        </div>
+      </div>
+
+      <div id="flash" class="plane" style="background: var(--red); opacity: 0"></div>
+      <div id="scanPass" class="abs" style="left: 0; width: 1080px; height: 140px; background: linear-gradient(180deg, rgba(242, 240, 234, 0), rgba(242, 240, 234, 0.07), rgba(242, 240, 234, 0)); opacity: 0"></div>
+
+      <!-- TEXTURE (last) -->
+      <svg id="grainS" class="abs" width="1080" height="1920" style="opacity: var(--grain, 0.06); mix-blend-mode: overlay"><filter id="gr"><feTurbulence id="grT" type="fractalNoise" baseFrequency="0.95" numOctaves="2" seed="1" stitchTiles="stitch" /><feColorMatrix type="saturate" values="0" /></filter><rect width="1080" height="1920" filter="url(#gr)" /></svg>
+      <div class="abs" style="width: 1080px; height: 1920px; opacity: var(--scan, 1); background: repeating-linear-gradient(180deg, rgba(255, 255, 255, 0.022) 0 1px, rgba(0, 0, 0, 0) 1px 3px)"></div>
+      <div id="dustL" class="abs" style="width: 1080px; height: 1920px; opacity: var(--dust, 1)"></div>
+      <div class="abs" style="width: 1080px; height: 1920px; background: radial-gradient(120% 80% at 42% 46%, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, 0.55) 100%)"></div>
+
+      
+    </div>
+
+    <script>
+      const FPS = 30;
+      const DUR = 3;
+      const INK = false;
+      const $ = (id) => document.getElementById(id);
+      const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
+      const lerp = (a, b, k) => a + (b - a) * k;
+      const seg = (t, a, b) => clamp((t - a) / (b - a), 0, 1);
+      const c3 = (x) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2); // camera: smooth cubic
+      const p4o = (x) => 1 - Math.pow(1 - x, 4); // type: fast, precise
+      const p4i = (x) => x * x * x * x;
+      const expo = (x) => (x >= 1 ? 1 : 1 - Math.pow(2, -10 * x));
+      const F = (n) => n / FPS;
+
+      // ---------- grid ----------
+      const grid = $("grid");
+      for (let i = 0; i <= 16; i++) {
+        const l = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        const x = 40 + i * 64;
+        l.setAttribute("x1", x);
+        l.setAttribute("x2", x);
+        l.setAttribute("y1", 0);
+        l.setAttribute("y2", 1920);
+        l.setAttribute("stroke", "rgba(242,240,234,0.028)");
+        l.setAttribute("stroke-width", "1");
+        grid.appendChild(l);
+      }
+      // ---------- dust (seeded) ----------
+      let seed = 7;
+      const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+      const dust = [];
+      for (let i = 0; i < 12; i++) {
+        const e = document.createElement("div");
+        const s = 1.5 + rnd() * 2;
+        Object.assign(e.style, { position: "absolute", width: s + "px", height: s + "px", borderRadius: "50%", background: "#d8d4ca", opacity: 0, left: rnd() * 1080 + "px", top: rnd() * 1920 + "px" });
+        $("dustL").appendChild(e);
+        dust.push({ e, ph: Math.floor(rnd() * 89) });
+      }
+      if (INK) ["tA", "tB", "tN", "tA2"].forEach((id) => ($(id).style.filter = "url(#ink)"));
+
+      // ================= CAMERA =================
+      // One forward dolly through the whole shot. S = camera scale on the foreground plane.
+      // Planes sit at different depths, so they scale/translate by different amounts (2.5D parallax):
+      // background k=0.35, midground k=0.7, foreground k=1.
+      const CX = 440;
+      const CY = 880;
+      function camS(t) {
+        let s = lerp(1.0, 1.06, c3(seg(t, 0, 0.45))); // wide establish: slow dolly 100 -> 106 %
+        if (t >= 0.45) s = 1.08 + 0.04 * c3(seg(t, 0.45, 2.25)); // hard cut on the cursor blink (+2 %), keep pushing
+        if (t >= 2.25) s = 1.12 - 0.012 * Math.sin(Math.PI * seg(t, 2.25, 2.37)) * (t < 2.37 ? 1 : 0) + 0.05 * c3(seg(t, 2.33, 2.75)); // anticipation, then push through
+        return s;
+      }
+      function camY(t) {
+        // push targets the gap between the two lines once the phrase is built
+        return lerp(0, -10, c3(seg(t, 0.45, 2.25))) + lerp(0, -8, c3(seg(t, 2.33, 2.75)));
+      }
+      function planeTf(S, Y, k, driftX = 0) {
+        const s = 1 + (S - 1) * k;
+        const tx = CX - CX * s + driftX;
+        const ty = CY - CY * s + Y * k;
+        return `translate(${tx.toFixed(2)}px, ${ty.toFixed(2)}px) scale(${s.toFixed(5)})`;
+      }
+
+      const BR = [0, 1, 2, 3].map((i) => $("b" + i));
+      let brLag = null;
+
+      function render(t) {
+        const f = Math.round(t * FPS);
+        const S = camS(t);
+        const Y = camY(t);
+        const hold = t >= F(83) && t < F(86); // 3-frame impact hold
+        $("bg").style.transform = planeTf(S, Y, 0.35, -6 * c3(seg(t, 0, 3)));
+        $("mid").style.transform = planeTf(S, Y, 0.7);
+        $("fg").style.transform = planeTf(S, Y, 1);
+
+        // 3D tilt of 1-2 degrees as NOT LAZY locks
+        const tilt = c3(seg(t, 1.15, 2.25));
+        $("fg").style.transform += ` rotateY(${(-1.6 * tilt).toFixed(3)}deg) rotateX(${(0.9 * tilt).toFixed(3)}deg)`;
+
+        // ---- rack focus: UI sharp first, then the type ----
+        const rk = seg(t, 1.15, 1.45);
+        const fgBlur = t < 1.15 ? 0 : t < 1.3 ? lerp(0, 3.2, seg(t, 1.15, 1.25)) : lerp(3.2, 0, c3(seg(t, 1.3, 1.5)));
+        const midBlur = t < 1.3 ? 0 : lerp(0, 2.2, c3(seg(t, 1.3, 1.5)));
+        $("fgP").style.filter = fgBlur > 0.05 ? `blur(${fgBlur.toFixed(2)}px)` : "none";
+        $("mid").style.filter = midBlur > 0.05 ? `blur(${midBlur.toFixed(2)}px)` : "none";
+        $("bg").style.filter = "blur(1.2px)";
+
+        // ---- midground UI ----
+        $("sec").textContent = String(t >= 1 ? (t >= 2 ? 13 : 12) : 11);
+        const gIn = p4o(seg(t, 0.05, 0.5));
+        $("gH1").style.transform = `translateY(878px) scaleX(${gIn.toFixed(4)})`;
+        $("gH2").style.transform = `translateY(1012px) scaleX(${p4o(seg(t, 0.15, 0.6)).toFixed(4)})`;
+        $("gH1").style.transformOrigin = $("gH2").style.transformOrigin = "0 0";
+        $("gV").style.left = "150px";
+        $("gV").style.transform = `scaleY(${p4o(seg(t, 0.1, 0.55)).toFixed(4)})`;
+        $("gV").style.transformOrigin = "0 0";
+        $("lblDec").style.top = "1240px";
+        $("lblLoop").style.top = "1282px";
+        $("lblDec").style.opacity = t >= 2.5 ? (t < F(77) ? 0.4 : 1) : 0;
+        $("lblLoop").style.opacity = t >= 1.15 ? 0.85 * p4o(seg(t, 1.15, 1.35)) : 0;
+        $("lblDec").textContent = t >= 2.5 ? "Decision / pending" : "";
+        // reticle locks onto the right end of the phrase
+        const ret = $("ret");
+        const rx = lerp(760, 690, p4o(seg(t, 1.15, 1.5)));
+        ret.style.opacity = t >= 0.6 ? Math.min(0.9, p4o(seg(t, 0.6, 0.9))) : 0;
+        ret.style.transform = `translate(${rx.toFixed(1)}px, ${lerp(1050, 1068, c3(seg(t, 0.6, 2.25))).toFixed(1)}px) rotate(${(45 * p4o(seg(t, 1.15, 1.5))).toFixed(1)}deg)`;
+        // thin red scan line passes behind the letters (1.30-1.85)
+        const sc = seg(t, 1.3, 1.85);
+        $("redScan").style.opacity = sc > 0 && sc < 1 ? Math.sin(Math.PI * sc) * 0.85 : 0;
+        $("redScan").style.transform = `translateY(${lerp(730, 1060, c3(sc)).toFixed(1)}px)`;
+
+        // ---- foreground type ----
+        const rA = p4o(seg(t, 0.45, 0.8));
+        const wA = lerp(70, 76, p4o(seg(t, 0.45, 1.1)));
+        $("tA").style.fontStretch = wA.toFixed(2) + "%";
+        // NOT LAZY rises, overshoots by a few px, settles (1.15-1.40)
+        let yB = 140;
+        if (t >= 1.15) yB = 140 * (1 - p4o(seg(t, 1.15, 1.33)));
+        if (t >= 1.33) yB = -6 * Math.sin(Math.PI * seg(t, 1.33, 1.45));
+        $("tB").style.fontStretch = lerp(70, 76, p4o(seg(t, 1.15, 1.7))).toFixed(2) + "%";
+
+        // ---- transition 2.25-3.00: camera pushes through; old phrase recedes in depth ----
+        const back = c3(seg(t, 2.33, 2.62));
+        const oldOn = t < 2.62;
+        $("mA").style.visibility = $("mB").style.visibility = oldOn ? "visible" : "hidden";
+        $("tA").style.transform = `translateY(${((1 - rA) * 124).toFixed(2)}px)`;
+        $("tB").style.transform = `translateY(${yB.toFixed(2)}px)`;
+        // anticipation: the phrase leans right before the push
+        const lean = t >= 2.25 && t < 2.37 ? 6 * Math.sin(Math.PI * seg(t, 2.25, 2.37)) : 0;
+        $("mA").style.transform = $("mB").style.transform = `translateX(${lean.toFixed(2)}px)`;
+        // the old phrase hands over to a ghost on the midground (moves backward in depth)
+        const gh = $("ghost");
+        gh.style.opacity = t >= 2.33 ? (0.16 * (1 - seg(t, 2.62, 3.0)) + 0.84 * (1 - back)) * (t < 2.62 ? back : 1) * (t >= 2.62 ? 1 : 0.0) + (t >= 2.62 ? 0 : 0) : 0;
+        if (t >= 2.33) {
+          const gs = lerp(1, 0.86, back);
+          gh.style.opacity = t < 2.62 ? 0 : (0.15 * (1 - 0.4 * seg(t, 2.62, 3.0))).toFixed(3);
+          gh.style.transform = `translate(${lerp(170, 230, back).toFixed(1)}px, ${lerp(764, 800, back).toFixed(1)}px) scale(${gs.toFixed(4)})`;
+          gh.style.filter = "blur(3px)";
+          // while still on the foreground it shrinks and softens backward in depth
+          const k = lerp(1, 0.86, back);
+          ["mA", "mB"].forEach((id) => {
+            const el = $(id);
+            el.style.transformOrigin = "440px 0";
+            el.style.transform = `translate(${(lean + 40 * back).toFixed(2)}px, ${(40 * back).toFixed(2)}px) scale(${k.toFixed(4)})`;
+            el.style.opacity = (1 - 0.8 * back).toFixed(3);
+            el.style.filter = back > 0.05 ? `blur(${(3 * back).toFixed(2)}px)` : "none";
+          });
+        }
+
+        // NEGOTIATING: directional wipe from the left, compress/decompress, impact hold
+        const wA2 = p4o(seg(t, 2.42, 2.62));
+        $("mA2").style.visibility = t >= 2.42 ? "visible" : "hidden";
+        $("mA2").style.clipPath = `inset(0 ${((1 - wA2) * 100).toFixed(2)}% 0 0)`;
+        $("tA2").style.transform = `translateX(${((1 - wA2) * -40).toFixed(2)}px)`;
+        const mN = $("mN");
+        const tN = $("tN");
+        const wipeU = p4o(seg(t, 2.5, 2.72));
+        mN.style.visibility = t >= 2.5 ? "visible" : "hidden";
+        mN.style.clipPath = `inset(0 ${((1 - wipeU) * 100).toFixed(2)}% 0 0)`;
+        let sx = 1;
+        if (t >= 2.5 && t < 2.72) sx = lerp(1.12, 0.94, p4o(seg(t, 2.5, 2.72)));
+        else if (t >= 2.72 && t < F(83)) sx = lerp(0.94, 1.0, p4o(seg(t, 2.72, F(83))));
+        tN.style.transform = `translateX(${((1 - wipeU) * -60).toFixed(2)}px) scaleX(${sx.toFixed(4)})`;
+        tN.style.transformOrigin = "0 50%";
+        tN.style.fontStretch = lerp(62, 66, p4o(seg(t, 2.5, 2.8))).toFixed(2) + "%";
+        // the wipe edge is a soft directional blur that sharpens as it lands
+        $("wipeG").setAttribute("stdDeviation", `${((1 - wipeU) * 9).toFixed(2)} 0`);
+        mN.style.filter = wipeU < 0.98 && t >= 2.5 ? "url(#wipe)" : "none";
+
+        // red cursor: hard cut on its first blink at 0.45, it rides with the camera
+        const cur = $("cur");
+        const blinkOn = (t >= 0.45 && t < F(19)) || (t >= F(24) && t < F(29)) || (t >= F(34) && t < F(39));
+        const curX = 170 + $("tA").getBoundingClientRect().width / S + 18;
+        cur.style.opacity = t < 2.25 ? (blinkOn || (t >= 1.15 && t < 2.25) ? 1 : 0) : 0;
+        cur.style.transform = `translate(${(t >= 1.15 ? 170 + $("tB").getBoundingClientRect().width / S + 18 : curX).toFixed(1)}px, ${t >= 1.15 ? 896 : 776}px)`;
+        cur.style.height = t >= 1.15 ? "116px" : "102px";
+
+        // thin red line reacts: draws under the phrase, kicks on the lock, re-draws for NEGOTIATING
+        const rl = $("rline");
+        let lw = 0.32 * p4o(seg(t, 0.45, 0.9));
+        if (t >= 1.15) lw = 0.32 + 0.68 * p4o(seg(t, 1.2, 1.45));
+        if (t >= 2.33) lw = 1 - p4i(seg(t, 2.33, 2.5));
+        if (t >= 2.5) lw = p4o(seg(t, 2.52, 2.72)) * 0.88;
+        rl.style.transform = `translateY(${t >= 2.5 ? 1006 : 1030}px) scaleX(${lw.toFixed(4)})`;
+        rl.style.opacity = t >= 0.45 ? 1 : 0;
+
+        // brackets track the edges of the active word (with a 2-frame lag)
+        const tgt = t >= 2.5 ? $("tN") : t >= 1.15 ? $("tB") : $("tA");
+        const r = tgt.getBoundingClientRect();
+        const fgR = $("fg").getBoundingClientRect();
+        // convert to fg-plane coordinates
+        const toL = (x) => (x - fgR.left) / S;
+        const toT = (y) => (y - fgR.top) / S;
+        const want = { l: toL(r.left) - 22, r: toL(r.right) + 22, t: toT(r.top) - 6, b: toT(r.bottom) + 2 };
+        if (!brLag || f === 0) brLag = { ...want };
+        if (!hold) for (const k of ["l", "r", "t", "b"]) brLag[k] = lerp(brLag[k], want[k], 0.55);
+        const bOn = t >= 0.62 ? p4o(seg(t, 0.62, 0.85)) : 0;
+        const pts = [[brLag.l, brLag.t], [brLag.r - 26, brLag.t], [brLag.l, brLag.b - 26], [brLag.r - 26, brLag.b - 26]];
+        BR.forEach((b, i) => {
+          b.style.opacity = t >= 2.33 && t < 2.5 ? 0 : bOn;
+          b.style.transform = `translate(${pts[i][0].toFixed(1)}px, ${pts[i][1].toFixed(1)}px)`;
+        });
+
+        // one deliberate red flash as NEGOTIATING appears; scanline pass on the impact
+        $("flash").style.opacity = t >= 2.5 && t < F(77) ? 0.16 : 0;
+        const sp = seg(t, F(83), F(89));
+        $("scanPass").style.opacity = sp > 0 && sp < 1 ? 1 : 0;
+        $("scanPass").style.transform = `translateY(${lerp(710, 1130, sp).toFixed(1)}px)`;
+
+        // texture
+        $("grT").setAttribute("seed", String((f % 12) + 1));
+        dust.forEach((d) => (d.e.style.opacity = (f + d.ph) % 23 < 2 ? 0.5 : 0));
+      }
+
+      // re-run render from frame 0 on every seek so the bracket lag is seek-safe
+      function renderSeek(t) {
+        brLag = null;
+        const n = Math.round(t * FPS);
+        for (let i = Math.max(0, n - 12); i <= n; i++) render(Math.min(t, i / FPS));
+      }
+      const tl = gsap.timeline({ paused: true });
+      const DR = { _t: 0 };
+      Object.defineProperty(DR, "t", {
+        get() {
+          return this._t;
+        },
+        set(v) {
+          this._t = v;
+          renderSeek(v);
+        },
+      });
+      tl.fromTo(DR, { t: 0 }, { t: DUR, duration: DUR, ease: "none", immediateRender: false }, 0);
+      renderSeek(0);
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
