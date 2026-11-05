@@ -1,0 +1,424 @@
+<!doctype html>
+<html lang="en" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="assets/lib/gsap.min.js"></script>
+    <script type="importmap">
+      { "imports": { "three": "./assets/lib/three.module.js", "three/addons/": "./assets/lib/addons/" } }
+    </script>
+    <style>
+      @font-face {
+        font-family: "Instrument Serif";
+        font-style: italic;
+        src: url("assets/fonts/instrument-serif-italic.woff2") format("woff2");
+      }
+      @font-face {
+        font-family: "Instrument Serif";
+        font-style: normal;
+        src: url("assets/fonts/instrument-serif.woff2") format("woff2");
+      }
+      @font-face {
+        font-family: "Instrument Sans";
+        src: url("assets/fonts/instrument-sans.woff2") format("woff2");
+        font-weight: 400 700;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #030308;
+      }
+      #root {
+        position: relative;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #030308;
+        color: #f4f1ea;
+      }
+      canvas#gl {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 1080px;
+        height: 1920px;
+      }
+      .copy {
+        position: absolute;
+        left: 120px;
+        width: 700px;
+        visibility: hidden;
+      }
+      .serif {
+        display: block;
+        font: italic 400 136px/0.98 "Instrument Serif", serif;
+        letter-spacing: -0.01em;
+        text-shadow: 0 0 40px rgba(0, 0, 0, 0.6);
+      }
+      .sans {
+        display: block;
+        margin-top: 18px;
+        font: 600 66px/1.04 "Instrument Sans", sans-serif;
+        letter-spacing: -0.025em;
+        color: rgba(244, 241, 234, 0.92);
+      }
+      .spec {
+        background: linear-gradient(90deg, #ff3b3b, #ffb02e 30%, #3dff8f 52%, #32c8ff 72%, #9b6bff);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        filter: drop-shadow(0 0 18px rgba(140, 120, 255, 0.45));
+      }
+      .hot {
+        color: #fff6e8;
+        text-shadow:
+          0 0 24px rgba(255, 170, 60, 0.9),
+          0 0 70px rgba(255, 110, 30, 0.6);
+      }
+      .kick {
+        display: block;
+        font: 600 26px/1 "Instrument Sans", sans-serif;
+        letter-spacing: 0.32em;
+        text-transform: uppercase;
+        color: rgba(244, 241, 234, 0.55);
+        margin-bottom: 26px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="3" data-width="1080" data-height="1920" data-layout-allow-overlap>
+      <canvas id="gl" width="1080" height="1920" data-layout-ignore></canvas>
+      <div class="copy" id="c1" style="top: 400px">
+        <span class="serif">You’re not tired.</span>
+        <span class="sans">You’re split <span class="spec">47 ways.</span></span>
+      </div>
+      <div class="copy" id="c2" style="top: 380px">
+        <span class="kick">47 open tasks</span>
+        <span class="serif">Every one</span>
+        <span class="sans">splits your focus again.</span>
+      </div>
+      <div class="copy" id="c3" style="top: 400px">
+        <span class="serif">Split light</span>
+        <span class="sans">can’t burn <span class="hot">anything.</span></span>
+      </div>
+      <svg width="1080" height="1920" data-layout-ignore style="position: absolute; left: 0; top: 0; opacity: 0.07; mix-blend-mode: overlay"><filter id="gr"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="5" stitchTiles="stitch" /><feColorMatrix type="saturate" values="0" /></filter><rect width="1080" height="1920" filter="url(#gr)" /></svg>
+      <div data-layout-ignore style="position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: radial-gradient(120% 80% at 50% 50%, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, 0.65) 100%)"></div>
+    </div>
+
+    <script type="module">
+      import * as THREE from "three";
+      import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
+      import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
+      import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
+      import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
+      import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
+
+      await Promise.all([document.fonts.load('500 120px "Instrument Sans"'), document.fonts.load('italic 136px "Instrument Serif"')]);
+
+      const W = 1080;
+      const H = 1920;
+      const V = THREE.Vector3;
+      function mulberry(a) {
+        return () => {
+          a |= 0;
+          a = (a + 0x6d2b79f5) | 0;
+          let t = Math.imul(a ^ (a >>> 15), 1 | a);
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+          return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        };
+      }
+      const rnd = mulberry(7);
+
+      const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById("gl"), antialias: true, preserveDrawingBuffer: true });
+      renderer.setPixelRatio(1);
+      renderer.setSize(W, H, false);
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.0;
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(46, W / H, 0.1, 100);
+      camera.position.set(0, 0, 13);
+      camera.lookAt(0, 0, 0);
+      scene.environment = new THREE.PMREMGenerator(renderer).fromScene(new RoomEnvironment(), 0.04).texture;
+      scene.environmentIntensity = 0.55;
+
+      // background: a deep indigo bloom of darkness, never pure flat black
+      const bg = new THREE.Mesh(
+        new THREE.PlaneGeometry(60, 90),
+        new THREE.ShaderMaterial({
+          uniforms: { uC: { value: new THREE.Vector2(0.62, 0.62) } },
+          vertexShader: `varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.0); }`,
+          fragmentShader: `varying vec2 vUv; uniform vec2 uC;
+            void main(){ vec2 d = (vUv - uC) * vec2(1.0, 1.6); float r = length(d);
+              vec3 c = mix(vec3(0.016, 0.011, 0.038), vec3(0.003, 0.003, 0.008), smoothstep(0.0, 0.6, r));
+              gl_FragColor = vec4(c, 1.0); }`,
+          depthWrite: false,
+        }),
+      );
+      bg.position.z = -30;
+      scene.add(bg);
+
+      // ---------- light ribbons (camera-facing quads, additive, HDR) ----------
+      const rayMat = () =>
+        new THREE.ShaderMaterial({
+          uniforms: { uC: { value: new THREE.Color(1, 1, 1) }, uI: { value: 1 }, uSharp: { value: 6 }, uFadeIn: { value: 0.02 }, uFadeOut: { value: 0.35 } },
+          vertexShader: `attribute vec2 st; varying vec2 vSt; void main(){ vSt = st; gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.0); }`,
+          fragmentShader: `uniform vec3 uC; uniform float uI; uniform float uSharp; uniform float uFadeIn; uniform float uFadeOut; varying vec2 vSt;
+            void main(){ float core = exp(-vSt.y*vSt.y*uSharp);
+              float a = smoothstep(0.0, uFadeIn, vSt.x) * (1.0 - smoothstep(1.0 - uFadeOut, 1.0, vSt.x));
+              gl_FragColor = vec4(uC * uI * core * a, 1.0); }`,
+          transparent: true,
+          blending: THREE.AdditiveBlending,
+          depthWrite: false,
+          side: THREE.DoubleSide,
+        });
+      function ribbon(group, A, B, width, color, I, sharp = 6, fadeIn = 0.02, fadeOut = 0.35) {
+        const dir = new V().subVectors(B, A);
+        const mid = new V().addVectors(A, B).multiplyScalar(0.5);
+        const side = new V().crossVectors(dir, new V().subVectors(camera.position, mid)).normalize().multiplyScalar(width);
+        const g = new THREE.BufferGeometry();
+        const p = [A.clone().add(side), A.clone().sub(side), B.clone().add(side), B.clone().sub(side)];
+        g.setAttribute("position", new THREE.Float32BufferAttribute(p.flatMap((v) => [v.x, v.y, v.z]), 3));
+        g.setAttribute("st", new THREE.Float32BufferAttribute([0, 1, 0, -1, 1, 1, 1, -1], 2));
+        g.setIndex([0, 1, 2, 2, 1, 3]);
+        const m = rayMat();
+        m.uniforms.uC.value.copy(color);
+        m.uniforms.uI.value = I;
+        m.uniforms.uSharp.value = sharp;
+        m.uniforms.uFadeIn.value = fadeIn;
+        m.uniforms.uFadeOut.value = fadeOut;
+        const mesh = new THREE.Mesh(g, m);
+        mesh.frustumCulled = false;
+        group.add(mesh);
+        return mesh;
+      }
+      // a beam = white-hot core + soft halo + a wide volumetric haze
+      function beam(group, A, B, s = 1, tint = new THREE.Color(0.75, 0.85, 1)) {
+        ribbon(group, A, B, 0.035 * s, new THREE.Color(1, 1, 1), 9 * s, 5, 0.005, 0.02);
+        ribbon(group, A, B, 0.22 * s, tint, 1.6 * s, 4, 0.005, 0.03);
+        ribbon(group, A, B, 0.9 * Math.min(s, 1.2), new THREE.Color(0.4, 0.45, 0.9), 0.07 * s, 2.4, 0.005, 0.05);
+      }
+      function glow(group, P, size, color, I) {
+        const m = new THREE.Mesh(
+          new THREE.PlaneGeometry(size, size),
+          new THREE.ShaderMaterial({
+            uniforms: { uC: { value: color }, uI: { value: I } },
+            vertexShader: `varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.0); }`,
+            fragmentShader: `uniform vec3 uC; uniform float uI; varying vec2 vUv; void main(){ float r = length(vUv - 0.5) * 2.0; float g = exp(-r*r*9.0) + 0.06*exp(-r*r*2.0); gl_FragColor = vec4(uC*uI*g*(1.0 - smoothstep(0.85, 1.0, r)), 1.0); }`,
+            transparent: true,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false,
+          }),
+        );
+        m.position.copy(P);
+        group.add(m);
+        return m;
+      }
+      // ---------- glass prisms: real transmission + dispersion, crisp edges ----------
+      const prismGeo = new THREE.CylinderGeometry(0.6, 0.6, 1.7, 3, 1);
+      const glass = new THREE.MeshPhysicalMaterial({ color: 0xffffff, metalness: 0, roughness: 0.03, transmission: 1, thickness: 1.1, ior: 1.52, dispersion: 6, envMapIntensity: 1.3, specularIntensity: 1, clearcoat: 1, clearcoatRoughness: 0.05, attenuationColor: new THREE.Color(0.85, 0.9, 1), attenuationDistance: 3 });
+      const edgeGeo = new THREE.EdgesGeometry(prismGeo);
+      function prism(group, P, rot, s, edgeI = 1.4, dark = false) {
+        const g = new THREE.Group();
+        const m = new THREE.Mesh(prismGeo, dark ? new THREE.MeshPhysicalMaterial({ color: 0x0c0c14, roughness: 0.2, metalness: 0.1, transmission: 0.4, thickness: 1, envMapIntensity: 0.4 }) : glass);
+        const e = new THREE.LineSegments(edgeGeo, new THREE.LineBasicMaterial({ color: new THREE.Color(edgeI, edgeI, edgeI * 1.1), transparent: true, opacity: dark ? 0.25 : 0.85, blending: THREE.AdditiveBlending }));
+        g.add(m, e);
+        g.position.copy(P);
+        g.rotation.set(rot[0], rot[1], rot[2]);
+        g.scale.setScalar(s);
+        group.add(g);
+        return g;
+      }
+      // ---------- task words (canvas sprites, depth blur baked in) ----------
+      function word(group, text, P, h, color, opacity, blurPx, hot = false) {
+        const c = document.createElement("canvas");
+        c.width = 1400;
+        c.height = 300;
+        const g = c.getContext("2d");
+        g.font = '500 150px "Instrument Sans"';
+        const tw = g.measureText(text).width;
+        g.filter = blurPx > 0.2 ? `blur(${blurPx}px)` : "none";
+        g.textBaseline = "middle";
+        if (hot) {
+          g.fillStyle = "#ffffff";
+          g.shadowColor = "#ff7a1a";
+          g.shadowBlur = 40;
+          g.fillText(text, (1400 - tw) / 2, 150);
+        } else {
+          g.fillStyle = "#ffffff";
+          g.fillText(text, (1400 - tw) / 2, 150);
+        }
+        const tex = new THREE.CanvasTexture(c);
+        tex.colorSpace = THREE.SRGBColorSpace;
+        const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, opacity, color, depthWrite: false, blending: hot ? THREE.AdditiveBlending : THREE.NormalBlending, toneMapped: false });
+        const m = new THREE.Mesh(new THREE.PlaneGeometry(h * (1400 / 300), h), mat);
+        m.position.copy(P);
+        group.add(m);
+        return m;
+      }
+      // ---------- dust in the air, lit only near light ----------
+      function dust(group, beams, n = 2600, gain = 1) {
+        const pos = [];
+        const col = [];
+        const seg = (p, a, b) => {
+          const ab = new V().subVectors(b, a);
+          const t = Math.max(0, Math.min(1, new V().subVectors(p, a).dot(ab) / ab.lengthSq()));
+          return p.distanceTo(a.clone().addScaledVector(ab, t));
+        };
+        for (let i = 0; i < n; i++) {
+          const p = new V((rnd() * 2 - 1) * 4.5, (rnd() * 2 - 1) * 7.5, -7 + rnd() * 10);
+          let L = new THREE.Color(0, 0, 0);
+          for (const [a, b, c, I] of beams) {
+            const d = seg(p, a, b);
+            const k = Math.exp(-(d * d) / 0.5) * I;
+            L.r += c.r * k;
+            L.g += c.g * k;
+            L.b += c.b * k;
+          }
+          if (L.r + L.g + L.b < 0.02) continue;
+          pos.push(p.x, p.y, p.z);
+          col.push(L.r * gain, L.g * gain, L.b * gain);
+        }
+        const g = new THREE.BufferGeometry();
+        g.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3));
+        g.setAttribute("color", new THREE.Float32BufferAttribute(col, 3));
+        const m = new THREE.Points(g, new THREE.PointsMaterial({ size: 0.035, vertexColors: true, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, sizeAttenuation: true }));
+        group.add(m);
+      }
+      const hue = (h, l = 0.55) => new THREE.Color().setHSL(h, 1, l);
+      const SRC = new V(4.8, 7.6, -1.5); // the light enters from top-right, off frame
+
+      // ================= FRAME 1: the hook, one pure beam, the first prism slides into it =================
+      const F1 = new THREE.Group();
+      {
+        const END = new V(-5.2, -8.6, 0.6);
+        const P1 = new V(-1.05, -2.15, 0.5);
+        beam(F1, SRC, P1, 1.15);
+        // the beam continues past the prism, already a little weaker
+        ribbon(F1, P1, END, 0.03, new THREE.Color(1, 1, 1), 5.5, 5, 0.01, 0.3);
+        ribbon(F1, P1, END, 0.18, new THREE.Color(0.75, 0.85, 1), 1.0, 4, 0.01, 0.35);
+        prism(F1, P1, [0.25, 0.6, 0.9], 0.62);
+        glow(F1, P1, 1.4, new THREE.Color(0.8, 0.85, 1), 0.7);
+        // the first crack: a thin spectrum leaks out of it
+        for (let i = 0; i < 7; i++) {
+          const a = -0.55 - i * 0.07;
+          const B = P1.clone().add(new V(Math.cos(a) * 6, Math.sin(a) * 6, 0.4));
+          ribbon(F1, P1, B, 0.016, hue(i / 7 * 0.8), 1.6, 5, 0.02, 0.6);
+        }
+        glow(F1, new V(3.55, 5.55, -1.0), 1.6, new THREE.Color(0.9, 0.95, 1), 0.8);
+        dust(F1, [[SRC, P1, new THREE.Color(1, 1, 1), 1.2], [P1, END, new THREE.Color(0.8, 0.9, 1), 0.5]]);
+      }
+      // ================= FRAME 2: shattered into 47 rays, every task barely lit =================
+      const F2 = new THREE.Group();
+      {
+        const C = new V(1.3, 1.05, 0);
+        beam(F2, SRC, C, 1.0);
+        glow(F2, C, 1.6, new THREE.Color(0.85, 0.85, 1), 0.8);
+        [
+          [new V(0.9, 1.4, 0.3), [0.3, 0.2, 0.6], 0.6],
+          [new V(1.7, 0.65, -0.2), [1.1, 0.5, 0.2], 0.5],
+          [new V(1.25, 1.15, 0.7), [-0.4, 1.2, 1.4], 0.42],
+          [new V(1.95, 1.55, -0.5), [0.8, -0.6, 2.2], 0.38],
+          [new V(0.6, 0.7, -0.4), [2.0, 0.3, -0.4], 0.44],
+          [new V(1.5, 0.1, 0.4), [0.2, 1.6, 0.9], 0.34],
+        ].forEach(([P, r, s]) => prism(F2, P, r, s));
+        const TASKS = ["the email", "gym plan", "taxes", "call mom back", "the essay", "meal prep", "that reply", "pay rent", "form check", "update CV", "the course", "book dentist", "fix the bike", "read ch. 4"];
+        const lit = [];
+        for (let i = 0; i < 47; i++) {
+          const u = i / 46;
+          const a = -3.0 + u * 2.25 + (rnd() - 0.5) * 0.05; // fan from down-left to down-right
+          const len = 5.8 + rnd() * 3.6;
+          const z = -3.5 + rnd() * 6;
+          const B = C.clone().add(new V(Math.cos(a) * len * 0.62, Math.sin(a) * len, z));
+          const col = hue(u * 0.8, 0.55);
+          ribbon(F2, C, B, 0.014 + rnd() * 0.012, col, 0.9, 5, 0.02, 0.55);
+          ribbon(F2, C, B, 0.09, col, 0.08, 3, 0.02, 0.55);
+          lit.push([C, B, col, 0.12]);
+          if (i % 3 === 1 && TASKS.length) {
+            const t = TASKS.shift();
+            const n = (i - 1) / 3;
+            const end = C.clone().lerp(B, 0.5 + (n % 3) * 0.17);
+            word(F2, t, end, 0.32, col.clone().lerp(new THREE.Color(1, 1, 1), 0.55), 0.45, Math.abs(z) * 2.0);
+          }
+        }
+        glow(F2, new V(3.55, 5.55, -1.0), 1.5, new THREE.Color(0.9, 0.95, 1), 0.7);
+        dust(F2, [[SRC, C, new THREE.Color(1, 1, 1), 1.0], ...lit], 3000, 1.4);
+      }
+      // ================= FRAME 3: one beam, white-hot, burning through one task =================
+      const F3 = new THREE.Group();
+      {
+        const T = new V(-0.35, -1.2, 0.5); // impact point, just above the word
+        ribbon(F3, SRC, T, 0.07, new THREE.Color(1, 1, 1), 16, 5, 0.005, 0.01);
+        ribbon(F3, SRC, T, 0.34, new THREE.Color(0.85, 0.9, 1), 2.4, 4, 0.005, 0.02);
+        ribbon(F3, SRC, T, 1.0, new THREE.Color(0.45, 0.5, 0.95), 0.1, 2.4, 0.005, 0.04);
+        glow(F3, T, 2.6, new THREE.Color(1.0, 0.42, 0.1), 0.9);
+        glow(F3, T, 0.7, new THREE.Color(1, 0.96, 0.88), 2.6);
+        const WP = new V(-0.35, -1.78, 0.52);
+        word(F3, "finish the set", WP, 0.7, new THREE.Color(3.0, 1.5, 0.6), 0.9, 14, true); // glow layer
+        word(F3, "finish the set", WP.clone().add(new V(0, 0, 0.01)), 0.7, new THREE.Color(1, 0.96, 0.86), 1, 0, false); // crisp white-hot core
+        // sparks: short streaks thrown off the impact
+        const sp = [];
+        const sc = [];
+        for (let i = 0; i < 160; i++) {
+          const a = rnd() * Math.PI * 2;
+          const r0 = 0.15 + rnd() * 0.5;
+          const r1 = r0 + 0.08 + rnd() * 0.5;
+          const zz = (rnd() - 0.5) * 1.2;
+          const grav = rnd() * 0.25;
+          const ay = Math.sin(a) > 0 ? 0.9 : 0.55; // most sparks spray up and out, a few fall
+          sp.push(T.x + Math.cos(a) * r0 * 1.3, T.y + Math.sin(a) * r0 * ay, T.z + zz, T.x + Math.cos(a) * r1 * 1.3, T.y + Math.sin(a) * r1 * ay - grav, T.z + zz);
+          const k = 1.5 + rnd() * 2.5;
+          sc.push(k * 1.0, k * 0.6, k * 0.25, k * 1.0, k * 0.35, k * 0.1);
+        }
+        const sg = new THREE.BufferGeometry();
+        sg.setAttribute("position", new THREE.Float32BufferAttribute(sp, 3));
+        sg.setAttribute("color", new THREE.Float32BufferAttribute(sc, 3));
+        F3.add(new THREE.LineSegments(sg, new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false })));
+        // the prisms that used to split it: dark, falling out of the light
+        prism(F3, new V(2.3, -4.4, -1.2), [0.9, 0.4, 2.0], 0.42, 0.5, true);
+        prism(F3, new V(1.4, -5.6, 0.2), [-0.6, 1.1, 0.4], 0.34, 0.5, true);
+        prism(F3, new V(-2.4, -5.0, -2.0), [0.3, -0.8, 1.1], 0.3, 0.5, true);
+        glow(F3, new V(3.55, 5.55, -1.0), 1.8, new THREE.Color(0.95, 0.97, 1), 0.9);
+        dust(F3, [[SRC, T, new THREE.Color(1, 0.95, 0.9), 1.6]], 3000, 1.2);
+      }
+      scene.add(F1, F2, F3);
+
+      // ---------- post ----------
+      const composer = new EffectComposer(renderer, new THREE.WebGLRenderTarget(W, H, { type: THREE.HalfFloatType, samples: 4 }));
+      composer.setPixelRatio(1);
+      composer.setSize(W, H);
+      composer.addPass(new RenderPass(scene, camera));
+      composer.addPass(new UnrealBloomPass(new THREE.Vector2(W / 2, H / 2), 0.55, 0.45, 0.7));
+      composer.addPass(new OutputPass());
+
+      const copies = [document.getElementById("c1"), document.getElementById("c2"), document.getElementById("c3")];
+      function render(t) {
+        const k = t < 1 ? 0 : t < 2 ? 1 : 2;
+        [F1, F2, F3].forEach((g, i) => (g.visible = i === k));
+        copies.forEach((c, i) => (c.style.visibility = i === k ? "visible" : "hidden"));
+        composer.render();
+      }
+      const tl = gsap.timeline({ paused: true });
+      const DR = { _t: 0 };
+      Object.defineProperty(DR, "t", {
+        get() {
+          return this._t;
+        },
+        set(v) {
+          this._t = v;
+          render(v);
+        },
+      });
+      tl.fromTo(DR, { t: 0 }, { t: 3, duration: 3, ease: "none", immediateRender: false }, 0);
+      render(0);
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
