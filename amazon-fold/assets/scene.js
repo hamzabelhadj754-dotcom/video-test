@@ -695,11 +695,11 @@ function render(t) {
   // DOM labels ride on the lights
   const sA = toScreen(wA), sB = toScreen(wB);
   // labels sit up and to the right of each house, in world space so they scale with the shot
-  const lA = toScreen(tmpV.copy(wA).add(new THREE.Vector3(0.17, 0.13, 0)));
-  const lB = toScreen(tmpV.copy(wB).add(new THREE.Vector3(0.17, 0.13, 0)));
+  const lA = toScreen(tmpV.copy(wA).add(new THREE.Vector3(0.045, 0.035, 0)));
+  const lB = toScreen(tmpV.copy(wB).add(new THREE.Vector3(0.045, 0.035, 0)));
   const cx = (v) => Math.min(W * 0.9 - 150, Math.max(W * 0.1, v)), cy = (v) => Math.min(1260, Math.max(200, v));
-  if (labels.here) labels.here.style.transform = `translate(${cx(lA.x + 14).toFixed(1)}px, ${cy(lA.y - 58).toFixed(1)}px)`;
-  if (labels.there) labels.there.style.transform = `translate(${cx(lB.x + 18).toFixed(1)}px, ${cy(lB.y - 58).toFixed(1)}px)`;
+  if (labels.here) labels.here.style.transform = `translate(${cx(lA.x + 22).toFixed(1)}px, ${cy(lA.y - 64).toFixed(1)}px)`;
+  if (labels.there) labels.there.style.transform = `translate(${cx(lB.x + 18).toFixed(1)}px, ${cy(lB.y - 64).toFixed(1)}px)`;
   host.debug = { t, theta, sA, sB, cam: p };
 }
 
