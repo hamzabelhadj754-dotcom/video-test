@@ -4,3 +4,4 @@ renders/*.log
 renders/*-draft.mp4
 renders/work-*/
 renders/.*-transaction-*/
+renders/*-master.mp4
