@@ -3,3 +3,4 @@ node_modules/
 renders/*.log
 renders/*-draft.mp4
 renders/work-*/
+renders/.*-transaction-*/
