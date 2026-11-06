@@ -1,0 +1,121 @@
+<template>
+  <style>
+    @font-face { font-family: "Instrument Serif"; src: url("assets/fonts/InstrumentSerif-Regular.woff2") format("woff2"); font-style: normal; }
+    @font-face { font-family: "Instrument Serif"; src: url("assets/fonts/InstrumentSerif-Italic.woff2") format("woff2"); font-style: italic; }
+    @font-face { font-family: "Inter"; src: url("assets/fonts/Inter-Variable.woff2") format("woff2"); font-weight: 100 900; }
+    @font-face { font-family: "JetBrains Mono"; src: url("assets/fonts/JetBrainsMono-Variable.woff2") format("woff2"); font-weight: 100 800; }
+    #root { position: absolute; inset: 0; overflow: hidden; color: #EDEDED; }
+    #n-whip { position: absolute; inset: 0; }
+    #n-view { position: absolute; inset: 0; perspective: 1700px; perspective-origin: 50% 47%; }
+    #n-ring { position: absolute; left: 540px; top: 900px; width: 0; height: 0; transform-style: preserve-3d; }
+    .n-card { position: absolute; left: -410px; top: -280px; width: 820px; height: 560px; transform-style: preserve-3d; }
+    .n-flip { position: absolute; inset: 0; transform-style: preserve-3d; }
+    .n-face { position: absolute; inset: 0; border-radius: 44px; overflow: hidden; backface-visibility: hidden; -webkit-backface-visibility: hidden;
+      background: linear-gradient(160deg, rgba(255,255,255,.11) 0%, rgba(255,255,255,.035) 40%, rgba(255,255,255,.02) 100%), #0e0e13;
+      border: 1px solid rgba(255,255,255,.13);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.18), inset 0 -40px 80px rgba(0,0,0,.35), 0 50px 120px rgba(0,0,0,.7); }
+    .n-back { transform: rotateY(180deg); }
+    .n-sheen { position: absolute; top: -40%; bottom: -40%; width: 45%; left: 0;
+      background: linear-gradient(100deg, transparent, rgba(255,255,255,.07) 45%, rgba(255,255,255,.16) 50%, rgba(255,255,255,.07) 55%, transparent); }
+    .n-top { position: absolute; left: 48px; right: 48px; top: 40px; display: flex; justify-content: space-between; align-items: center; }
+    .n-idx { font: 600 28px "JetBrains Mono"; letter-spacing: .12em; color: #8a8a92; }
+    .n-pill { height: 50px; padding: 0 22px; border-radius: 25px; display: flex; align-items: center; gap: 10px; font: 700 24px "Inter"; letter-spacing: .16em;
+      color: #ff8a80; background: rgba(194,54,47,.18); border: 1px solid rgba(194,54,47,.6); }
+    .n-pill i { width: 10px; height: 10px; border-radius: 50%; background: #C2362F; box-shadow: 0 0 10px #C2362F; display: block; }
+    .n-icon { position: absolute; left: 50%; top: 110px; width: 190px; height: 190px; margin-left: -95px; }
+    .n-icon svg { width: 100%; height: 100%; overflow: visible; }
+    .n-txt { position: absolute; left: 0; right: 0; top: 352px; text-align: center; font: 400 104px/1.1 "Instrument Serif", serif; letter-spacing: -0.02em; white-space: nowrap; }
+    .n-txt em { font-style: italic; }
+    .n-tw { position: relative; display: inline-block; }
+    .n-strike { position: absolute; left: -24px; right: -24px; top: 54%; height: 7px; border-radius: 4px; background: #C2362F; box-shadow: 0 0 24px rgba(194,54,47,.75), 0 0 2px #ff9a90; }
+    .n-dim { position: absolute; inset: 0; background: rgba(5,5,8,.55); border-radius: 44px; }
+    .n-glow { position: absolute; left: 10%; right: 10%; bottom: -60px; height: 120px; border-radius: 50%; background: radial-gradient(ellipse, rgba(194,54,47,.35), transparent 70%); filter: blur(10px); }
+    /* back of card 3: the motivation meter, which the next scene opens */
+    .n-meter { position: absolute; left: 50%; top: 50%; width: 330px; height: 330px; margin: -165px 0 0 -165px; }
+    .n-mlab { position: absolute; left: 48px; top: 40px; font: 600 24px "Inter"; letter-spacing: .2em; color: #9a958b; display: flex; align-items: center; gap: 12px; }
+    .n-mlab i { width: 10px; height: 10px; border-radius: 50%; background: #D4A64A; box-shadow: 0 0 12px #D4A64A; display: block; }
+  </style>
+  <div id="root" data-composition-id="nots" data-width="1080" data-height="1920">
+    <div id="n-whip">
+      <div id="n-view">
+        <div id="n-ring">
+          <!-- 01 the boss -->
+          <div class="n-card" id="n-c1"><div class="n-flip">
+            <div class="n-face"><div class="n-sheen" id="n-sh1"></div>
+              <div class="n-top"><div class="n-idx">01 / 03</div><div class="n-pill" id="n-p1"><i></i>NO</div></div>
+              <div class="n-icon"><svg viewBox="0 0 190 190" fill="none" stroke="#EDEDED" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="22" y="62" width="146" height="104" rx="16"/><path d="M68 62 V44 a10 10 0 0 1 10 -10 h34 a10 10 0 0 1 10 10 V62"/><path d="M22 104 h146" opacity=".55"/><rect x="84" y="94" width="22" height="20" rx="4" fill="#EDEDED" stroke="none"/></svg></div>
+              <div class="n-txt"><span class="n-tw">Not your <em>boss.</em><span class="n-strike" id="n-s1"></span></span></div>
+              <div class="n-dim" id="n-d1"></div>
+            </div>
+          </div><div class="n-glow" id="n-g1"></div></div>
+          <!-- 02 the family -->
+          <div class="n-card" id="n-c2"><div class="n-flip">
+            <div class="n-face"><div class="n-sheen" id="n-sh2"></div>
+              <div class="n-top"><div class="n-idx">02 / 03</div><div class="n-pill" id="n-p2"><i></i>NO</div></div>
+              <div class="n-icon"><svg viewBox="0 0 190 190" fill="none" stroke="#EDEDED" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 92 L95 30 L170 92"/><path d="M38 80 V166 H152 V80"/><circle cx="74" cy="112" r="12"/><path d="M54 152 q20 -26 40 0"/><circle cx="118" cy="116" r="10"/><path d="M102 152 q16 -20 32 0"/></svg></div>
+              <div class="n-txt"><span class="n-tw">Not your <em>family.</em><span class="n-strike" id="n-s2"></span></span></div>
+              <div class="n-dim" id="n-d2"></div>
+            </div>
+          </div><div class="n-glow" id="n-g2"></div></div>
+          <!-- 03 motivation (its back is the meter) -->
+          <div class="n-card" id="n-c3"><div class="n-flip" id="n-f3">
+            <div class="n-face"><div class="n-sheen" id="n-sh3"></div>
+              <div class="n-top"><div class="n-idx">03 / 03</div><div class="n-pill" id="n-p3"><i></i>NO</div></div>
+              <div class="n-icon"><svg viewBox="0 0 190 190" fill="none" stroke="#EDEDED" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M30 140 h130"/><path d="M50 140 a45 45 0 0 1 90 0"/><path d="M95 50 v-22 M45 74 l-14 -14 M145 74 l14 -14 M22 112 h-14 M168 112 h14"/><path d="M60 162 h70" opacity=".5"/></svg></div>
+              <div class="n-txt"><span class="n-tw">Not <em>motivation.</em><span class="n-strike" id="n-s3"></span></span></div>
+              <div class="n-dim" id="n-d3"></div>
+            </div>
+            <div class="n-face n-back">
+              <div class="n-mlab"><i></i>MOTIVATION</div>
+              <svg class="n-meter" viewBox="0 0 330 330"><circle cx="165" cy="165" r="140" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="20"/>
+                <circle cx="165" cy="165" r="140" fill="none" stroke="#D4A64A" stroke-width="20" stroke-linecap="round" stroke-dasharray="880" stroke-dashoffset="0" transform="rotate(-90 165 165)" opacity=".9"/></svg>
+            </div>
+          </div><div class="n-glow" id="n-g3"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const START = 5.6, T = (g) => g - START;
+      const tl = gsap.timeline({ paused: true });
+      const R = 1250, STEP = 40;
+      // cylinder: every card pivots around a point R px behind it
+      [1, 2, 3].forEach((n) => tl.set("#n-c" + n, { rotationY: (n - 1) * STEP, transformOrigin: `50% 50% ${-R}px` }, 0));
+      tl.set("#n-ring", { transformOrigin: `0px 0px ${-R}px` }, 0);
+      gsap.set(".n-strike", { scaleX: 0, transformOrigin: "0% 50%" });
+      gsap.set(".n-pill", { opacity: 0, scale: 0.6 });
+      gsap.set([".n-dim", ".n-glow"], { opacity: 0 });
+
+      // whip in from below at the speed the hook left
+      tl.fromTo("#n-whip", { y: 1400 }, { y: 0, duration: 0.5, ease: "expo.out" }, T(5.6));
+      tl.fromTo("#n-ring", { rotationY: 0, rotationX: 16, scale: 0.94 }, { rotationX: 4, scale: 1, duration: 1.4, ease: "expo.out" }, T(5.6));
+
+      const beat = (n, tArrive) => {
+        tl.fromTo("#n-sh" + n, { xPercent: -120 }, { xPercent: 320, duration: 0.9, ease: "power2.inOut" }, T(tArrive) - 0.1);
+        const tS = tArrive + 0.55;
+        tl.to("#n-s" + n, { scaleX: 1, duration: 0.22, ease: "power4.out" }, T(tS));
+        tl.to("#n-p" + n, { opacity: 1, scale: 1, duration: 0.28, ease: "back.out(1.6)" }, T(tS) + 0.06);
+        tl.to("#n-g" + n, { opacity: 1, duration: 0.1, ease: "power2.out" }, T(tS)).to("#n-g" + n, { opacity: 0.35, duration: 0.6, ease: "power2.out" }, T(tS) + 0.1);
+        tl.to("#n-d" + n, { opacity: 1, duration: 0.5, ease: "power2.inOut" }, T(tS) + 0.3);
+        // a small recoil when the strike lands
+        tl.to("#n-c" + n + " .n-flip", { z: -40, duration: 0.07, ease: "power2.out" }, T(tS)).to("#n-c" + n + " .n-flip", { z: 0, duration: 0.4, ease: "expo.out" }, T(tS) + 0.07);
+      };
+      beat(1, 6.0);
+      // the carousel turns on the beat (lands at 7.5 and 9.0)
+      tl.to("#n-ring", { rotationY: -STEP, duration: 0.36, ease: "power3.inOut" }, T(7.14));
+      beat(2, 7.5);
+      tl.to("#n-ring", { rotationY: -2 * STEP, duration: 0.36, ease: "power3.inOut" }, T(8.64));
+      beat(3, 9.0);
+
+      // card 3 turns over: its back is the motivation meter (carried into the next scene)
+      tl.to(["#n-c1", "#n-c2", "#n-g3"], { opacity: 0, duration: 0.4, ease: "power2.in" }, T(10.0));
+      tl.to("#n-ring", { rotationX: 0, duration: 0.5, ease: "power2.inOut" }, T(10.0));
+      tl.fromTo("#n-f3", { rotationY: 0 }, { rotationY: 180, duration: 0.55, ease: "power3.inOut" }, T(10.02));
+      window.__timelines["nots"] = tl;
+    })();
+  </script>
+</template>
