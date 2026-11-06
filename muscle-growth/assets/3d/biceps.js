@@ -82,9 +82,11 @@
       const segLen = 0.35, a = Math.max(0, sp - segLen), b = Math.min(1, sp);
       sigGeo.setDrawRange(Math.floor(a * n / 6) * 6, Math.max(0, Math.floor((b - a) * n / 6) * 6)); halo.geometry.setDrawRange(Math.floor(a * halo.geometry.index.count / 6) * 6, Math.max(0, Math.floor((b - a) * halo.geometry.index.count / 6) * 6));
       const hp = sigCurve.getPoint(Math.min(1, Math.max(0, sp))); sigGlow.position.copy(hp); sigGlow.material.opacity = 0.9 * gl; sigGlow2.position.copy(hp); sigGlow2.material.opacity = 0.35 * gl;
-      camera.position.set(s.camX ?? 0, s.camY ?? 0.2, s.camZ ?? 9.5); camera.lookAt(s.lookX ?? 0, s.lookY ?? 0.1, 0);
+      camera.position.set(s.camX ?? 0, s.camY ?? 0.2, s.camZ ?? 9.5); camera.lookAt(s.lookX ?? 0, s.lookY ?? 0.1, s.lookZ ?? 0);
       renderer.render(scene, camera);
     }
-    return { ready, render, renderer };
+    const _v = new T.Vector3();
+    function screen(x, y, z, local) { _v.set(x, y, z); if (local) { g.updateMatrixWorld(true); _v.applyMatrix4(g.matrixWorld); } _v.project(camera); return [(_v.x + 1) / 2 * w, (1 - _v.y) / 2 * h]; }
+    return { ready, render, renderer, camera, screen };
   };
 })();

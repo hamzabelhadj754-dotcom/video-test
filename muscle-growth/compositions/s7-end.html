@@ -1,0 +1,51 @@
+<template>
+  <style>
+    @font-face { font-family: "Anton"; src: url("assets/fonts/Anton-Regular.woff2") format("woff2"); }
+    @font-face { font-family: "JetBrains Mono"; src: url("assets/fonts/JetBrainsMono-Variable.woff2") format("woff2"); font-weight: 100 800; }
+    #root { position: absolute; inset: 0; overflow: hidden; background: #08090B; color: #F2F3F5; }
+    #s7-gl { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #s7-shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(8,9,11,0) 28%, rgba(8,9,11,.78) 52%, rgba(8,9,11,.92) 80%); }
+    #s7-view { position: absolute; inset: 0; perspective: 1400px; }
+    #s7-title { position: absolute; left: 0; right: 0; top: 880px; text-align: center; font-family: "Anton", sans-serif; font-size: 132px; line-height: 1.02; text-transform: uppercase; color: #F2F3F5;
+      text-shadow: 0 2px 0 #9ea3ac, 0 4px 0 #6f747d, 0 6px 0 #4a4e55, 0 8px 0 #2d3035, 0 22px 40px rgba(0,0,0,.6); }
+    .s7-w { display: inline-block; }
+    #s7-rest { color: #C6FF3D; text-shadow: 0 2px 0 #9fd02f, 0 4px 0 #78a01f, 0 6px 0 #557214, 0 8px 0 #354a0a, 0 0 50px rgba(198,255,61,.35); }
+    #s7-ul { position: absolute; left: 519px; top: 1290px; width: 259px; height: 8px; border-radius: 3px; background: #C6FF3D; box-shadow: 0 0 22px rgba(198,255,61,.6); }
+    #s7-handle { position: absolute; left: 0; right: 0; top: 1440px; text-align: center; font: 600 30px "JetBrains Mono"; letter-spacing: .14em; color: #9AA0AB; }
+    #s7-black { position: absolute; inset: 0; background: #08090B; }
+  </style>
+  <div id="root" data-composition-id="s7" data-width="1080" data-height="1920">
+    <canvas id="s7-gl" width="1080" height="1920"></canvas>
+    <div id="s7-shade"></div>
+    <div id="s7-view"><div id="s7-title">
+      <span class="s7-w">Growth</span> <span class="s7-w">is</span> <span class="s7-w">built</span><br/>
+      <span class="s7-w">in</span> <span class="s7-w">the</span> <span class="s7-w">hours</span><br/>
+      <span class="s7-w">you</span> <span class="s7-w" id="s7-rest">rest.</span></div></div>
+    <div id="s7-ul"></div>
+    <div id="s7-handle">@yourhandle</div>
+    <div id="s7-black"></div>
+  </div>
+  <script>
+    (function () {
+      const START = 55.161, DUR = 6.839, T = (g) => g - START;
+      const tl = gsap.timeline({ paused: true });
+      try { const v = window.__hyperframes && window.__hyperframes.getVariables && window.__hyperframes.getVariables(); if (v && v.handle) document.getElementById("s7-handle").textContent = v.handle; } catch (e) {}
+      // Return: the scene-2 biceps, now thicker and softly lit, closes the loop
+      const m = MG3D.biceps(document.getElementById("s7-gl"), 1080, 1920, "assets/");
+      const cam = FX.path([[START, { camZ: 9.6, lookY: -0.6, camY: 0.1 }, "sine"], [START + DUR, { camZ: 8.7, lookY: -0.7, camY: 0.1 }]]);
+      FX.wire3D(tl, "s7", m, (lt) => ({ ...cam(lt + START), yaw: -0.3, pitch: 0.05, thick: 1, glow: 0.45, signal: 0.85 }), START, DUR);
+      tl.fromTo("#s7-gl", { opacity: 0, filter: "blur(12px)" }, { opacity: 0.6, filter: "blur(3px)", duration: 1.2, ease: "power2.out" }, 0);
+      gsap.set(["#s7-black"], { opacity: 0 });
+
+      // "Growth is built in the hours you rest." 55.88–57.96 — Extrude 3D type turning to face the camera
+      tl.fromTo("#s7-title", { rotationY: 8, rotationX: 4, z: -60 }, { rotationY: 0, rotationX: 0, z: 0, duration: 3.4, ease: "power2.out" }, T(55.7));
+      const W = [55.84, 56.18, 56.31, 56.65, 56.78, 56.98, 57.34, 57.52];
+      document.querySelectorAll(".s7-w").forEach((w, i) => tl.fromTo(w, { opacity: 0, filter: "blur(10px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.32, ease: "power3.out" }, T(W[i])));
+      FX.highlight(tl, "#s7-ul", T(57.75), 0.55);
+      tl.fromTo("#s7-handle", { opacity: 0 }, { opacity: 1, duration: 0.6, ease: "power2.out" }, T(58.6));
+      // clean tail: fade to black, then 0.5 s on black
+      tl.to("#s7-black", { opacity: 1, duration: 0.6, ease: "sine.inOut" }, T(60.9));
+      window.__timelines["s7"] = tl;
+    })();
+  </script>
+</template>

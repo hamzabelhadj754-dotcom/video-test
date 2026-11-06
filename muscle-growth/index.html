@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en" data-composition-variables='[{"id":"handle","type":"string","label":"End-card handle","default":"@yourhandle"}]'>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+    <!-- Three.js r147 (MIT) + the film's 3D heroes, loaded once for every scene -->
+    <script src="assets/vendor/three/three.min.js"></script>
+    <script src="assets/vendor/three/RoomEnvironment.js"></script>
+    <script src="assets/vendor/three/RGBELoader.js"></script>
+    <script src="assets/3d/common.js"></script>
+    <script src="assets/3d/plate.js"></script>
+    <script src="assets/3d/biceps.js"></script>
+    <script src="assets/3d/fibres.js"></script>
+    <script src="assets/fx.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { margin: 0; width: 1080px; height: 1920px; overflow: hidden; background: #08090B; }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; }
+      #bg { position: absolute; inset: 0; background: #08090B; }
+    </style>
+  </head>
+  <body>
+    <!-- 62 s · 124 BPM (beat = 0.48387 s); every scene boundary is a downbeat -->
+    <div id="root" data-composition-id="main" data-start="0" data-duration="62" data-width="1080" data-height="1920" data-fps="30" data-motion-blur="on" data-motion-blur-events="on">
+      <div id="bg"></div>
+      <div id="s1" data-composition-id="s1" data-composition-src="compositions/s1-hook.html"     data-start="0"      data-duration="3.871"  data-track-index="1" data-track-kind="graphics" data-width="1080" data-height="1920" style="z-index:2"></div>
+      <div id="s2" data-composition-id="s2" data-composition-src="compositions/s2-anatomy.html"  data-start="3.871"  data-duration="8.226"  data-track-index="1" data-track-kind="graphics" data-width="1080" data-height="1920" style="z-index:2"></div>
+      <div id="s3" data-composition-id="s3" data-composition-src="compositions/s3-fibre.html"    data-start="12.097" data-duration="12.097" data-track-index="1" data-track-kind="graphics" data-width="1080" data-height="1920" style="z-index:2"></div>
+      <div id="s4" data-composition-id="s4" data-composition-src="compositions/s4-system.html"   data-start="24.194" data-duration="11.612" data-track-index="1" data-track-kind="graphics" data-width="1080" data-height="1920" style="z-index:2"></div>
+      <div id="s5" data-composition-id="s5" data-composition-src="compositions/s5-compare.html"  data-start="35.806" data-duration="10.162" data-track-index="1" data-track-kind="graphics" data-width="1080" data-height="1920" style="z-index:2"></div>
+      <div id="s6" data-composition-id="s6" data-composition-src="compositions/s6-kinetic.html"  data-start="45.968" data-duration="9.193"  data-track-index="1" data-track-kind="graphics" data-width="1080" data-height="1920" style="z-index:2"></div>
+      <div id="s7" data-composition-id="s7" data-composition-src="compositions/s7-end.html"      data-start="55.161" data-duration="6.839"  data-track-index="1" data-track-kind="graphics" data-width="1080" data-height="1920" style="z-index:2"></div>
+      <div id="captions" data-composition-id="captions" data-composition-src="compositions/captions.html" data-start="0" data-duration="62" data-track-index="2" data-track-kind="captions" data-width="1080" data-height="1920" style="z-index:5"></div>
+      <div id="texture" data-composition-id="texture" data-composition-src="compositions/texture.html" data-start="0" data-duration="62" data-track-index="3" data-track-kind="graphics" data-width="1080" data-height="1920" style="z-index:6"></div>
+      <audio id="mix" class="clip" src="assets/audio/mix.wav" data-start="0" data-duration="62" data-track-index="4" data-volume="1"></audio>
+    </div>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = gsap.timeline({ paused: true });
+    </script>
+  </body>
+</html>

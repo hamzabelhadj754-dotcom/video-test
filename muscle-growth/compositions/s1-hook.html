@@ -1,0 +1,79 @@
+<template>
+  <style>
+    @font-face { font-family: "Anton"; src: url("assets/fonts/Anton-Regular.woff2") format("woff2"); }
+    #root { position: absolute; inset: 0; overflow: hidden; background: #08090B; }
+    #s1-cam { position: absolute; inset: 0; }
+    #s1-haze { position: absolute; inset: 0; background: radial-gradient(ellipse 70% 40% at 50% 30%, rgba(255,241,223,.06), transparent 70%); }
+    #s1-gl { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    .s1-t { position: absolute; left: 0; right: 0; text-align: center; font-family: "Anton", sans-serif; text-transform: uppercase; line-height: .96; white-space: nowrap; }
+    #s1-l1 { top: 262px; font-size: 118px; color: rgba(242,243,245,.85); }
+    #s1-grow { top: 378px; font-size: 440px; color: #F2F3F5; }
+    #s1-strike { position: absolute; left: 96px; right: 96px; top: 600px; height: 30px; border-radius: 4px; background: #C6FF3D; box-shadow: 0 0 34px rgba(198,255,61,.55), 0 0 4px #efffc0; }
+    #s1-l3 { top: 830px; font-size: 118px; color: rgba(242,243,245,.85); }
+    #s1-dust { position: absolute; inset: 0; filter: blur(5px); }
+    #s1-flash { position: absolute; inset: 0; background: radial-gradient(ellipse 80% 55% at 50% 70%, rgba(255,250,240,.95), rgba(255,250,240,.35) 55%, rgba(255,250,240,.1)); }
+    #s1-ca { position: absolute; inset: 0; box-shadow: inset 14px 0 30px rgba(255,60,60,.28), inset -14px 0 30px rgba(61,214,255,.28); }
+    #s1-ring { position: absolute; left: 0; top: 0; border-radius: 50%; border: 3px solid #F2F3F5; box-shadow: 0 0 24px rgba(242,243,245,.35); }
+  </style>
+  <div id="root" data-composition-id="s1" data-width="1080" data-height="1920">
+    <div id="s1-cam">
+      <div id="s1-haze"></div>
+      <canvas id="s1-gl" width="1080" height="1920"></canvas>
+      <div class="s1-t" id="s1-l1">Your muscles don't</div>
+      <div class="s1-t" id="s1-grow">Grow</div>
+      <div id="s1-strike"></div>
+      <div class="s1-t" id="s1-l3">in the gym.</div>
+    </div>
+    <div id="s1-dust"></div>
+    <div id="s1-ring"></div>
+    <div id="s1-ca"></div>
+    <div id="s1-flash"></div>
+  </div>
+  <script>
+    (function () {
+      const START = 0, DUR = 3.871, IMP = 1.40;
+      const tl = gsap.timeline({ paused: true });
+      const m = MG3D.plate(document.getElementById("s1-gl"), 1080, 1920, "assets/");
+      const cam = FX.path([[0, { camZ: 9.6, camY: 1.0, lookY: 1.1 }], [IMP, { camZ: 9.4, camY: 1.0, lookY: 1.1 }, "lin"], [3.4, { camZ: 8.9, camY: 0.95, lookY: 1.05 }, "sine"], [DUR, { camZ: 8.6, camY: 0.95, lookY: 1.05 }]]);
+      const stateAt = (t) => {
+        const k = Math.max(0, Math.min(1, (t - 0.7) / (IMP - 0.7)));
+        const drop = t < 0.7 ? 1 : t < IMP ? 1 - k * k : 0;
+        return { ...cam(t), drop, impact: t >= IMP ? t - IMP : -1, yaw: -0.55, tilt: 0.05, spin: t < IMP ? (IMP - t) * 0.6 : 0 };
+      };
+      FX.wire3D(tl, "s1", m, stateAt, START, DUR);
+
+      // FG dust: out of focus, scatters on impact (1.4× parallax vs the plate)
+      FX.dust("#s1-dust", 3, 26, [0, 1150, 1080, 1920]);
+      tl.fromTo("#s1-dust", { y: 0, scale: 1, opacity: 0.6 }, { y: -20, scale: 1, opacity: 0.6, duration: IMP, ease: "none" }, 0);
+      tl.to("#s1-dust", { y: -70, scale: 1.12, opacity: 0.9, duration: 0.5, ease: "expo.out" }, IMP).to("#s1-dust", { y: -110, opacity: 0.5, duration: 2, ease: "sine.out" }, IMP + 0.5);
+
+      // line 1 — Tracking collapse, already legible on frame 0 (the hook is on screen immediately)
+      const cs = FX.chars("#s1-l1"), c0 = (cs.length - 1) / 2;
+      cs.forEach((c, i) => tl.fromTo(c, { x: (i - c0) * 7, opacity: 0.6, filter: "blur(2px)" }, { x: 0, opacity: 1, filter: "blur(0px)", duration: 1.0, ease: "expo.out" }, 0));
+
+      // GROW — Slam-in on the impact, with a 3-frame shake, flash, edge aberration and chalk burst (3D)
+      FX.slam(tl, "#s1-grow", IMP - 0.02, { from: 1.6, d: 0.35 });
+      FX.shake(tl, "#s1-cam", IMP, 34, 11, 3);
+      tl.fromTo("#s1-flash", { opacity: 0 }, { opacity: 0, duration: 0.01 }, 0);
+      tl.to("#s1-flash", { opacity: 0.9, duration: 1 / 30, ease: "none" }, IMP).to("#s1-flash", { opacity: 0, duration: 0.3, ease: "power3.out" }, IMP + 2 / 30);
+      tl.fromTo("#s1-ca", { opacity: 0 }, { opacity: 0, duration: 0.01 }, 0);
+      tl.to("#s1-ca", { opacity: 1, duration: 0.03, ease: "none" }, IMP).to("#s1-ca", { opacity: 0, duration: 0.25, ease: "power2.out" }, IMP + 0.07);
+      // the strike lands on the beat after the slam
+      tl.fromTo("#s1-strike", { scaleX: 0, rotation: -5, transformOrigin: "0% 50%" }, { scaleX: 1, rotation: -5, duration: 0.22, ease: "power4.out" }, 1.62);
+
+      // "in the gym." — Mask rise
+      FX.maskRise(tl, "#s1-l3", 1.70, { stagger: 0.07 });
+
+      // match cut: the plate's hub becomes the reticle on the biceps (next scene)
+      m.render(stateAt(3.5)); const [hx, hy] = m.screen(0, 0, 0);
+      const R0 = 92, R1 = 74, TX = 706, TY = 900;
+      gsap.set("#s1-ring", { width: R0 * 2, height: R0 * 2, x: hx - R0, y: hy - R0, opacity: 0 });
+      tl.fromTo("#s1-ring", { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1, duration: 0.18, ease: "expo.out", immediateRender: false }, 3.36);
+      tl.to("#s1-ring", { x: TX - R0, y: TY - R0, scale: R1 / R0, duration: 0.31, ease: "power3.inOut" }, 3.54);
+      tl.to(["#s1-l1", "#s1-grow", "#s1-l3", "#s1-strike"], { opacity: 0, filter: "blur(10px)", y: -30, duration: 0.28, ease: "power3.in", stagger: 0.03 }, 3.40);
+      tl.to(["#s1-gl", "#s1-haze"], { opacity: 0.12, duration: 0.35, ease: "power2.in" }, 3.48);
+      tl.to("#s1-flash", { opacity: 0.55, duration: 1 / 30, ease: "none" }, DUR - 2 / 30);
+      window.__timelines["s1"] = tl;
+    })();
+  </script>
+</template>

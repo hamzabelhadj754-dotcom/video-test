@@ -1,0 +1,92 @@
+<template>
+  <style>
+    @font-face { font-family: "Inter"; src: url("assets/fonts/Inter-Variable.woff2") format("woff2"); font-weight: 100 900; }
+    @font-face { font-family: "JetBrains Mono"; src: url("assets/fonts/JetBrainsMono-Variable.woff2") format("woff2"); font-weight: 100 800; }
+    #root { position: absolute; inset: 0; overflow: hidden; background: #08090B; color: #F2F3F5; }
+    #s5-bg { position: absolute; inset: -80px; background: radial-gradient(ellipse 40% 35% at 75% 45%, rgba(198,255,61,.06), transparent 70%), radial-gradient(ellipse 40% 35% at 25% 45%, rgba(255,77,61,.05), transparent 70%); }
+    #s5-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px); background-size: 60px 60px;
+      -webkit-mask-image: radial-gradient(ellipse 70% 55% at 50% 45%, #000 30%, transparent 80%); mask-image: radial-gradient(ellipse 70% 55% at 50% 45%, #000 30%, transparent 80%); }
+    #s5-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    .s5-card { position: absolute; top: 300px; width: 490px; height: 960px; border-radius: 26px; overflow: hidden;
+      background: linear-gradient(165deg, rgba(255,255,255,.085), rgba(255,255,255,.025) 55%), rgba(14,15,19,.66); border: 1px solid rgba(255,255,255,.1);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.13), 0 40px 100px rgba(0,0,0,.65); }
+    #s5-L { left: 40px; } #s5-R { left: 550px; }
+    #s5-Rrim { position: absolute; inset: 0; border-radius: 26px; border: 1px solid rgba(198,255,61,.5); box-shadow: 0 0 70px rgba(198,255,61,.14); }
+    #s5-warn { position: absolute; inset: 0; background: rgba(255,77,61,.12); }
+    .s5-chip { position: absolute; left: 30px; top: 32px; height: 50px; padding: 0 20px; border-radius: 25px; display: flex; align-items: center; gap: 10px; font: 700 24px "Inter"; letter-spacing: .1em; white-space: nowrap; }
+    .s5-chip i { width: 10px; height: 10px; border-radius: 50%; display: block; }
+    .s5-svg { position: absolute; left: 20px; top: 130px; width: 450px; height: 780px; overflow: visible; }
+    .s5-lab { font: 600 26px "JetBrains Mono"; letter-spacing: .1em; fill: #9AA0AB; }
+    #s5-sess { position: absolute; right: 30px; top: 36px; font: 600 26px "JetBrains Mono"; color: #9AA0AB; letter-spacing: .1em; }
+    #s5-bloom { position: absolute; left: 540px; top: 960px; width: 200px; height: 200px; margin: -100px 0 0 -100px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(214,255,120,.9) 25%, rgba(198,255,61,.35) 50%, rgba(198,255,61,0) 72%); }
+    #s5-black { position: absolute; inset: 0; background: #08090B; }
+    #s5-dust { position: absolute; inset: 0; filter: blur(6px); }
+  </style>
+  <div id="root" data-composition-id="s5" data-width="1080" data-height="1920">
+    <div id="s5-bg"></div><div id="s5-grid"></div>
+    <div id="s5-cam">
+      <div class="s5-card" id="s5-L"><div id="s5-warn"></div>
+        <div class="s5-chip" style="color:#ffb1a8; background:rgba(255,77,61,.14); border:1px solid rgba(255,77,61,.5)"><i style="background:#FF4D3D"></i>NO RECOVERY</div>
+        <svg class="s5-svg" id="s5-ga" viewBox="0 0 450 780"></svg></div>
+      <div class="s5-card" id="s5-R"><div id="s5-Rrim"></div>
+        <div class="s5-chip" style="color:#C6FF3D; background:rgba(198,255,61,.1); border:1px solid rgba(198,255,61,.5)"><i style="background:#C6FF3D"></i>RECOVERY</div>
+        <div id="s5-sess">S <span id="s5-sessn" style="color:#F2F3F5">01</span></div>
+        <svg class="s5-svg" id="s5-gb" viewBox="0 0 450 780"></svg></div>
+    </div>
+    <div id="s5-dust"></div>
+    <div id="s5-bloom"></div>
+    <div id="s5-black"></div>
+  </div>
+  <script>
+    (function () {
+      const START = 35.806, DUR = 10.162, T = (g) => g - START;
+      const tl = gsap.timeline({ paused: true });
+      const W = 450, H = 780, r = FX.rng(13);
+      // left: effort with no recovery — jagged, then flat
+      let dA = ""; for (let i = 0; i <= 30; i++) { const x = 20 + i / 30 * (W - 40); let y = i < 10 ? 520 - i * 14 + (r() - .5) * 90 : 400 + (r() - .5) * 26; if (i > 16) y = 430 + (r() - .5) * 8; dA += (i ? "L" : "M") + x.toFixed(1) + " " + y.toFixed(1); }
+      let grid = ""; for (let k = 0; k < 6; k++) grid += `<line x1="20" x2="${W - 20}" y1="${120 + k * 110}" y2="${120 + k * 110}" stroke="rgba(255,255,255,.06)"/>`;
+      document.getElementById("s5-ga").innerHTML = grid + `<path id="s5-pa" d="${dA}" fill="none" stroke="#9aa0ab" stroke-width="5" stroke-linejoin="round"/><text class="s5-lab" x="20" y="${H - 20}">FLAT</text>`;
+      // right: with recovery — steady climb, one dot per session
+      const pts = []; let dB = ""; for (let i = 0; i <= 24; i++) { const x = 20 + i / 24 * (W - 40), y = H - 140 - Math.pow(i / 24, 1.3) * (H - 300) + (i % 2 ? 8 : -6); pts.push([x, y]); dB += (i ? "L" : "M") + x.toFixed(1) + " " + y.toFixed(1); }
+      let dots = ""; pts.forEach((p, i) => { dots += `<circle class="s5-d" id="s5-d${i}" cx="${p[0]}" cy="${p[1]}" r="${i === 24 ? 11 : 5}" fill="${i === 24 ? "#F2F3F5" : "#C6FF3D"}"/>`; });
+      document.getElementById("s5-gb").innerHTML = grid + `<defs><linearGradient id="s5-gf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C6FF3D" stop-opacity=".22"/><stop offset="1" stop-color="#C6FF3D" stop-opacity="0"/></linearGradient></defs>
+        <path id="s5-fb" d="${dB} L${pts[24][0]},${H - 140} L20,${H - 140} Z" fill="url(#s5-gf)"/><path id="s5-pb" d="${dB}" fill="none" stroke="#C6FF3D" stroke-width="5" stroke-linejoin="round"/>${dots}<text class="s5-lab" x="20" y="${H - 20}">CLIMBING</text>`;
+      FX.dust("#s5-dust", 33, 20);
+      tl.fromTo("#s5-dust", { y: 0 }, { y: -120, duration: DUR, ease: "none" }, 0);
+      tl.fromTo("#s5-bg", { y: 0 }, { y: -20, duration: DUR, ease: "none" }, 0);
+      gsap.set(["#s5-bloom"], { opacity: 0 }); gsap.set("#s5-black", { opacity: 0 }); gsap.set(".s5-d", { opacity: 0 });
+
+      // card unfold: both panels open on the centre seam (the sleep bars became these two lines)
+      tl.fromTo("#s5-L", { rotationY: 90, transformOrigin: "100% 50%", transformPerspective: 1600, opacity: 0 }, { rotationY: 0, opacity: 1, duration: 0.6, ease: "power4.out" }, 0);
+      tl.fromTo("#s5-R", { rotationY: -90, transformOrigin: "0% 50%", transformPerspective: 1600, opacity: 0 }, { rotationY: 0, opacity: 1, duration: 0.6, ease: "power4.out" }, 0.04);
+      // "Skip recovery, and you're just collecting damage." 36.46–39.3
+      tl.fromTo("#s5-pa", { strokeDasharray: 900, strokeDashoffset: 900 }, { strokeDashoffset: 0, duration: 1.8, ease: "power1.inOut" }, T(36.45));
+      tl.fromTo("#s5-pb", { strokeDasharray: 1100, strokeDashoffset: 1100 }, { strokeDashoffset: 0, duration: 2.2, ease: "power2.inOut" }, T(36.65));
+      tl.fromTo("#s5-fb", { opacity: 0 }, { opacity: 1, duration: 0.8, ease: "power2.out" }, T(38.4));
+      tl.fromTo("#s5-warn", { opacity: 0 }, { opacity: 0, duration: 0.01 }, 0);
+      tl.to("#s5-warn", { opacity: 1, duration: 0.12, ease: "power2.out" }, T(38.84)).to("#s5-warn", { opacity: 0.35, duration: 0.8, ease: "power2.out" }, T(38.96));
+      tl.fromTo("#s5-Rrim", { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "power2.out" }, T(39.0));
+      // (hold: both graphs fully visible 39.0 → 40.7)
+
+      // push into the winner: the left panel leaves, the right panel takes the frame
+      const S1 = 1.9, tx = 540 - S1 * 795, ty = 900 - S1 * 780;
+      tl.fromTo("#s5-cam", { x: 0, y: 0, scale: 1, transformOrigin: "0px 0px" }, { x: 0, y: 0, scale: 1, duration: 0.01 }, 0);
+      tl.to("#s5-cam", { x: 12, duration: 0.12, ease: "power2.out" }, T(40.62));             // anticipation
+      tl.to("#s5-cam", { x: tx, y: ty, scale: S1, duration: 1.1, ease: "power3.inOut" }, T(40.74));
+      tl.to("#s5-L", { opacity: 0, x: -200, duration: 0.6, ease: "power3.in" }, T(40.74));
+      // "Respect it, and every session compounds." 41.05–43.43 — sessions light one by one
+      const sess = { v: 1 }, sEl = document.getElementById("s5-sessn");
+      tl.fromTo(sess, { v: 1 }, { v: 24, duration: 1.7, ease: "power1.in", onUpdate: () => { sEl.textContent = String(Math.round(sess.v)).padStart(2, "0"); } }, T(41.6));
+      pts.forEach((p, i) => tl.fromTo("#s5-d" + i, { opacity: 0, scale: 0, svgOrigin: `${p[0]} ${p[1]}` }, { opacity: 1, scale: 1, duration: 0.22, ease: "back.out(1.7)" }, T(41.6) + Math.pow(i / 24, 1.0 / 1.4) * 1.6));
+
+      // push-through: the endpoint blooms and swallows the frame into black
+      const ex = 550 + 20 + pts[24][0], ey = 300 + 130 + pts[24][1];
+      const S2 = 40;
+      tl.to("#s5-cam", { x: 540 - S2 * ex, y: 960 - S2 * ey, scale: S2, duration: 0.8, ease: "power4.in" }, T(45.05));
+      tl.to("#s5-bloom", { opacity: 1, scale: 2, duration: 0.3, ease: "power2.in" }, T(45.4)).to("#s5-bloom", { scale: 14, opacity: 0, duration: 0.4, ease: "power2.out" }, T(45.7));
+      tl.to("#s5-black", { opacity: 1, duration: 0.25, ease: "power2.in" }, T(45.7));
+      window.__timelines["s5"] = tl;
+    })();
+  </script>
+</template>

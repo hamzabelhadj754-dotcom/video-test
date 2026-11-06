@@ -1,0 +1,158 @@
+<template>
+  <style>
+    @font-face { font-family: "Anton"; src: url("assets/fonts/Anton-Regular.woff2") format("woff2"); }
+    @font-face { font-family: "Inter"; src: url("assets/fonts/Inter-Variable.woff2") format("woff2"); font-weight: 100 900; }
+    @font-face { font-family: "JetBrains Mono"; src: url("assets/fonts/JetBrainsMono-Variable.woff2") format("woff2"); font-weight: 100 800; }
+    #root { position: absolute; inset: 0; overflow: hidden; background: #08090B; color: #F2F3F5; }
+    #s4-bg { position: absolute; inset: -80px; background: radial-gradient(ellipse 70% 45% at 45% 45%, rgba(255,241,223,.06), transparent 70%); }
+    #s4-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px); background-size: 60px 60px;
+      -webkit-mask-image: radial-gradient(ellipse 70% 55% at 50% 45%, #000 30%, transparent 80%); mask-image: radial-gradient(ellipse 70% 55% at 50% 45%, #000 30%, transparent 80%); }
+    .s4-disp { font-family: "Anton", sans-serif; text-transform: uppercase; line-height: .96; white-space: nowrap; }
+    .s4-label { font: 600 26px "JetBrains Mono"; letter-spacing: .14em; text-transform: uppercase; color: #9AA0AB; }
+    #s4-head { position: absolute; left: 0; right: 0; top: 640px; text-align: center; }
+    #s4-h1 { font-size: 190px; }
+    #s4-h2 { font-size: 190px; color: rgba(242,243,245,.55); }
+    #s4-rail { position: absolute; left: 0; top: 0; width: 3000px; height: 1920px; }
+    .s4-card { position: absolute; top: 300px; width: 900px; height: 980px; border-radius: 28px; overflow: hidden;
+      background: linear-gradient(165deg, rgba(255,255,255,.085), rgba(255,255,255,.025) 55%), rgba(14,15,19,.66); border: 1px solid rgba(255,255,255,.1);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.13), inset 0 -40px 80px rgba(0,0,0,.25), 0 40px 110px rgba(0,0,0,.7); }
+    .s4-rim { position: absolute; inset: 0; border-radius: 28px; border: 1px solid rgba(198,255,61,.5); box-shadow: inset 0 1px 0 rgba(198,255,61,.25), 0 0 80px rgba(198,255,61,.16); }
+    .s4-sheen { position: absolute; top: -30%; bottom: -30%; width: 40%; left: 0; background: linear-gradient(100deg, transparent, rgba(255,255,255,.06) 46%, rgba(255,255,255,.12) 50%, rgba(255,255,255,.06) 54%, transparent); }
+    .s4-idx { position: absolute; left: 50px; top: 50px; }
+    .s4-title { position: absolute; left: 46px; top: 100px; font-size: 168px; }
+    .s4-sub { position: absolute; left: 50px; top: 296px; font: 500 46px "Inter"; color: rgba(242,243,245,.6); }
+    #s4-prog { position: absolute; left: 90px; top: 297px; width: 900px; height: 6px; border-radius: 3px; background: rgba(255,255,255,.12); overflow: hidden; }
+    #s4-progf { position: absolute; inset: 0; border-radius: 3px; background: #C6FF3D; box-shadow: 0 0 22px rgba(198,255,61,.7); }
+    #s4-num { position: absolute; left: 0; right: 0; top: 500px; text-align: center; font: 600 210px/1 "JetBrains Mono"; font-variant-numeric: tabular-nums; }
+    #s4-unit { position: absolute; left: 0; right: 0; top: 730px; text-align: center; font: 600 44px "JetBrains Mono"; color: rgba(242,243,245,.7); }
+    #s4-note { position: absolute; left: 0; right: 0; bottom: 56px; text-align: center; font: 500 26px "Inter"; color: #9AA0AB; }
+    #s4-dust { position: absolute; inset: 0; filter: blur(6px); }
+  </style>
+  <div id="root" data-composition-id="s4" data-width="1080" data-height="1920">
+    <div id="s4-bg"></div><div id="s4-grid"></div>
+    <div id="s4-head"><div class="s4-disp" id="s4-h1">Three things</div><div class="s4-disp" id="s4-h2">drive it.</div></div>
+    <div id="s4-rail">
+      <!-- 01 OVERLOAD -->
+      <div class="s4-card" id="s4-c1" style="left:90px">
+        <div class="s4-sheen" id="s4-sh1"></div><div class="s4-rim" id="s4-r1"></div>
+        <div class="s4-label s4-idx"><span style="color:#F2F3F5">01</span> / 03</div>
+        <svg style="position:absolute; left:42px; top:96px; width:820px; height:180px; overflow:visible" viewBox="0 0 820 180">
+          <defs><clipPath id="s4-fc"><rect id="s4-fcr" x="0" y="0" width="820" height="180"/></clipPath></defs>
+          <text id="s4-ovs" x="6" y="160" font-family="Anton" font-size="168" fill="none" stroke="#F2F3F5" stroke-width="2.5" letter-spacing="2">OVERLOAD</text>
+          <text x="6" y="160" font-family="Anton" font-size="168" fill="#F2F3F5" letter-spacing="2" clip-path="url(#s4-fc)">OVERLOAD</text>
+        </svg>
+        <div class="s4-sub" id="s4-sub1">A little more, over time.</div>
+        <svg id="s4-bars" style="position:absolute; left:50px; bottom:50px; width:800px; height:520px; overflow:visible" viewBox="0 0 800 520"></svg>
+      </div>
+      <!-- 02 PROTEIN -->
+      <div class="s4-card" id="s4-c2" style="left:1050px">
+        <div class="s4-sheen" id="s4-sh2"></div><div class="s4-rim" id="s4-r2"></div>
+        <div class="s4-label s4-idx"><span style="color:#F2F3F5">02</span> / 03</div>
+        <div class="s4-disp s4-title" id="s4-t2">Protein</div>
+        <svg style="position:absolute; left:150px; top:330px; width:600px; height:600px" viewBox="0 0 600 600">
+          <circle cx="300" cy="300" r="270" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="16"/>
+          <circle id="s4-ring" cx="300" cy="300" r="270" fill="none" stroke="#F2F3F5" stroke-opacity=".85" stroke-width="16" stroke-linecap="round" transform="rotate(-90 300 300)" stroke-dasharray="1697" stroke-dashoffset="1697"/>
+        </svg>
+        <div id="s4-num"><span id="s4-numv"></span></div>
+        <div id="s4-unit">g / kg / day</div>
+        <div id="s4-note">~1.6 g per kg of bodyweight · general guidance — not medical advice</div>
+      </div>
+      <!-- 03 SLEEP -->
+      <div class="s4-card" id="s4-c3" style="left:2010px">
+        <div class="s4-sheen" id="s4-sh3"></div><div class="s4-rim" id="s4-r3"></div>
+        <div class="s4-label s4-idx"><span style="color:#F2F3F5">03</span> / 03</div>
+        <div class="s4-disp s4-title" id="s4-t3">Sleep</div>
+        <svg style="position:absolute; right:60px; top:96px; width:150px; height:150px" viewBox="0 0 24 24" fill="none" stroke="#F2F3F5" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path id="s4-moon" d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        <div class="s4-sub" id="s4-sub3">Where the rebuild happens.</div>
+        <svg id="s4-hyp" style="position:absolute; left:50px; bottom:60px; width:800px; height:480px; overflow:visible" viewBox="0 0 800 480"></svg>
+      </div>
+    </div>
+    <div id="s4-prog"><div id="s4-progf"></div></div>
+    <div id="s4-dust"></div>
+  </div>
+  <script>
+    (function () {
+      const START = 24.194, DUR = 11.612, T = (g) => g - START;
+      const tl = gsap.timeline({ paused: true });
+      const ns = "http://www.w3.org/2000/svg";
+      FX.dust("#s4-dust", 21, 22);
+      tl.fromTo("#s4-dust", { x: 0 }, { x: -160, duration: DUR, ease: "none" }, 0);
+      tl.fromTo("#s4-bg", { x: 0 }, { x: -40, duration: DUR, ease: "none" }, 0);
+
+      // bars: every bar labelled; only the newest is lime
+      (() => { const v = [60, 60, 62.5, 62.5, 65, 65], W = 800, H = 520, bw = 104, gap = (W - 6 * bw) / 5; let h = `<text x="0" y="24" font-family="JetBrains Mono" font-weight="600" font-size="26" letter-spacing="3" fill="#9AA0AB">KG · WEEKLY</text>`;
+        v.forEach((kg, i) => { const x = i * (bw + gap), bh = 120 + (kg - 60) * 52, y = H - 60 - bh, last = i === 5;
+          h += `<g id="s4-bar${i}"><rect x="${x}" y="${y}" width="${bw}" height="${bh}" rx="14" fill="${last ? "#C6FF3D" : "rgba(255,255,255,.12)"}" ${last ? "" : 'stroke="rgba(255,255,255,.16)" stroke-width="1.5"'}/>`
+            + `<text x="${x + bw / 2}" y="${y - 18}" text-anchor="middle" font-family="JetBrains Mono" font-weight="600" font-size="36" fill="${last ? "#C6FF3D" : "#F2F3F5"}">${kg}</text></g>`
+            + `<text x="${x + bw / 2}" y="${H - 14}" text-anchor="middle" font-family="JetBrains Mono" font-weight="600" font-size="28" letter-spacing="2" fill="#9AA0AB">W${i + 1}</text>`; });
+        document.getElementById("s4-bars").innerHTML = h; })();
+      // simplified 3-stage night: LIGHT / DEEP / REM (deep sleep is the lime focal stage)
+      (() => { const rows = [["LIGHT", 0], ["DEEP", 1], ["REM", 2]], segs = [[0, 0, .12], [1, .12, .27], [0, .27, .36], [2, .36, .44], [0, .44, .55], [1, .55, .64], [0, .64, .74], [2, .74, .86], [0, .86, .95], [2, .95, 1]];
+        let h = ""; rows.forEach(([n, r]) => { h += `<text x="0" y="${70 + r * 140}" font-family="JetBrains Mono" font-weight="600" font-size="28" letter-spacing="2" fill="#9AA0AB">${n}</text><line x1="150" x2="800" y1="${60 + r * 140}" y2="${60 + r * 140}" stroke="rgba(255,255,255,.06)"/>`; });
+        segs.forEach(([r, a, b], i) => { const x = 150 + a * 650, w = (b - a) * 650 - 6, col = r === 1 ? "#C6FF3D" : r === 2 ? "#3DD6FF" : "rgba(242,243,245,.45)";
+          h += `<rect class="s4-seg" id="s4-seg${i}" x="${x}" y="${36 + r * 140}" width="${w}" height="48" rx="12" fill="${col}"/>`; });
+        h += `<text x="150" y="470" font-family="JetBrains Mono" font-weight="600" font-size="26" fill="#9AA0AB">23:00</text><text x="800" y="470" text-anchor="end" font-family="JetBrains Mono" font-weight="600" font-size="26" fill="#9AA0AB">07:00</text>`;
+        document.getElementById("s4-hyp").innerHTML = h; })();
+
+      // ---- the carried strand is the progress line: full → 1/3 → 2/3 → 3/3 ----
+      tl.fromTo("#s4-progf", { scaleX: 1, transformOrigin: "0% 50%" }, { scaleX: 1, duration: 0.01 }, 0);
+      tl.to("#s4-progf", { scaleX: 1 / 3, duration: 0.5, ease: "power3.inOut" }, T(26.2));
+      tl.to("#s4-progf", { scaleX: 2 / 3, duration: 0.35, ease: "power3.inOut" }, T(29.8));
+      tl.to("#s4-progf", { scaleX: 1, duration: 0.35, ease: "power3.inOut" }, T(33.85));
+      tl.fromTo("#s4-prog", { opacity: 1 }, { opacity: 1, duration: 0.01 }, 0);
+
+      // "Three things drive it." 24.60–26.0 — Mask rise, word by word on the VO
+      FX.maskRiseAt(tl, "#s4-h1", [T(24.56), T(24.9)]);
+      FX.maskRiseAt(tl, "#s4-h2", [T(25.25), T(25.6)]);
+      tl.to("#s4-head", { opacity: 0, filter: "blur(10px)", y: -40, duration: 0.3, ease: "power3.in" }, T(25.95));
+
+      // card reveals grow down out of the line; the rail is the camera
+      gsap.set(["#s4-r1", "#s4-r2", "#s4-r3"], { opacity: 0 });
+      tl.fromTo("#s4-c1", { clipPath: "inset(0% 0% 100% 0% round 28px)" }, { clipPath: "inset(0% 0% 0% 0% round 28px)", duration: 0.55, ease: "power4.out" }, T(26.15));
+      tl.fromTo(["#s4-c2", "#s4-c3"], { filter: "blur(8px)", opacity: 0.6 }, { filter: "blur(8px)", opacity: 0.6, duration: 0.01 }, 0);
+      tl.fromTo("#s4-sh1", { xPercent: -120 }, { xPercent: 330, duration: 1.0, ease: "power2.inOut" }, T(26.4));
+
+      // 01 — "Progressive overload." 26.66–28.2: Outline → fill on the noun
+      FX.outlineFill(tl, "#s4-ovs", "#s4-fcr", T(26.6), { len: 2400, draw: 0.8, fill: 0.45 });
+      tl.to("#s4-r1", { opacity: 1, duration: 0.25, ease: "power2.out" }, T(27.5));
+      // "A little more, over time." 28.21–29.6 — Mask rise sub-line, bars climb week by week
+      FX.maskRise(tl, "#s4-sub1", T(28.18), { stagger: 0.07 });
+      for (let i = 0; i < 6; i++) tl.fromTo("#s4-bar" + i, { scaleY: 0, opacity: 0, svgOrigin: `${i * 139.2 + 52} 460` }, { scaleY: 1, opacity: 1, duration: 0.5, ease: "power4.out" }, T(28.3) + i * 0.12);
+
+      // whip pan 1 → 2 (anticipation, speed ramp in/out)
+      tl.fromTo("#s4-rail", { x: 0 }, { x: 0, duration: 0.01 }, 0);
+      tl.to("#s4-rail", { x: 30, duration: 0.1, ease: "power2.out" }, T(29.62)).to("#s4-rail", { x: -960, duration: 0.3, ease: "power4.inOut" }, T(29.72));
+      tl.to("#s4-c1", { filter: "blur(8px)", opacity: 0.6, duration: 0.3, ease: "power2.in" }, T(29.72));
+      tl.to("#s4-c2", { filter: "blur(0px)", opacity: 1, duration: 0.3, ease: "power2.out" }, T(29.85));
+      tl.fromTo("#s4-sh2", { xPercent: -120 }, { xPercent: 330, duration: 1.0, ease: "power2.inOut" }, T(30.1));
+
+      // 02 — "Protein." 30.28 — Char cascade 3D; split-flap counter lands 1.6 on "1.6" (31.45)
+      FX.cascade(tl, "#s4-t2", T(30.25));
+      FX.flap(tl, "#s4-numv", ["0.0", "0.4", "0.9", "1.3", "1.6"], [T(30.9), T(31.05), T(31.2), T(31.4)], { lh: 1.0 });
+      tl.fromTo("#s4-ring", { strokeDashoffset: 1697 }, { strokeDashoffset: 0, duration: 0.7, ease: "power3.out" }, T(30.9));
+      tl.to("#s4-r2", { opacity: 1, duration: 0.25, ease: "power2.out" }, T(31.45));
+      FX.maskRise(tl, "#s4-unit", T(32.1), { stagger: 0.06 });
+      tl.fromTo("#s4-note", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power2.out" }, T(32.6));
+
+      // whip pan 2 → 3
+      tl.to("#s4-rail", { x: -930, duration: 0.1, ease: "power2.out" }, T(33.62)).to("#s4-rail", { x: -1920, duration: 0.3, ease: "power4.inOut" }, T(33.72));
+      tl.to("#s4-c2", { filter: "blur(8px)", opacity: 0.6, duration: 0.3, ease: "power2.in" }, T(33.72));
+      tl.to("#s4-c3", { filter: "blur(0px)", opacity: 1, duration: 0.3, ease: "power2.out" }, T(33.85));
+      tl.fromTo("#s4-sh3", { xPercent: -120 }, { xPercent: 330, duration: 1.0, ease: "power2.inOut" }, T(34.0));
+
+      // 03 — "And sleep." 34.32–34.9 — Tracking collapse on the title, the moon draws, the night builds
+      FX.tracking(tl, "#s4-t3", T(34.38), { spread: 40, d: 0.8 });
+      tl.fromTo("#s4-moon", { strokeDasharray: 60, strokeDashoffset: 60 }, { strokeDashoffset: 0, duration: 0.6, ease: "power2.inOut" }, T(34.2));
+      tl.to("#s4-r3", { opacity: 1, duration: 0.25, ease: "power2.out" }, T(34.44));
+      tl.fromTo("#s4-sub3", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.45, ease: "power4.out" }, T(34.6));
+      const segs = [...document.querySelectorAll(".s4-seg")];
+      segs.forEach((s, i) => tl.fromTo(s, { scaleX: 0, transformOrigin: "0% 50%" }, { scaleX: 1, duration: 0.3, ease: "power4.out" }, T(34.55) + i * 0.04));
+
+      // card unfold → next scene: the night's bars turn edge-on (they become the two graph lines)
+      segs.forEach((s, i) => tl.to(s, { scaleY: 0.08, duration: 0.3, ease: "power3.in" }, T(35.38) + (i % 3) * 0.02));
+      tl.to(["#s4-c3"], { rotationY: -90, transformPerspective: 1600, transformOrigin: "50% 50%", opacity: 0.2, duration: 0.36, ease: "power3.in" }, T(35.44));
+      tl.to(["#s4-prog", "#s4-dust", "#s4-c2"], { opacity: 0, duration: 0.3, ease: "power2.in" }, T(35.45));
+      window.__timelines["s4"] = tl;
+    })();
+  </script>
+</template>

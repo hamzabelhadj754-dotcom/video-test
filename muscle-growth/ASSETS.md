@@ -18,7 +18,7 @@ Every file in the film that came from outside this repository. None of the hero 
 - **Fibre bundle:** hex-packed striated fibres, microtears, frayed fibrils, lime repair strands, seeded motes (`assets/3d/fibres.js`).
 - **Grain, dust, haze, chalk-smoke "footage-in-type" fill, charts, HUD:** procedural SVG/CSS, seeded and deterministic.
 - **Voiceover:** Kokoro-82M via `hyperframes tts`, generated locally.
-- **Music and SFX:** to be synthesised in code (seeded), with no samples.
+- **Music and SFX:** 124 BPM hybrid-electronic score (kick, clap, hats, bass, plucks, pads) plus sound design (layered impacts, risers, whooshes, UI ticks, glass locks, a heartbeat), all synthesised in `tools/build_audio.py` with seeded noise and no samples.
 
 ## Not used, and why
 

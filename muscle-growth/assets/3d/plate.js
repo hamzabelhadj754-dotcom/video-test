@@ -69,6 +69,8 @@
       L.key.intensity = 2.2 + (imp >= 0 ? 5 * Math.exp(-imp * 12) : 0);
       renderer.render(scene, camera);
     }
-    return { ready, render, renderer };
+    const _v = new T.Vector3();
+    function screen(x, y, z) { _v.set(x, y, z).project(camera); return [(_v.x + 1) / 2 * w, (1 - _v.y) / 2 * h]; }
+    return { ready, render, renderer, camera, screen };
   };
 })();

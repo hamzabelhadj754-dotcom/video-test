@@ -1,0 +1,62 @@
+<template>
+  <style>
+    @font-face { font-family: "Anton"; src: url("assets/fonts/Anton-Regular.woff2") format("woff2"); }
+    @font-face { font-family: "Inter"; src: url("assets/fonts/Inter-Variable.woff2") format("woff2"); font-weight: 100 900; }
+    #root { position: absolute; inset: 0; overflow: hidden; background: #08090B; color: #F2F3F5; }
+    #s6-cam { position: absolute; inset: 0; }
+    #s6-haze { position: absolute; left: 50%; top: 960px; width: 1500px; height: 1000px; margin: -500px 0 0 -750px; background: radial-gradient(ellipse at center, rgba(198,255,61,.14), rgba(198,255,61,.03) 45%, transparent 70%); }
+    .s6-line { position: absolute; left: 0; right: 0; text-align: center; font-family: "Anton", sans-serif; text-transform: uppercase; line-height: 1; white-space: nowrap; }
+    #s6-l1, #s6-l2 { font-size: 178px; }
+    /* footage-in-type: a moving procedural chalk-smoke plate seen through the letters */
+    #s6-l1 { top: 330px; padding: 0 0 .06em; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1400' height='420'><filter id='s'><feTurbulence type='fractalNoise' baseFrequency='.004 .016' numOctaves='5' seed='12'/><feColorMatrix values='0 0 0 0 .96  0 0 0 0 .96  0 0 0 0 .94  0 0 0 1.7 -.3'/></filter><rect width='100%' height='100%' fill='%23707278'/><rect width='100%' height='100%' filter='url(%23s)'/></svg>");
+      background-size: 1400px 420px; -webkit-background-clip: text; background-clip: text; color: transparent; }
+    #s6-l2 { top: 530px; }
+    #s6-l3 { top: 730px; font-size: 400px; color: #C6FF3D; text-shadow: 0 0 70px rgba(198,255,61,.3); }
+    #s6-sub { position: absolute; left: 0; right: 0; top: 1150px; height: 70px; }
+    .s6-subl { position: absolute; left: 0; right: 0; top: 0; text-align: center; font: 700 52px "Inter"; letter-spacing: -0.01em; white-space: nowrap; }
+    #s6-b { font-family: "Anton", sans-serif; font-weight: 400; font-size: 96px; top: -16px; text-transform: uppercase; }
+    #s6-dust { position: absolute; inset: 0; filter: blur(5px); }
+    #s6-ca { position: absolute; inset: 0; box-shadow: inset 14px 0 30px rgba(255,60,60,.28), inset -14px 0 30px rgba(61,214,255,.28); }
+  </style>
+  <div id="root" data-composition-id="s6" data-width="1080" data-height="1920">
+    <div id="s6-cam">
+      <div id="s6-haze"></div>
+      <div class="s6-line" id="s6-l1">Train hard.</div>
+      <div class="s6-line" id="s6-l2">Eat enough.</div>
+      <div class="s6-line" id="s6-l3">Sleep</div>
+      <div id="s6-sub"><div class="s6-subl" id="s6-a">like it's part of the program.</div><div class="s6-subl" id="s6-b">Because it is.</div></div>
+    </div>
+    <div id="s6-dust"></div>
+    <div id="s6-ca"></div>
+  </div>
+  <script>
+    (function () {
+      const START = 45.968, DUR = 9.193, T = (g) => g - START, FREEZE = 54.6;
+      const tl = gsap.timeline({ paused: true });
+      FX.dust("#s6-dust", 15, 24);
+      tl.fromTo("#s6-dust", { y: 0 }, { y: -140, duration: T(FREEZE), ease: "none" }, 0);
+      gsap.set(["#s6-b", "#s6-ca"], { opacity: 0 });
+
+      // "Train hard." 46.36 — Footage-in-type (chalk smoke drifting through the letters), rising out of a mask
+      tl.fromTo("#s6-l1", { clipPath: "inset(100% 0% -10% 0%)", y: 60 }, { clipPath: "inset(0% 0% -10% 0%)", y: 0, duration: 0.55, ease: "expo.out" }, T(46.3));
+      tl.fromTo("#s6-l1", { backgroundPosition: "0px 0px" }, { backgroundPosition: "-420px -60px", duration: T(FREEZE) - T(46.3), ease: "none" }, T(46.3));
+      // "Eat enough." 47.97 — Char cascade 3D
+      FX.cascade(tl, "#s6-l2", T(47.9), { stagger: 0.035 });
+      tl.to("#s6-l1", { opacity: 0.55, duration: 0.4, ease: "power2.out" }, T(47.9));
+      // "Sleep" 49.46 — Slam-in on the beat with shake, aberration, dust scatter
+      FX.slam(tl, "#s6-l3", T(49.44), { from: 1.6 });
+      FX.shake(tl, "#s6-cam", T(49.46), 28, 9, 3);
+      tl.to("#s6-ca", { opacity: 1, duration: 0.03 }, T(49.46)).to("#s6-ca", { opacity: 0, duration: 0.25, ease: "power2.out" }, T(49.53));
+      tl.fromTo("#s6-haze", { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1, duration: 0.6, ease: "expo.out" }, T(49.46));
+      tl.to("#s6-dust", { scale: 1.15, duration: 0.5, ease: "expo.out" }, T(49.46));
+      tl.to("#s6-l2", { opacity: 0.55, duration: 0.4, ease: "power2.out" }, T(49.46));
+      // "…like it's part of the program." 49.74 — Tracking collapse
+      FX.tracking(tl, "#s6-a", T(49.72), { spread: 14, d: 0.9 });
+      // "Because it is." 53.41 — Word swap morph in the same slot
+      FX.swap(tl, "#s6-a", "#s6-b", T(53.3));
+      // beat drop-out: the picture freezes for the half beat before the cut (nothing animates after FREEZE)
+      tl.to({}, { duration: 0.01 }, T(FREEZE));
+      window.__timelines["s6"] = tl;
+    })();
+  </script>
+</template>

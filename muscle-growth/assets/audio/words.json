@@ -1,0 +1,560 @@
+[
+{
+"text": "your",
+"start": 0.38,
+"end": 0.58,
+"line": 1
+},
+{
+"text": "muscles",
+"start": 0.58,
+"end": 0.97,
+"line": 1
+},
+{
+"text": "don't",
+"start": 1.07,
+"end": 1.42,
+"line": 1
+},
+{
+"text": "grow",
+"start": 1.42,
+"end": 1.7,
+"line": 1
+},
+{
+"text": "in",
+"start": 1.7,
+"end": 1.84,
+"line": 1
+},
+{
+"text": "the",
+"start": 1.84,
+"end": 2.05,
+"line": 1
+},
+{
+"text": "gym.",
+"start": 2.05,
+"end": 2.16,
+"line": 1
+},
+{
+"text": "In",
+"start": 4.3,
+"end": 4.35,
+"line": 2
+},
+{
+"text": "the",
+"start": 4.35,
+"end": 4.58,
+"line": 2
+},
+{
+"text": "gym,",
+"start": 4.58,
+"end": 4.9,
+"line": 2
+},
+{
+"text": "you",
+"start": 5.05,
+"end": 5.17,
+"line": 2
+},
+{
+"text": "break",
+"start": 5.2,
+"end": 5.57,
+"line": 2
+},
+{
+"text": "them",
+"start": 5.57,
+"end": 5.86,
+"line": 2
+},
+{
+"text": "down.",
+"start": 5.86,
+"end": 5.96,
+"line": 2
+},
+{
+"text": "Every",
+"start": 7.51,
+"end": 7.81,
+"line": 3
+},
+{
+"text": "hard",
+"start": 7.81,
+"end": 8.09,
+"line": 3
+},
+{
+"text": "set",
+"start": 8.14,
+"end": 8.37,
+"line": 3
+},
+{
+"text": "sends",
+"start": 8.46,
+"end": 8.79,
+"line": 3
+},
+{
+"text": "a",
+"start": 8.8,
+"end": 8.88,
+"line": 3
+},
+{
+"text": "signal.",
+"start": 8.88,
+"end": 9.2,
+"line": 3
+},
+{
+"text": "the",
+"start": 12.49,
+"end": 12.65,
+"line": 4
+},
+{
+"text": "growth",
+"start": 12.65,
+"end": 13.04,
+"line": 4
+},
+{
+"text": "happens",
+"start": 13.04,
+"end": 13.5,
+"line": 4
+},
+{
+"text": "after.",
+"start": 13.5,
+"end": 13.81,
+"line": 4
+},
+{
+"text": "While",
+"start": 15.16,
+"end": 15.44,
+"line": 5
+},
+{
+"text": "you",
+"start": 15.44,
+"end": 15.58,
+"line": 5
+},
+{
+"text": "recover,",
+"start": 15.66,
+"end": 16.26,
+"line": 5
+},
+{
+"text": "your",
+"start": 16.32,
+"end": 16.51,
+"line": 5
+},
+{
+"text": "body",
+"start": 16.53,
+"end": 16.8,
+"line": 5
+},
+{
+"text": "rebuilds",
+"start": 16.8,
+"end": 17.31,
+"line": 5
+},
+{
+"text": "the",
+"start": 17.38,
+"end": 17.7,
+"line": 5
+},
+{
+"text": "fibers",
+"start": 17.7,
+"end": 18.07,
+"line": 5
+},
+{
+"text": "a",
+"start": 18.41,
+"end": 18.46,
+"line": 5
+},
+{
+"text": "little",
+"start": 18.46,
+"end": 18.71,
+"line": 5
+},
+{
+"text": "thicker",
+"start": 18.72,
+"end": 19.18,
+"line": 5
+},
+{
+"text": "than",
+"start": 19.18,
+"end": 19.36,
+"line": 5
+},
+{
+"text": "before.",
+"start": 19.44,
+"end": 19.69,
+"line": 5
+},
+{
+"text": "three",
+"start": 24.6,
+"end": 24.83,
+"line": 6
+},
+{
+"text": "things",
+"start": 24.95,
+"end": 25.22,
+"line": 6
+},
+{
+"text": "drive",
+"start": 25.29,
+"end": 25.59,
+"line": 6
+},
+{
+"text": "it.",
+"start": 25.63,
+"end": 25.71,
+"line": 6
+},
+{
+"text": "Progressive",
+"start": 26.66,
+"end": 27.51,
+"line": 7
+},
+{
+"text": "overload.",
+"start": 27.51,
+"end": 28.2,
+"line": 7
+},
+{
+"text": "A",
+"start": 28.21,
+"end": 28.27,
+"line": 7
+},
+{
+"text": "little",
+"start": 28.27,
+"end": 28.71,
+"line": 7
+},
+{
+"text": "more",
+"start": 28.71,
+"end": 29.0,
+"line": 7
+},
+{
+"text": "over",
+"start": 29.0,
+"end": 29.29,
+"line": 7
+},
+{
+"text": "time.",
+"start": 29.29,
+"end": 29.41,
+"line": 7
+},
+{
+"text": "protein,",
+"start": 30.28,
+"end": 30.93,
+"line": 8
+},
+{
+"text": "around",
+"start": 30.93,
+"end": 31.4,
+"line": 8
+},
+{
+"text": "1.6",
+"start": 31.45,
+"end": 32.14,
+"line": 8
+},
+{
+"text": "grams",
+"start": 32.14,
+"end": 32.55,
+"line": 8
+},
+{
+"text": "per",
+"start": 32.55,
+"end": 32.79,
+"line": 8
+},
+{
+"text": "kilo",
+"start": 32.79,
+"end": 33.07,
+"line": 8
+},
+{
+"text": "a",
+"start": 33.07,
+"end": 33.2,
+"line": 8
+},
+{
+"text": "day.",
+"start": 33.2,
+"end": 33.53,
+"line": 8
+},
+{
+"text": "and",
+"start": 34.32,
+"end": 34.44,
+"line": 9
+},
+{
+"text": "sleep.",
+"start": 34.44,
+"end": 34.98,
+"line": 9
+},
+{
+"text": "skip",
+"start": 36.46,
+"end": 36.7,
+"line": 10
+},
+{
+"text": "recovery,",
+"start": 36.79,
+"end": 37.65,
+"line": 10
+},
+{
+"text": "and",
+"start": 37.65,
+"end": 37.75,
+"line": 10
+},
+{
+"text": "you're",
+"start": 37.75,
+"end": 37.95,
+"line": 10
+},
+{
+"text": "just",
+"start": 37.95,
+"end": 38.06,
+"line": 10
+},
+{
+"text": "collecting",
+"start": 38.13,
+"end": 38.84,
+"line": 10
+},
+{
+"text": "damage.",
+"start": 38.84,
+"end": 39.2,
+"line": 10
+},
+{
+"text": "respect",
+"start": 41.05,
+"end": 41.51,
+"line": 11
+},
+{
+"text": "it",
+"start": 41.51,
+"end": 41.59,
+"line": 11
+},
+{
+"text": "in",
+"start": 41.72,
+"end": 41.79,
+"line": 11
+},
+{
+"text": "every",
+"start": 41.79,
+"end": 42.15,
+"line": 11
+},
+{
+"text": "session",
+"start": 42.15,
+"end": 42.66,
+"line": 11
+},
+{
+"text": "compounds.",
+"start": 42.66,
+"end": 43.32,
+"line": 11
+},
+{
+"text": "Train",
+"start": 46.36,
+"end": 46.67,
+"line": 12
+},
+{
+"text": "hard.",
+"start": 46.67,
+"end": 47.1,
+"line": 12
+},
+{
+"text": "Eat",
+"start": 47.97,
+"end": 48.09,
+"line": 13
+},
+{
+"text": "enough.",
+"start": 48.09,
+"end": 48.56,
+"line": 13
+},
+{
+"text": "Sleep",
+"start": 49.46,
+"end": 49.74,
+"line": 14
+},
+{
+"text": "like",
+"start": 49.74,
+"end": 50.01,
+"line": 14
+},
+{
+"text": "it's",
+"start": 50.01,
+"end": 50.21,
+"line": 14
+},
+{
+"text": "part",
+"start": 50.29,
+"end": 50.54,
+"line": 14
+},
+{
+"text": "of",
+"start": 50.54,
+"end": 50.63,
+"line": 14
+},
+{
+"text": "the",
+"start": 50.69,
+"end": 50.87,
+"line": 14
+},
+{
+"text": "program.",
+"start": 50.87,
+"end": 51.18,
+"line": 14
+},
+{
+"text": "Because",
+"start": 53.41,
+"end": 53.98,
+"line": 15
+},
+{
+"text": "it",
+"start": 53.98,
+"end": 54.09,
+"line": 15
+},
+{
+"text": "is.",
+"start": 54.16,
+"end": 54.27,
+"line": 15
+},
+{
+"text": "growth",
+"start": 55.88,
+"end": 56.21,
+"line": 16
+},
+{
+"text": "is",
+"start": 56.21,
+"end": 56.33,
+"line": 16
+},
+{
+"text": "built",
+"start": 56.34,
+"end": 56.68,
+"line": 16
+},
+{
+"text": "in",
+"start": 56.68,
+"end": 56.81,
+"line": 16
+},
+{
+"text": "the",
+"start": 56.81,
+"end": 57.01,
+"line": 16
+},
+{
+"text": "hours",
+"start": 57.01,
+"end": 57.34,
+"line": 16
+},
+{
+"text": "you",
+"start": 57.37,
+"end": 57.55,
+"line": 16
+},
+{
+"text": "rest.",
+"start": 57.55,
+"end": 57.81,
+"line": 16
+}
+]

@@ -1,0 +1,113 @@
+<template>
+  <style>
+    @font-face { font-family: "Inter"; src: url("assets/fonts/Inter-Variable.woff2") format("woff2"); font-weight: 100 900; }
+    @font-face { font-family: "JetBrains Mono"; src: url("assets/fonts/JetBrainsMono-Variable.woff2") format("woff2"); font-weight: 100 800; }
+    #root { position: absolute; inset: 0; overflow: hidden; background: #08090B; color: #F2F3F5; }
+    .s3-gl { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    .s3-label { font: 600 24px "JetBrains Mono"; letter-spacing: .14em; text-transform: uppercase; color: #9AA0AB; white-space: nowrap; }
+    #s3-svg { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: visible; }
+    .s3-dot { position: absolute; width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 50%; background: #F2F3F5; box-shadow: 0 0 0 6px rgba(242,243,245,.15); }
+    .s3-glass { position: absolute; border-radius: 26px; overflow: hidden;
+      background: linear-gradient(165deg, rgba(255,255,255,.085), rgba(255,255,255,.025) 55%), rgba(14,15,19,.62); border: 1px solid rgba(255,255,255,.1);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.13), 0 40px 100px rgba(0,0,0,.65); }
+    #s3-rec { left: 70px; right: 70px; top: 1150px; height: 150px; padding: 26px 32px; }
+    #s3-track { position: relative; margin-top: 24px; height: 10px; border-radius: 5px; background: rgba(255,255,255,.1); }
+    #s3-fill { position: absolute; left: 0; top: 0; bottom: 0; width: 100%; border-radius: 5px; background: linear-gradient(90deg, rgba(198,255,61,.25), #C6FF3D); box-shadow: 0 0 16px rgba(198,255,61,.5); }
+    #s3-head { position: absolute; left: 0; top: -9px; width: 28px; height: 28px; margin-left: -14px; border-radius: 50%; background: #F2F3F5; }
+    .s3-hrs { display: flex; justify-content: space-between; margin-top: 12px; font: 600 30px "JetBrains Mono"; color: #9AA0AB; }
+    #s3-haze { position: absolute; inset: 0; background: radial-gradient(circle at 50% 50%, rgba(150,40,40,.35) 0%, rgba(110,25,28,.9) 45%, #1a0708 100%); }
+    #s3-dust { position: absolute; inset: 0; filter: blur(6px); }
+    #s3-carry { position: absolute; left: 0; top: 0; height: 6px; width: 900px; border-radius: 3px; background: #C6FF3D; box-shadow: 0 0 24px rgba(198,255,61,.7), 0 0 4px #efffc0; }
+    .s3-slot { position: relative; display: inline-block; height: 1.3em; overflow: visible; vertical-align: top; }
+    .s3-slot span { position: absolute; left: 0; top: 0; white-space: nowrap; }
+  </style>
+  <div id="root" data-composition-id="s3" data-width="1080" data-height="1920">
+    <canvas class="s3-gl" id="s3-fib" width="1080" height="1920"></canvas>
+    <canvas class="s3-gl" id="s3-bic" width="1080" height="1920"></canvas>
+    <div id="s3-haze"></div>
+    <div id="s3-hud">
+      <div class="s3-label" style="position:absolute; left:70px; top:240px">MAG <span id="s3-mag" style="color:#F2F3F5">×40</span></div>
+      <div class="s3-label" style="position:absolute; right:70px; top:240px">T+ <span id="s3-hr" style="color:#F2F3F5">0 H</span></div>
+      <svg id="s3-svg"><path id="s3-ld1" d="M70 460 L300 460 L470 700" fill="none" stroke="rgba(242,243,245,.6)" stroke-width="2"/><path id="s3-ld2" d="M1010 890 L840 890" fill="none" stroke="rgba(242,243,245,.6)" stroke-width="2"/></svg>
+      <div class="s3-dot" id="s3-dt1" style="left:470px; top:700px"></div>
+      <div class="s3-dot" id="s3-dt2" style="left:840px; top:890px; background:#C6FF3D; box-shadow:0 0 0 6px rgba(198,255,61,.2)"></div>
+      <div class="s3-label" style="position:absolute; left:70px; top:404px"><span class="s3-slot"><span id="s3-w1">MICROTEAR</span><span id="s3-w2" style="color:#F2F3F5">REBUILT</span></span></div>
+      <div class="s3-label" id="s3-rep" style="position:absolute; right:70px; top:834px; color:#F2F3F5">REPAIR</div>
+      <div class="s3-glass" id="s3-rec">
+        <div style="display:flex; justify-content:space-between"><div class="s3-label">Recovery</div><div class="s3-label" id="s3-state" style="color:#F2F3F5">Rebuilding</div></div>
+        <div id="s3-track"><div id="s3-fill"></div><div id="s3-head"></div></div>
+        <div class="s3-hrs"><span>0h</span><span>24h</span><span>48h</span></div>
+      </div>
+    </div>
+    <div id="s3-dust"></div>
+    <div id="s3-carry"></div>
+  </div>
+  <script>
+    (function () {
+      const START = 12.097, DUR = 12.097, T = (g) => g - START, END = START + DUR;
+      const tl = gsap.timeline({ paused: true });
+      const fib = MG3D.fibres(document.getElementById("s3-fib"), 1080, 1920, "assets/");
+      const bic = MG3D.biceps(document.getElementById("s3-bic"), 1080, 1920, "assets/");
+      const HERO = { camX: 0.4, camY: -0.9, camZ: 9.0, lookX: 0.5, lookY: -1.5, lookZ: 0.6, rx: 0.38, rz: 0.36 };
+      // one camera path, no cuts: arrive from the dive, settle on the repair, drift, then pull back out of the tissue
+      const camF = FX.path([
+        [START, { ...HERO, camZ: 24, camY: -2.0 }, "out"],
+        [START + 1.6, { ...HERO, camZ: 10.4 }, "sine"],
+        [15.0, { ...HERO, camZ: 9.4, camX: 0.55 }, "sine"],
+        [19.8, { ...HERO, camZ: 8.6, camX: 0.25 }, "in"],
+        [21.4, { ...HERO, camZ: 30, camY: -3 }],
+      ]);
+      const sm = (a, b, g) => Math.max(0, Math.min(1, (g - a) / (b - a)));
+      const stateF = (lt) => { const g = lt + START; return { ...camF(g), t: g, tear: 1, repair: sm(15.4, 19.4, g), thick: sm(18.6, 19.7, g) }; };
+      const camB = FX.path([[20.9, { camZ: 3.2, camY: 0.1, lookY: -0.1 }, "out"], [22.6, { camZ: 11.6, camY: 0.2, lookY: -0.25 }, "sine"], [END, { camZ: 12.2, camY: 0.2, lookY: -0.25 }]]);
+      const stateB = (lt) => { const g = lt + START; return { ...camB(g), yaw: -0.3 + 0.04 * sm(20.9, END, g), pitch: 0.05, thick: 1, glow: sm(22.6, 23.2, g) * 0.9, signal: 0.62 }; };
+      // render each 3D layer only while it is on screen
+      const both = { ready: Promise.all([fib.ready, bic.ready]), render: (s) => { if (s.f) fib.render(s.f); if (s.b) bic.render(s.b); } };
+      FX.wire3D(tl, "s3", both, (lt) => { const g = lt + START; return { f: g < 21.6 ? stateF(lt) : null, b: g > 20.8 ? stateB(lt) : null }; }, START, DUR);
+      gsap.set("#s3-bic", { opacity: 0 });
+
+      // arrive: the tissue haze from the dive clears, depth of field resolves
+      tl.fromTo("#s3-haze", { opacity: 1 }, { opacity: 0, duration: 0.9, ease: "power2.out" }, 0);
+      tl.fromTo("#s3-fib", { filter: "blur(10px)" }, { filter: "blur(0px)", duration: 0.9, ease: "power2.out" }, 0);
+      const mag = { v: 40 }, magEl = document.getElementById("s3-mag");
+      tl.fromTo(mag, { v: 40 }, { v: 1200, duration: 1.5, ease: "power3.out", onUpdate: () => { magEl.textContent = "×" + Math.round(mag.v); } }, 0);
+      FX.dust("#s3-dust", 9, 30);
+      tl.fromTo("#s3-dust", { y: 40 }, { y: -90, duration: DUR, ease: "none" }, 0);
+
+      // "The growth happens after." 12.49–14.0 — the microtear is the damage the set left behind
+      tl.fromTo("#s3-ld1", { strokeDasharray: 600, strokeDashoffset: 600 }, { strokeDashoffset: 0, duration: 0.5, ease: "power2.inOut" }, T(13.3));
+      tl.fromTo("#s3-dt1", { scale: 0 }, { scale: 1, duration: 0.25, ease: "back.out(1.7)" }, T(13.7));
+      FX.scramble(tl, "#s3-w1", T(13.35), { seed: 4, d: 0.4 });
+      gsap.set("#s3-w2", { opacity: 0 });
+
+      // "While you recover…" 15.16 — recovery bar 0h → 48h, strands knit (3D), REPAIR is called out
+      tl.fromTo("#s3-rec", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.6, ease: "power4.out" }, T(15.0));
+      tl.fromTo("#s3-fill", { scaleX: 0, transformOrigin: "0% 50%" }, { scaleX: 1, duration: 4.4, ease: "power1.inOut" }, T(15.2));
+      tl.fromTo("#s3-head", { x: 0 }, { x: 876, duration: 4.4, ease: "power1.inOut" }, T(15.2));
+      const hr = { v: 0 }, hrEl = document.getElementById("s3-hr");
+      tl.fromTo(hr, { v: 0 }, { v: 48, duration: 4.4, ease: "power1.inOut", onUpdate: () => { hrEl.textContent = Math.round(hr.v) + " H"; } }, T(15.2));
+      tl.fromTo("#s3-ld2", { strokeDasharray: 300, strokeDashoffset: 300 }, { strokeDashoffset: 0, duration: 0.4, ease: "power2.inOut" }, T(16.2));
+      tl.fromTo("#s3-dt2", { scale: 0 }, { scale: 1, duration: 0.25, ease: "back.out(1.7)" }, T(16.5));
+      FX.tracking(tl, "#s3-rep", T(16.25), { spread: 18, d: 0.7 });
+      // "…a little thicker than before." 18.41–19.9 — damage becomes growth (Word swap morph)
+      FX.swap(tl, "#s3-w1", "#s3-w2", T(19.0));
+      FX.scramble(tl, "#s3-state", T(19.5), { seed: 8, d: 0.35, text: "STRONGER" });
+
+      // pull back out to the whole muscle (no cut): HUD clears, tissue haze, the thicker biceps resolves
+      tl.to("#s3-hud", { opacity: 0, filter: "blur(6px)", duration: 0.4, ease: "power3.in" }, T(20.1));
+      tl.to(mag, { v: 1, duration: 1.8, ease: "power3.in", onUpdate: () => { magEl.textContent = "×" + Math.round(mag.v); } }, T(20.2));
+      tl.to("#s3-haze", { opacity: 0.85, duration: 0.6, ease: "power2.in" }, T(20.6)).to("#s3-haze", { opacity: 0, duration: 0.8, ease: "power2.out" }, T(21.25));
+      tl.to("#s3-bic", { opacity: 1, duration: 0.6, ease: "power2.out" }, T(21.0));
+      tl.fromTo("#s3-bic", { filter: "blur(10px)" }, { filter: "blur(0px)", duration: 1.0, ease: "power2.out", immediateRender: false }, T(21.0));
+      tl.to("#s3-fib", { opacity: 0, duration: 0.5, ease: "power2.in" }, T(21.0));
+
+      // carry: the glowing repaired strand stretches out of the muscle and becomes card 01's progress line
+      bic.render(stateB(T(23.2))); const [px, py] = bic.screen(0.5, 0.06, 0.36, true);
+      gsap.set("#s3-carry", { x: px, y: py, scaleX: 0, transformOrigin: "0% 50%" });
+      tl.fromTo("#s3-carry", { scaleX: 0, opacity: 0 }, { scaleX: 0.25, opacity: 1, duration: 0.3, ease: "power3.out", immediateRender: false }, T(23.25));
+      tl.to("#s3-carry", { x: 90, y: 297, scaleX: 1, duration: 0.55, ease: "power3.inOut" }, T(23.6));
+      tl.to("#s3-bic", { opacity: 0.25, filter: "blur(8px)", duration: 0.5, ease: "power2.in" }, T(23.6));
+      window.__timelines["s3"] = tl;
+    })();
+  </script>
+</template>

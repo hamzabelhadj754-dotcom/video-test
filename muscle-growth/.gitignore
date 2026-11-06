@@ -1,0 +1,8 @@
+.hyperframes/artifacts/
+renders/work-*
+renders/.*transaction*
+renders/*.log
+node_modules/
+__pycache__/
+renders/*_master.mp4
+_shot-*.html

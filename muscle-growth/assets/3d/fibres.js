@@ -89,6 +89,8 @@
         renderer.render(scene, camera); const c = out[k]; if (c) { const g2 = c.getContext("2d"); g2.clearRect(0, 0, c.width, c.height); g2.drawImage(renderer.domElement, 0, 0, c.width, c.height); } });
       scene.background = keepBg;
     }
-    return { ready, render, renderer };
+    const _v = new T.Vector3();
+    function screen(x, y, z) { _v.set(x, y, z).project(camera); return [(_v.x + 1) / 2 * w, (1 - _v.y) / 2 * h]; }
+    return { ready, render, renderer, camera, screen };
   };
 })();

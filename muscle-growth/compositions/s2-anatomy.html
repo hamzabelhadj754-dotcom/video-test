@@ -1,0 +1,131 @@
+<template>
+  <style>
+    @font-face { font-family: "Inter"; src: url("assets/fonts/Inter-Variable.woff2") format("woff2"); font-weight: 100 900; }
+    @font-face { font-family: "JetBrains Mono"; src: url("assets/fonts/JetBrainsMono-Variable.woff2") format("woff2"); font-weight: 100 800; }
+    #root { position: absolute; inset: 0; overflow: hidden; background: #08090B; color: #F2F3F5; }
+    #s2-bg { position: absolute; inset: -60px; background: radial-gradient(ellipse 60% 40% at 58% 46%, rgba(255,140,120,.08), transparent 70%); }
+    #s2-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px); background-size: 60px 60px;
+      -webkit-mask-image: radial-gradient(ellipse 70% 55% at 50% 45%, #000 30%, transparent 80%); mask-image: radial-gradient(ellipse 70% 55% at 50% 45%, #000 30%, transparent 80%); }
+    #s2-gl { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #s2-hud { position: absolute; inset: 0; }
+    #s2-svg { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: visible; }
+    .s2-label { font: 600 24px "JetBrains Mono"; letter-spacing: .14em; text-transform: uppercase; color: #9AA0AB; white-space: pre; }
+    .s2-data { font: 600 42px "JetBrains Mono"; font-variant-numeric: tabular-nums; color: #F2F3F5; margin-top: 6px; display: flex; align-items: baseline; gap: 8px; }
+    .s2-data small { font-size: 24px; color: #9AA0AB; }
+    .s2-box { position: absolute; }
+    .s2-glass { position: absolute; border-radius: 26px; overflow: hidden;
+      background: linear-gradient(165deg, rgba(255,255,255,.085), rgba(255,255,255,.025) 55%), rgba(14,15,19,.62); border: 1px solid rgba(255,255,255,.1);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.13), 0 40px 100px rgba(0,0,0,.65); }
+    #s2-rep { right: 70px; top: 226px; width: 270px; height: 172px; padding: 24px 28px; }
+    #s2-repn { font: 600 84px/1 "JetBrains Mono"; }
+    #s2-hr { left: 70px; right: 70px; top: 1170px; height: 130px; }
+    #s2-hrclip { position: absolute; left: 30px; right: 30px; bottom: 14px; height: 58px; overflow: hidden; }
+    #s2-hrpath { position: absolute; left: 0; top: 0; width: 2640px; height: 58px; }
+    .s2-dot { position: absolute; left: 0; top: 0; width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 50%; background: #F2F3F5; box-shadow: 0 0 0 6px rgba(242,243,245,.15); }
+    #s2-mag { position: absolute; left: 70px; top: 240px; }
+    #s2-fg { position: absolute; inset: -40px; }
+    .s2-brk { position: absolute; width: 120px; height: 120px; border: 0 solid rgba(242,243,245,.5); filter: blur(4px); }
+    #s2-dust { position: absolute; inset: 0; filter: blur(5px); }
+    #s2-dive { position: absolute; inset: 0; background: radial-gradient(circle at 65% 47%, rgba(150,40,40,.0) 0%, rgba(110,25,28,.85) 40%, #1a0708 100%); }
+  </style>
+  <div id="root" data-composition-id="s2" data-width="1080" data-height="1920">
+    <div id="s2-bg"></div><div id="s2-grid"></div>
+    <canvas id="s2-gl" width="1080" height="1920"></canvas>
+    <div id="s2-hud">
+      <svg id="s2-svg"></svg>
+      <div class="s2-label" id="s2-set" style="position:absolute; left:70px; top:240px">SET 04 · BICEPS</div>
+      <div class="s2-glass" id="s2-rep"><div class="s2-label">REP</div><div style="display:flex; align-items:baseline; margin-top:10px"><span id="s2-repn"></span><span style="font:600 36px 'JetBrains Mono'; color:#9AA0AB">&nbsp;/10</span></div></div>
+      <div class="s2-box" id="s2-b1" style="left:70px; top:574px"><div class="s2-label" id="s2-k1">LOAD</div><div class="s2-data"><span id="s2-v1"></span><small>KG</small></div></div>
+      <div class="s2-box" id="s2-b2" style="right:70px; top:690px; text-align:right"><div class="s2-label" id="s2-k2">TENSION</div><div class="s2-data" style="justify-content:flex-end"><span id="s2-v2">HIGH</span></div></div>
+      <div class="s2-box" id="s2-b3" style="left:70px; top:1014px"><div class="s2-label" id="s2-k3">FATIGUE</div><div class="s2-data"><span id="s2-v3"></span><small>%</small></div></div>
+      <div class="s2-glass" id="s2-hr">
+        <div class="s2-label" style="position:absolute; left:30px; top:24px">HEART RATE</div>
+        <div class="s2-data" style="position:absolute; right:30px; top:10px; color:#3DD6FF"><span id="s2-bpm"></span><small>BPM</small></div>
+        <div id="s2-hrclip"><svg id="s2-hrpath" viewBox="0 0 2640 58" preserveAspectRatio="none"></svg></div>
+      </div>
+      <div class="s2-label" id="s2-mag" style="opacity:0">MAG <span id="s2-magn" style="color:#F2F3F5">×1</span></div>
+    </div>
+    <div id="s2-fg"><div class="s2-brk" style="left:60px; top:500px; border-top-width:3px; border-left-width:3px"></div><div class="s2-brk" style="right:60px; top:1130px; border-bottom-width:3px; border-right-width:3px"></div><div id="s2-dust"></div></div>
+    <div id="s2-dive"></div>
+  </div>
+  <script>
+    (function () {
+      const START = 3.871, DUR = 8.226, T = (g) => g - START;
+      const tl = gsap.timeline({ paused: true });
+      const m = MG3D.biceps(document.getElementById("s2-gl"), 1080, 1920, "assets/");
+      const P = [0.5, 0.06, 0.36];              // the point on the long head the camera dives into
+      const REPS = [6.95, 7.75, 8.55];          // VO: "Every hard set sends a signal." 7.51–9.4
+      const base = (g) => ({ yaw: -0.42 + 0.12 * Math.min(1, (g - START) / 7.2), pitch: 0.05, camZ: 12.6 - 1.0 * Math.min(1, (g - START) / 7.2), camX: 0, camY: 0.2, lookX: 0, lookY: -0.25, lookZ: 0 });
+      // solve lookX/lookY so the dive point sits under the reticle that the hook's ring landed on (706, 900)
+      const TX = 706, TY = 900; let ox = 0, oy = 0;
+      for (let it = 0; it < 6; it++) { const st = { ...base(START), lookX: ox, lookY: -0.25 + oy }; m.render(st); const [sx, sy] = m.screen(P[0], P[1], P[2], true);
+        m.render({ ...st, lookX: ox + 0.05 }); const dx = (m.screen(P[0], P[1], P[2], true)[0] - sx) / 0.05; m.render({ ...st, lookY: -0.25 + oy + 0.05 }); const dy = (m.screen(P[0], P[1], P[2], true)[1] - sy) / 0.05;
+        ox += (TX - sx) / dx; oy += (TY - sy) / dy; }
+      const DIVE0 = 11.0, DIVE1 = START + DUR;
+      const stateAt = (lt) => {
+        const g = lt + START; const b = base(Math.min(g, DIVE0)); b.lookX = ox; b.lookY = -0.25 + oy;
+        // signal: one travelling pulse per rep
+        let glow = 0, sig = 0; REPS.forEach((r) => { const p = (g - r) / 0.6; if (p >= 0 && p <= 1.2) { glow = Math.max(glow, Math.min(1, (1.2 - p) * 3)); sig = Math.min(1.2, p); } });
+        if (g > 9.2) glow = Math.max(glow, 0.0);
+        if (g > DIVE0) { // the scale dive: fly toward P and through the surface
+          const k = Math.min(1, (g - DIVE0) / (DIVE1 - DIVE0)), e = k * k * k;
+          b.camX = b.camX + (P[0] - b.camX) * e; b.camY = b.camY + (P[1] - b.camY) * e; b.camZ = b.camZ + (P[2] + 0.25 - b.camZ) * e;
+        }
+        return { ...b, glow, signal: sig, thick: 0 };
+      };
+      FX.wire3D(tl, "s2", m, stateAt, START, DUR);
+
+      // ---- HUD geometry from projected 3D points (leaders end ON the muscle) ----
+      m.render(stateAt(0));
+      const pts = { L: m.screen(-0.25, 0.55, 0.3, true), Tn: m.screen(0.62, 0.35, 0.3, true), F: m.screen(-0.18, -0.65, 0.3, true), R: m.screen(P[0], P[1], P[2], true) };
+      const svg = document.getElementById("s2-svg");
+      const ln = (id, d) => `<path id="${id}" d="${d}" fill="none" stroke="rgba(242,243,245,.6)" stroke-width="2"/>`;
+      svg.innerHTML = `<g id="s2-ret" stroke="rgba(242,243,245,.9)" stroke-width="2.5" fill="none"><circle id="s2-retc" cx="${pts.R[0]}" cy="${pts.R[1]}" r="74"/><path id="s2-rett" d="M${pts.R[0]} ${pts.R[1] - 92} v22 M${pts.R[0]} ${pts.R[1] + 70} v22 M${pts.R[0] - 92} ${pts.R[1]} h22 M${pts.R[0] + 70} ${pts.R[1]} h22"/></g>`
+        + ln("s2-l1", `M260 646 L440 646 L${pts.L[0]} ${pts.L[1]}`) + ln("s2-l2", `M820 760 L${Math.max(pts.Tn[0] + 30, 760)} 760 L${pts.Tn[0]} ${pts.Tn[1]}`) + ln("s2-l3", `M250 1086 L400 1086 L${pts.F[0]} ${pts.F[1]}`);
+      [["s2-d1", pts.L], ["s2-d2", pts.Tn], ["s2-d3", pts.F]].forEach(([id, p]) => { const d = document.createElement("div"); d.className = "s2-dot"; d.id = id; d.style.transform = `translate(${p[0]}px, ${p[1]}px)`; document.getElementById("s2-hud").appendChild(d); });
+
+      gsap.set(["#s2-retc", "#s2-rett"], { svgOrigin: `${pts.R[0]} ${pts.R[1]}` });
+      // reticle: the hook's ring lands here, then the crosshair draws
+      tl.fromTo("#s2-retc", { strokeDasharray: 470, strokeDashoffset: 0 }, { strokeDashoffset: 0, duration: 0.01 }, 0);
+      tl.fromTo("#s2-rett", { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "power2.out" }, 0.1);
+      tl.fromTo("#s2-gl", { opacity: 0, scale: 1.04 }, { opacity: 1, scale: 1, duration: 0.6, ease: "expo.out" }, 0);
+      tl.fromTo(["#s2-bg", "#s2-grid"], { opacity: 0 }, { opacity: 1, duration: 0.8, ease: "power2.out" }, 0.1);
+      // parallax: BG 0.3×, FG 1.4× of the camera's push
+      tl.fromTo("#s2-bg", { y: 0 }, { y: -12, duration: DUR, ease: "none" }, 0);
+      tl.fromTo("#s2-fg", { y: 30, scale: 1 }, { y: -56, scale: 1.04, duration: DUR, ease: "none" }, 0);
+      FX.dust("#s2-dust", 5, 18);
+
+      // "In the gym, you break them down." 4.30–6.21 — Scramble decode labels, split-flap data, leaders draw
+      [["#s2-l1", "#s2-b1", "#s2-k1", "#s2-d1", 4.55], ["#s2-l2", "#s2-b2", "#s2-k2", "#s2-d2", 5.05], ["#s2-l3", "#s2-b3", "#s2-k3", "#s2-d3", 5.55]].forEach(([l, b, k, d, t], i) => {
+        tl.fromTo(l, { strokeDasharray: 900, strokeDashoffset: 900 }, { strokeDashoffset: 0, duration: 0.45, ease: "power2.inOut" }, T(t));
+        tl.fromTo(d, { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.25, ease: "back.out(1.7)" }, T(t) + 0.35);
+        tl.fromTo(b, { opacity: 0, x: i === 1 ? 20 : -20 }, { opacity: 1, x: 0, duration: 0.4, ease: "power4.out" }, T(t) + 0.1);
+        FX.scramble(tl, k, T(t) + 0.1, { seed: 30 + i, d: 0.4 });
+      });
+      FX.flap(tl, "#s2-v1", ["00.0", "82.5"], [T(4.75)]);
+      FX.flap(tl, "#s2-v3", ["00", "52", "61", "74"], [T(5.75), T(REPS[1]), T(REPS[2])]);
+      tl.fromTo("#s2-v2", { opacity: 0 }, { opacity: 1, duration: 0.2 }, T(5.3));
+
+      // the rep counter and heart rate tick on every rep (the reps cause the signal pulses)
+      tl.fromTo("#s2-rep", { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.5, ease: "power4.out" }, T(6.3));
+      FX.flap(tl, "#s2-repn", [" 8", " 9", "10"], [T(REPS[1]), T(REPS[2])]);
+      tl.fromTo("#s2-hr", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6, ease: "power4.out" }, T(6.0));
+      FX.flap(tl, "#s2-bpm", ["142", "156", "168"], [T(REPS[1]) + 0.1, T(REPS[2]) + 0.1]);
+      (() => { const r = FX.rng(5); let d = ""; for (let i = 0; i <= 330; i++) { const x = i / 330 * 2640; let y = 36 + (r() - .5) * 5; const k = i % 22; if (k === 11) y = 4; if (k === 12) y = 56; if (k === 13) y = 26; d += (i ? "L" : "M") + x.toFixed(1) + " " + y.toFixed(1); }
+        document.getElementById("s2-hrpath").innerHTML = `<path d="${d}" fill="none" stroke="#3DD6FF" stroke-width="3" stroke-linejoin="round"/>`; })();
+      tl.fromTo("#s2-hrpath", { x: 0 }, { x: -1760, duration: DUR, ease: "none" }, 0);
+      REPS.forEach((r) => tl.fromTo("#s2-retc", { scale: 1 }, { scale: 1.12, duration: 0.12, ease: "power2.out", yoyo: true, repeat: 1, immediateRender: false }, T(r)));
+
+      // the scale dive (11.0 → cut): HUD clears, MAG counts up, depth of field shifts, tissue haze swallows the frame
+      tl.to(["#s2-b1", "#s2-b2", "#s2-b3", "#s2-l1", "#s2-l2", "#s2-l3", "#s2-d1", "#s2-d2", "#s2-d3", "#s2-rep", "#s2-hr", "#s2-set", "#s2-rett"], { opacity: 0, duration: 0.3, ease: "power3.in", stagger: 0.015 }, T(10.75));
+      tl.fromTo("#s2-mag", { opacity: 0 }, { opacity: 1, duration: 0.2 }, T(10.95));
+      const mag = { v: 1 }, magEl = document.getElementById("s2-magn");
+      tl.fromTo(mag, { v: 1 }, { v: 40, duration: DIVE1 - DIVE0, ease: "power3.in", onUpdate: () => { magEl.textContent = "×" + Math.round(mag.v); } }, T(DIVE0));
+      tl.to("#s2-retc", { scale: 4, opacity: 0, duration: DIVE1 - DIVE0, ease: "power3.in" }, T(DIVE0));
+      tl.fromTo("#s2-gl", { filter: "blur(0px)" }, { filter: "blur(10px)", duration: DIVE1 - DIVE0 - 0.15, ease: "power3.in", immediateRender: false }, T(DIVE0) + 0.15);
+      tl.fromTo("#s2-dive", { opacity: 0 }, { opacity: 1, duration: DIVE1 - DIVE0 - 0.2, ease: "power3.in" }, T(DIVE0) + 0.2);
+      tl.to("#s2-fg", { scale: 1.6, opacity: 0, duration: DIVE1 - DIVE0, ease: "power3.in" }, T(DIVE0));
+      window.__timelines["s2"] = tl;
+    })();
+  </script>
+</template>
