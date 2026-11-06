@@ -1,0 +1,193 @@
+<template>
+  <style>
+    @font-face { font-family: "Instrument Serif"; src: url("assets/fonts/InstrumentSerif-Regular.woff2") format("woff2"); font-style: normal; }
+    @font-face { font-family: "Instrument Serif"; src: url("assets/fonts/InstrumentSerif-Italic.woff2") format("woff2"); font-style: italic; }
+    @font-face { font-family: "Inter"; src: url("assets/fonts/Inter-Variable.woff2") format("woff2"); font-weight: 100 900; }
+    @font-face { font-family: "JetBrains Mono"; src: url("assets/fonts/JetBrainsMono-Variable.woff2") format("woff2"); font-weight: 100 800; }
+    #root { position: absolute; inset: 0; overflow: hidden; background: #07070A; color: #EDEDED; font-family: "Inter", sans-serif; }
+    #s6-view { position: absolute; inset: 0; perspective: 1800px; perspective-origin: 50% 45%; }
+    #s6-cam { position: absolute; inset: 0; transform-style: preserve-3d; }
+    #s6-amb { position: absolute; left: 50%; top: 560px; width: 1400px; height: 1200px; margin: -600px 0 0 -700px;
+      background: radial-gradient(ellipse at center, rgba(212,166,74,.12), rgba(212,166,74,.03) 40%, transparent 68%); }
+    .s6-glass { position: absolute; border-radius: 26px; overflow: hidden;
+      background: linear-gradient(180deg, rgba(255,255,255,.075), rgba(255,255,255,.02));
+      border: 1px solid rgba(255,255,255,.09);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.12), 0 30px 80px rgba(0,0,0,.6); }
+    .s6-sheen { position: absolute; top: -30%; bottom: -30%; width: 40%; left: 0;
+      background: linear-gradient(100deg, transparent, rgba(255,255,255,.08) 48%, rgba(255,255,255,.13) 50%, rgba(255,255,255,.08) 52%, transparent); }
+    .s6-k { font: 600 24px "JetBrains Mono"; letter-spacing: .18em; text-transform: uppercase; color: #85858d; }
+
+    #s6-head { position: absolute; left: 96px; right: 96px; top: 232px; height: 130px; }
+    #s6-title { position: absolute; left: 0; bottom: 0; font: 400 120px/1 "Instrument Serif"; letter-spacing: -0.02em; }
+    #s6-title em { font-style: italic; color: #D4A64A; }
+    #s6-date { position: absolute; right: 0; bottom: 14px; text-align: right; }
+    #s6-date .v { font: 500 40px "JetBrains Mono"; font-variant-numeric: tabular-nums; margin-top: 6px; }
+    #s6-date .v small { font-size: 28px; color: #85858d; }
+
+    #s6-streak { left: 96px; right: 96px; top: 398px; height: 230px; }
+    #s6-odo { position: absolute; left: 40px; top: 30px; width: 130px; height: 170px; overflow: hidden; }
+    #s6-odocol { position: absolute; left: 0; top: 0; width: 130px; }
+    #s6-odocol div { height: 170px; font: 500 170px/170px "JetBrains Mono"; text-align: center; color: #D4A64A; }
+    #s6-odocol div:first-child { color: #3a3a42; }
+    #s6-odoglow { position: absolute; left: 20px; top: 20px; width: 170px; height: 190px; border-radius: 50%; background: radial-gradient(circle, rgba(212,166,74,.35), transparent 65%); }
+    #s6-sinfo { position: absolute; left: 210px; top: 52px; }
+    #s6-week { display: flex; gap: 14px; margin-top: 26px; }
+    #s6-week i { position: relative; width: 50px; height: 50px; border-radius: 13px; border: 1px solid rgba(255,255,255,.1); background: rgba(255,255,255,.03); display: block; }
+    #s6-week i b { position: absolute; inset: -1px; border-radius: 13px; background: #D4A64A; box-shadow: 0 0 22px rgba(212,166,74,.5); display: block; }
+    #s6-wlab { display: flex; gap: 14px; margin-top: 10px; }
+    #s6-wlab span { width: 50px; text-align: center; font: 600 15px "JetBrains Mono"; letter-spacing: .08em; color: #45454c; }
+    #s6-ring { position: absolute; right: 40px; top: 44px; width: 140px; height: 140px; }
+    #s6-ring svg { position: absolute; inset: 0; }
+    #s6-ringv { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    #s6-ringv .n { font: 600 36px "JetBrains Mono"; font-variant-numeric: tabular-nums; }
+    #s6-ringv .n small { color: #6B6B73; font-size: 22px; }
+
+    .s6-habit { left: 96px; right: 96px; height: 112px; border-radius: 22px; }
+    .s6-cb { position: absolute; left: 36px; top: 31px; width: 50px; height: 50px; border-radius: 14px; border: 2px solid rgba(255,255,255,.2); }
+    .s6-cbf { position: absolute; inset: -2px; border-radius: 14px; background: #D4A64A; box-shadow: 0 0 24px rgba(212,166,74,.45); }
+    .s6-cb svg { position: absolute; left: 9px; top: 9px; width: 28px; height: 28px; overflow: visible; }
+    .s6-nm { position: absolute; left: 116px; top: 0; bottom: 0; display: flex; align-items: center; font: 600 36px "Inter"; letter-spacing: -0.01em; }
+    .s6-meta { position: absolute; right: 36px; top: 0; bottom: 0; display: flex; align-items: center; font: 500 28px "JetBrains Mono"; color: #85858d; }
+    .s6-meta.on { color: #D4A64A; }
+
+    #s6-year { left: 96px; right: 96px; top: 1056px; height: 214px; }
+    #s6-yhead { position: absolute; left: 40px; right: 40px; top: 26px; display: flex; justify-content: space-between; }
+    #s6-proj { font: 600 26px "JetBrains Mono"; letter-spacing: .1em; color: #D4A64A; }
+    #s6-grid { position: absolute; left: 136px; top: 1130px; width: 806px; height: 106px; }
+    .s6-cell { position: absolute; width: 12px; height: 12px; border-radius: 3px; background: rgba(255,255,255,.07); }
+    #s6-c0 { background: #D4A64A; box-shadow: 0 0 10px rgba(212,166,74,.6); }
+    #s6-ping { position: absolute; left: 136px; top: 1130px; width: 12px; height: 12px; border-radius: 4px; border: 2px solid #D4A64A; }
+    #s6-cursor { position: absolute; left: 0; top: 0; width: 44px; height: 44px; margin: -22px 0 0 -22px; border-radius: 50%;
+      background: rgba(237,237,237,.85); box-shadow: 0 0 0 8px rgba(237,237,237,.12), 0 10px 30px rgba(0,0,0,.6); }
+    #s6-rip { position: absolute; left: 0; top: 0; width: 120px; height: 120px; margin: -60px 0 0 -60px; border-radius: 50%; border: 2px solid rgba(237,237,237,.7); }
+
+    @media (orientation: landscape) {
+      #s6-amb { left: 960px; top: 480px; }
+      #s6-head { left: 160px; right: 160px; top: 86px; }
+      #s6-streak { left: 160px; right: auto; width: 760px; top: 256px; }
+      .s6-habit { left: 1000px; right: 160px; }
+      #s6-year { left: 160px; right: 160px; top: 650px; }
+      #s6-grid { left: 200px; top: 724px; }
+      #s6-ping { left: 200px; top: 724px; }
+      #s6-h1 { top: 260px !important; } #s6-h2 { top: 388px !important; } #s6-h3 { top: 516px !important; }
+    }
+  </style>
+  <div id="root" data-composition-id="s6" data-width="1080" data-height="1920">
+    <div id="s6-view">
+      <div id="s6-cam">
+        <div id="s6-amb"></div>
+        <div id="s6-head">
+          <div id="s6-title"><span id="s6-t1">The</span> <em id="s6-t2">system.</em></div>
+          <div id="s6-date"><div class="s6-k">Day</div><div class="v"><span id="s6-dn">001</span><small> / 365</small></div></div>
+        </div>
+
+        <div class="s6-glass" id="s6-streak">
+          <div id="s6-odoglow"></div>
+          <div id="s6-odo"><div id="s6-odocol"><div>0</div><div>1</div></div></div>
+          <div id="s6-sinfo"><div class="s6-k">Day streak</div>
+            <div id="s6-week"><i><b id="s6-wk0"></b></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            <div id="s6-wlab" data-layout-ignore><span style="color:#D4A64A">D1</span><span>D2</span><span>D3</span><span>D4</span><span>D5</span><span>D6</span><span>D7</span></div></div>
+          <div id="s6-ring"><svg viewBox="0 0 140 140"><circle cx="70" cy="70" r="60" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="10"/>
+            <circle id="s6-rarc" cx="70" cy="70" r="60" fill="none" stroke="#D4A64A" stroke-width="10" stroke-linecap="round" transform="rotate(-90 70 70)" stroke-dasharray="377" stroke-dashoffset="377"/></svg>
+            <div id="s6-ringv"><div class="n"><span id="s6-rn">0</span><small>/3</small></div><div class="s6-k" style="font-size:16px" data-layout-ignore>Today</div></div></div>
+          <div class="s6-sheen" id="s6-streak-sh"></div>
+        </div>
+
+        <div class="s6-glass s6-habit" id="s6-h1" style="top:656px"><div class="s6-cb"><div class="s6-cbf" id="s6-f1"></div><svg viewBox="0 0 28 28"><path id="s6-p1" d="M4 14.5 L11 21 L24 7" fill="none" stroke="#07070A" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="30" stroke-dashoffset="30"/></svg></div>
+          <div class="s6-nm">Wake before 6:00</div><div class="s6-meta" id="s6-m1">—</div><div class="s6-sheen" id="s6-h1-sh"></div></div>
+        <div class="s6-glass s6-habit" id="s6-h2" style="top:784px"><div class="s6-cb"><div class="s6-cbf" id="s6-f2"></div><svg viewBox="0 0 28 28"><path id="s6-p2" d="M4 14.5 L11 21 L24 7" fill="none" stroke="#07070A" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="30" stroke-dashoffset="30"/></svg></div>
+          <div class="s6-nm">Train for 30 minutes</div><div class="s6-meta" id="s6-m2">—</div><div class="s6-sheen" id="s6-h2-sh"></div></div>
+        <div class="s6-glass s6-habit" id="s6-h3" style="top:912px"><div class="s6-cb"><div class="s6-cbf" id="s6-f3"></div><svg viewBox="0 0 28 28"><path id="s6-p3" d="M4 14.5 L11 21 L24 7" fill="none" stroke="#07070A" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="30" stroke-dashoffset="30"/></svg></div>
+          <div class="s6-nm">Read 10 pages</div><div class="s6-meta" id="s6-m3">—</div><div class="s6-sheen" id="s6-h3-sh"></div></div>
+
+        <div class="s6-glass" id="s6-year">
+          <div id="s6-yhead"><div class="s6-k">The next 365 days</div><div id="s6-proj">1.01<sup>365</sup> ≈ 37.78×</div></div>
+        </div>
+        <div id="s6-grid" data-layout-ignore></div>
+        <div id="s6-ping"></div>
+        <div id="s6-cursor"></div>
+        <div id="s6-rip"></div>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const START = 49.5, T = (g) => g - START, DUR = 10.5;
+      const W = innerWidth, H = innerHeight, LAND = W > H;
+      const tl = gsap.timeline({ paused: true });
+
+      // 365-day grid: 53 weeks × 7 days
+      const grid = document.getElementById("s6-grid"); let gh = "";
+      for (let i = 0; i < 365; i++) { const c = Math.floor(i / 7), r = i % 7; gh += `<div class="s6-cell" id="s6-c${i}" style="left:${(c * 15.2).toFixed(1)}px;top:${(r * 15.2).toFixed(1)}px"></div>`; }
+      grid.innerHTML = gh;
+
+      // ---- open: the gold square from scene 5 IS day one; pull back to reveal the year ----
+      const cell = LAND ? [206, 730] : [142, 1136];
+      const ZS = 110 / 12;
+      tl.fromTo("#s6-grid", { x: W / 2 - cell[0], y: H / 2 - cell[1], scale: ZS, transformOrigin: "6px 6px" },
+        { x: 0, y: 0, scale: 1, duration: 1.7, ease: "power3.inOut" }, T(49.62));
+      const cells = [...document.querySelectorAll(".s6-cell")].slice(1);
+      tl.fromTo(cells, { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "power1.out", stagger: { each: 0.0026, from: "start" } }, T(49.9));
+      tl.fromTo("#s6-year", { opacity: 0, scale: 0.97 }, { opacity: 1, scale: 1, duration: 0.7, ease: "expo.out" }, T(51.05));
+      tl.fromTo("#s6-proj", { opacity: 0 }, { opacity: 0, duration: 0.01 }, 0);
+      tl.fromTo("#s6-amb", { opacity: 0 }, { opacity: 1, duration: 1.4, ease: "power2.out" }, T(50.6));
+
+      // ---- "Start the system." (52.29–53.32): the app assembles ----
+      tl.fromTo("#s6-t1", { opacity: 0, y: 30, filter: "blur(12px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.8, ease: "expo.out" }, T(52.6));
+      tl.fromTo("#s6-t2", { opacity: 0, y: 30, filter: "blur(12px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.8, ease: "expo.out" }, T(52.95));
+      tl.fromTo("#s6-date", { opacity: 0, x: 20 }, { opacity: 1, x: 0, duration: 0.7, ease: "expo.out" }, T(52.75));
+      const cards = ["#s6-streak", "#s6-h1", "#s6-h2", "#s6-h3"];
+      tl.fromTo(cards, { opacity: 0, y: 110, rotationX: -32, z: -80, filter: "blur(6px)" },
+        { opacity: 1, y: 0, rotationX: 0, z: 0, filter: "blur(0px)", duration: 0.9, ease: "expo.out", stagger: 0.1 }, T(52.3));
+      ["#s6-streak-sh", "#s6-h1-sh", "#s6-h2-sh", "#s6-h3-sh"].forEach((s, i) => tl.fromTo(s, { xPercent: -120 }, { xPercent: 320, duration: 1.0, ease: "power2.inOut" }, T(52.55) + i * 0.1));
+      tl.fromTo("#s6-cam", { rotationX: 8, rotationY: -5 }, { rotationX: 1, rotationY: 4, duration: DUR, ease: "sine.inOut" }, 0);
+
+      // ---- the cursor ticks each habit; each tick feeds the ring ----
+      const hx = LAND ? 1000 + 61 : 96 + 61, hy = [656, 784, 912].map((y) => LAND ? (y - 400) + 56 : y + 56);
+      const hyL = LAND ? [260 + 56, 388 + 56, 516 + 56] : hy;
+      tl.set(["#s6-f1", "#s6-f2", "#s6-f3"], { scale: 0, opacity: 0 }, 0);
+      tl.fromTo("#s6-cursor", { x: W * 0.8, y: hyL[2] + 260, opacity: 0, scale: 1 }, { x: hx + 6, y: hyL[0] + 6, opacity: 1, duration: 0.4, ease: "power2.out" }, T(53.0));
+      tl.set("#s6-rip", { opacity: 0 }, 0);
+      const meta = ["05:52", "0:31", "10/10"];
+      const ticks = [53.42, 53.97, 54.52];
+      ticks.forEach((t, i) => {
+        const tt = T(t), n = i + 1;
+        if (i > 0) tl.to("#s6-cursor", { x: hx + 6, y: hyL[i] + 6, duration: 0.32, ease: "power2.inOut" }, tt - 0.38);
+        tl.to("#s6-cursor", { scale: 0.78, duration: 0.07, ease: "power2.out" }, tt).to("#s6-cursor", { scale: 1, duration: 0.2, ease: "power2.out" }, tt + 0.07);
+        tl.fromTo("#s6-rip", { x: hx + 6, y: hyL[i] + 6, scale: 0.2, opacity: 0.8 }, { x: hx + 6, y: hyL[i] + 6, scale: 1.3, opacity: 0, duration: 0.5, ease: "expo.out", immediateRender: false }, tt);
+        tl.to("#s6-f" + n, { scale: 1, opacity: 1, duration: 0.3, ease: "back.out(1.6)" }, tt + 0.02);
+        tl.to("#s6-p" + n, { strokeDashoffset: 0, duration: 0.25, ease: "power2.out" }, tt + 0.08);
+        tl.to("#s6-rarc", { strokeDashoffset: 377 * (1 - n / 3), duration: 0.4, ease: "expo.out" }, tt + 0.05);
+      });
+      // text state as a pure function of time (seek-safe)
+      const rn = document.getElementById("s6-rn"), ms = [1, 2, 3].map((n) => document.getElementById("s6-m" + n));
+      const drv = { g: START };
+      tl.fromTo(drv, { g: START }, { g: START + DUR, duration: DUR, ease: "none", onUpdate: () => {
+        const g = drv.g; let done = 0;
+        ticks.forEach((t, i) => { const on = g >= t + 0.05; if (on) done++; ms[i].textContent = on ? meta[i] : "—"; ms[i].className = "s6-meta" + (on ? " on" : ""); });
+        rn.textContent = String(done);
+      } }, 0);
+      tl.to("#s6-cursor", { x: W * 0.86, y: hyL[2] + 220, opacity: 0, duration: 0.5, ease: "power2.in" }, T(54.85));
+
+      // ---- "Day one is today." (55.16–56.33) ----
+      tl.fromTo("#s6-odocol", { y: 0 }, { y: -170, duration: 0.55, ease: "expo.out" }, T(55.33));
+      tl.fromTo("#s6-odoglow", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1.1, duration: 0.25, ease: "power2.out" }, T(55.33))
+        .to("#s6-odoglow", { opacity: 0.45, scale: 1, duration: 1.2, ease: "power2.out" }, T(55.58));
+      tl.fromTo("#s6-wk0", { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.32, ease: "back.out(1.6)" }, T(55.38));
+      tl.fromTo("#s6-ping", { scale: 1, opacity: 0 }, { scale: 1, opacity: 0, duration: 0.01 }, 0);
+      tl.to("#s6-ping", { scale: 5, opacity: 0, duration: 1.1, ease: "expo.out", startAt: { scale: 1, opacity: 1 } }, T(55.9));
+      tl.to("#s6-c0", { scale: 1.6, duration: 0.15, ease: "power2.out" }, T(55.9)).to("#s6-c0", { scale: 1, duration: 0.5, ease: "power2.out" }, T(56.05));
+      tl.to("#s6-proj", { opacity: 1, duration: 0.6, ease: "power2.out" }, T(56.6));
+      tl.fromTo("#s6-amb", { scale: 1 }, { scale: 1.08, duration: 3, ease: "sine.inOut" }, T(56.4));
+
+      // ---- exit: the system folds away into black, the "1" is the last light ----
+      tl.to(["#s6-year", "#s6-grid", "#s6-ping"], { opacity: 0, y: 40, filter: "blur(6px)", duration: 0.45, ease: "power3.in" }, T(59.0));
+      tl.to(["#s6-h3", "#s6-h2", "#s6-h1"], { opacity: 0, y: 50, filter: "blur(6px)", duration: 0.45, ease: "power3.in", stagger: 0.06 }, T(59.08));
+      tl.to(["#s6-head", "#s6-amb"], { opacity: 0, duration: 0.45, ease: "power3.in" }, T(59.15));
+      tl.to(["#s6-sinfo", "#s6-ring"], { opacity: 0, duration: 0.35, ease: "power3.in" }, T(59.2));
+      tl.to("#s6-streak", { opacity: 0, duration: 0.45, ease: "power2.in" }, T(59.5));
+
+      window.__timelines["s6"] = tl;
+    })();
+  </script>
+</template>

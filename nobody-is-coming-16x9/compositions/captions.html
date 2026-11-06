@@ -1,0 +1,59 @@
+<template>
+  <style>
+    @font-face { font-family: "Inter"; src: url("assets/fonts/Inter-Variable.woff2") format("woff2"); font-weight: 100 900; }
+    #root { position: absolute; inset: 0; pointer-events: none; }
+    .cap { position: absolute; left: 64px; right: 64px; top: 1306px; height: 170px; }
+    .cap-in { position: absolute; isolation: isolate; left: 0; right: 0; top: 0; text-align: center; font: 600 64px/1.18 "Inter", sans-serif; letter-spacing: -0.012em; color: #EDEDED; }
+    .cap-in::before { content: ""; position: absolute; left: -64px; right: -64px; top: -70px; bottom: -80px;
+      background: radial-gradient(ellipse 60% 50% at 50% 50%, rgba(7,7,10,.72), rgba(7,7,10,0) 100%); }
+    .cap-w { position: relative; display: inline-block; opacity: .7; }
+    @media (orientation: landscape) {
+      .cap { left: 240px; right: 240px; top: 918px; height: 140px; }
+      .cap-in { font-size: 52px; }
+    }
+  </style>
+  <div id="root" data-composition-id="captions" data-width="1920" data-height="1080" data-layout-allow-caption-zone>
+    <div class="clip cap" id="cap-g1" data-start="4.75" data-duration="1.69" data-track-index="0"><div class="cap-in" id="cap-g1-in"><span class="cap-w" id="cap-g1-w0">Not</span> <span class="cap-w" id="cap-g1-w1">your</span> <span class="cap-w" id="cap-g1-w2">boss.</span></div></div>
+    <div class="clip cap" id="cap-g2" data-start="6.96" data-duration="1.7" data-track-index="0"><div class="cap-in" id="cap-g2-in"><span class="cap-w" id="cap-g2-w0">Not</span> <span class="cap-w" id="cap-g2-w1">your</span> <span class="cap-w" id="cap-g2-w2">family.</span></div></div>
+    <div class="clip cap" id="cap-g3" data-start="9.38" data-duration="1.7" data-track-index="0"><div class="cap-in" id="cap-g3-in"><span class="cap-w" id="cap-g3-w0">Not</span> <span class="cap-w" id="cap-g3-w1">motivation.</span></div></div>
+    <div class="clip cap" id="cap-g4" data-start="12.65" data-duration="2.29" data-track-index="0"><div class="cap-in" id="cap-g4-in"><span class="cap-w" id="cap-g4-w0">Motivation</span> <span class="cap-w" id="cap-g4-w1">is</span> <span class="cap-w" id="cap-g4-w2">a</span> <span class="cap-w" id="cap-g4-w3">feeling.</span></div></div>
+    <div class="clip cap" id="cap-g5" data-start="16.04" data-duration="2.22" data-track-index="0"><div class="cap-in" id="cap-g5-in"><span class="cap-w" id="cap-g5-w0">Feelings</span> <span class="cap-w" id="cap-g5-w1">fade</span> <span class="cap-w" id="cap-g5-w2">by</span> <span class="cap-w" id="cap-g5-w3">Tuesday.</span></div></div>
+    <div class="clip cap" id="cap-g6" data-start="21.79" data-duration="2.61" data-track-index="0"><div class="cap-in" id="cap-g6-in"><span class="cap-w" id="cap-g6-w0">But</span> <span class="cap-w" id="cap-g6-w1">get</span> <span class="cap-w" id="cap-g6-w2">1%</span> <span class="cap-w" id="cap-g6-w3">better</span> <span class="cap-w" id="cap-g6-w4">every</span> <span class="cap-w" id="cap-g6-w5">day,</span></div></div>
+    <div class="clip cap" id="cap-g7" data-start="24.52" data-duration="1.01" data-track-index="0"><div class="cap-in" id="cap-g7-in"><span class="cap-w" id="cap-g7-w0">and</span> <span class="cap-w" id="cap-g7-w1">in</span> <span class="cap-w" id="cap-g7-w2">a</span> <span class="cap-w" id="cap-g7-w3">year,</span></div></div>
+    <div class="clip cap" id="cap-g8" data-start="25.55" data-duration="2.36" data-track-index="0"><div class="cap-in" id="cap-g8-in"><span class="cap-w" id="cap-g8-w0">you're</span> <span class="cap-w" id="cap-g8-w1">37</span> <span class="cap-w" id="cap-g8-w2">times</span> <span class="cap-w" id="cap-g8-w3">better.</span></div></div>
+    <div class="clip cap" id="cap-g9" data-start="29.6" data-duration="1.96" data-track-index="0"><div class="cap-in" id="cap-g9-in"><span class="cap-w" id="cap-g9-w0">1%</span> <span class="cap-w" id="cap-g9-w1">worse…</span></div></div>
+    <div class="clip cap" id="cap-g10" data-start="31.82" data-duration="1.81" data-track-index="0"><div class="cap-in" id="cap-g10-in"><span class="cap-w" id="cap-g10-w0">and</span> <span class="cap-w" id="cap-g10-w1">you're</span> <span class="cap-w" id="cap-g10-w2">almost</span> <span class="cap-w" id="cap-g10-w3">zero.</span></div></div>
+    <div class="clip cap" id="cap-g15" data-start="49.98" data-duration="1.63" data-track-index="0"><div class="cap-in" id="cap-g15-in"><span class="cap-w" id="cap-g15-w0">So</span> <span class="cap-w" id="cap-g15-w1">stop</span> <span class="cap-w" id="cap-g15-w2">waiting.</span></div></div>
+    <div class="clip cap" id="cap-g16" data-start="52.17" data-duration="1.65" data-track-index="0"><div class="cap-in" id="cap-g16-in"><span class="cap-w" id="cap-g16-w0">Start</span> <span class="cap-w" id="cap-g16-w1">the</span> <span class="cap-w" id="cap-g16-w2">system.</span></div></div>
+    <div class="clip cap" id="cap-g17" data-start="55.04" data-duration="1.79" data-track-index="0"><div class="cap-in" id="cap-g17-in"><span class="cap-w" id="cap-g17-w0">Day</span> <span class="cap-w" id="cap-g17-w1">one</span> <span class="cap-w" id="cap-g17-w2">is</span> <span class="cap-w" id="cap-g17-w3">today.</span></div></div>
+  </div>
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      function grp(id, s, e, starts) {
+        tl.fromTo("#" + id + "-in", { opacity: 0, y: 18, filter: "blur(8px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.34, ease: "expo.out" }, s);
+        tl.to("#" + id + "-in", { opacity: 0, y: -10, duration: 0.22, ease: "power3.in" }, e - 0.24);
+        starts.forEach((t, j) => {
+          const w = "#" + id + "-w" + j, until = j + 1 < starts.length ? starts[j + 1] : e;
+          tl.fromTo(w, { color: "#EDEDED", opacity: 0.7 }, { color: "#D4A64A", opacity: 1, duration: 0.08, ease: "none", immediateRender: false }, Math.max(s, t - 0.02));
+          tl.to(w, { color: "#EDEDED", opacity: 0.7, duration: 0.12, ease: "none" }, Math.max(t + 0.1, until - 0.04));
+        });
+      }
+      grp("cap-g1", 4.75, 6.44, [4.87, 5.04, 5.37]);
+      grp("cap-g2", 6.96, 8.66, [7.08, 7.28, 7.72]);
+      grp("cap-g3", 9.38, 11.08, [9.5, 9.71]);
+      grp("cap-g4", 12.65, 14.94, [12.77, 13.54, 13.72, 13.8]);
+      grp("cap-g5", 16.04, 18.26, [16.16, 16.73, 16.9, 17.04]);
+      grp("cap-g6", 21.79, 24.4, [21.91, 22.08, 22.36, 22.73, 23.28, 23.74]);
+      grp("cap-g7", 24.52, 25.53, [24.64, 24.77, 24.95, 25.04]);
+      grp("cap-g8", 25.55, 27.91, [25.67, 26.0, 26.49, 26.95]);
+      grp("cap-g9", 29.6, 31.56, [29.72, 30.25]);
+      grp("cap-g10", 31.82, 33.63, [31.94, 32.0, 32.4, 32.81]);
+      grp("cap-g15", 49.98, 51.61, [50.1, 50.14, 50.43]);
+      grp("cap-g16", 52.17, 53.82, [52.29, 52.77, 52.98]);
+      grp("cap-g17", 55.04, 56.83, [55.16, 55.33, 55.67, 55.9]);
+      tl.set({}, {}, 69);
+      window.__timelines["captions"] = tl;
+    })();
+  </script>
+</template>

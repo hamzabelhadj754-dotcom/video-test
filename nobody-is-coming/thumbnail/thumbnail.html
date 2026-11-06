@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Nobody Is Coming — thumbnail</title>
+<style>
+  @font-face { font-family: "Instrument Serif"; src: url("../assets/fonts/InstrumentSerif-Regular.woff2") format("woff2"); font-style: normal; }
+  @font-face { font-family: "Instrument Serif"; src: url("../assets/fonts/InstrumentSerif-Italic.woff2") format("woff2"); font-style: italic; }
+  @font-face { font-family: "JetBrains Mono"; src: url("../assets/fonts/JetBrainsMono-Variable.woff2") format("woff2"); font-weight: 100 800; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; background: #07070A; }
+  #t { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #07070A; }
+  /* the scene-4 hero frame (rendered), pushed down to make room for the title */
+  #hero { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform: translateY(360px) scale(1.0); transform-origin: 50% 0;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, transparent 20%, #000 32%, #000 100%); mask-image: linear-gradient(to bottom, transparent 0%, transparent 20%, #000 32%, #000 100%); }
+  #glow { position: absolute; left: 50%; top: 470px; width: 1400px; height: 900px; margin: -450px 0 0 -700px; background: radial-gradient(ellipse at center, rgba(237,232,220,.10), transparent 65%); }
+  #title { position: absolute; left: 0; right: 0; top: 250px; text-align: center; font-family: "Instrument Serif", serif; color: #EDEDED; line-height: .94; letter-spacing: -0.03em; }
+  #title .a { font-size: 220px; display: block; }
+  #title .b { font-size: 132px; display: block; color: #b9b9c0; margin-top: 10px; }
+  #title .c { font-size: 168px; display: block; margin-top: 8px; }
+  #title em { font-style: italic; color: #D4A64A; }
+  #vig { position: absolute; inset: 0; background: radial-gradient(ellipse 80% 62% at 50% 46%, transparent 50%, rgba(0,0,0,.4) 100%); }
+  #grain { position: absolute; inset: 0; opacity: .05; mix-blend-mode: screen;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' seed='7' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); }
+</style>
+</head>
+<body>
+  <div id="t">
+    <img id="hero" src="hero-s4.png" alt="" />
+    <div id="glow"></div>
+    <div id="title"><span class="a">Nobody</span><span class="b">is coming</span><span class="c">to <em>save you.</em></span></div>
+    <div id="vig"></div><div id="grain"></div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,190 @@
+<template>
+  <style>
+    @font-face { font-family: "Instrument Serif"; src: url("assets/fonts/InstrumentSerif-Regular.woff2") format("woff2"); font-style: normal; }
+    @font-face { font-family: "Instrument Serif"; src: url("assets/fonts/InstrumentSerif-Italic.woff2") format("woff2"); font-style: italic; }
+    @font-face { font-family: "Inter"; src: url("assets/fonts/Inter-Variable.woff2") format("woff2"); font-weight: 100 900; }
+    #root { position: absolute; inset: 0; overflow: hidden; background: #07070A; color: #EDEDED; font-family: "Instrument Serif", serif; }
+    #s5-cam { position: absolute; inset: 0; }
+    #s5-light { position: absolute; left: 50%; top: 0; width: 0; height: 0; }
+    #s5-cone { position: absolute; left: -700px; top: -160px; width: 1400px; height: 1460px;
+      background: linear-gradient(180deg, rgba(240,232,214,.22) 0%, rgba(240,232,214,.09) 50%, rgba(240,232,214,.03) 100%);
+      clip-path: polygon(45% 0, 55% 0, 84% 100%, 16% 100%); filter: blur(10px); }
+    #s5-cone2 { position: absolute; left: -420px; top: -160px; width: 840px; height: 1460px;
+      background: linear-gradient(180deg, rgba(255,248,230,.14), rgba(255,248,230,0) 85%);
+      clip-path: polygon(46% 0, 54% 0, 76% 100%, 24% 100%); filter: blur(18px); }
+    #s5-lamp { position: absolute; left: -60px; top: -40px; width: 120px; height: 60px; border-radius: 50%; background: radial-gradient(ellipse at center, rgba(255,250,235,.9), rgba(255,250,235,0) 70%); }
+    #s5-pool { position: absolute; left: -400px; top: 1180px; width: 800px; height: 150px; border-radius: 50%;
+      background: radial-gradient(ellipse at center, rgba(240,232,214,.26), rgba(240,232,214,.06) 50%, transparent 72%); }
+    #s5-dust { position: absolute; left: -520px; top: 0; width: 1040px; height: 1300px; }
+    .s5-m { position: absolute; border-radius: 50%; background: rgba(255,246,226,.85); }
+    #s5-fig { position: absolute; left: 50%; top: 800px; width: 400px; height: 470px; margin-left: -200px; }
+    #s5-sq { position: absolute; left: 50%; top: 50%; width: 110px; height: 110px; margin: -55px 0 0 -55px; border-radius: 24px; background: #D4A64A; box-shadow: 0 0 50px rgba(212,166,74,.5); }
+
+    .s5-g { position: absolute; left: 64px; right: 64px; text-align: center; }
+    .s5-w, .s5-ch { display: inline-block; }
+    #s5-a1 { top: 300px; font-size: 210px; line-height: 1.02; letter-spacing: -0.025em; }
+    #s5-a2 { top: 540px; font-size: 86px; font-style: italic; color: #8b8b93; }
+    #s5-pun { position: relative; }
+    #s5-pstrike { position: absolute; left: -6px; right: -6px; top: 56%; height: 4px; background: #8b8b93; border-radius: 2px; }
+    #s5-b1 { top: 286px; font-size: 84px; color: #8b8b93; }
+    #s5-b2 { top: 360px; font-size: 250px; line-height: 1; font-style: italic; color: #D4A64A; letter-spacing: -0.02em; }
+    #s5-b3 { top: 640px; font-size: 74px; color: #CFCFCF; }
+    #s5-c { top: 744px; font: 500 40px "Inter"; color: #EDEDED; letter-spacing: 0; }
+    #s5-d1 { top: 330px; font-size: 150px; line-height: 1; letter-spacing: -0.02em; }
+    #s5-d2 { top: 490px; font-size: 150px; line-height: 1; letter-spacing: -0.02em; font-style: italic; }
+
+    @media (orientation: landscape) {
+      #s5-light { left: 1420px; }
+      #s5-cone { top: -260px; height: 1340px; }
+      #s5-cone2 { top: -260px; height: 1340px; }
+      #s5-pool { top: 930px; }
+      #s5-dust { height: 1080px; }
+      #s5-fig { left: 1420px; top: 520px; width: 360px; height: 423px; margin-left: -180px; }
+      .s5-g { left: 100px; right: 900px; }
+      #s5-a1 { top: 300px; font-size: 180px; }
+      #s5-a2 { top: 510px; font-size: 76px; }
+      #s5-b1 { top: 250px; font-size: 72px; }
+      #s5-b2 { top: 320px; font-size: 220px; }
+      #s5-b3 { top: 580px; font-size: 64px; }
+      #s5-c { top: 680px; }
+      #s5-d1 { top: 330px; font-size: 130px; }
+      #s5-d2 { top: 470px; font-size: 130px; }
+    }
+  </style>
+  <div id="root" data-composition-id="s5" data-width="1920" data-height="1080">
+    <div id="s5-cam">
+      <div id="s5-light">
+        <div id="s5-cone"></div><div id="s5-cone2"></div><div id="s5-lamp"></div>
+        <div id="s5-dust"></div>
+        <div id="s5-pool"></div>
+      </div>
+      <svg id="s5-fig" viewBox="0 0 400 470">
+        <defs>
+          <pattern id="s5-ht" width="7" height="7" patternUnits="userSpaceOnUse"><circle cx="3.5" cy="3.5" r="1.7" fill="#000" opacity=".6"/></pattern>
+          <linearGradient id="s5-rim" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5c564b"/><stop offset=".5" stop-color="#2a2722"/><stop offset="1" stop-color="#0d0c0b"/></linearGradient>
+          <linearGradient id="s5-box" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a2722"/><stop offset="1" stop-color="#0e0d0c"/></linearGradient>
+          <filter id="s5-torn" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency=".07" numOctaves="2" seed="5"/><feDisplacementMap in="SourceGraphic" scale="7"/></filter>
+          <clipPath id="s5-clip"><rect width="400" height="470"/></clipPath>
+        </defs>
+        <g filter="url(#s5-torn)" id="s5-figshape">
+          <!-- crate -->
+          <path d="M96 330 L304 330 L308 462 L92 462 Z" fill="url(#s5-box)"/>
+          <path d="M96 330 L304 330" stroke="rgba(240,232,214,.35)" stroke-width="3"/>
+          <!-- figure: seated, forearms on knees, head bowed -->
+          <path d="M176 150 Q166 116 196 104 Q228 98 234 130 Q238 156 214 166 Q190 170 176 150 Z" fill="url(#s5-rim)"/>
+          <path d="M160 186 Q198 162 246 184 Q268 236 258 330 L150 330 Q142 248 160 186 Z" fill="url(#s5-rim)"/>
+          <path d="M244 196 Q284 240 280 286 L250 300 Q256 260 232 228 Z" fill="#191815"/>
+          <path d="M162 200 Q132 246 150 290 L176 292 Q166 256 184 226 Z" fill="#141310"/>
+          <path d="M148 290 Q200 300 282 288 L290 318 Q214 334 150 322 Z" fill="#161512"/>
+          <path d="M156 318 L196 320 L190 462 L170 462 Z" fill="#0f0e0c"/>
+          <path d="M240 318 L282 314 L268 462 L248 462 Z" fill="#0f0e0c"/>
+          <path d="M160 456 L200 456 L204 470 L150 470 Z" fill="#0b0a09"/><path d="M244 456 L284 456 L290 470 L238 470 Z" fill="#0b0a09"/>
+        </g>
+        <mask id="s5-mask"></mask><rect width="400" height="470" fill="url(#s5-ht)" opacity=".6" mask="url(#s5-mask)"/>
+        <!-- rim light from above -->
+        <path d="M178 140 Q170 112 198 104 Q226 100 232 126" fill="none" stroke="rgba(255,246,226,.65)" stroke-width="3" stroke-linecap="round"/>
+        <path d="M164 188 Q200 166 244 186" fill="none" stroke="rgba(255,246,226,.5)" stroke-width="3" stroke-linecap="round"/>
+        <path d="M150 290 Q210 300 282 288" fill="none" stroke="rgba(255,246,226,.25)" stroke-width="2"/>
+      </svg>
+    </div>
+
+    <div class="s5-g" id="s5-a1"><span class="s5-w" id="s5-a1w">Discipline</span></div>
+    <div class="s5-g" id="s5-a2"><span class="s5-w" id="s5-isnt">isn't</span> <span class="s5-w" id="s5-pun">punishment.<span id="s5-pstrike"></span></span></div>
+
+    <div class="s5-g" id="s5-b1"><span class="s5-w" id="s5-its">It's a</span></div>
+    <div class="s5-g" id="s5-b2" data-split="promise"></div>
+    <div class="s5-g" id="s5-b3"><span class="s5-w" id="s5-k1">you</span> <span class="s5-w" id="s5-k2">keep</span> <span class="s5-w" id="s5-k3">to</span> <span class="s5-w" id="s5-k4">yourself,</span></div>
+    <div class="s5-g" id="s5-c" data-split="quietly,"></div>
+
+    <div class="s5-g" id="s5-d1"><span class="s5-w" id="s5-d1w">when no one</span></div>
+    <div class="s5-g" id="s5-d2"><span class="s5-w" id="s5-d2w">is watching.</span></div>
+
+    <div id="s5-sq"></div>
+  </div>
+  <script>
+    (function () {
+      const START = 37.5, T = (g) => g - START, DUR = 12;
+      function rng(s) { return function () { s |= 0; s = (s + 0x6D2B79F5) | 0; let t = Math.imul(s ^ (s >>> 15), 1 | s); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+      const W = innerWidth, H = innerHeight, LAND = W > H;
+      const tl = gsap.timeline({ paused: true });
+
+      // split words into glyphs so spacing can "breathe" with transforms only
+      document.querySelectorAll("[data-split]").forEach((el) => {
+        const txt = el.dataset.split, id = el.id;
+        el.innerHTML = [...txt].map((c, i) => `<span class="s5-ch" id="${id}-c${i}">${c}</span>`).join("");
+      });
+      // halftone only inside the cut-out silhouette
+      const fs = document.getElementById("s5-figshape").cloneNode(true); fs.removeAttribute("id");
+      fs.querySelectorAll("path").forEach((p) => { p.setAttribute("fill", "#fff"); p.removeAttribute("stroke"); });
+      document.getElementById("s5-mask").appendChild(fs);
+      const chars = (id) => [...document.querySelectorAll("#" + id + " .s5-ch")];
+
+      // dust in the beam (seeded)
+      const r = rng(55), dust = document.getElementById("s5-dust");
+      for (let i = 0; i < 46; i++) {
+        const m = document.createElement("div"); m.className = "s5-m"; m.id = "s5-m" + i;
+        const y = r() * 1250, spread = 90 + y * 0.42, sz = 1.5 + r() * 3.5;
+        m.style.width = m.style.height = sz + "px"; m.style.left = (520 + (r() - 0.5) * 2 * spread) + "px"; m.style.top = y + "px";
+        dust.appendChild(m);
+        tl.fromTo(m, { opacity: 0, x: 0, y: 0 }, { opacity: 0.2 + r() * 0.55, x: (r() - 0.5) * 70, y: -30 - r() * 80, duration: DUR, ease: "sine.inOut" }, 0);
+      }
+
+      // slow push-in for the whole scene
+      tl.fromTo("#s5-cam", { scale: 1, y: 0 }, { scale: 1.06, y: -20, duration: DUR, ease: "sine.inOut" }, 0);
+
+      // the light switches on: a seeded flicker, then steady
+      const L = ["#s5-cone", "#s5-cone2", "#s5-lamp", "#s5-pool"];
+      tl.set(L, { opacity: 0 }, 0);
+      [[37.62, 0.55], [37.68, 0.08], [37.76, 0.8], [37.83, 0.3], [37.93, 1]].forEach(([t, o]) => tl.set(L, { opacity: o }, T(t)));
+      tl.fromTo("#s5-fig", { opacity: 0, y: 14 }, { opacity: 0.6, y: 0, duration: 1.4, ease: "power2.out" }, T(37.95));
+      tl.fromTo("#s5-dust", { opacity: 0 }, { opacity: 1, duration: 1.2, ease: "power2.out" }, T(37.95));
+
+      const blurIn = (sel, t, d = 0.85, y = 34) => tl.fromTo(sel, { opacity: 0, filter: "blur(14px)", y }, { opacity: 1, filter: "blur(0px)", y: 0, duration: d, ease: "expo.out" }, T(t));
+      const blurOut = (sel, t, d = 0.45) => tl.to(sel, { opacity: 0, filter: "blur(12px)", y: -30, duration: d, ease: "power3.in" }, T(t));
+
+      // A — "Discipline isn't punishment." (38.27–39.99)
+      tl.fromTo("#s5-a1w", { clipPath: "inset(100% 0% -20% 0%)", y: 60 }, { clipPath: "inset(0% 0% -20% 0%)", y: 0, duration: 0.95, ease: "expo.out" }, T(38.2));
+      blurIn("#s5-isnt", 39.05); blurIn("#s5-pun", 39.33);
+      tl.fromTo("#s5-pstrike", { scaleX: 0, transformOrigin: "0% 50%" }, { scaleX: 1, duration: 0.42, ease: "power4.out" }, T(39.98));
+      blurOut(["#s5-a1", "#s5-a2"], 40.55);
+
+      // B — "It's a promise you keep to yourself," (41.14–43.01)
+      blurIn("#s5-its", 41.08);
+      const pc = chars("s5-b2"), pcC = (pc.length - 1) / 2;
+      pc.forEach((c, i) => tl.fromTo(c, { opacity: 0, filter: "blur(16px)", y: 50 }, { opacity: 1, filter: "blur(0px)", y: 0, duration: 0.9, ease: "expo.out" }, T(41.38) + i * 0.05));
+      // spacing breathes ±2% on the held word (per-glyph x)
+      pc.forEach((c, i) => { const o = (i - pcC) * 4.5;
+        tl.to(c, { x: o, duration: 1.3, ease: "sine.inOut" }, T(42.3)).to(c, { x: -o * 0.4, duration: 1.3, ease: "sine.inOut" }, T(43.6)); });
+      [["#s5-k1", 41.94], ["#s5-k2", 42.19], ["#s5-k3", 42.5], ["#s5-k4", 42.66]].forEach(([s, t]) => blurIn(s, t, 0.7, 24));
+      tl.fromTo("#s5-b2", { textShadow: "0 0 0px rgba(212,166,74,0)" }, { textShadow: "0 0 60px rgba(212,166,74,.35)", duration: 1.2, ease: "power2.out" }, T(41.9));
+
+      // C — "quietly," (44.00–44.70): everything gets quieter
+      tl.to(["#s5-b1", "#s5-b3"], { opacity: 0, filter: "blur(10px)", duration: 0.6, ease: "power3.in" }, T(43.8));
+      tl.to("#s5-b2", { scale: 0.62, y: -40, opacity: 0.32, duration: 1.0, ease: "power2.inOut" }, T(43.85));
+      const qc = chars("s5-c"), qcC = (qc.length - 1) / 2;
+      qc.forEach((c, i) => { const o = i - qcC;
+        tl.fromTo(c, { opacity: 0, x: o * 34 }, { opacity: 0.88, x: o * 14, duration: 1.8, ease: "expo.out" }, T(43.98) + Math.abs(o) * 0.03)
+          .to(c, { x: o * 17, duration: 1.0, ease: "sine.inOut" }, T(45.0)); });
+      tl.to(["#s5-cone", "#s5-cone2"], { opacity: 0.7, duration: 1.0, ease: "power2.inOut" }, T(44.0));
+
+      // D — "when no one is watching." (45.72–47.18): mask wipes; the figure is alone in the light
+      tl.to(["#s5-b2", "#s5-c"], { opacity: 0, filter: "blur(10px)", duration: 0.4, ease: "power3.in" }, T(45.3));
+      tl.fromTo("#s5-d1w", { clipPath: "inset(-10% 100% -20% 0%)", x: -20 }, { clipPath: "inset(-10% 0% -20% 0%)", x: 0, duration: 0.75, ease: "expo.out" }, T(45.7));
+      tl.fromTo("#s5-d2w", { clipPath: "inset(-10% 100% -20% 0%)", x: -20 }, { clipPath: "inset(-10% 0% -20% 0%)", x: 0, duration: 0.85, ease: "expo.out" }, T(46.3));
+      tl.to(["#s5-cone", "#s5-cone2"], { opacity: 1, scaleX: 0.82, transformOrigin: "50% 0%", duration: 1.4, ease: "power2.inOut" }, T(45.7));
+      tl.to("#s5-fig", { opacity: 1, duration: 1.2, ease: "power2.inOut" }, T(45.8));
+      tl.to("#s5-pool", { scaleX: 0.85, opacity: 1.0, duration: 1.4, ease: "power2.inOut" }, T(45.7));
+
+      // exit — the light goes, its pool on the floor condenses into one gold square: day one
+      blurOut(["#s5-d1", "#s5-d2"], 48.35, 0.55);
+      tl.to(["#s5-cone", "#s5-cone2", "#s5-lamp", "#s5-dust"], { opacity: 0, duration: 0.7, ease: "power2.in" }, T(48.5));
+      tl.to("#s5-fig", { opacity: 0, y: 10, duration: 0.6, ease: "power2.in" }, T(48.5));
+      tl.to("#s5-pool", { scaleX: 0.18, scaleY: 0.6, opacity: 0, duration: 0.6, ease: "power3.in" }, T(48.65));
+      const poolY = (LAND ? 930 + 75 : 1180 + 75) - H / 2, poolX = LAND ? 1420 - W / 2 : 0;
+      tl.fromTo("#s5-sq", { opacity: 0, scale: 0.25, x: poolX, y: poolY, borderRadius: "50%" },
+        { opacity: 1, scale: 1, x: 0, y: 0, borderRadius: "24px", duration: 0.85, ease: "power2.inOut" }, T(48.62));
+
+      window.__timelines["s5"] = tl;
+    })();
+  </script>
+</template>

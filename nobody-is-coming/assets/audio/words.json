@@ -1,0 +1,470 @@
+[
+{
+"text": "Nobody",
+"start": 0.41,
+"end": 0.87,
+"line": 1
+},
+{
+"text": "is",
+"start": 0.87,
+"end": 1.03,
+"line": 1
+},
+{
+"text": "coming",
+"start": 1.04,
+"end": 1.56,
+"line": 1
+},
+{
+"text": "to",
+"start": 1.56,
+"end": 1.72,
+"line": 1
+},
+{
+"text": "save",
+"start": 1.72,
+"end": 2.07,
+"line": 1
+},
+{
+"text": "you.",
+"start": 2.07,
+"end": 2.32,
+"line": 1
+},
+{
+"text": "Not",
+"start": 4.87,
+"end": 5.04,
+"line": 2
+},
+{
+"text": "your",
+"start": 5.04,
+"end": 5.37,
+"line": 2
+},
+{
+"text": "boss.",
+"start": 5.37,
+"end": 5.94,
+"line": 2
+},
+{
+"text": "Not",
+"start": 7.08,
+"end": 7.28,
+"line": 3
+},
+{
+"text": "your",
+"start": 7.28,
+"end": 7.62,
+"line": 3
+},
+{
+"text": "family.",
+"start": 7.72,
+"end": 8.16,
+"line": 3
+},
+{
+"text": "Not",
+"start": 9.5,
+"end": 9.71,
+"line": 4
+},
+{
+"text": "motivation.",
+"start": 9.71,
+"end": 10.58,
+"line": 4
+},
+{
+"text": "Motivation",
+"start": 12.77,
+"end": 13.54,
+"line": 5
+},
+{
+"text": "is",
+"start": 13.54,
+"end": 13.59,
+"line": 5
+},
+{
+"text": "a",
+"start": 13.72,
+"end": 13.8,
+"line": 5
+},
+{
+"text": "feeling.",
+"start": 13.8,
+"end": 14.44,
+"line": 5
+},
+{
+"text": "Feelings",
+"start": 16.16,
+"end": 16.58,
+"line": 6
+},
+{
+"text": "fade",
+"start": 16.73,
+"end": 16.9,
+"line": 6
+},
+{
+"text": "by",
+"start": 16.9,
+"end": 16.97,
+"line": 6
+},
+{
+"text": "Tuesday.",
+"start": 17.04,
+"end": 17.76,
+"line": 6
+},
+{
+"text": "But",
+"start": 21.91,
+"end": 22.08,
+"line": 7
+},
+{
+"text": "get",
+"start": 22.08,
+"end": 22.36,
+"line": 7
+},
+{
+"text": "1%",
+"start": 22.36,
+"end": 22.73,
+"line": 7
+},
+{
+"text": "better",
+"start": 22.73,
+"end": 23.28,
+"line": 7
+},
+{
+"text": "every",
+"start": 23.28,
+"end": 23.74,
+"line": 7
+},
+{
+"text": "day,",
+"start": 23.74,
+"end": 23.9,
+"line": 7
+},
+{
+"text": "and",
+"start": 24.64,
+"end": 24.77,
+"line": 8
+},
+{
+"text": "in",
+"start": 24.77,
+"end": 24.95,
+"line": 8
+},
+{
+"text": "a",
+"start": 24.95,
+"end": 25.03,
+"line": 8
+},
+{
+"text": "year,",
+"start": 25.04,
+"end": 25.35,
+"line": 8
+},
+{
+"text": "you're",
+"start": 25.67,
+"end": 25.85,
+"line": 8
+},
+{
+"text": "37",
+"start": 26.0,
+"end": 26.48,
+"line": 8
+},
+{
+"text": "times",
+"start": 26.49,
+"end": 26.95,
+"line": 8
+},
+{
+"text": "better.",
+"start": 26.95,
+"end": 27.41,
+"line": 8
+},
+{
+"text": "1%",
+"start": 29.72,
+"end": 30.25,
+"line": 9
+},
+{
+"text": "worse\u2026",
+"start": 30.25,
+"end": 31.06,
+"line": 9
+},
+{
+"text": "and",
+"start": 31.94,
+"end": 32.0,
+"line": 10
+},
+{
+"text": "you're",
+"start": 32.0,
+"end": 32.4,
+"line": 10
+},
+{
+"text": "almost",
+"start": 32.4,
+"end": 32.81,
+"line": 10
+},
+{
+"text": "zero.",
+"start": 32.81,
+"end": 33.13,
+"line": 10
+},
+{
+"text": "Discipline",
+"start": 38.27,
+"end": 38.96,
+"line": 11
+},
+{
+"text": "isn't",
+"start": 39.09,
+"end": 39.37,
+"line": 11
+},
+{
+"text": "punishment.",
+"start": 39.38,
+"end": 39.99,
+"line": 11
+},
+{
+"text": "It's",
+"start": 41.14,
+"end": 41.31,
+"line": 12
+},
+{
+"text": "a",
+"start": 41.31,
+"end": 41.36,
+"line": 12
+},
+{
+"text": "promise",
+"start": 41.43,
+"end": 41.94,
+"line": 12
+},
+{
+"text": "you",
+"start": 41.94,
+"end": 42.14,
+"line": 12
+},
+{
+"text": "keep",
+"start": 42.19,
+"end": 42.5,
+"line": 12
+},
+{
+"text": "to",
+"start": 42.5,
+"end": 42.66,
+"line": 12
+},
+{
+"text": "yourself,",
+"start": 42.66,
+"end": 43.01,
+"line": 12
+},
+{
+"text": "quietly,",
+"start": 44.0,
+"end": 44.7,
+"line": 13
+},
+{
+"text": "when",
+"start": 45.72,
+"end": 45.93,
+"line": 14
+},
+{
+"text": "no",
+"start": 45.93,
+"end": 46.09,
+"line": 14
+},
+{
+"text": "one",
+"start": 46.09,
+"end": 46.34,
+"line": 14
+},
+{
+"text": "is",
+"start": 46.34,
+"end": 46.5,
+"line": 14
+},
+{
+"text": "watching.",
+"start": 46.5,
+"end": 47.18,
+"line": 14
+},
+{
+"text": "So",
+"start": 50.1,
+"end": 50.15,
+"line": 15
+},
+{
+"text": "stop",
+"start": 50.14,
+"end": 50.36,
+"line": 15
+},
+{
+"text": "waiting.",
+"start": 50.43,
+"end": 51.11,
+"line": 15
+},
+{
+"text": "Start",
+"start": 52.29,
+"end": 52.77,
+"line": 16
+},
+{
+"text": "the",
+"start": 52.77,
+"end": 52.98,
+"line": 16
+},
+{
+"text": "system.",
+"start": 52.98,
+"end": 53.32,
+"line": 16
+},
+{
+"text": "Day",
+"start": 55.16,
+"end": 55.33,
+"line": 17
+},
+{
+"text": "one",
+"start": 55.33,
+"end": 55.59,
+"line": 17
+},
+{
+"text": "is",
+"start": 55.67,
+"end": 55.83,
+"line": 17
+},
+{
+"text": "today.",
+"start": 55.9,
+"end": 56.33,
+"line": 17
+},
+{
+"text": "Nobody",
+"start": 60.64,
+"end": 61.13,
+"line": 18
+},
+{
+"text": "is",
+"start": 61.13,
+"end": 61.32,
+"line": 18
+},
+{
+"text": "coming.",
+"start": 61.32,
+"end": 61.82,
+"line": 18
+},
+{
+"text": "Good.",
+"start": 62.66,
+"end": 63.07,
+"line": 19
+},
+{
+"text": "Now",
+"start": 64.13,
+"end": 64.27,
+"line": 20
+},
+{
+"text": "you",
+"start": 64.27,
+"end": 64.53,
+"line": 20
+},
+{
+"text": "know",
+"start": 64.54,
+"end": 64.89,
+"line": 20
+},
+{
+"text": "who",
+"start": 64.89,
+"end": 65.16,
+"line": 20
+},
+{
+"text": "has",
+"start": 65.16,
+"end": 65.43,
+"line": 20
+},
+{
+"text": "to.",
+"start": 65.43,
+"end": 65.51,
+"line": 20
+}
+]

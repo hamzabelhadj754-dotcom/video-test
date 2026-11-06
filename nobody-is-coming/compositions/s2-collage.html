@@ -1,0 +1,227 @@
+<template>
+  <style>
+    @font-face { font-family: "Instrument Serif"; src: url("assets/fonts/InstrumentSerif-Regular.woff2") format("woff2"); font-style: normal; }
+    @font-face { font-family: "Instrument Serif"; src: url("assets/fonts/InstrumentSerif-Italic.woff2") format("woff2"); font-style: italic; }
+    @font-face { font-family: "JetBrains Mono"; src: url("assets/fonts/JetBrainsMono-Variable.woff2") format("woff2"); font-weight: 100 800; }
+    #root { position: absolute; inset: 0; overflow: hidden; background: #07070A; }
+    #s2-cam { position: absolute; inset: 0; }
+    #s2-amb { position: absolute; left: 50%; top: 38%; width: 1400px; height: 1100px; margin: -550px 0 0 -700px;
+      background: radial-gradient(ellipse at center, rgba(194,54,47,.10) 0%, rgba(194,54,47,.03) 40%, transparent 70%); }
+    .s2-p { position: absolute; left: calc(50% - 440px); top: 470px; width: 880px; height: 600px; }
+    .s2-in { position: absolute; inset: 0; }
+    .s2-shadow { position: absolute; left: 30px; right: 30px; top: 40px; bottom: -30px; background: rgba(0,0,0,.85); filter: blur(34px); border-radius: 30px; }
+    .s2-half { position: absolute; inset: 0; }
+    .s2-art { position: absolute; inset: 0; overflow: hidden; }
+    .s2-art svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .s2-ht { position: absolute; inset: 0; mix-blend-mode: multiply; opacity: .6;
+      background-image: radial-gradient(circle at center, #000 33%, transparent 37%); background-size: 8px 8px; }
+    .s2-fib { position: absolute; inset: 0; opacity: .45; mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='440' height='440'><filter id='p'><feTurbulence type='fractalNoise' baseFrequency='.03 .55' numOctaves='4' seed='3'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%' height='100%' filter='url(%23p)'/></svg>"); }
+    .s2-edge { position: absolute; inset: 0; box-shadow: inset 0 0 60px rgba(0,0,0,.55); }
+    .s2-dim { position: absolute; inset: 0; background: #050304; opacity: 0; }
+    .s2-tape { position: absolute; width: 170px; height: 46px; background: rgba(226,214,192,.16); border-left: 1px dashed rgba(255,255,255,.08); border-right: 1px dashed rgba(255,255,255,.08); }
+    .s2-fig { position: absolute; left: 6px; top: -62px; font: 500 28px "JetBrains Mono", monospace; letter-spacing: .2em; color: #9a8d8b; text-transform: uppercase; white-space: nowrap; }
+    .s2-fig b { color: #C2362F; font-weight: 600; }
+    .s2-sk { position: absolute; left: -40px; right: -40px; top: 50%; height: 0; }
+    .s2-strike { position: absolute; left: 0; right: 0; top: -3px; height: 6px; background: #C2362F; border-radius: 3px;
+      box-shadow: 0 0 22px rgba(194,54,47,.6), 0 0 2px rgba(255,120,110,.9); }
+    #s2-ember { position: absolute; left: 0; top: 0; width: 22px; height: 22px; margin: -11px 0 0 -11px; border-radius: 50%; background: #EDEDED;
+      box-shadow: 0 0 24px rgba(237,237,237,.55), 0 0 4px #fff; }
+    #s2-art-src { display: none; }
+    @media (orientation: landscape) {
+      .s2-p { top: 190px; }
+    }
+  </style>
+  <div id="root" data-composition-id="s2" data-width="1080" data-height="1920">
+    <div id="s2-cam">
+      <div id="s2-amb"></div>
+
+      <!-- Panel A: the boss -->
+      <div class="s2-p" id="s2-pA" data-layout-allow-overflow>
+        <div class="s2-in" id="s2-pA-in">
+          <div class="s2-shadow" id="s2-pA-sh"></div>
+          <div class="s2-half" id="s2-pA-t" data-art="A"></div>
+          <div class="s2-half" id="s2-pA-b" data-art="A"></div>
+          <div class="s2-tape" style="left:-40px;top:-10px;transform:rotate(-24deg)"></div>
+          <div class="s2-tape" style="right:-36px;top:-6px;transform:rotate(19deg)"></div>
+          <div class="s2-fig" id="s2-pA-fig">Fig. 01 — <b>The boss</b></div>
+          <div class="s2-sk" style="transform:rotate(-5deg)"><div class="s2-strike" id="s2-pA-st"></div></div>
+        </div>
+      </div>
+
+      <!-- Panel B: the family -->
+      <div class="s2-p" id="s2-pB" data-layout-allow-overflow>
+        <div class="s2-in" id="s2-pB-in">
+          <div class="s2-shadow" id="s2-pB-sh"></div>
+          <div class="s2-half" id="s2-pB-t" data-art="B"></div>
+          <div class="s2-half" id="s2-pB-b" data-art="B"></div>
+          <div class="s2-tape" style="left:300px;top:-26px;transform:rotate(-4deg)"></div>
+          <div class="s2-fig" id="s2-pB-fig">Fig. 02 — <b>The family</b></div>
+          <div class="s2-sk" style="transform:rotate(4deg)"><div class="s2-strike" id="s2-pB-st"></div></div>
+        </div>
+      </div>
+
+      <!-- Panel C: the motivational poster -->
+      <div class="s2-p" id="s2-pC" data-layout-allow-overflow>
+        <div class="s2-in" id="s2-pC-in">
+          <div class="s2-shadow" id="s2-pC-sh"></div>
+          <div class="s2-half" id="s2-pC-t" data-art="C"></div>
+          <div class="s2-half" id="s2-pC-b" data-art="C"></div>
+          <div class="s2-tape" style="left:-30px;bottom:40px;transform:rotate(28deg)"></div>
+          <div class="s2-tape" style="right:-40px;top:10px;transform:rotate(-30deg)"></div>
+          <div class="s2-fig" id="s2-pC-fig">Fig. 03 — <b>Motivation</b></div>
+          <div class="s2-sk" style="transform:rotate(-3deg)"><div class="s2-strike" id="s2-pC-st"></div></div>
+        </div>
+      </div>
+
+      <div id="s2-ember"></div>
+    </div>
+
+    <!-- source art (cloned into both halves of each panel at init) -->
+    <div id="s2-art-src">
+      <svg data-src="A" viewBox="0 0 880 600" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="s2gA" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7c3129"/><stop offset=".6" stop-color="#3b1512"/><stop offset="1" stop-color="#170807"/></linearGradient>
+          <radialGradient id="s2gA2" cx=".72" cy=".3" r=".5"><stop offset="0" stop-color="#e59a88" stop-opacity=".7"/><stop offset="1" stop-color="#e59a88" stop-opacity="0"/></radialGradient>
+        </defs>
+        <rect width="880" height="600" fill="url(#s2gA)"/>
+        <rect x="520" y="50" width="320" height="300" fill="#1a0908"/>
+        <rect x="520" y="50" width="320" height="300" fill="url(#s2gA2)"/>
+        <g fill="#d88a78" opacity=".55">
+          <rect x="520" y="64" width="320" height="14"/><rect x="520" y="98" width="320" height="14"/><rect x="520" y="132" width="320" height="14"/><rect x="520" y="166" width="320" height="14"/><rect x="520" y="200" width="320" height="14"/><rect x="520" y="234" width="320" height="14"/><rect x="520" y="268" width="320" height="14"/><rect x="520" y="302" width="320" height="14"/>
+        </g>
+        <!-- the boss: head, suit, tie -->
+        <circle cx="330" cy="200" r="64" fill="#120605"/>
+        <path d="M180 470 Q180 300 330 292 Q480 300 480 470 Z" fill="#120605"/>
+        <path d="M312 300 L348 300 L340 330 L356 420 L330 452 L304 420 L320 330 Z" fill="#b54a3c"/>
+        <path d="M290 296 L330 340 L370 296" fill="none" stroke="#e8b1a2" stroke-width="5" opacity=".7"/>
+        <rect x="0" y="440" width="880" height="160" fill="#0e0504"/>
+        <rect x="560" y="370" width="170" height="80" rx="6" fill="#0e0504"/><rect x="574" y="384" width="142" height="54" fill="#d88a78" opacity=".35"/>
+        <rect x="80" y="404" width="90" height="40" fill="#2a0e0c"/>
+        <path d="M0 440 L880 440" stroke="#d88a78" stroke-width="3" opacity=".35"/>
+      </svg>
+      <svg data-src="B" viewBox="0 0 880 600" preserveAspectRatio="none">
+        <defs>
+          <radialGradient id="s2gB" cx=".5" cy=".28" r=".75"><stop offset="0" stop-color="#c0594a"/><stop offset=".55" stop-color="#4a1915"/><stop offset="1" stop-color="#140706"/></radialGradient>
+        </defs>
+        <rect width="880" height="600" fill="url(#s2gB)"/>
+        <line x1="440" y1="0" x2="440" y2="110" stroke="#0e0504" stroke-width="5"/>
+        <path d="M376 110 L504 110 L476 160 L404 160 Z" fill="#0e0504"/>
+        <ellipse cx="440" cy="164" rx="40" ry="8" fill="#f2c4b4" opacity=".8"/>
+        <path d="M404 160 L476 160 L640 470 L240 470 Z" fill="#f2c4b4" opacity=".07"/>
+        <g fill="#0e0504">
+          <circle cx="232" cy="300" r="50"/><path d="M152 440 Q152 362 232 360 Q312 362 312 440 Z"/>
+          <circle cx="440" cy="282" r="56"/><path d="M350 440 Q350 350 440 348 Q530 350 530 440 Z"/>
+          <circle cx="650" cy="318" r="40"/><path d="M586 440 Q586 380 650 378 Q714 380 714 440 Z"/>
+        </g>
+        <rect x="90" y="430" width="700" height="30" fill="#0e0504"/>
+        <ellipse cx="300" cy="432" rx="46" ry="7" fill="#e0a090" opacity=".5"/><ellipse cx="560" cy="432" rx="46" ry="7" fill="#e0a090" opacity=".5"/>
+        <rect x="0" y="460" width="880" height="140" fill="#120605"/>
+        <rect x="140" y="460" width="22" height="140" fill="#0a0303"/><rect x="718" y="460" width="22" height="140" fill="#0a0303"/>
+      </svg>
+      <svg data-src="C" viewBox="0 0 880 600" preserveAspectRatio="none">
+        <defs>
+          <radialGradient id="s2gC" cx=".5" cy=".95" r=".9"><stop offset="0" stop-color="#f09a80"/><stop offset=".35" stop-color="#9a3c31"/><stop offset="1" stop-color="#1c0a09"/></radialGradient>
+          <clipPath id="s2cC"><rect x="56" y="48" width="768" height="392"/></clipPath>
+        </defs>
+        <rect width="880" height="600" fill="#0c0606"/>
+        <g clip-path="url(#s2cC)">
+          <rect x="56" y="48" width="768" height="392" fill="url(#s2gC)"/>
+          <g class="s2-sun"><circle cx="440" cy="400" r="122" fill="#f6c4b2" opacity=".9"/>
+            <g stroke="#3a1410" stroke-width="6" opacity=".5"><line x1="300" y1="330" x2="580" y2="330"/><line x1="290" y1="352" x2="590" y2="352"/><line x1="284" y1="372" x2="596" y2="372"/></g></g>
+          <path d="M56 400 L170 350 L262 384 L380 330 L470 372 L580 334 L700 378 L824 346 L824 440 L56 440 Z" fill="#0e0504"/>
+        </g>
+        <rect x="56" y="48" width="768" height="392" fill="none" stroke="#3a2420" stroke-width="2"/>
+        <text x="440" y="522" text-anchor="middle" font-family="Instrument Serif" font-size="64" letter-spacing="18" fill="#e3b6a8">MOTIVATION</text>
+        <text x="440" y="570" text-anchor="middle" font-family="Instrument Serif" font-style="italic" font-size="28" fill="#a9726a">Believe in yourself. Every single morning.</text>
+      </svg>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const START = 4.6, T = (g) => g - START;
+      function rng(s) { return function () { s |= 0; s = (s + 0x6D2B79F5) | 0; let t = Math.imul(s ^ (s >>> 15), 1 | s); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+      const LAND = innerWidth > innerHeight;
+      const PW = 880, PH = 600;
+
+      // ---- build torn halves: same art, two complementary jagged clip paths ----
+      function jag(r, x0, x1, yBase, amp, steps, slope) {
+        const pts = [];
+        for (let i = 0; i <= steps; i++) { const x = x0 + (x1 - x0) * i / steps; pts.push([x, yBase + slope * (x - x0) + (r() - 0.5) * amp]); }
+        return pts;
+      }
+      const seeds = { A: 11, B: 23, C: 37 };
+      ["A", "B", "C"].forEach((k) => {
+        const r = rng(seeds[k]);
+        const top = jag(r, 0, PW, 6, 10, 40, 0);
+        const bot = jag(r, 0, PW, PH - 8, 14, 40, 0);
+        const tear = jag(r, -4, PW + 4, PH * 0.42, 34, 26, (k === "B" ? -0.09 : 0.08));
+        const fmt = (a) => a.map((p) => p[0].toFixed(1) + "px " + p[1].toFixed(1) + "px").join(",");
+        const tPoly = "polygon(" + fmt(top) + "," + fmt(tear.slice().reverse()) + ")";
+        const bPoly = "polygon(" + fmt(tear) + "," + fmt(bot.slice().reverse()) + ")";
+        const src = document.querySelector('#s2-art-src svg[data-src="' + k + '"]');
+        [["t", tPoly], ["b", bPoly]].forEach(([h, poly]) => {
+          const half = document.getElementById("s2-p" + k + "-" + h);
+          const art = document.createElement("div"); art.className = "s2-art";
+          art.appendChild(src.cloneNode(true));
+          ["s2-ht", "s2-fib", "s2-edge", "s2-dim"].forEach((c) => { const d = document.createElement("div"); d.className = c + (c === "s2-dim" ? " s2-dim-" + k : ""); art.appendChild(d); });
+          art.style.clipPath = poly;
+          half.appendChild(art);
+        });
+      });
+
+      const tl = gsap.timeline({ paused: true });
+      const shake = (t, amt, seed) => {
+        const r = rng(seed); let tt = t;
+        for (let i = 0; i < 6; i++) { tl.to("#s2-cam", { x: (r() - 0.5) * amt * (1 - i / 6), y: (r() - 0.5) * amt * (1 - i / 6), duration: 0.04, ease: "none" }, tt); tt += 0.04; }
+        tl.to("#s2-cam", { x: 0, y: 0, duration: 0.08, ease: "power2.out" }, tt);
+      };
+      tl.fromTo("#s2-cam", { x: 0, y: 0 }, { x: 0, y: 0, duration: 0.01 }, 0);
+      tl.fromTo("#s2-amb", { opacity: 0 }, { opacity: 1, duration: 0.6, ease: "power2.out" }, 0);
+
+      function slam(k, t, rot, seed) {
+        const P = "#s2-p" + k;
+        tl.fromTo(P, { opacity: 0, scale: 1.32, rotation: rot * 2.4, y: -30, filter: "blur(10px)" },
+          { opacity: 1, scale: 1, rotation: rot, y: 0, filter: "blur(0px)", duration: 0.42, ease: "expo.out" }, T(t));
+        tl.fromTo(P + "-fig", { opacity: 0, x: -14 }, { opacity: 1, x: 0, duration: 0.5, ease: "expo.out" }, T(t) + 0.18);
+        // slow handheld drift while it is held
+        tl.fromTo(P + "-in", { x: 0, y: 0, rotation: 0 }, { x: (seed % 2 ? 10 : -12), y: -8, rotation: (seed % 2 ? 0.8 : -0.8), duration: 2.4, ease: "sine.inOut" }, T(t) + 0.2);
+        shake(T(t) + 0.12, 14, seed);
+      }
+      function strike(k, t, dur) {
+        tl.fromTo("#s2-p" + k + "-st", { scaleX: 0, transformOrigin: "0% 50%" }, { scaleX: 1, duration: dur, ease: "power4.out" }, T(t));
+      }
+      function tear(k, t) {
+        const P = "#s2-p" + k;
+        tl.to(".s2-dim-" + k, { opacity: 0.45, duration: 0.3, ease: "power2.out" }, T(t) - 0.5)
+          .to(".s2-dim-" + k, { opacity: 0.85, duration: 0.7, ease: "power2.in" }, T(t) + 0.12);
+        // rip: halves pull apart, then fall into the dark
+        tl.to(P + "-t", { y: -16, x: -8, rotation: -2.5, duration: 0.12, ease: "power3.out" }, T(t))
+          .to(P + "-t", { y: 360, x: -90, rotation: -16, opacity: 0, duration: 0.7, ease: "power3.in" }, T(t) + 0.12);
+        tl.to(P + "-b", { y: 18, x: 10, rotation: 2.5, duration: 0.12, ease: "power3.out" }, T(t))
+          .to(P + "-b", { y: 560, x: 90, rotation: 12, opacity: 0, duration: 0.78, ease: "power3.in" }, T(t) + 0.12);
+        tl.to([P + "-sh", P + "-fig", P + "-st", P + " .s2-tape"], { opacity: 0, duration: 0.3, ease: "power3.in" }, T(t));
+      }
+
+      // VO: "Not your boss." 4.87–5.94 · "Not your family." 7.08–8.16 · "Not motivation." 9.50–10.58
+      slam("A", 4.62, -2.2, 3);  strike("A", 5.40, 0.24); tear("A", 6.40);
+      slam("B", 6.92, 1.8, 6);   strike("B", 7.70, 0.24); tear("B", 8.70);
+      slam("C", 9.30, -1.2, 9);  strike("C", 9.80, 0.6);
+
+      // the poster burns down: sky darkens, the sun sets, one ember survives
+      tl.to(".s2-dim-C", { opacity: 0.82, duration: 1.0, ease: "power2.inOut" }, T(10.6));
+      tl.to(".s2-sun", { y: 70, duration: 1.2, ease: "power2.in" }, T(10.5));
+      tl.to("#s2-amb", { opacity: 0, duration: 1.0, ease: "power2.in" }, T(10.8));
+      tl.to("#s2-pC", { scale: 0.86, opacity: 0, filter: "blur(6px)", duration: 0.7, ease: "power3.in" }, T(11.35));
+
+      // ember: from the sun's position to the centre of the next scene's gauge
+      const sunX = innerWidth / 2, sunY = (LAND ? 190 : 470) + 400;
+      const tgtX = LAND ? innerWidth * 0.33 : innerWidth / 2, tgtY = LAND ? 560 : 760;
+      tl.set("#s2-ember", { x: sunX, y: sunY + 40, opacity: 0, scale: 0.4 }, 0);
+      tl.to("#s2-ember", { opacity: 1, scale: 1, y: sunY + 20, duration: 0.5, ease: "power2.out" }, T(11.05));
+      tl.to("#s2-ember", { x: tgtX, y: tgtY, duration: 0.6, ease: "power2.inOut" }, T(11.55));
+
+      window.__timelines["s2"] = tl;
+    })();
+  </script>
+</template>

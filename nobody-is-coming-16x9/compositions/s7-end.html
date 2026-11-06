@@ -1,0 +1,73 @@
+<template>
+  <style>
+    @font-face { font-family: "Instrument Serif"; src: url("assets/fonts/InstrumentSerif-Regular.woff2") format("woff2"); font-style: normal; }
+    @font-face { font-family: "Instrument Serif"; src: url("assets/fonts/InstrumentSerif-Italic.woff2") format("woff2"); font-style: italic; }
+    @font-face { font-family: "JetBrains Mono"; src: url("assets/fonts/JetBrainsMono-Variable.woff2") format("woff2"); font-weight: 100 800; }
+    #root { position: absolute; inset: 0; overflow: hidden; background: #07070A; color: #EDEDED; font-family: "Instrument Serif", serif; }
+    #s7-all { position: absolute; inset: 0; }
+    #s7-glow { position: absolute; left: 50%; top: 900px; width: 1400px; height: 900px; margin: -450px 0 0 -700px;
+      background: radial-gradient(ellipse at center, rgba(237,232,220,.06), rgba(237,232,220,.02) 40%, transparent 68%); }
+    .s7-g { position: absolute; left: 40px; right: 40px; text-align: center; }
+    .s7-w { display: inline-block; }
+    #s7-a { top: 620px; font-size: 92px; color: #8b8b93; letter-spacing: -0.01em; }
+    #s7-good { font-style: italic; color: #EDEDED; }
+    #s7-b1 { top: 770px; font-size: 168px; line-height: 1; letter-spacing: -0.025em; }
+    #s7-b2 { top: 950px; font-size: 168px; line-height: 1; letter-spacing: -0.025em; font-style: italic; }
+    #s7-ul { position: absolute; left: 50%; top: 1150px; width: 640px; height: 3px; margin-left: -320px;
+      background: linear-gradient(90deg, rgba(212,166,74,0), #D4A64A 10%, #D4A64A 90%, rgba(212,166,74,0)); box-shadow: 0 0 20px rgba(212,166,74,.55); }
+    #s7-glint { position: absolute; left: 50%; top: 1139px; width: 120px; height: 25px; margin-left: -320px;
+      background: radial-gradient(ellipse at center, rgba(255,240,205,.95), rgba(255,220,150,.3) 40%, transparent 70%); }
+    #s7-handle { position: absolute; left: 0; right: 0; top: 1450px; text-align: center; font: 500 30px "JetBrains Mono"; letter-spacing: .22em; color: #85858d; }
+    @media (orientation: landscape) {
+      #s7-glow { left: 960px; top: 520px; }
+      #s7-a { top: 230px; font-size: 76px; }
+      #s7-b1 { top: 360px; font-size: 150px; }
+      #s7-b2 { top: 520px; font-size: 150px; }
+      #s7-ul { top: 700px; width: 580px; margin-left: -290px; }
+      #s7-glint { top: 689px; margin-left: -290px; }
+      #s7-handle { top: 880px; }
+    }
+  </style>
+  <div id="root" data-composition-id="s7" data-width="1920" data-height="1080">
+    <div id="s7-all">
+      <div id="s7-glow"></div>
+      <div class="s7-g" id="s7-a"><span class="s7-w" id="s7-a1">Nobody</span> <span class="s7-w" id="s7-a2">is</span> <span class="s7-w" id="s7-a3">coming.</span> <span class="s7-w" id="s7-good">Good.</span></div>
+      <div class="s7-g" id="s7-b1"><span class="s7-w" id="s7-b1a">Now</span> <span class="s7-w" id="s7-b1b">you</span> <span class="s7-w" id="s7-b1c">know</span></div>
+      <div class="s7-g" id="s7-b2"><span class="s7-w" id="s7-b2a">who</span> <span class="s7-w" id="s7-b2b">has</span> <span class="s7-w" id="s7-b2c">to.</span></div>
+      <div id="s7-ul"></div>
+      <div id="s7-glint"></div>
+      <div id="s7-handle">1.01³⁶⁵ ≈ 37.78</div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const START = 60, T = (g) => g - START, DUR = 9;
+      try { const v = (window.__hyperframes && window.__hyperframes.getVariables) ? window.__hyperframes.getVariables() : null;
+        if (v && v.handle) document.getElementById("s7-handle").textContent = v.handle; } catch (e) {}
+      const tl = gsap.timeline({ paused: true });
+      const inW = (sel, t, y = 36) => tl.fromTo(sel, { opacity: 0, filter: "blur(14px)", y }, { opacity: 1, filter: "blur(0px)", y: 0, duration: 0.9, ease: "expo.out" }, T(t));
+
+      tl.fromTo("#s7-glow", { opacity: 0 }, { opacity: 1, duration: 2.0, ease: "power2.out" }, 0.2);
+      // "Nobody is coming." 60.64–61.82 · "Good." 62.66
+      inW("#s7-a1", 60.58); inW("#s7-a2", 61.08); inW("#s7-a3", 61.28);
+      tl.fromTo("#s7-good", { opacity: 0, filter: "blur(12px)", scale: 1.12 }, { opacity: 1, filter: "blur(0px)", scale: 1, duration: 0.8, ease: "expo.out" }, T(62.62));
+      tl.to("#s7-a", { y: -80, opacity: 0.42, duration: 1.0, ease: "power2.inOut" }, T(63.55));
+      // "Now you know who has to." 64.13–65.51
+      inW("#s7-b1a", 64.08, 44); inW("#s7-b1b", 64.24, 44); inW("#s7-b1c", 64.5, 44);
+      inW("#s7-b2a", 64.85, 44); inW("#s7-b2b", 65.12, 44); inW("#s7-b2c", 65.4, 44);
+      // the gold underline draws left → right, a glint rides it
+      tl.fromTo("#s7-ul", { scaleX: 0, transformOrigin: "0% 50%" }, { scaleX: 1, duration: 0.95, ease: "power3.inOut" }, T(65.75));
+      tl.fromTo("#s7-glint", { x: 0, opacity: 0 }, { x: 0, opacity: 0, duration: 0.01 }, 0);
+      tl.to("#s7-glint", { keyframes: [{ opacity: 1, duration: 0.15 }, { x: 520, duration: 0.8, ease: "power2.inOut" }, { opacity: 0, duration: 0.3 }] }, T(65.85));
+      tl.fromTo("#s7-handle", { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 1.0, ease: "expo.out" }, T(66.1));
+      // letter-free breathing on the held line: a slow scale drift instead of spacing
+      tl.fromTo("#s7-all", { scale: 1 }, { scale: 1.03, duration: DUR, ease: "sine.inOut" }, 0);
+      // slow fade on the reverb tail
+      tl.to(["#s7-a", "#s7-b1", "#s7-b2", "#s7-glow"], { opacity: 0, duration: 1.15, ease: "sine.inOut" }, T(67.7));
+      tl.to("#s7-handle", { opacity: 0, duration: 0.8, ease: "sine.inOut" }, T(68.15));
+      tl.to(["#s7-ul", "#s7-glint"], { opacity: 0, duration: 1.0, ease: "sine.inOut" }, T(67.95));
+
+      window.__timelines["s7"] = tl;
+    })();
+  </script>
+</template>

@@ -1,0 +1,122 @@
+<template>
+  <style>
+    @font-face { font-family: "Instrument Serif"; src: url("assets/fonts/InstrumentSerif-Regular.woff2") format("woff2"); font-style: normal; }
+    @font-face { font-family: "Instrument Serif"; src: url("assets/fonts/InstrumentSerif-Italic.woff2") format("woff2"); font-style: italic; }
+    @font-face { font-family: "JetBrains Mono"; src: url("assets/fonts/JetBrainsMono-Variable.woff2") format("woff2"); font-weight: 100 800; }
+    #root { position: absolute; inset: 0; overflow: hidden; background: #07070A; }
+    #s1-cam, #s1-shake { position: absolute; inset: 0; }
+    /* single light source: a narrow beam from above, falling on the words */
+    #s1-beam { position: absolute; left: 50%; top: -200px; width: 1300px; height: 1900px; margin-left: -650px;
+      background: linear-gradient(180deg, rgba(240,234,220,.16) 0%, rgba(240,234,220,.06) 55%, rgba(240,234,220,0) 100%);
+      clip-path: polygon(41% 0, 59% 0, 92% 100%, 8% 100%); filter: blur(14px); }
+    #s1-glow { position: absolute; left: 50%; top: 860px; width: 1500px; height: 1100px; margin: -550px 0 0 -750px;
+      background: radial-gradient(ellipse at center, rgba(237,232,220,.14) 0%, rgba(237,232,220,.04) 38%, transparent 68%); }
+    #s1-streak { position: absolute; left: 50%; top: 1078px; width: 1080px; height: 2px; margin-left: -540px;
+      background: linear-gradient(90deg, transparent, rgba(237,237,237,.55) 28%, rgba(255,250,240,1) 50%, rgba(237,237,237,.55) 72%, transparent); }
+    #s1-streak-soft { position: absolute; left: 50%; top: 1034px; width: 1300px; height: 90px; margin-left: -650px;
+      background: radial-gradient(ellipse at center, rgba(237,232,220,.2), transparent 70%); }
+    #s1-flash { position: absolute; inset: 0; background: radial-gradient(ellipse 70% 45% at 50% 52%, rgba(255,250,240,.55), rgba(255,250,240,.12) 50%, transparent 80%); }
+    .s1-line { position: absolute; left: 0; right: 0; text-align: center; font-family: "Instrument Serif", serif; color: #EDEDED; white-space: nowrap; }
+    #s1-l1 { top: 470px; font-size: 330px; line-height: 1; letter-spacing: -0.035em; }
+    #s1-l2 { top: 800px; font-size: 128px; line-height: 1; letter-spacing: -0.015em; color: #b9b9c0; }
+    #s1-l3 { top: 930px; font-size: 176px; line-height: 1; letter-spacing: -0.025em; }
+    .s1-w { display: inline-block; }
+    .s1-it { font-style: italic; padding-right: .04em; }
+    .s1-mask { display: inline-block; overflow: hidden; vertical-align: top; padding: 0 .02em .12em; }
+    #s1-tease { position: absolute; left: 0; right: 0; top: 1268px; text-align: center; }
+    #s1-tk { font: 600 28px "JetBrains Mono", monospace; letter-spacing: .22em; color: #8a8a92; }
+    #s1-tv { font: 500 96px "JetBrains Mono", monospace; letter-spacing: -0.03em; color: #D4A64A; margin-top: 10px; font-variant-numeric: tabular-nums; text-shadow: 0 0 40px rgba(212,166,74,.35); }
+    #s1-dust { position: absolute; inset: 0; }
+    .s1-mote { position: absolute; border-radius: 50%; background: rgba(240,232,214,.8); }
+    @media (orientation: landscape) {
+      #s1-beam { height: 1200px; }
+      #s1-glow { top: 470px; }
+      #s1-l1 { top: 110px; font-size: 250px; }
+      #s1-l2 { top: 370px; font-size: 104px; }
+      #s1-l3 { top: 480px; font-size: 150px; }
+      #s1-streak { top: 600px; } #s1-streak-soft { top: 556px; }
+      #s1-tease { top: 790px; }
+      #s1-tv { font-size: 80px; }
+    }
+  </style>
+  <div id="root" data-composition-id="s1" data-width="1080" data-height="1920">
+    <div id="s1-cam">
+      <div id="s1-shake">
+        <div id="s1-beam"></div>
+        <div id="s1-glow"></div>
+        <div id="s1-streak-soft"></div>
+        <div id="s1-streak"></div>
+        <div id="s1-dust"></div>
+        <div class="s1-line" id="s1-l1"><span class="s1-w" id="s1-w1">Nobody</span></div>
+        <div class="s1-line" id="s1-l2"><span class="s1-mask"><span class="s1-w" id="s1-w2">is</span></span> <span class="s1-mask"><span class="s1-w" id="s1-w3">coming</span></span></div>
+        <div class="s1-line" id="s1-l3"><span class="s1-w" id="s1-w4">to</span> <span class="s1-w s1-it" id="s1-w5">save</span> <span class="s1-w" id="s1-w6">you.</span></div>
+        <div id="s1-tease"><div id="s1-tk">1% BETTER A DAY</div><div id="s1-tv"><span id="s1-tn">1.00</span>×</div></div>
+      </div>
+    </div>
+    <div id="s1-flash"></div>
+  </div>
+  <script>
+    (function () {
+      const START = 0, T = (g) => g - START, DUR = 4.6;
+      function rng(s) { return function () { s |= 0; s = (s + 0x6D2B79F5) | 0; let t = Math.imul(s ^ (s >>> 15), 1 | s); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+      const W = innerWidth, H = innerHeight;
+      const tl = gsap.timeline({ paused: true });
+
+      // dust in the beam (seeded)
+      const r = rng(101), dust = document.getElementById("s1-dust");
+      for (let i = 0; i < 40; i++) {
+        const m = document.createElement("div"); m.className = "s1-mote"; m.id = "s1-m" + i;
+        const sz = 1.5 + r() * 4, y = r() * H, spread = 120 + y * 0.35;
+        m.style.width = m.style.height = sz + "px"; m.style.left = (W / 2 + (r() - 0.5) * 2 * spread) + "px"; m.style.top = y + "px";
+        dust.appendChild(m);
+        tl.fromTo(m, { opacity: 0.1 + r() * 0.4, x: 0, y: 0 }, { opacity: 0.15 + r() * 0.5, x: (r() - 0.5) * 60, y: -50 - r() * 90, duration: DUR, ease: "sine.inOut" }, 0);
+      }
+      const shake = (t, amt, seed, n = 7) => { const rr = rng(seed); let tt = t;
+        for (let i = 0; i < n; i++) { const k = 1 - i / n; tl.to("#s1-shake", { x: (rr() - 0.5) * amt * k, y: (rr() - 0.5) * amt * k, rotation: (rr() - 0.5) * amt * 0.02 * k, duration: 1 / 60 * 2, ease: "none" }, tt); tt += 1 / 30; }
+        tl.to("#s1-shake", { x: 0, y: 0, rotation: 0, duration: 0.1, ease: "power2.out" }, tt); };
+      tl.fromTo("#s1-shake", { x: 0, y: 0, rotation: 0 }, { x: 0, y: 0, rotation: 0, duration: 0.01 }, 0);
+
+      // FRAME 0 is already the hook: the word is on screen, still landing, light already on
+      tl.fromTo("#s1-cam", { scale: 1.14 }, { scale: 1.0, duration: 0.9, ease: "expo.out" }, 0)
+        .to("#s1-cam", { scale: 1.06, duration: DUR - 0.9, ease: "sine.inOut" }, 0.9);
+      tl.fromTo("#s1-w1", { opacity: 0.85, filter: "blur(3px)", y: 14 }, { opacity: 1, filter: "blur(0px)", y: 0, duration: 0.5, ease: "expo.out" }, 0);
+      tl.fromTo("#s1-beam", { opacity: 0.75 }, { opacity: 1, duration: 0.6, ease: "power2.out" }, 0);
+      tl.fromTo("#s1-glow", { opacity: 0.6, scale: 0.95 }, { opacity: 0.75, scale: 1, duration: 1.6, ease: "sine.inOut" }, 0);
+      shake(0.0, 18, 7, 6);
+
+      // "is coming" rises out of masks on the VO (0.87, 1.04)
+      tl.fromTo("#s1-w2", { yPercent: 110 }, { yPercent: 0, duration: 0.6, ease: "expo.out" }, T(0.84));
+      tl.fromTo("#s1-w3", { yPercent: 110 }, { yPercent: 0, duration: 0.6, ease: "expo.out" }, T(1.0));
+
+      // "to save you." (1.56, 1.72, 2.07)
+      [["#s1-w4", 1.52], ["#s1-w6", 2.03]].forEach(([id, t]) =>
+        tl.fromTo(id, { opacity: 0, filter: "blur(14px)", y: 40 }, { opacity: 1, filter: "blur(0px)", y: 0, duration: 0.8, ease: "expo.out" }, T(t)));
+      tl.fromTo("#s1-w5", { opacity: 0, scale: 1.5, filter: "blur(18px)" }, { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.55, ease: "expo.out" }, T(1.69));
+
+      // the HIT on "save": flash, shake, light streak, everything else steps back
+      const HIT = T(1.72);
+      tl.fromTo("#s1-flash", { opacity: 0 }, { opacity: 0, duration: 0.01 }, 0);
+      tl.to("#s1-flash", { opacity: 1, duration: 0.05, ease: "none" }, HIT).to("#s1-flash", { opacity: 0, duration: 0.45, ease: "power3.out" }, HIT + 0.05);
+      shake(HIT, 30, 13, 9);
+      tl.fromTo("#s1-streak", { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 0.5, ease: "expo.out" }, HIT)
+        .to("#s1-streak", { opacity: 0.22, duration: 1.6, ease: "power2.out" }, HIT + 0.5);
+      tl.fromTo("#s1-streak-soft", { opacity: 0, scaleX: 0.3 }, { opacity: 1, scaleX: 1, duration: 0.45, ease: "expo.out" }, HIT)
+        .to("#s1-streak-soft", { opacity: 0.3, duration: 1.8, ease: "power2.out" }, HIT + 0.45);
+      tl.to("#s1-glow", { opacity: 1, scale: 1.15, duration: 0.1, ease: "power2.out" }, HIT).to("#s1-glow", { opacity: 0.6, scale: 1.04, duration: 1.4, ease: "power2.out" }, HIT + 0.1);
+      tl.to(["#s1-l1", "#s1-l2"], { opacity: 0.24, duration: 0.8, ease: "power2.out" }, HIT + 0.15);
+
+      // open loop: tease the payoff the film will prove (counter rolls 1.00 → 37.78)
+      tl.fromTo("#s1-tease", { opacity: 0, y: 20, filter: "blur(8px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.5, ease: "expo.out" }, T(2.55));
+      const tn = document.getElementById("s1-tn"), c = { n: 0 };
+      tl.fromTo(c, { n: 0 }, { n: 365, duration: 1.1, ease: "power2.in", onUpdate: () => { tn.textContent = Math.pow(1.01, c.n).toFixed(2); } }, T(2.65));
+      tl.fromTo("#s1-tv", { scale: 1 }, { scale: 1.08, duration: 0.08, ease: "power2.out" }, T(3.75)).to("#s1-tv", { scale: 1, duration: 0.4, ease: "expo.out" }, T(3.83));
+
+      // exit into the collage: words scatter up into the dark
+      tl.to(["#s1-w1", "#s1-w2", "#s1-w3", "#s1-w4", "#s1-w5", "#s1-w6"], { opacity: 0, filter: "blur(14px)", y: -40, duration: 0.42, ease: "power3.in", stagger: 0.03 }, T(4.0));
+      tl.to("#s1-tease", { opacity: 0, y: 30, filter: "blur(8px)", duration: 0.35, ease: "power3.in" }, T(4.0));
+      tl.to(["#s1-streak", "#s1-streak-soft", "#s1-glow", "#s1-beam", "#s1-dust"], { opacity: 0, duration: 0.45, ease: "power3.in" }, T(4.05));
+
+      window.__timelines["s1"] = tl;
+    })();
+  </script>
+</template>
