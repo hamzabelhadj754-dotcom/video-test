@@ -1,0 +1,6 @@
+<!doctype html><html><head><meta charset="utf-8"><style>html,body{margin:0;background:#08090B}#w{position:relative;width:1080px;height:1920px;overflow:hidden;background:#08090B}#w canvas{position:absolute;inset:0;width:1080px;height:1920px}#far{filter:blur(7px)}#near{filter:blur(12px)}#gl{display:none}</style>
+<script src="../assets/vendor/three/three.min.js"></script><script src="../assets/vendor/three/RoomEnvironment.js"></script><script src="../assets/vendor/three/RGBELoader.js"></script>
+<script src="../assets/3d/common.js"></script><script src="../assets/3d/fibres.js"></script></head>
+<body><div id="w"><canvas id="far" width="1080" height="1920"></canvas><canvas id="mid" width="1080" height="1920"></canvas><canvas id="near" width="1080" height="1920"></canvas></div><canvas id="gl" width="1080" height="1920"></canvas>
+<script>window.go = async (kind, st) => { const m = MG3D.fibres(document.getElementById('gl'), 1080, 1920, '../assets/'); await m.ready; const t0=performance.now();
+ if (st.useLayers) st.layers = { far: document.getElementById('far'), mid: document.getElementById('mid'), near: document.getElementById('near') }; m.render(st); if (!st.layers) document.getElementById('mid').getContext('2d').drawImage(document.getElementById('gl'),0,0); return performance.now()-t0; };</script></body></html>

@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Muscle Growth — style frames v2</title>
+<link rel="stylesheet" href="style.css" />
+<script src="../assets/vendor/three/three.min.js"></script>
+<script src="../assets/vendor/three/RoomEnvironment.js"></script>
+<script src="../assets/vendor/three/RGBELoader.js"></script>
+<script src="../assets/3d/common.js"></script>
+<script src="../assets/3d/plate.js"></script>
+<script src="../assets/3d/biceps.js"></script>
+<script src="../assets/3d/fibres.js"></script>
+</head>
+<body>
+
+<!-- ============ 1 HOOK ============ -->
+<section class="frame" id="f1">
+  <div class="bg-haze" style="background: radial-gradient(ellipse 70% 40% at 50% 30%, rgba(255,241,223,.05), transparent 70%);"></div>
+  <canvas class="gl" id="gl1" width="1080" height="1920"></canvas>
+  <div class="layer" style="z-index:20">
+    <div class="disp" style="position:absolute; left:0; right:0; top:262px; text-align:center; font-size:118px; color:rgba(242,243,245,.82)">Your muscles don't</div>
+    <div class="disp" style="position:absolute; left:0; right:0; top:378px; text-align:center; font-size:440px; color:#F2F3F5">Grow</div>
+    <div style="position:absolute; left:96px; right:96px; top:600px; height:30px; background:#C6FF3D; border-radius:4px; transform:rotate(-5deg); box-shadow:0 0 34px rgba(198,255,61,.55), 0 0 4px #efffc0"></div>
+    <div class="disp" style="position:absolute; left:0; right:0; top:830px; text-align:center; font-size:118px; color:rgba(242,243,245,.82)">in the gym.</div>
+  </div>
+  <div class="fg-dust" data-seed="3" data-n="26" data-zone="0,1200,1080,1920"></div>
+  <div class="sweep" style="left:8%"></div>
+  <div class="vig"></div><div class="grain"></div>
+  <div class="tag">01 · HOOK · 0:01.3</div>
+</section>
+
+<!-- ============ 2 ANATOMY ============ -->
+<section class="frame" id="f2">
+  <div class="bg-haze" style="background: radial-gradient(ellipse 60% 40% at 55% 46%, rgba(255,140,120,.07), transparent 70%);"></div>
+  <div class="grid4" style="z-index:1"></div>
+  <canvas class="gl" id="gl2" width="1080" height="1920" style="z-index:2"></canvas>
+  <div class="layer" style="z-index:20">
+    <div class="label" style="position:absolute; left:70px; top:240px">Set 04 · <span style="color:#F2F3F5">Biceps</span></div>
+    <div class="glass" style="right:70px; top:226px; width:270px; height:170px; padding:24px 28px">
+      <div class="label">Rep</div>
+      <div style="font:600 84px/1 var(--mono); margin-top:10px">10<span style="font-size:36px; color:var(--muted)"> /10</span></div>
+    </div>
+    <!-- reticle on the belly + leader-line labels in clear space -->
+    <svg style="position:absolute; left:0; top:0; width:1080px; height:1920px; overflow:visible">
+      <g stroke="rgba(242,243,245,.85)" stroke-width="2" fill="none"><circle cx="706" cy="900" r="74"/><path d="M706 810 v22 M706 968 v22 M616 900 h22 M774 900 h22"/></g>
+      <g stroke="rgba(242,243,245,.55)" stroke-width="2" fill="none"><path d="M260 640 L470 640 L560 720"/><path d="M820 760 L960 760"/><path d="M260 1080 L440 1080 L520 1010"/></g>
+    </svg>
+    <div class="dot" style="left:560px; top:720px"></div><div class="dot" style="left:782px; top:760px"></div><div class="dot" style="left:520px; top:1010px"></div>
+    <div style="position:absolute; left:70px; top:574px"><div class="label">Load</div><div class="data" style="margin-top:6px">82.5<small>KG</small></div></div>
+    <div style="position:absolute; right:70px; top:690px; text-align:right"><div class="label">Tension</div><div class="data" style="margin-top:6px">HIGH</div></div>
+    <div style="position:absolute; left:70px; top:1014px"><div class="label">Fatigue</div><div class="data" style="margin-top:6px">74<small>%</small></div></div>
+    <div class="glass" style="left:70px; right:70px; top:1170px; height:130px">
+      <div class="label" style="position:absolute; left:30px; top:24px">Heart rate</div>
+      <div class="data" style="position:absolute; right:30px; top:16px; color:var(--data)">168<small>BPM</small></div>
+      <svg id="hr" style="position:absolute; left:30px; right:30px; bottom:14px; width:calc(100% - 60px); height:58px" viewBox="0 0 880 58" preserveAspectRatio="none"></svg>
+    </div>
+  </div>
+  <div class="fg-bracket" style="left:22px; top:470px; border-top-width:3px; border-left-width:3px"></div>
+  <div class="fg-bracket" style="right:22px; top:1080px; border-bottom-width:3px; border-right-width:3px"></div>
+  <div class="fg-dust" data-seed="5" data-n="18" data-zone="0,0,1080,1920"></div>
+  <div class="cap"><span>Every</span> <span>hard</span> <span>set</span> <span>sends</span> <span>a</span> <span class="on">signal.</span></div>
+  <div class="vig"></div><div class="grain"></div>
+  <div class="tag">02 · ANATOMY · 0:10.6</div>
+</section>
+
+<!-- ============ 3 FIBRE (hero) ============ -->
+<section class="frame" id="f3">
+  <canvas class="gl" id="gl3" width="1080" height="1920"></canvas>
+  <div class="layer" style="z-index:20">
+    <div class="label" style="position:absolute; left:70px; top:240px">Mag <span style="color:#F2F3F5">×1200</span></div>
+    <div class="label" style="position:absolute; right:70px; top:240px">T+ <span style="color:#F2F3F5">31 H</span></div>
+    <svg style="position:absolute; left:0; top:0; width:1080px; height:1920px; overflow:visible"><g stroke="rgba(242,243,245,.6)" stroke-width="2" fill="none"><path id="ld1" d="M70 460 L300 460 L470 700"/><path id="ld2" d="M1010 890 L840 890"/></g></svg>
+    <div class="dot" id="dt1" style="left:470px; top:700px"></div><div class="dot" id="dt2" style="left:840px; top:890px; background:#C6FF3D; box-shadow:0 0 0 6px rgba(198,255,61,.2)"></div>
+    <div style="position:absolute; left:70px; top:404px" class="label">Microtear</div>
+    <div style="position:absolute; right:70px; top:834px; text-align:right" class="label"><span style="color:#F2F3F5">Repair</span></div>
+    <div class="glass" style="left:70px; right:70px; top:1150px; height:150px; padding:26px 32px">
+      <div style="display:flex; justify-content:space-between"><div class="label">Recovery</div><div class="label" style="color:#F2F3F5">Rebuilding</div></div>
+      <div style="position:relative; margin-top:24px; height:10px; border-radius:5px; background:rgba(255,255,255,.1)">
+        <div style="position:absolute; left:0; top:0; bottom:0; width:64%; border-radius:5px; background:linear-gradient(90deg, rgba(198,255,61,.25), #C6FF3D); box-shadow:0 0 16px rgba(198,255,61,.5)"></div>
+        <div style="position:absolute; left:64%; top:-9px; width:28px; height:28px; margin-left:-14px; border-radius:50%; background:#F2F3F5"></div></div>
+      <div style="display:flex; justify-content:space-between; margin-top:12px; font:600 30px var(--mono); color:var(--muted)"><span>0h</span><span style="color:#F2F3F5">24h</span><span>48h</span></div>
+    </div>
+  </div>
+  <div class="fg-dust" data-seed="9" data-n="30" data-zone="0,0,1080,1920"></div>
+  <div class="cap"><span>a</span> <span>little</span> <span class="on">thicker</span> <span>than</span> <span>before.</span></div>
+  <div class="vig"></div><div class="grain"></div>
+  <div class="tag">03 · FIBRE · 0:19.0</div>
+</section>
+
+<!-- ============ 4 SYSTEM: one card at a time ============ -->
+<section class="frame" id="f4">
+  <div class="bg-haze" style="background: radial-gradient(ellipse 70% 45% at 45% 45%, rgba(255,241,223,.06), transparent 70%);"></div>
+  <div class="grid4"></div>
+  <!-- next card peeking (slide-through canvas), out of focus -->
+  <div class="glass" style="left:1012px; top:330px; width:900px; height:930px; filter:blur(8px); opacity:.8"><div class="disp" style="position:absolute; left:50px; top:120px; font-size:150px">Protein</div></div>
+  <div class="glass active" id="card1" style="left:90px; top:300px; width:900px; height:980px">
+    <div class="label" style="position:absolute; left:50px; top:46px"><span style="color:#F2F3F5">01</span> / 03</div>
+    <svg style="position:absolute; left:42px; top:96px; width:820px; height:170px" viewBox="0 0 820 170">
+      <defs><clipPath id="fillclip"><rect x="0" y="0" width="470" height="170"/></clipPath></defs>
+      <text x="6" y="150" font-family="Anton" font-size="164" fill="none" stroke="#F2F3F5" stroke-width="2.5" letter-spacing="2">OVERLOAD</text>
+      <text x="6" y="150" font-family="Anton" font-size="164" fill="#F2F3F5" letter-spacing="2" clip-path="url(#fillclip)">OVERLOAD</text>
+    </svg>
+    <div style="position:absolute; left:50px; top:290px; font:500 44px var(--ui); color:var(--dim)">A little more, over time.</div>
+    <svg id="bars" style="position:absolute; left:50px; bottom:50px; width:800px; height:520px" viewBox="0 0 800 520"></svg>
+  </div>
+  <div class="cap"><span>Progressive</span> <span class="on">overload</span></div>
+  <div class="vig"></div><div class="grain"></div>
+  <div class="tag">04 · SYSTEM · 0:27.0</div>
+</section>
+
+<!-- ============ 5 COMPARE: split hold ============ -->
+<section class="frame" id="f5">
+  <div class="bg-haze" style="background: radial-gradient(ellipse 40% 35% at 75% 45%, rgba(198,255,61,.06), transparent 70%), radial-gradient(ellipse 40% 35% at 25% 45%, rgba(255,77,61,.06), transparent 70%);"></div>
+  <div class="grid4"></div>
+  <div class="glass" style="left:40px; top:300px; width:490px; height:960px">
+    <div style="position:absolute; left:30px; top:32px; height:48px; padding:0 18px; border-radius:24px; display:flex; align-items:center; gap:10px; font:700 24px var(--ui); letter-spacing:.1em; color:#ffb1a8; background:rgba(255,77,61,.14); border:1px solid rgba(255,77,61,.5)"><i style="width:10px;height:10px;border-radius:50%;background:#FF4D3D;display:block"></i>NO RECOVERY</div>
+    <svg id="ga" style="position:absolute; left:20px; top:130px; width:450px; height:780px" viewBox="0 0 450 780"></svg>
+  </div>
+  <div class="glass active" style="left:550px; top:300px; width:490px; height:960px">
+    <div style="position:absolute; left:30px; top:32px; height:48px; padding:0 18px; border-radius:24px; display:flex; align-items:center; gap:10px; font:700 24px var(--ui); letter-spacing:.1em; color:#C6FF3D; background:rgba(198,255,61,.1); border:1px solid rgba(198,255,61,.5)"><i style="width:10px;height:10px;border-radius:50%;background:#C6FF3D;display:block"></i>RECOVERY</div>
+    <svg id="gb" style="position:absolute; left:20px; top:130px; width:450px; height:780px" viewBox="0 0 450 780"></svg>
+  </div>
+  <div class="cap"><span>you're</span> <span>just</span> <span>collecting</span> <span class="on">damage.</span></div>
+  <div class="vig"></div><div class="grain"></div>
+  <div class="tag">05 · COMPARE (split hold) · 0:39.4</div>
+</section>
+
+<!-- ============ 6 KINETIC ============ -->
+<section class="frame" id="f6">
+  <div class="bg-haze" style="background: radial-gradient(ellipse 60% 30% at 50% 52%, rgba(198,255,61,.07), transparent 70%);"></div>
+  <div class="disp" style="position:absolute; left:0; right:0; top:330px; text-align:center; font-size:178px;
+    background: url(&quot;data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='900' height='300'><filter id='s'><feTurbulence type='fractalNoise' baseFrequency='.006 .02' numOctaves='5' seed='12'/><feColorMatrix values='0 0 0 0 .95  0 0 0 0 .95  0 0 0 0 .93  0 0 0 1.6 -.35'/></filter><rect width='100%' height='100%' fill='%23555' /><rect width='100%' height='100%' filter='url(%23s)'/></svg>&quot;) center/cover; -webkit-background-clip: text; background-clip: text; color: transparent; opacity:.9">Train hard.</div>
+  <div class="disp" style="position:absolute; left:0; right:0; top:530px; text-align:center; font-size:178px; color:var(--dim)">Eat enough.</div>
+  <div class="disp" style="position:absolute; left:0; right:0; top:730px; text-align:center; font-size:400px; color:#C6FF3D; text-shadow:0 0 70px rgba(198,255,61,.3)">Sleep</div>
+  <div style="position:absolute; left:0; right:0; top:1150px; text-align:center; font:700 50px var(--ui)">like it's part of the program.</div>
+  <div class="fg-dust" data-seed="15" data-n="22" data-zone="0,0,1080,1920"></div>
+  <div class="vig"></div><div class="grain"></div>
+  <div class="tag">06 · KINETIC · 0:50.8</div>
+</section>
+
+<!-- ============ 7 END ============ -->
+<section class="frame" id="f7">
+  <canvas class="gl" id="gl7" width="1080" height="1920" style="opacity:.55; filter:blur(3px)"></canvas>
+  <div class="layer" style="z-index:20; background: linear-gradient(180deg, rgba(8,9,11,0) 30%, rgba(8,9,11,.75) 55%, rgba(8,9,11,.9) 80%)"></div>
+  <div class="disp" style="position:absolute; left:0; right:0; top:880px; z-index:21; text-align:center; font-size:132px; color:#F2F3F5;
+    text-shadow: 0 2px 0 #9ea3ac, 0 4px 0 #6f747d, 0 6px 0 #4a4e55, 0 8px 0 #2d3035, 0 20px 40px rgba(0,0,0,.6)">Growth is built<br/>in the hours<br/>you <span style="color:#C6FF3D; text-shadow: 0 2px 0 #9fd02f, 0 4px 0 #78a01f, 0 6px 0 #557214, 0 8px 0 #354a0a, 0 0 50px rgba(198,255,61,.35)">rest.</span></div>
+  <div style="position:absolute; left:604px; top:1288px; width:268px; height:7px; z-index:21; background:#C6FF3D; box-shadow:0 0 22px rgba(198,255,61,.6)"></div>
+  <div class="label" style="position:absolute; left:0; right:0; top:1440px; z-index:21; text-align:center; font-size:30px">@yourhandle</div>
+  <div class="vig"></div><div class="grain"></div>
+  <div class="tag">07 · END · 0:59.0</div>
+</section>
+
+<!-- ============ THUMBNAIL ============ -->
+<section class="frame" id="f8">
+  <canvas class="gl" id="gl8" width="1080" height="1920"></canvas>
+  <div class="layer" style="z-index:20; background: linear-gradient(180deg, rgba(8,9,11,.92) 0%, rgba(8,9,11,.78) 32%, rgba(8,9,11,0) 55%)"></div>
+  <div class="disp" style="position:absolute; left:0; right:0; top:240px; z-index:21; text-align:center; font-size:160px; line-height:.94">Your muscles<br/>don't <span style="color:#C6FF3D">grow</span><br/>in the gym</div>
+  <div class="vig"></div><div class="grain"></div>
+  <div class="tag">THUMBNAIL</div>
+</section>
+
+<script>
+const rng = (s) => function () { s |= 0; s = (s + 0x6D2B79F5) | 0; let t = Math.imul(s ^ (s >>> 15), 1 | s); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+// FG dust (out of focus, seeded)
+document.querySelectorAll(".fg-dust").forEach((el) => { const r = rng(+el.dataset.seed), n = +el.dataset.n, [x0, y0, x1, y1] = el.dataset.zone.split(",").map(Number);
+  for (let i = 0; i < n; i++) { const d = document.createElement("i"), s = 4 + r() * 16; d.style.width = d.style.height = s + "px"; d.style.left = (x0 + r() * (x1 - x0)) + "px"; d.style.top = (y0 + r() * (y1 - y0)) + "px"; d.style.opacity = (0.15 + r() * 0.5).toFixed(2); el.appendChild(d); } });
+// heart rate
+(() => { const r = rng(5); let d = ""; for (let i = 0; i <= 110; i++) { const x = i / 110 * 880; let y = 36 + (r() - .5) * 5; const k = i % 22; if (k === 11) y = 4; if (k === 12) y = 56; if (k === 13) y = 26; d += (i ? "L" : "M") + x.toFixed(1) + " " + y.toFixed(1); }
+  document.getElementById("hr").innerHTML = `<path d="${d}" fill="none" stroke="#3DD6FF" stroke-width="3" stroke-linejoin="round"/>`; })();
+// overload bars: every bar labelled, only the newest one is lime
+(() => { const v = [60, 60, 62.5, 62.5, 65, 65], W = 800, H = 520, bw = 104, gap = (W - 6 * bw) / 5; let h = "";
+  v.forEach((kg, i) => { const x = i * (bw + gap), bh = 120 + (kg - 60) * 52, y = H - 60 - bh, last = i === 5;
+    h += `<rect x="${x}" y="${y}" width="${bw}" height="${bh}" rx="14" fill="${last ? "#C6FF3D" : "rgba(255,255,255,.12)"}" ${last ? "" : 'stroke="rgba(255,255,255,.16)" stroke-width="1.5"'}/>`;
+    h += `<text x="${x + bw / 2}" y="${y - 18}" text-anchor="middle" font-family="JetBrains Mono" font-weight="600" font-size="34" fill="${last ? "#C6FF3D" : "#F2F3F5"}">${kg}</text>`;
+    h += `<text x="${x + bw / 2}" y="${H - 14}" text-anchor="middle" font-family="JetBrains Mono" font-weight="600" font-size="26" letter-spacing="2" fill="#9AA0AB">W${i + 1}</text>`; });
+  h += `<text x="0" y="24" font-family="JetBrains Mono" font-weight="600" font-size="24" letter-spacing="3" fill="#9AA0AB">KG · WEEKLY</text>`;
+  document.getElementById("bars").innerHTML = h; })();
+// compare graphs
+(() => { const r = rng(13); let d = "", W = 450, H = 780; for (let i = 0; i <= 30; i++) { const x = 20 + i / 30 * (W - 40); let y = i < 10 ? 520 - i * 14 + (r() - .5) * 90 : 400 + (r() - .5) * 26; if (i > 16) y = 430 + (r() - .5) * 8; d += (i ? "L" : "M") + x.toFixed(1) + " " + y.toFixed(1); }
+  let g = ""; for (let k = 0; k < 6; k++) g += `<line x1="20" x2="${W - 20}" y1="${120 + k * 110}" y2="${120 + k * 110}" stroke="rgba(255,255,255,.06)"/>`;
+  document.getElementById("ga").innerHTML = g + `<path d="${d}" fill="none" stroke="#9aa0ab" stroke-width="4" stroke-linejoin="round"/><text x="20" y="${H - 20}" font-family="JetBrains Mono" font-weight="600" font-size="24" fill="#9AA0AB">FLAT</text>`;
+  let d2 = "", pts = []; for (let i = 0; i <= 24; i++) { const x = 20 + i / 24 * (W - 40), y = H - 140 - Math.pow(i / 24, 1.3) * (H - 300) + (i % 2 ? 8 : -6); pts.push([x, y]); d2 += (i ? "L" : "M") + x.toFixed(1) + " " + y.toFixed(1); }
+  document.getElementById("gb").innerHTML = g + `<defs><linearGradient id="gf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C6FF3D" stop-opacity=".22"/><stop offset="1" stop-color="#C6FF3D" stop-opacity="0"/></linearGradient></defs>
+   <path d="${d2} L${pts[24][0]},${H - 140} L20,${H - 140} Z" fill="url(#gf)"/><path d="${d2}" fill="none" stroke="#C6FF3D" stroke-width="5" stroke-linejoin="round"/><circle cx="${pts[24][0]}" cy="${pts[24][1]}" r="11" fill="#F2F3F5"/>
+   <text x="20" y="${H - 20}" font-family="JetBrains Mono" font-weight="600" font-size="24" fill="#9AA0AB">CLIMBING</text>`; })();
+
+// ---- 3D heroes ----
+window.renderAll = async function () {
+  await document.fonts.ready; await document.fonts.load("150px Anton");
+  const jobs = [
+    ["gl1", "plate", { drop: 0, impact: 0.14, camY: 1.0, camZ: 9.4, lookY: 1.1, yaw: -0.55, tilt: 0.05 }],
+    ["gl2", "biceps", { glow: 1, signal: 0.62, camZ: 12.2, camX: 0.0, lookY: -0.25 }],
+    ["gl3", "fibres", { t: 3, tear: 1, repair: 0.75, camX: 0.4, camY: -0.9, camZ: 9.0, lookX: 0.5, lookY: -1.5, lookZ: 0.6, rx: 0.38, rz: 0.36 }],
+    ["gl7", "biceps", { glow: 0.5, signal: 0.9, thick: 1, camZ: 9.0, lookY: -0.4 }],
+    ["gl8", "fibres", { t: 5, tear: 1, repair: 0.9, camX: 0.4, camY: -0.9, camZ: 8.6, lookX: 0, lookY: -1.1, lookZ: 0.6, rx: 0.38, rz: 0.36 }],
+  ];
+  for (const [id, kind, st] of jobs) { const m = MG3D[kind](document.getElementById(id), 1080, 1920, "../assets/"); await m.ready; m.render(st); }
+  return true;
+};
+</script>
+</body>
+</html>
