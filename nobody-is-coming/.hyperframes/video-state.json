@@ -3462,5 +3462,16 @@
         "attribution": "unversioned"
       }
     ]
-  }
+  },
+  "renders": {
+    "latest": {
+      "id": "c8a3f44e-38d8-4009-867a-e2f21d9fd7e5",
+      "completedAt": 1793968061193,
+      "output": "/home/user/video-test/nobody-is-coming/renders/final_9x16.mp4",
+      "status": "completed",
+      "revision": null
+    },
+    "retainedRevisions": []
+  },
+  "pendingArtifactCleanup": []
 }

@@ -4,3 +4,4 @@ renders/.*transaction*
 renders/*.log
 node_modules/
 __pycache__/
+renders/*_master.mp4
