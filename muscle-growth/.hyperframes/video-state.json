@@ -1,12 +1,12 @@
 {
   "version": 1,
   "historyId": "bd6366cb-bd71-4d10-af58-b8f41346d9ef",
-  "currentRevision": "4ca3604e-9bde-4941-90d7-ae2519293c9e",
+  "currentRevision": "41ac12ee-c520-48c8-b2b5-c76feccc1d83",
   "pendingChanges": false,
   "files": {
     "ASSETS.md": {
-      "hash": "a13a7efe250141c89601c70a8ed1a825e3615921a7b2b050da352870ddc7395e",
-      "content": "/root/.cache/hyperframes/history/bd6366cb-bd71-4d10-af58-b8f41346d9ef/blobs/a1/a13a7efe250141c89601c70a8ed1a825e3615921a7b2b050da352870ddc7395e"
+      "hash": "14443e3f5e0d77a9cbc3cfc8c8f9330406611c76bdf106ce79cc8fcd0896bbc2",
+      "content": "/root/.cache/hyperframes/history/bd6366cb-bd71-4d10-af58-b8f41346d9ef/blobs/14/14443e3f5e0d77a9cbc3cfc8c8f9330406611c76bdf106ce79cc8fcd0896bbc2"
     },
     "BRIEF.md": {
       "hash": "eab9cec677a909d3c742555ec085545c6f003b80efd006d8c5efdeca02e132e8",
@@ -379,6 +379,14 @@
     "tools/scene_shot.py": {
       "hash": "c7fc5c5d0a87f80ad3ba36139d95397bb73d8c17b798559a4c35d6ebd97bd51c",
       "content": "/root/.cache/hyperframes/history/bd6366cb-bd71-4d10-af58-b8f41346d9ef/blobs/c7/c7fc5c5d0a87f80ad3ba36139d95397bb73d8c17b798559a4c35d6ebd97bd51c"
+    },
+    "thumbnail/thumbnail.png": {
+      "hash": "f7e896e6912f2a2ef2a8b29dafe8af54267a6921eeaae2dc7949cfa16e2d29cc",
+      "content": "/root/.cache/hyperframes/history/bd6366cb-bd71-4d10-af58-b8f41346d9ef/blobs/f7/f7e896e6912f2a2ef2a8b29dafe8af54267a6921eeaae2dc7949cfa16e2d29cc"
+    },
+    "README.md": {
+      "hash": "803952be71346fff6237142f8286fdbaca7658f20da199c98fd9b1f34fb0926b",
+      "content": "/root/.cache/hyperframes/history/bd6366cb-bd71-4d10-af58-b8f41346d9ef/blobs/80/803952be71346fff6237142f8286fdbaca7658f20da199c98fd9b1f34fb0926b"
     }
   },
   "revisions": {
@@ -504,6 +512,29 @@
         "tools/scene_shot.py": {
           "before": null,
           "after": "/root/.cache/hyperframes/history/bd6366cb-bd71-4d10-af58-b8f41346d9ef/blobs/c7/c7fc5c5d0a87f80ad3ba36139d95397bb73d8c17b798559a4c35d6ebd97bd51c"
+        }
+      }
+    },
+    "41ac12ee-c520-48c8-b2b5-c76feccc1d83": {
+      "actor": {
+        "kind": "outside",
+        "name": "Outside"
+      },
+      "label": "Changed outside the app",
+      "startedAt": 1794004436288,
+      "endedAt": 1794004436300,
+      "files": {
+        "ASSETS.md": {
+          "before": "/root/.cache/hyperframes/history/bd6366cb-bd71-4d10-af58-b8f41346d9ef/blobs/a1/a13a7efe250141c89601c70a8ed1a825e3615921a7b2b050da352870ddc7395e",
+          "after": "/root/.cache/hyperframes/history/bd6366cb-bd71-4d10-af58-b8f41346d9ef/blobs/14/14443e3f5e0d77a9cbc3cfc8c8f9330406611c76bdf106ce79cc8fcd0896bbc2"
+        },
+        "README.md": {
+          "before": null,
+          "after": "/root/.cache/hyperframes/history/bd6366cb-bd71-4d10-af58-b8f41346d9ef/blobs/80/803952be71346fff6237142f8286fdbaca7658f20da199c98fd9b1f34fb0926b"
+        },
+        "thumbnail/thumbnail.png": {
+          "before": null,
+          "after": "/root/.cache/hyperframes/history/bd6366cb-bd71-4d10-af58-b8f41346d9ef/blobs/f7/f7e896e6912f2a2ef2a8b29dafe8af54267a6921eeaae2dc7949cfa16e2d29cc"
         }
       }
     }
