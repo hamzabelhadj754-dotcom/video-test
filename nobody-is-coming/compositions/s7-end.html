@@ -45,7 +45,7 @@
       try { const v = (window.__hyperframes && window.__hyperframes.getVariables) ? window.__hyperframes.getVariables() : null;
         if (v && v.handle) document.getElementById("s7-handle").textContent = v.handle; } catch (e) {}
       const tl = gsap.timeline({ paused: true });
-      const inW = (sel, t, y = 36) => tl.fromTo(sel, { opacity: 0, filter: "blur(14px)", y }, { opacity: 1, filter: "blur(0px)", y: 0, duration: 0.9, ease: "expo.out" }, T(t));
+      const inW = (sel, t) => tl.fromTo(sel, { opacity: 0, filter: "blur(10px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.45, ease: "power3.out" }, T(t));
 
       tl.fromTo("#s7-glow", { opacity: 0 }, { opacity: 1, duration: 2.0, ease: "power2.out" }, 0.2);
       // "Nobody is coming." 60.64–61.82 · "Good." 62.66
@@ -53,15 +53,14 @@
       tl.fromTo("#s7-good", { opacity: 0, filter: "blur(12px)", scale: 1.12 }, { opacity: 1, filter: "blur(0px)", scale: 1, duration: 0.8, ease: "expo.out" }, T(62.62));
       tl.to("#s7-a", { y: -80, opacity: 0.42, duration: 1.0, ease: "power2.inOut" }, T(63.55));
       // "Now you know who has to." 64.13–65.51
-      inW("#s7-b1a", 64.08, 44); inW("#s7-b1b", 64.24, 44); inW("#s7-b1c", 64.5, 44);
-      inW("#s7-b2a", 64.85, 44); inW("#s7-b2b", 65.12, 44); inW("#s7-b2c", 65.4, 44);
+      inW("#s7-b1a", 64.08); inW("#s7-b1b", 64.24); inW("#s7-b1c", 64.5);
+      inW("#s7-b2a", 64.85); inW("#s7-b2b", 65.12); inW("#s7-b2c", 65.4);
       // the gold underline draws left → right, a glint rides it
       tl.fromTo("#s7-ul", { scaleX: 0, transformOrigin: "0% 50%" }, { scaleX: 1, duration: 0.95, ease: "power3.inOut" }, T(65.75));
       tl.fromTo("#s7-glint", { x: 0, opacity: 0 }, { x: 0, opacity: 0, duration: 0.01 }, 0);
       tl.to("#s7-glint", { keyframes: [{ opacity: 1, duration: 0.15 }, { x: 520, duration: 0.8, ease: "power2.inOut" }, { opacity: 0, duration: 0.3 }] }, T(65.85));
       tl.fromTo("#s7-handle", { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 1.0, ease: "expo.out" }, T(66.1));
       // letter-free breathing on the held line: a slow scale drift instead of spacing
-      tl.fromTo("#s7-all", { scale: 1 }, { scale: 1.03, duration: DUR, ease: "sine.inOut" }, 0);
       // slow fade on the reverb tail
       tl.to(["#s7-a", "#s7-b1", "#s7-b2", "#s7-glow"], { opacity: 0, duration: 1.15, ease: "sine.inOut" }, T(67.7));
       tl.to("#s7-handle", { opacity: 0, duration: 0.8, ease: "sine.inOut" }, T(68.15));

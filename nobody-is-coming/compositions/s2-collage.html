@@ -33,7 +33,7 @@
     }
   </style>
   <div id="root" data-composition-id="s2" data-width="1080" data-height="1920">
-    <div id="s2-cam">
+    <div id="s2-dolly" style="position:absolute;inset:0"><div id="s2-cam">
       <div id="s2-amb"></div>
 
       <!-- Panel A: the boss -->
@@ -75,7 +75,7 @@
       </div>
 
       <div id="s2-ember"></div>
-    </div>
+    </div></div>
 
     <!-- source art (cloned into both halves of each panel at init) -->
     <div id="s2-art-src">
@@ -177,6 +177,7 @@
         tl.to("#s2-cam", { x: 0, y: 0, duration: 0.08, ease: "power2.out" }, tt);
       };
       tl.fromTo("#s2-cam", { x: 0, y: 0 }, { x: 0, y: 0, duration: 0.01 }, 0);
+      tl.fromTo("#s2-dolly", { y: 0, scale: 1, rotation: 0 }, { y: 0, scale: 1, rotation: 0, duration: 0.01 }, 0);
       tl.fromTo("#s2-amb", { opacity: 0 }, { opacity: 1, duration: 0.6, ease: "power2.out" }, 0);
 
       function slam(k, t, rot, seed) {
@@ -187,6 +188,8 @@
         // slow handheld drift while it is held
         tl.fromTo(P + "-in", { x: 0, y: 0, rotation: 0 }, { x: (seed % 2 ? 10 : -12), y: -8, rotation: (seed % 2 ? 0.8 : -0.8), duration: 2.4, ease: "sine.inOut" }, T(t) + 0.2);
         shake(T(t) + 0.12, 14, seed);
+        // whip back up from the fall into the new slam (fast, motion-blurred)
+        if (t > 5) tl.to("#s2-dolly", { y: 0, scale: 1, rotation: 0, duration: 0.32, ease: "power3.out" }, T(t) - 0.04);
       }
       function strike(k, t, dur) {
         tl.fromTo("#s2-p" + k + "-st", { scaleX: 0, transformOrigin: "0% 50%" }, { scaleX: 1, duration: dur, ease: "power4.out" }, T(t));
@@ -201,6 +204,8 @@
         tl.to(P + "-b", { y: 18, x: 10, rotation: 2.5, duration: 0.12, ease: "power3.out" }, T(t))
           .to(P + "-b", { y: 560, x: 90, rotation: 12, opacity: 0, duration: 0.78, ease: "power3.in" }, T(t) + 0.12);
         tl.to([P + "-sh", P + "-fig", P + "-st", P + " .s2-tape"], { opacity: 0, duration: 0.3, ease: "power3.in" }, T(t));
+        // the camera tilts down after the pieces as they drop
+        tl.to("#s2-dolly", { y: -150, scale: 1.05, rotation: k === "A" ? 1.2 : -1.2, duration: 0.42, ease: "power2.in" }, T(t) + 0.12);
       }
 
       // VO: "Not your boss." 4.87–5.94 · "Not your family." 7.08–8.16 · "Not motivation." 9.50–10.58
@@ -209,6 +214,8 @@
       slam("C", 9.30, -1.2, 9);  strike("C", 9.80, 0.6);
 
       // the poster burns down: sky darkens, the sun sets, one ember survives
+      tl.to("#s2-dolly", { scale: 1.12, y: LAND ? 30 : 40, duration: 1.2, ease: "power2.inOut" }, T(9.75));
+      tl.to("#s2-dolly", { scale: 1, y: 0, duration: 0.9, ease: "power2.inOut" }, T(10.95));
       tl.to(".s2-dim-C", { opacity: 0.82, duration: 1.0, ease: "power2.inOut" }, T(10.6));
       tl.to(".s2-sun", { y: 70, duration: 1.2, ease: "power2.in" }, T(10.5));
       tl.to("#s2-amb", { opacity: 0, duration: 1.0, ease: "power2.in" }, T(10.8));

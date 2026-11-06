@@ -130,7 +130,9 @@
       }
 
       // slow push-in for the whole scene
-      tl.fromTo("#s5-cam", { scale: 1, y: 0 }, { scale: 1.06, y: -20, duration: DUR, ease: "sine.inOut" }, 0);
+      // camera starts close under the lamp; on "when no one is watching" it cranes back to reveal the figure alone
+      tl.fromTo("#s5-cam", { scale: 1.28, y: -60, transformOrigin: "50% 18%" }, { scale: 1.24, y: -50, duration: T(45.55), ease: "none" }, 0);
+      tl.to("#s5-cam", { scale: 1, y: 0, duration: 1.7, ease: "power2.inOut" }, T(45.55));
 
       // the light switches on: a seeded flicker, then steady
       const L = ["#s5-cone", "#s5-cone2", "#s5-lamp", "#s5-pool"];

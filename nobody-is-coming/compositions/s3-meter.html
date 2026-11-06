@@ -72,7 +72,7 @@
     }
   </style>
   <div id="root" data-composition-id="s3" data-width="1080" data-height="1920">
-    <div id="s3-view">
+    <div id="s3-dolly" style="position:absolute;inset:0"><div id="s3-view">
       <div id="s3-cam">
         <div id="s3-amb"></div>
 
@@ -122,6 +122,7 @@
           <div class="s3-sheen" id="s3-week-sh"></div>
         </div>
       </div>
+    </div>
     </div>
     <div id="s3-burst"></div>
     <div id="s3-dot"></div>
@@ -223,6 +224,21 @@
       tl.to("#s3-ring", { scale: 0.05, opacity: 0, duration: 0.5, ease: "power3.in" }, T(20.4));
       tl.to("#s3-cam", { rotationX: 0, rotationY: 0, y: 0, duration: 0.5, ease: "power2.inOut" }, T(20.35));
       tl.fromTo("#s3-dot", { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: "expo.out", immediateRender: false }, T(20.72));
+
+      // ---------- camera choreography (2D dolly over the 3D stage) ----------
+      const W = innerWidth, H = innerHeight, CC = [W / 2, H / 2];
+      const aim = (p, s, q, rot = 0) => ({ x: q[0] - CC[0] - s * (p[0] - CC[0]), y: q[1] - CC[1] - s * (p[1] - CC[1]), scale: s, rotation: rot });
+      const RING = LAND ? [634, 560] : [540, 760], TOAST = LAND ? [1460, 264] : [540, 300];
+      const DL = "#s3-dolly";
+      tl.fromTo(DL, { x: 0, y: 0, scale: 1, rotation: 0 }, { x: 0, y: 0, scale: 1, rotation: 0, duration: 0.01 }, 0);
+      tl.to(DL, { ...aim(RING, 1.16, LAND ? [760, 540] : [540, 740]), duration: 1.4, ease: "power2.inOut" }, T(12.9));          // push in as it fills
+      tl.to(DL, { scale: 1.2, duration: 0.07, ease: "power2.out" }, T(14.3)).to(DL, { scale: 1.16, duration: 0.5, ease: "expo.out" }, T(14.37)); // peak punch
+      tl.to(DL, { ...aim(TOAST, 1.1, LAND ? [1200, 420] : [540, 560]), duration: 0.42, ease: "power3.inOut" }, T(15.72));   // whip to the snooze
+      tl.to(DL, { ...aim(RING, 1.08, LAND ? [760, 580] : [540, 820]), duration: 0.5, ease: "power3.inOut" }, T(16.35));    // whip back: the drain
+      tl.to(DL, { ...aim(RING, 0.97, LAND ? [700, 560] : [540, 780], -2.2), duration: 3.0, ease: "sine.inOut" }, T(16.9)); // pull out, a dutch tilt as it fades
+      tl.to(DL, { x: 0, y: 0, scale: 1, rotation: 0, duration: 0.45, ease: "power2.inOut" }, T(19.9));
+      tl.fromTo("#s3-week", { filter: "blur(0px)" }, { filter: "blur(4px)", opacity: 0.4, duration: 0.8, ease: "power2.inOut", immediateRender: false }, T(13.0));
+      tl.to("#s3-week", { filter: "blur(0px)", opacity: 1, duration: 0.4, ease: "power2.out" }, T(16.4));
 
       window.__timelines["s3"] = tl;
     })();
