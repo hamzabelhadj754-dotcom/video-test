@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Kinetic 20s — style frames</title>
+<style>
+  @font-face { font-family: "Anton"; src: url("../assets/fonts/Anton-Regular.woff2") format("woff2"); }
+  @font-face { font-family: "Inter"; src: url("../assets/fonts/Inter-Variable.woff2") format("woff2"); font-weight: 100 900; }
+  @font-face { font-family: "Instrument Serif"; src: url("../assets/fonts/InstrumentSerif-Italic.woff2") format("woff2"); font-style: italic; }
+  :root { --bg:#0A0A0C; --grid:rgba(255,255,255,.035); --swoosh:#1C1C21; --text:#F4F4F6; --muted:#8A8A93; --accent:#FF3B30; --accent-2:#FF9F1C; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #000; }
+  .frame { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: var(--bg); margin-bottom: 40px; font-family: "Inter", sans-serif; color: var(--text); }
+  .grid { position: absolute; inset: 0; background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px); background-size: 48px 48px; }
+  .light { position: absolute; width: 1200px; height: 1200px; margin: -600px 0 0 -600px; border-radius: 50%; background: radial-gradient(circle, rgba(255,255,255,.07), transparent 62%); }
+  .vig { position: absolute; inset: 0; background: radial-gradient(ellipse 80% 62% at 50% 46%, transparent 50%, rgba(0,0,0,.55) 100%); }
+  .grain { position: absolute; inset: -40px; opacity: .03; mix-blend-mode: screen;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' seed='7' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); }
+  svg.deco { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: visible; }
+  .lines { position: absolute; left: 70px; right: 70px; text-align: center; }
+  .l { display: block; white-space: nowrap; line-height: 1.05; }
+  .p { font: 600 62px "Inter"; letter-spacing: -0.02em; }
+  .m { color: var(--muted); }
+  .a { font-family: "Anton"; font-size: 165px; color: var(--accent); text-transform: uppercase; letter-spacing: .005em; text-shadow: 0 0 40px rgba(255,59,48,.35); vertical-align: -0.08em; }
+  .i { font: italic 400 88px "Instrument Serif"; letter-spacing: -0.01em; }
+  .obj { position: absolute; filter: drop-shadow(0 30px 40px rgba(0,0,0,.6)) drop-shadow(0 0 2px rgba(255,255,255,.25)); }
+  .shadow { position: absolute; height: 46px; border-radius: 50%; background: radial-gradient(ellipse at center, rgba(0,0,0,.75), transparent 70%); }
+  .box { display: inline-block; padding: 14px 22px; border: 3px dashed rgba(244,244,246,.55); border-radius: 10px; font: 700 30px "Inter"; letter-spacing: .12em; color: var(--text); }
+  .box.on { border-color: var(--accent); color: #fff; background: rgba(255,59,48,.9); box-shadow: 0 0 30px rgba(255,59,48,.5); }
+  .count { font: 800 230px/1 "Inter"; font-variant-numeric: tabular-nums; color: var(--accent-2); text-shadow: 0 0 40px rgba(255,159,28,.6), 0 0 90px rgba(255,159,28,.35); letter-spacing: -0.04em; }
+  .tag { position: absolute; left: 24px; top: 24px; font: 600 20px "Inter"; color: rgba(255,255,255,.35); }
+  body.clean .tag { display: none; }
+</style>
+</head>
+<body>
+<!-- deco template: swoosh band + two 4-point stars -->
+<template id="deco"><svg class="deco" viewBox="0 0 1080 1920">
+  <defs><linearGradient id="SG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3a3a44"/><stop offset="1" stop-color="#1a1a20"/></linearGradient>
+  <filter id="sb"><feGaussianBlur stdDeviation="6"/></filter></defs>
+  <path d="M-200 SWY C 300 SWY2, 700 SWY3, 1300 SWY4" stroke="#1C1C21" stroke-width="170" fill="none" stroke-linecap="round"/>
+  <path d="M-200 SWYH C 300 SWY2H, 700 SWY3H, 1300 SWY4H" stroke="rgba(255,255,255,.07)" stroke-width="3" fill="none"/>
+  <path transform="translate(ST1X ST1Y) scale(1.6)" d="M0 -60 C 8 -14 14 -8 60 0 C 14 8 8 14 0 60 C -8 14 -14 8 -60 0 C -14 -8 -8 -14 0 -60 Z" fill="url(#SG)"/>
+  <path transform="translate(ST2X ST2Y) scale(2.6)" d="M0 -60 C 8 -14 14 -8 60 0 C 14 8 8 14 0 60 C -8 14 -14 8 -60 0 C -14 -8 -8 -14 0 -60 Z" fill="url(#SG)" filter="url(#sb)" opacity=".8"/>
+</svg></template>
+
+<!-- 1 -->
+<section class="frame" id="f1" data-sw="1500,1250,1700,1350" data-st="930,330,120,1600">
+  <div class="grid"></div><div class="light" style="left:540px; top:1120px"></div>
+  <div class="lines" style="top:430px"><span class="l p">Your muscles don't</span><span class="l"><span class="a">grow</span> <span class="p">in the gym.</span></span></div>
+  <div class="shadow" style="left:300px; width:480px; top:1430px"></div>
+  <img class="obj" src="../assets/objects/dumbbell.png" style="left:200px; top:820px; width:680px; transform: rotate(8deg)" />
+  <div class="vig"></div><div class="grain"></div><div class="tag">01 · 0:02.1</div>
+</section>
+
+<!-- 2 -->
+<section class="frame" id="f2" data-sw="1650,1450,1550,1300" data-st="140,300,980,1500">
+  <div class="grid"></div><div class="light" style="left:540px; top:1100px"></div>
+  <div class="lines" style="top:430px"><span class="l p">Training just</span><span class="l"><span class="a">breaks</span> <span class="p">them down.</span></span></div>
+  <div class="shadow" style="left:330px; width:420px; top:1420px"></div>
+  <img class="obj" src="../assets/objects/biceps@3x.png" style="left:270px; top:850px; width:540px" />
+  <svg class="deco"><path d="M380 960 L470 1040 L440 1080 L540 1140 L510 1190 L640 1260 L620 1300 L720 1360" fill="none" stroke="#FF3B30" stroke-width="9" stroke-linejoin="round" stroke-linecap="round" style="filter: drop-shadow(0 0 10px rgba(255,59,48,.8))"/></svg>
+  <div class="vig"></div><div class="grain"></div><div class="tag">02 · 0:04.9</div>
+</section>
+
+<!-- 3 -->
+<section class="frame" id="f3" data-sw="1550,1300,1600,1400" data-st="960,520,110,1450">
+  <div class="grid"></div><div class="light" style="left:540px; top:980px"></div>
+  <div class="lines" style="top:330px"><span class="l p">They grow while you</span><span class="l"><span class="i">recover,</span> <span class="p m">for up to</span></span></div>
+  <img class="obj" src="../assets/objects/alarm@3x.png" style="left:380px; top:700px; width:320px; transform: rotate(-6deg)" />
+  <div class="lines" style="top:1060px"><span class="l count">48</span><span class="l p" style="color:#FF9F1C; letter-spacing:.3em; padding-left:.3em; font-weight:800; margin-top:8px">HOURS</span></div>
+  <div class="vig"></div><div class="grain"></div><div class="tag">03 · 0:08.2</div>
+</section>
+
+<!-- 4 -->
+<section class="frame" id="f4" data-sw="1500,1350,1550,1250" data-st="150,420,950,1560">
+  <div class="grid"></div><div class="light" style="left:540px; top:1050px"></div>
+  <div class="lines" style="top:400px"><span class="l p">Three things build</span><span class="l"><span class="a">muscle:</span></span></div>
+  <img class="obj" src="../assets/objects/dumbbell.png" style="left:60px; top:880px; width:320px; transform: rotate(-8deg)" />
+  <img class="obj" src="../assets/objects/meat@3x.png" style="left:410px; top:900px; width:260px" />
+  <img class="obj" src="../assets/objects/sleeping@3x.png" style="left:720px; top:900px; width:260px" />
+  <div style="position:absolute; left:40px; right:40px; top:1230px; display:flex; justify-content:space-around">
+    <span class="box">OVERLOAD</span><span class="box on">PROTEIN</span><span class="box">SLEEP</span></div>
+  <div class="vig"></div><div class="grain"></div><div class="tag">04 · 0:12.0</div>
+</section>
+
+<!-- 5 -->
+<section class="frame" id="f5" data-sw="1450,1250,1650,1380" data-st="960,800,140,1500">
+  <div class="grid"></div><div class="light" style="left:540px; top:1150px"></div>
+  <div class="lines" style="top:330px"><span class="l"><span class="p">Not more</span> <span class="a" style="color:#8A8A93; text-shadow:none; font-size:140px; position:relative">hours.<span style="position:absolute; left:-10px; right:-10px; top:52%; height:10px; background:#FF3B30; border-radius:5px; transform:rotate(-4deg)"></span></span></span>
+    <span class="l"><span class="p">Smarter</span> <span class="a" style="font-size:170px">recovery.</span></span></div>
+  <div class="shadow" style="left:360px; width:360px; top:1420px"></div>
+  <img class="obj" src="../assets/objects/sunglasses@3x.png" style="left:310px; top:930px; width:460px; transform: rotate(-4deg)" />
+  <div class="vig"></div><div class="grain"></div><div class="tag">05 · 0:15.8</div>
+</section>
+
+<!-- 6 -->
+<section class="frame" id="f6" data-sw="1600,1400,1550,1300" data-st="160,360,940,1450">
+  <div class="grid"></div><div class="light" style="left:540px; top:1080px"></div>
+  <div style="position:absolute; left:540px; top:1150px; width:700px; height:700px; margin:-350px 0 0 -350px; border-radius:50%; background: radial-gradient(circle, rgba(255,159,28,.18), transparent 65%)"></div>
+  <div class="lines" style="top:400px"><span class="l p">Growth is built</span><span class="l"><span class="p">while you</span> <span class="a" style="font-size:170px; position:relative">rest.<span style="position:absolute; left:4px; right:28px; bottom:6px; height:12px; background:#FF3B30; border-radius:6px; box-shadow:0 0 22px rgba(255,59,48,.6)"></span></span></span></div>
+  <img class="obj" src="../assets/objects/trophy@3x.png" style="left:330px; top:850px; width:420px" />
+  <div style="position:absolute; left:0; right:0; top:1470px; text-align:center; font:600 28px Inter; letter-spacing:.2em; color:#8A8A93">@YOURHANDLE</div>
+  <div class="vig"></div><div class="grain"></div><div class="tag">06 · 0:19.0</div>
+</section>
+
+<script>
+const tpl = document.getElementById("deco").innerHTML;
+document.querySelectorAll(".frame").forEach((f) => {
+  const [a, b, c, d] = f.dataset.sw.split(",").map(Number), [x1, y1, x2, y2] = f.dataset.st.split(",").map(Number);
+  const h = tpl.replace("SWY ", a + " ").replace("SWY2,", b + ",").replace("SWY3,", c + ",").replace("SWY4\"", d + "\"")
+    .replace("SWYH ", (a - 85) + " ").replace("SWY2H,", (b - 85) + ",").replace("SWY3H,", (c - 85) + ",").replace("SWY4H\"", (d - 85) + "\"")
+    .replace("ST1X ST1Y", x1 + " " + y1).replace("ST2X ST2Y", x2 + " " + y2);
+  f.insertAdjacentHTML("afterbegin", h); f.querySelector(".grid").before(f.querySelector("svg.deco"));
+});
+</script>
+</body>
+</html>

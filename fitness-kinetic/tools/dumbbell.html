@@ -1,0 +1,31 @@
+<!doctype html><html><head><meta charset="utf-8"><style>html,body{margin:0;background:transparent}</style>
+<script src="../assets/vendor/three/three.min.js"></script><script src="../assets/vendor/three/RGBELoader.js"></script></head>
+<body><canvas id="c" width="1400" height="1000"></canvas><script>
+/* Glossy black hex dumbbell, rendered once to a transparent PNG (Three.js r147, Poly Haven CC0 HDRI). */
+window.go = async () => {
+  const T = THREE, W = 1400, H = 1000, cv = document.getElementById('c');
+  const r = new T.WebGLRenderer({ canvas: cv, antialias: true, alpha: true, preserveDrawingBuffer: true });
+  r.setSize(W, H, false); r.outputEncoding = T.sRGBEncoding; r.toneMapping = T.ACESFilmicToneMapping; r.physicallyCorrectLights = true; r.setClearColor(0, 0);
+  const scene = new T.Scene(), cam = new T.PerspectiveCamera(24, W / H, 0.1, 100);
+  const pm = new T.PMREMGenerator(r);
+  scene.environment = await new Promise((res) => new T.RGBELoader().load('../assets/hdri/studio_small_09_1k.hdr', (t) => res(pm.fromEquirectangular(t).texture)));
+  const key = new T.DirectionalLight(0xfff3e6, 1.6); key.position.set(-3, 4, 4); scene.add(key);
+  const rim = new T.DirectionalLight(0xdfe8ff, 2.6); rim.position.set(3, 2.5, -4); scene.add(rim);
+  const rim2 = new T.DirectionalLight(0xff8a80, 1.2); rim2.position.set(-4, -1, -3); scene.add(rim2);
+  const rubber = new T.MeshPhysicalMaterial({ color: '#060607', roughness: 0.5, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.08, envMapIntensity: 0.28 });
+  const chrome = new T.MeshStandardMaterial({ color: '#d9dce2', roughness: 0.22, metalness: 1, envMapIntensity: 0.7 });
+  const steel = new T.MeshStandardMaterial({ color: '#9aa0a8', roughness: 0.42, metalness: 1, envMapIntensity: 0.9 });
+  const g = new T.Group();
+  const handle = new T.Mesh(new T.CylinderGeometry(0.16, 0.16, 2.2, 48), steel); handle.rotation.z = Math.PI / 2; g.add(handle);
+  // knurl rings on the grip
+  for (let i = -6; i <= 6; i++) { const k = new T.Mesh(new T.TorusGeometry(0.162, 0.008, 8, 48), chrome); k.rotation.y = Math.PI / 2; k.position.x = i * 0.08; g.add(k); }
+  [-1, 1].forEach((s) => {
+    const head = new T.Mesh(new T.CylinderGeometry(0.62, 0.62, 0.78, 6, 1), rubber); head.rotation.z = Math.PI / 2; head.position.x = s * 1.42; g.add(head);
+    const cap = new T.Mesh(new T.CylinderGeometry(0.34, 0.34, 0.06, 48), chrome); cap.rotation.z = Math.PI / 2; cap.position.x = s * 1.84; g.add(cap);
+    const collar = new T.Mesh(new T.CylinderGeometry(0.24, 0.24, 0.16, 48), chrome); collar.rotation.z = Math.PI / 2; collar.position.x = s * 0.98; g.add(collar);
+  });
+  g.rotation.set(0.42, -0.62, 0.16); scene.add(g);
+  cam.position.set(0, 0.2, 7.6); cam.lookAt(0, 0, 0);
+  r.render(scene, cam); return true;
+};
+</script></body></html>

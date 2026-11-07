@@ -1,0 +1,9 @@
+refs/*.mp4
+refs/sheet_*.png
+refs/frames/
+.hyperframes/artifacts/
+renders/work-*
+renders/.*transaction*
+renders/*.log
+renders/*_master.mp4
+_shot-*.html
