@@ -561,15 +561,14 @@
   },
   "snapshots": {
     "latest": {
-      "revision": "67372c83-6c8c-41cf-980d-4114bc12e94c",
-      "id": "63ffcb16-1c7c-4a83-adc6-66a748ea3d8a-11"
+      "revision": null,
+      "id": "b5cac218-2ac0-482c-9046-677cf6f8d554-1"
     },
     "revisions": {
       "67372c83-6c8c-41cf-980d-4114bc12e94c": [
         {
           "scope": "full",
           "id": "63ffcb16-1c7c-4a83-adc6-66a748ea3d8a-0",
-          "image": "/home/user/video-test/muscle-growth/.hyperframes/artifacts/snapshots/83e0e76d-100c-409b-bb1a-2c4d477e6f11/frame-00-at-3.6s.png",
           "time": 3.6,
           "metadata": {
             "width": 1080,
@@ -584,12 +583,13 @@
           "revision": "67372c83-6c8c-41cf-980d-4114bc12e94c",
           "inputFingerprint": "1deec2e67a44bdaf1c253240ed507530389b951a6ccba8cca843395940d95c57",
           "inputScope": "local-project-files",
-          "attribution": "recorded-revision"
+          "attribution": "recorded-revision",
+          "status": "cleaned",
+          "cleanedAfterRender": "e2342ccc-5688-47f9-8483-ea64aa07ffe4"
         },
         {
           "scope": "full",
           "id": "63ffcb16-1c7c-4a83-adc6-66a748ea3d8a-1",
-          "image": "/home/user/video-test/muscle-growth/.hyperframes/artifacts/snapshots/83e0e76d-100c-409b-bb1a-2c4d477e6f11/frame-01-at-3.9s.png",
           "time": 3.9,
           "metadata": {
             "width": 1080,
@@ -604,12 +604,13 @@
           "revision": "67372c83-6c8c-41cf-980d-4114bc12e94c",
           "inputFingerprint": "1deec2e67a44bdaf1c253240ed507530389b951a6ccba8cca843395940d95c57",
           "inputScope": "local-project-files",
-          "attribution": "recorded-revision"
+          "attribution": "recorded-revision",
+          "status": "cleaned",
+          "cleanedAfterRender": "e2342ccc-5688-47f9-8483-ea64aa07ffe4"
         },
         {
           "scope": "full",
           "id": "63ffcb16-1c7c-4a83-adc6-66a748ea3d8a-2",
-          "image": "/home/user/video-test/muscle-growth/.hyperframes/artifacts/snapshots/83e0e76d-100c-409b-bb1a-2c4d477e6f11/frame-02-at-4.4s.png",
           "time": 4.4,
           "metadata": {
             "width": 1080,
@@ -624,12 +625,13 @@
           "revision": "67372c83-6c8c-41cf-980d-4114bc12e94c",
           "inputFingerprint": "1deec2e67a44bdaf1c253240ed507530389b951a6ccba8cca843395940d95c57",
           "inputScope": "local-project-files",
-          "attribution": "recorded-revision"
+          "attribution": "recorded-revision",
+          "status": "cleaned",
+          "cleanedAfterRender": "e2342ccc-5688-47f9-8483-ea64aa07ffe4"
         },
         {
           "scope": "full",
           "id": "63ffcb16-1c7c-4a83-adc6-66a748ea3d8a-3",
-          "image": "/home/user/video-test/muscle-growth/.hyperframes/artifacts/snapshots/83e0e76d-100c-409b-bb1a-2c4d477e6f11/frame-03-at-5.2s.png",
           "time": 5.2,
           "metadata": {
             "width": 1080,
@@ -644,12 +646,13 @@
           "revision": "67372c83-6c8c-41cf-980d-4114bc12e94c",
           "inputFingerprint": "1deec2e67a44bdaf1c253240ed507530389b951a6ccba8cca843395940d95c57",
           "inputScope": "local-project-files",
-          "attribution": "recorded-revision"
+          "attribution": "recorded-revision",
+          "status": "cleaned",
+          "cleanedAfterRender": "e2342ccc-5688-47f9-8483-ea64aa07ffe4"
         },
         {
           "scope": "full",
           "id": "63ffcb16-1c7c-4a83-adc6-66a748ea3d8a-4",
-          "image": "/home/user/video-test/muscle-growth/.hyperframes/artifacts/snapshots/83e0e76d-100c-409b-bb1a-2c4d477e6f11/frame-04-at-6.4s.png",
           "time": 6.4,
           "metadata": {
             "width": 1080,
@@ -664,12 +667,13 @@
           "revision": "67372c83-6c8c-41cf-980d-4114bc12e94c",
           "inputFingerprint": "1deec2e67a44bdaf1c253240ed507530389b951a6ccba8cca843395940d95c57",
           "inputScope": "local-project-files",
-          "attribution": "recorded-revision"
+          "attribution": "recorded-revision",
+          "status": "cleaned",
+          "cleanedAfterRender": "e2342ccc-5688-47f9-8483-ea64aa07ffe4"
         },
         {
           "scope": "full",
           "id": "63ffcb16-1c7c-4a83-adc6-66a748ea3d8a-5",
-          "image": "/home/user/video-test/muscle-growth/.hyperframes/artifacts/snapshots/83e0e76d-100c-409b-bb1a-2c4d477e6f11/frame-05-at-7.8s.png",
           "time": 7.8,
           "metadata": {
             "width": 1080,
@@ -684,12 +688,13 @@
           "revision": "67372c83-6c8c-41cf-980d-4114bc12e94c",
           "inputFingerprint": "1deec2e67a44bdaf1c253240ed507530389b951a6ccba8cca843395940d95c57",
           "inputScope": "local-project-files",
-          "attribution": "recorded-revision"
+          "attribution": "recorded-revision",
+          "status": "cleaned",
+          "cleanedAfterRender": "e2342ccc-5688-47f9-8483-ea64aa07ffe4"
         },
         {
           "scope": "full",
           "id": "63ffcb16-1c7c-4a83-adc6-66a748ea3d8a-6",
-          "image": "/home/user/video-test/muscle-growth/.hyperframes/artifacts/snapshots/83e0e76d-100c-409b-bb1a-2c4d477e6f11/frame-06-at-8.7s.png",
           "time": 8.7,
           "metadata": {
             "width": 1080,
@@ -704,12 +709,13 @@
           "revision": "67372c83-6c8c-41cf-980d-4114bc12e94c",
           "inputFingerprint": "1deec2e67a44bdaf1c253240ed507530389b951a6ccba8cca843395940d95c57",
           "inputScope": "local-project-files",
-          "attribution": "recorded-revision"
+          "attribution": "recorded-revision",
+          "status": "cleaned",
+          "cleanedAfterRender": "e2342ccc-5688-47f9-8483-ea64aa07ffe4"
         },
         {
           "scope": "full",
           "id": "63ffcb16-1c7c-4a83-adc6-66a748ea3d8a-7",
-          "image": "/home/user/video-test/muscle-growth/.hyperframes/artifacts/snapshots/83e0e76d-100c-409b-bb1a-2c4d477e6f11/frame-07-at-10.2s.png",
           "time": 10.2,
           "metadata": {
             "width": 1080,
@@ -724,12 +730,13 @@
           "revision": "67372c83-6c8c-41cf-980d-4114bc12e94c",
           "inputFingerprint": "1deec2e67a44bdaf1c253240ed507530389b951a6ccba8cca843395940d95c57",
           "inputScope": "local-project-files",
-          "attribution": "recorded-revision"
+          "attribution": "recorded-revision",
+          "status": "cleaned",
+          "cleanedAfterRender": "e2342ccc-5688-47f9-8483-ea64aa07ffe4"
         },
         {
           "scope": "full",
           "id": "63ffcb16-1c7c-4a83-adc6-66a748ea3d8a-8",
-          "image": "/home/user/video-test/muscle-growth/.hyperframes/artifacts/snapshots/83e0e76d-100c-409b-bb1a-2c4d477e6f11/frame-08-at-11.3s.png",
           "time": 11.3,
           "metadata": {
             "width": 1080,
@@ -744,12 +751,13 @@
           "revision": "67372c83-6c8c-41cf-980d-4114bc12e94c",
           "inputFingerprint": "1deec2e67a44bdaf1c253240ed507530389b951a6ccba8cca843395940d95c57",
           "inputScope": "local-project-files",
-          "attribution": "recorded-revision"
+          "attribution": "recorded-revision",
+          "status": "cleaned",
+          "cleanedAfterRender": "e2342ccc-5688-47f9-8483-ea64aa07ffe4"
         },
         {
           "scope": "full",
           "id": "63ffcb16-1c7c-4a83-adc6-66a748ea3d8a-9",
-          "image": "/home/user/video-test/muscle-growth/.hyperframes/artifacts/snapshots/83e0e76d-100c-409b-bb1a-2c4d477e6f11/frame-09-at-11.8s.png",
           "time": 11.8,
           "metadata": {
             "width": 1080,
@@ -764,12 +772,13 @@
           "revision": "67372c83-6c8c-41cf-980d-4114bc12e94c",
           "inputFingerprint": "1deec2e67a44bdaf1c253240ed507530389b951a6ccba8cca843395940d95c57",
           "inputScope": "local-project-files",
-          "attribution": "recorded-revision"
+          "attribution": "recorded-revision",
+          "status": "cleaned",
+          "cleanedAfterRender": "e2342ccc-5688-47f9-8483-ea64aa07ffe4"
         },
         {
           "scope": "full",
           "id": "63ffcb16-1c7c-4a83-adc6-66a748ea3d8a-10",
-          "image": "/home/user/video-test/muscle-growth/.hyperframes/artifacts/snapshots/83e0e76d-100c-409b-bb1a-2c4d477e6f11/frame-10-at-12.05s.png",
           "time": 12.05,
           "metadata": {
             "width": 1080,
@@ -784,12 +793,13 @@
           "revision": "67372c83-6c8c-41cf-980d-4114bc12e94c",
           "inputFingerprint": "1deec2e67a44bdaf1c253240ed507530389b951a6ccba8cca843395940d95c57",
           "inputScope": "local-project-files",
-          "attribution": "recorded-revision"
+          "attribution": "recorded-revision",
+          "status": "cleaned",
+          "cleanedAfterRender": "e2342ccc-5688-47f9-8483-ea64aa07ffe4"
         },
         {
           "scope": "full",
           "id": "63ffcb16-1c7c-4a83-adc6-66a748ea3d8a-11",
-          "image": "/home/user/video-test/muscle-growth/.hyperframes/artifacts/snapshots/83e0e76d-100c-409b-bb1a-2c4d477e6f11/frame-11-at-61.75s.png",
           "time": 61.75,
           "metadata": {
             "width": 1080,
@@ -804,7 +814,9 @@
           "revision": "67372c83-6c8c-41cf-980d-4114bc12e94c",
           "inputFingerprint": "1deec2e67a44bdaf1c253240ed507530389b951a6ccba8cca843395940d95c57",
           "inputScope": "local-project-files",
-          "attribution": "recorded-revision"
+          "attribution": "recorded-revision",
+          "status": "cleaned",
+          "cleanedAfterRender": "e2342ccc-5688-47f9-8483-ea64aa07ffe4"
         }
       ]
     },
@@ -1030,5 +1042,18 @@
         "attribution": "unversioned"
       }
     ]
-  }
+  },
+  "renders": {
+    "latest": {
+      "id": "e2342ccc-5688-47f9-8483-ea64aa07ffe4",
+      "completedAt": 1794010074802,
+      "output": "/home/user/video-test/muscle-growth/renders/fitness_9x16.mp4",
+      "status": "completed",
+      "revision": "ed4e3836-3105-4dc9-b573-941dbbda2b9a"
+    },
+    "retainedRevisions": [
+      "ed4e3836-3105-4dc9-b573-941dbbda2b9a"
+    ]
+  },
+  "pendingArtifactCleanup": []
 }
