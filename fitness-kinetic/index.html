@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="en" data-composition-variables='[{"id":"handle","type":"string","label":"End-card handle","default":"@YOURHANDLE"}]'>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+<style>
+  @font-face { font-family: "Anton"; src: url("assets/fonts/Anton-Regular.woff2") format("woff2"); }
+  @font-face { font-family: "Inter"; src: url("assets/fonts/Inter-Variable.woff2") format("woff2"); font-weight: 100 900; }
+  @font-face { font-family: "Instrument Serif"; src: url("assets/fonts/InstrumentSerif-Italic.woff2") format("woff2"); font-style: italic; }
+  :root { --bg:#0A0A0C; --grid:rgba(255,255,255,.035); --swoosh:#1C1C21; --text:#F4F4F6; --muted:#8A8A93; --accent:#FF3B30; --accent-2:#FF9F1C;
+          --violet:#7C5CFF; --pink:#FF2D6F; --sky:#2E9BFF; --gold:#FFC23D; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; background: var(--bg); }
+  #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: var(--bg); font-family: "Inter", sans-serif; color: var(--text); }
+  .full { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+  #world { overflow: hidden; }
+  .grid { position: absolute; inset: -96px; background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px); background-size: 48px 48px; }
+  .glow { position: absolute; width: 1500px; height: 1500px; left: -210px; top: 400px; border-radius: 50%; opacity: 0; }
+  svg { overflow: visible; }
+  .sc { visibility: hidden; }
+  .lines { position: absolute; left: 60px; right: 60px; text-align: center; }
+  .l { display: block; white-space: nowrap; line-height: 1.05; font: 600 62px "Inter"; letter-spacing: -0.02em; }
+  .w { display: inline-block; position: relative; will-change: transform, opacity, filter; }
+  .p { font: 600 62px "Inter"; letter-spacing: -0.02em; }
+  .m { color: var(--muted); }
+  .a { font-family: "Anton"; font-size: 165px; color: var(--accent); text-transform: uppercase; letter-spacing: .005em; text-shadow: 0 0 40px rgba(255,59,48,.35); vertical-align: -0.08em; }
+  .a .ghost { position: absolute; left: 0; top: 0; color: inherit; opacity: 0; pointer-events: none; text-shadow: none; }
+  .i { font: italic 400 88px "Instrument Serif"; letter-spacing: -0.01em; }
+  .spk { position: absolute; width: 46px; height: 46px; margin: -23px 0 0 -23px; }
+  .obj { position: absolute; }
+  .obj .fl { position: relative; width: 100%; }
+  .obj img { display: block; width: 100%; }
+  .shadow { position: absolute; height: 46px; border-radius: 50%; background: radial-gradient(ellipse at center, rgba(0,0,0,.8), transparent 70%); }
+  .box { display: inline-block; padding: 14px 22px; border: 3px dashed rgba(244,244,246,.55); border-radius: 10px; font: 700 30px "Inter"; letter-spacing: .12em; color: var(--text); position: relative; }
+  .box .fill { position: absolute; inset: -3px; border-radius: 10px; background: var(--accent); box-shadow: 0 0 34px rgba(255,59,48,.65); opacity: 0; }
+  .box span { position: relative; }
+  .count { font: 800 230px/1 "Inter"; font-variant-numeric: tabular-nums; color: var(--accent-2); letter-spacing: -0.04em; display: inline-flex; filter: drop-shadow(0 0 22px rgba(255,159,28,.55)) drop-shadow(0 0 60px rgba(255,159,28,.3)); }
+  .dg { display: inline-block; height: 1em; overflow: hidden; }
+  .dg .strip { display: block; }
+  .dg .strip b { display: block; height: 1em; font-weight: 800; }
+  .vig { background: radial-gradient(ellipse 80% 62% at 50% 46%, transparent 50%, rgba(0,0,0,.55) 100%); pointer-events: none; }
+  .grain { position: absolute; inset: -40px; opacity: .03; mix-blend-mode: screen; pointer-events: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' seed='7' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); }
+  .disc { position: absolute; border-radius: 50%; }
+  #glint { position: absolute; left: 0; top: 0; width: 100%; height: 100%;
+    -webkit-mask: url("assets/objects/sunglasses@3x.png") center / 100% 100% no-repeat; mask: url("assets/objects/sunglasses@3x.png") center / 100% 100% no-repeat;
+    background: linear-gradient(110deg, transparent 42%, rgba(255,255,255,.85) 50%, transparent 58%); background-size: 300% 100%; background-position: 100% 0; }
+  #handle { position: absolute; left: 0; right: 0; top: 1470px; text-align: center; font: 600 28px "Inter"; letter-spacing: .2em; color: var(--muted); text-transform: uppercase; }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="20" data-width="1080" data-height="1920" data-fps="30">
+
+  <!-- the camera: shake, punch and per-transition zooms act on everything below -->
+  <div id="world" class="full">
+    <!-- background: grid, coloured scene light, swoosh bands, stars (parallax) -->
+    <div id="bg" class="full">
+      <div class="grid" id="grid"></div>
+      <div class="glow" id="g-red"    style="background: radial-gradient(circle, rgba(255,59,48,.20), transparent 62%)"></div>
+      <div class="glow" id="g-pink"   style="background: radial-gradient(circle, rgba(255,45,111,.20), transparent 62%)"></div>
+      <div class="glow" id="g-orange" style="background: radial-gradient(circle, rgba(255,159,28,.22), transparent 62%)"></div>
+      <div class="glow" id="g-violet" style="background: radial-gradient(circle, rgba(124,92,255,.24), transparent 62%)"></div>
+      <div class="glow" id="g-sky"    style="background: radial-gradient(circle, rgba(46,155,255,.20), transparent 62%)"></div>
+      <div class="glow" id="g-gold"   style="background: radial-gradient(circle, rgba(255,194,61,.26), transparent 60%)"></div>
+      <div class="glow" style="opacity:1; background: radial-gradient(circle, rgba(255,255,255,.06), transparent 55%)"></div>
+      <svg class="full" viewBox="0 0 1080 1920">
+        <defs>
+          <linearGradient id="SG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4a4a58"/><stop offset="1" stop-color="#1a1a20"/></linearGradient>
+          <linearGradient id="SGc" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8f7bff"/><stop offset="1" stop-color="#2a1f5a"/></linearGradient>
+          <linearGradient id="band2" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7C5CFF" stop-opacity="0"/><stop offset=".35" stop-color="#7C5CFF" stop-opacity=".22"/><stop offset=".7" stop-color="#FF3B30" stop-opacity=".18"/><stop offset="1" stop-color="#FF9F1C" stop-opacity="0"/></linearGradient>
+          <filter id="sb"><feGaussianBlur stdDeviation="7"/></filter>
+        </defs>
+        <g id="bandA">
+          <path d="M-300 1520 C 250 1300, 700 1720, 1400 1400" stroke="#1C1C21" stroke-width="170" fill="none" stroke-linecap="round"/>
+          <path d="M-300 1435 C 250 1215, 700 1635, 1400 1315" stroke="rgba(255,255,255,.07)" stroke-width="3" fill="none"/>
+        </g>
+        <g id="bandB"><path d="M-300 640 C 300 520, 760 820, 1400 600" stroke="url(#band2)" stroke-width="14" fill="none" stroke-linecap="round"/></g>
+        <g id="star1"><path transform="scale(1.6)" d="M0 -60 C 8 -14 14 -8 60 0 C 14 8 8 14 0 60 C -8 14 -14 8 -60 0 C -14 -8 -8 -14 0 -60 Z" fill="url(#SG)"/></g>
+        <g id="star3"><path transform="scale(.55)" d="M0 -60 C 8 -14 14 -8 60 0 C 14 8 8 14 0 60 C -8 14 -14 8 -60 0 C -14 -8 -8 -14 0 -60 Z" fill="url(#SGc)"/></g>
+        <g id="star2"><path transform="scale(2.6)" d="M0 -60 C 8 -14 14 -8 60 0 C 14 8 8 14 0 60 C -8 14 -14 8 -60 0 C -14 -8 -8 -14 0 -60 Z" fill="url(#SG)" filter="url(#sb)" opacity=".8"/></g>
+      </svg>
+    </div>
+
+    <!-- 1 · grow -->
+    <section class="sc full" id="s1"><div class="dr full">
+      <div class="lines" style="top:430px"><span class="l"><span class="w p" data-t="0.51">Your</span> <span class="w p" data-t="0.73">muscles</span> <span class="w p" data-t="1.22">don't</span></span><span class="l"><span class="w a" data-t="1.57">grow</span> <span class="w p" data-t="1.85">in</span> <span class="w p" data-t="1.99">the</span> <span class="w p" data-t="2.20">gym.</span></span></div>
+      <div class="shadow" id="db-sh" style="left:300px; width:480px; top:1430px"></div>
+      <div class="obj" id="db" style="left:200px; top:820px; width:680px"><div class="fl"><img src="assets/objects/dumbbell.png" alt="" style="filter: drop-shadow(0 30px 40px rgba(0,0,0,.6)) drop-shadow(0 0 2px rgba(255,255,255,.25)) drop-shadow(0 0 26px rgba(255,59,48,.18))" /></div></div>
+    </div></section>
+
+    <!-- 2 · breaks -->
+    <section class="sc full" id="s2"><div class="dr full">
+      <div class="lines" id="s2-lines" style="top:430px"><span class="l"><span class="w p" data-t="3.30">Training</span> <span class="w p" data-t="3.72">just</span></span><span class="l"><span class="w a" data-t="4.01">breaks</span> <span class="w p" data-t="4.31">them</span> <span class="w p" data-t="4.48">down.</span></span></div>
+      <div class="shadow" id="bi-sh" style="left:330px; width:420px; top:1420px"></div>
+      <div class="obj" id="bi" style="left:270px; top:850px; width:540px"><div class="fl"><img src="assets/objects/biceps@3x.png" alt="" style="filter: drop-shadow(0 30px 40px rgba(0,0,0,.6)) drop-shadow(0 0 2px rgba(255,255,255,.3)) drop-shadow(0 0 30px rgba(255,45,111,.25))" />
+        <svg class="full" viewBox="0 0 540 540" style="width:540px; height:540px"><path id="crack" d="M110 110 L200 190 L170 230 L270 290 L240 340 L370 410 L350 450 L450 510" fill="none" stroke="#FF3B30" stroke-width="10" stroke-linejoin="round" stroke-linecap="round" pathLength="1" stroke-dasharray="1 1.2" stroke-dashoffset="1.1" style="filter: drop-shadow(0 0 10px rgba(255,59,48,.9)) drop-shadow(0 0 22px rgba(255,159,28,.5))"/></svg>
+      </div></div>
+    </div></section>
+
+    <!-- 3 · recover / 48 hours -->
+    <section class="sc full" id="s3"><div class="dr full">
+      <div class="lines" style="top:330px"><span class="l"><span class="w p" data-t="5.74">They</span> <span class="w p" data-t="5.98">grow</span> <span class="w p" data-t="6.26">while</span> <span class="w p" data-t="6.62">you</span></span><span class="l"><span class="w i" data-t="6.83">recover,</span> <span class="w p m" data-t="7.43">for</span> <span class="w p m" data-t="7.60">up</span> <span class="w p m" data-t="7.76">to</span></span></div>
+      <div class="obj" id="al" style="left:380px; top:690px; width:320px"><div class="fl"><img src="assets/objects/alarm@3x.png" alt="" style="filter: drop-shadow(0 30px 40px rgba(0,0,0,.6)) drop-shadow(0 0 2px rgba(255,255,255,.3)) drop-shadow(0 0 30px rgba(255,159,28,.3))" /></div></div>
+      <div class="lines" id="ctr" style="top:1060px">
+        <span class="l"><span class="count" id="count"><span class="dg"><span class="strip" id="tens"><b>0</b><b>1</b><b>2</b><b>3</b><b>4</b></span></span><span class="dg"><span class="strip" id="ones"></span></span></span></span>
+        <span class="l p" id="hrs" style="color:#FF9F1C; letter-spacing:.3em; padding-left:.3em; font-weight:800; margin-top:8px">HOURS</span>
+      </div>
+    </div></section>
+
+    <!-- 4 · three things -->
+    <section class="sc full" id="s4"><div class="dr full">
+      <div class="lines" style="top:400px"><span class="l"><span class="w p" data-t="9.75">Three</span> <span class="w p" data-t="10.08">things</span> <span class="w p" data-t="10.44">build</span></span><span class="l"><span class="w a" data-t="10.80">muscle:</span></span></div>
+      <div class="obj" id="o1" style="left:60px; top:880px; width:320px"><div class="fl"><img src="assets/objects/dumbbell.png" alt="" style="transform: rotate(-8deg); filter: drop-shadow(0 26px 30px rgba(0,0,0,.6)) drop-shadow(0 0 2px rgba(255,255,255,.25)) drop-shadow(0 0 22px rgba(255,59,48,.3))" /></div></div>
+      <div class="obj" id="o2" style="left:410px; top:900px; width:260px"><div class="fl"><img src="assets/objects/meat@3x.png" alt="" style="filter: drop-shadow(0 26px 30px rgba(0,0,0,.6)) drop-shadow(0 0 2px rgba(255,255,255,.3)) drop-shadow(0 0 22px rgba(255,159,28,.3))" /></div></div>
+      <div class="obj" id="o3" style="left:720px; top:900px; width:260px"><div class="fl"><img src="assets/objects/sleeping@3x.png" alt="" style="filter: drop-shadow(0 26px 30px rgba(0,0,0,.6)) drop-shadow(0 0 2px rgba(255,255,255,.3)) drop-shadow(0 0 22px rgba(124,92,255,.4))" /></div></div>
+      <div style="position:absolute; left:40px; right:40px; top:1230px; display:flex; justify-content:space-around">
+        <span class="box" id="b1" data-c="#FF3B30"><i class="fill"></i><span>OVERLOAD</span></span>
+        <span class="box" id="b2" data-c="#FF9F1C"><i class="fill"></i><span>PROTEIN</span></span>
+        <span class="box" id="b3" data-c="#8F7BFF"><i class="fill"></i><span>SLEEP</span></span>
+      </div>
+    </div></section>
+
+    <!-- 5 · not more hours -->
+    <section class="sc full" id="s5"><div class="dr full">
+      <div class="lines" style="top:330px"><span class="l"><span class="w p" data-t="13.71">Not</span> <span class="w p" data-t="13.93">more</span> <span class="w a" data-t="14.30" style="color:#8A8A93; text-shadow:none; font-size:140px">hours.<i id="strike" style="position:absolute; left:-10px; right:-10px; top:52%; height:10px; background:#FF3B30; border-radius:5px; box-shadow:0 0 16px rgba(255,59,48,.8)"></i></span></span><span class="l"><span class="w p" data-t="15.01">Smarter</span> <span class="w a" data-t="15.46" style="font-size:170px">recovery.</span></span></div>
+      <div class="shadow" id="sg-sh" style="left:360px; width:360px; top:1420px"></div>
+      <div class="obj" id="sg" style="left:310px; top:930px; width:460px"><div class="fl"><img src="assets/objects/sunglasses@3x.png" alt="" style="filter: drop-shadow(0 30px 40px rgba(0,0,0,.6)) drop-shadow(0 0 2px rgba(255,255,255,.3)) drop-shadow(0 0 30px rgba(46,155,255,.3))" /><div id="glint"></div></div></div>
+    </div></section>
+
+    <!-- 6 · rest -->
+    <section class="sc full" id="s6"><div class="dr full">
+      <div class="lines" style="top:400px"><span class="l"><span class="w p" data-t="16.74">Growth</span> <span class="w p" data-t="16.98">is</span> <span class="w p" data-t="17.09">built</span></span><span class="l"><span class="w p" data-t="17.37">while</span> <span class="w p" data-t="17.65">you</span> <span class="w a" data-t="17.81" style="font-size:170px">rest.<i id="uline" style="position:absolute; left:4px; right:28px; bottom:6px; height:12px; background:linear-gradient(90deg,#FF3B30,#FF9F1C); border-radius:6px; box-shadow:0 0 22px rgba(255,59,48,.6)"></i></span></span></div>
+      <div class="obj" id="tr" style="left:330px; top:850px; width:420px"><div class="fl"><img src="assets/objects/trophy@3x.png" alt="" style="filter: drop-shadow(0 30px 40px rgba(0,0,0,.6)) drop-shadow(0 0 2px rgba(255,255,255,.35)) drop-shadow(0 0 40px rgba(255,194,61,.45))" /></div></div>
+      <div id="handle">@YOURHANDLE</div>
+    </div></section>
+  </div>
+
+  <!-- transition layers -->
+  <div class="full" style="pointer-events:none">
+    <div class="disc" id="ring1" style="left:540px; top:1130px; width:2600px; height:2600px; margin:-1300px 0 0 -1300px; border:70px solid #FF9F1C"></div>
+    <div class="disc" id="wipe"  style="left:540px; top:1130px; width:2600px; height:2600px; margin:-1300px 0 0 -1300px; background:#FF3B30"></div>
+    <div class="disc" id="ring2" style="left:540px; top:1150px; width:2600px; height:2600px; margin:-1300px 0 0 -1300px; border:36px solid #FFE3DF"></div>
+    <div class="disc" id="dot"   style="left:540px; top:1120px; width:80px; height:80px; margin:-40px 0 0 -40px; background:#FF3B30; box-shadow:0 0 0 10px rgba(255,159,28,.35), 0 0 40px rgba(255,59,48,.8)"></div>
+    <svg class="full" viewBox="0 0 1080 1920" id="sweep">
+      <defs><linearGradient id="sw" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#16161B"/><stop offset="1" stop-color="#202027"/></linearGradient></defs>
+      <path d="M-1400 3600 C -200 1500, 1300 400, 2500 -1700" stroke="#FF9F1C" stroke-width="3240" fill="none"/>
+      <path d="M-1400 3600 C -200 1500, 1300 400, 2500 -1700" stroke="#FF3B30" stroke-width="3140" fill="none"/>
+      <path d="M-1400 3600 C -200 1500, 1300 400, 2500 -1700" stroke="#7C5CFF" stroke-width="3040" fill="none"/>
+      <path d="M-1400 3600 C -200 1500, 1300 400, 2500 -1700" stroke="url(#sw)" stroke-width="2940" fill="none"/>
+    </svg>
+    <svg class="full" viewBox="0 0 1080 1920" id="speed"></svg>
+    <div class="full" id="flash" style="background:#FF3B30"></div>
+  </div>
+  <div class="full vig"></div>
+  <div class="grain"></div>
+  <div class="full" id="fade" style="background:#0A0A0C"></div>
+
+  <audio id="mix" class="clip" src="assets/audio/mix.wav" data-start="0" data-duration="20" data-track-index="1" data-volume="1"></audio>
+</div>
+
+<script>
+(() => {
+  const $ = (s) => document.querySelector(s), $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+  const FR = 1 / 30;
+  const tl = gsap.timeline({ paused: true });
+  window.__timelines = window.__timelines || {};
+  window.__timelines["main"] = tl;
+
+  // handle from the composition variable
+  try { const v = window.__hyperframes && window.__hyperframes.getVariables && window.__hyperframes.getVariables(); if (v && v.handle) $("#handle").textContent = v.handle; } catch (e) {}
+
+  // ---------- build helpers ----------
+  const ones = $("#ones"); for (let k = 0; k < 50; k++) { const b = document.createElement("b"); b.textContent = k % 10; ones.appendChild(b); }
+  // seeded RNG (no Math.random)
+  let seed = 7; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+  const STAR = "M0 -60 C 8 -14 14 -8 60 0 C 14 8 8 14 0 60 C -8 14 -14 8 -60 0 C -14 -8 -8 -14 0 -60 Z";
+  const SPK = ["#FF9F1C", "#8F7BFF", "#FFFFFF", "#FF3B30"];
+  $$(".a").forEach((el, n) => {
+    const txt = el.firstChild.textContent;
+    for (let g = 0; g < 2; g++) { const s = document.createElement("span"); s.className = "ghost"; s.textContent = txt; s.setAttribute("aria-hidden", "true"); el.appendChild(s); }
+    for (let k = 0; k < 3; k++) {
+      const s = document.createElementNS("http://www.w3.org/2000/svg", "svg"); s.setAttribute("viewBox", "-60 -60 120 120"); s.setAttribute("class", "spk");
+      s.innerHTML = `<path d="${STAR}" fill="${SPK[(n + k) % 4]}"/>`;
+      const px = [[-4, 12], [100, 4], [92, 96]][k]; s.style.left = px[0] + "%"; s.style.top = px[1] + "%";
+      el.appendChild(s);
+    }
+  });
+  // speed lines for the blur zoom
+  { let h = ""; const cols = ["#FF3B30", "#FF9F1C", "#8F7BFF", "#FFFFFF"];
+    for (let k = 0; k < 44; k++) { const a = rnd() * Math.PI * 2, r0 = 260 + rnd() * 260, r1 = r0 + 500 + rnd() * 700;
+      h += `<line x1="${540 + Math.cos(a) * r0}" y1="${1050 + Math.sin(a) * r0}" x2="${540 + Math.cos(a) * r1}" y2="${1050 + Math.sin(a) * r1}" stroke="${cols[k % 4]}" stroke-width="${3 + rnd() * 7}" stroke-linecap="round" opacity="${0.35 + rnd() * 0.5}"/>`; }
+    $("#speed").innerHTML = h; }
+
+  // ---------- initial states ----------
+  gsap.set(".w", { autoAlpha: 0 });
+  gsap.set(".a .ghost", { autoAlpha: 0 });
+  gsap.set(".spk", { scale: 0, autoAlpha: 1 });
+  gsap.set(".obj, .shadow", { autoAlpha: 0 });
+  gsap.set("#wipe, #ring1, #ring2", { scale: 0, autoAlpha: 0 });
+  gsap.set("#dot", { scale: 0, autoAlpha: 0 });
+  gsap.set("#sweep", { x: 2700, y: 1500, autoAlpha: 0 });
+  gsap.set("#speed", { autoAlpha: 0, scale: 0.6, transformOrigin: "540px 1050px" });
+  gsap.set("#flash, #fade", { autoAlpha: 0 });
+  gsap.set("#strike, #uline", { scaleX: 0, transformOrigin: "0% 50%" });
+  gsap.set("#count, #hrs", { autoAlpha: 0 });
+  gsap.set("#glint", { autoAlpha: 0 });
+  gsap.set(".box", { autoAlpha: 0 });
+  gsap.set("#handle", { autoAlpha: 0 });
+  gsap.set(".sc", { autoAlpha: 0 }); gsap.set("#s1", { autoAlpha: 1 }); gsap.set("#db", { autoAlpha: 1 });
+  gsap.set(".dr", { transformOrigin: "50% 55%" });
+  gsap.set("#bandA", { x: 0 }); gsap.set("#star1", { x: 940, y: 790 }); gsap.set("#star2", { x: 140, y: 1600 }); gsap.set("#star3", { x: 180, y: 760 });
+
+  // ---------- global: zoom drift per scene, background parallax, scene lights ----------
+  const SC = [["#s1", 0, 3.0], ["#s2", 3.0, 5.5], ["#s3", 5.5, 9.5], ["#s4", 9.5, 13.5], ["#s5", 13.5333, 16.5], ["#s6", 16.5, 20]];
+  SC.forEach(([id, a, b]) => {
+    if (a > 0) tl.set(id, { autoAlpha: 1 }, a);
+    if (b < 20) tl.set(id, { autoAlpha: 0 }, b);
+    if (a < 13) tl.fromTo(id + " .dr", { scale: 1 }, { scale: 1.04, duration: b - a, ease: "none" }, a);
+  });
+  tl.fromTo("#grid", { x: 0, y: 0 }, { x: -48, y: -96, duration: 20, ease: "none" }, 0);
+  tl.fromTo("#bandA", { x: 0, y: 0 }, { x: -160, y: -40, duration: 20, ease: "none" }, 0);
+  tl.fromTo("#bandB", { x: 120, y: 0 }, { x: -260, y: 120, duration: 20, ease: "none" }, 0);
+  tl.fromTo("#star1", { x: 940, y: 790, rotation: 0 }, { x: 900, y: 740, rotation: 30, duration: 20, ease: "none", svgOrigin: "0 0" }, 0);
+  tl.fromTo("#star3", { x: 180, y: 760, rotation: 0 }, { x: 230, y: 700, rotation: -50, duration: 20, ease: "none", svgOrigin: "0 0" }, 0);
+  tl.fromTo("#star2", { x: 140, y: 1600, rotation: 0 }, { x: 40, y: 1500, rotation: 20, duration: 20, ease: "none", svgOrigin: "0 0" }, 0);
+  const lights = [["#g-red", 0, 3.0, 1130], ["#g-pink", 3.0, 5.5, 1120], ["#g-orange", 5.5, 9.5, 980], ["#g-violet", 9.5, 13.5, 1050], ["#g-sky", 13.5333, 16.5, 1150], ["#g-gold", 16.5, 20, 1060]];
+  lights.forEach(([id, a, b, cy]) => {
+    gsap.set(id, { y: cy - 750 - 400 });
+    tl.fromTo(id, { autoAlpha: 0, scale: 0.85 }, { autoAlpha: 1, scale: 1, duration: 0.3, ease: "power2.out" }, a);
+    if (b < 20) tl.to(id, { autoAlpha: 0, duration: 0.15, ease: "none" }, b - 0.05);
+  });
+
+  // ---------- words (exact VO timestamps; each word lands 1 frame before its sound) ----------
+  $$(".w").forEach((w) => {
+    const t = Math.max(0, parseFloat(w.dataset.t) - FR);
+    if (w.classList.contains("a")) {
+      tl.fromTo(w, { autoAlpha: 0, scale: 1.5, filter: "blur(4px)" }, { autoAlpha: 1, scale: 1, filter: "blur(0px)", duration: 0.28, ease: "back.out(2)" }, t);
+      $$(".ghost", w).forEach((g, k) => tl.fromTo(g, { autoAlpha: 0.45 - k * 0.15, scale: 1.25 + k * 0.2 }, { autoAlpha: 0, scale: 1, duration: 3 * FR, ease: "power2.out" }, t));
+      $$(".spk", w).forEach((s, k) => tl.fromTo(s, { scale: 0, rotation: -45 }, { keyframes: [{ scale: 1, rotation: 0, duration: 0.16, ease: "back.out(3)" }, { scale: 0, rotation: 45, duration: 0.3, ease: "power2.in" }] }, t + 0.06 + k * 0.05));
+      // the rest of the line makes room
+      const line = w.parentElement, sib = $$(".w", line).filter((x) => x !== w), idx = $$(".w", line).indexOf(w);
+      sib.forEach((x) => { const i = $$(".w", line).indexOf(x); tl.fromTo(x, { x: i < idx ? 22 : -22 }, { x: 0, duration: 0.3, ease: "back.out(2)", immediateRender: false }, t); });
+    } else if (w.classList.contains("i")) {
+      tl.fromTo(w, { autoAlpha: 0, filter: "blur(12px)", y: 6 }, { autoAlpha: 1, filter: "blur(0px)", y: 0, duration: 0.25, ease: "power3.out" }, t);
+    } else {
+      tl.fromTo(w, { autoAlpha: 0, y: 14, filter: "blur(6px)" }, { autoAlpha: 1, y: 0, filter: "blur(0px)", duration: 0.18, ease: "power3.out" }, t);
+    }
+  });
+
+  // ---------- object helpers ----------
+  const pop = (id, t, rot = -10) => {
+    tl.fromTo(id, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.05, ease: "none" }, t);
+    tl.fromTo(id, { scale: 0 }, { keyframes: [{ scale: 1.12, duration: 0.22, ease: "back.out(1.8)" }, { scale: 1, duration: 0.13, ease: "power2.out" }], immediateRender: false }, t);
+    tl.fromTo(id, { rotation: rot }, { rotation: 0, duration: 0.35, ease: "back.out(1.8)", immediateRender: false }, t);
+  };
+  const idle = (id, a, b, ph = 0) => {
+    const fl = id + " .fl", n = Math.max(1, Math.round((b - a) / 1));
+    tl.fromTo(fl, { y: 0, rotation: 0 }, { keyframes: Array.from({ length: n }, (_, k) => ({ y: (k + ph) % 2 ? 6 : -6, rotation: (k + ph) % 2 ? -2 : 2, duration: (b - a) / n, ease: "sine.inOut" })) }, a);
+  };
+  const punch = (id, t, s = 1.08) => tl.fromTo(id + " .fl", { scale: 1 }, { keyframes: [{ scale: s, duration: 0.08, ease: "power2.out" }, { scale: 1, duration: 0.22, ease: "power2.inOut" }], immediateRender: false }, t);
+  const shadowIn = (id, t, d = 0.3) => tl.fromTo(id, { autoAlpha: 0, scaleX: 0.4 }, { autoAlpha: 1, scaleX: 1, duration: d, ease: "power2.out" }, t);
+  const shake = (t, amp = 14) => tl.fromTo("#world", { x: 0, y: 0 }, { keyframes: [{ x: amp, y: -amp * 0.6, duration: FR }, { x: -amp * 0.8, y: amp * 0.5, duration: FR }, { x: amp * 0.4, y: amp * 0.3, duration: FR }, { x: 0, y: 0, duration: FR }], ease: "none", immediateRender: false }, t);
+
+  // ===== 1 · dumbbell drops in =====
+  tl.fromTo("#db", { y: -1100, rotation: -14 }, { y: 0, rotation: -3, duration: 0.33, ease: "power2.in" }, 0);
+  tl.fromTo("#db .fl", { scaleX: 1, scaleY: 1 }, { keyframes: [{ scaleX: 1.08, scaleY: 0.9, duration: 0.06, ease: "power2.out" }, { scaleX: 0.97, scaleY: 1.04, duration: 0.1, ease: "power2.inOut" }, { scaleX: 1, scaleY: 1, duration: 0.14, ease: "power2.out" }], transformOrigin: "50% 80%" }, 0.33);
+  tl.to("#db", { y: -26, rotation: 0, duration: 0.14, ease: "power2.out" }, 0.33);
+  tl.to("#db", { y: 0, duration: 0.18, ease: "bounce.out" }, 0.47);
+  tl.fromTo("#db-sh", { autoAlpha: 0, scaleX: 0.3 }, { autoAlpha: 1, scaleX: 1, duration: 0.33, ease: "power2.in" }, 0);
+  shake(0.33, 10);
+  tl.fromTo("#db .fl", { y: 0 }, { keyframes: [{ y: -6, duration: 1, ease: "sine.inOut" }, { y: 6, duration: 1, ease: "sine.inOut" }], immediateRender: false }, 0.75);
+  punch("#db", 1.54, 1.07);
+  tl.to("#db", { rotation: 8, duration: 0.3, ease: "back.out(2.5)" }, 2.17);
+  // out: circle wipe from the dumbbell centre (8 frames) with an orange leading ring
+  tl.fromTo("#ring1", { autoAlpha: 1, scale: 0 }, { autoAlpha: 1, scale: 1, duration: 8 * FR, ease: "power3.in" }, 2.70);
+  tl.fromTo("#wipe", { autoAlpha: 1, scale: 0 }, { autoAlpha: 1, scale: 1, duration: 8 * FR, ease: "power3.in" }, 2.733);
+  tl.to("#db", { scale: 0.85, duration: 8 * FR, ease: "power3.in" }, 2.733);
+  tl.set("#ring1", { autoAlpha: 0 }, 3.0);
+
+  // ===== 2 · biceps: the red closes back as a circle (8 frames) =====
+  tl.fromTo("#s2", { clipPath: "circle(0% at 50% 60%)" }, { clipPath: "circle(75% at 50% 60%)", duration: 8 * FR, ease: "power3.out" }, 3.0);
+  tl.fromTo("#ring2", { autoAlpha: 0.9, scale: 0 }, { autoAlpha: 0, scale: 0.85, duration: 9 * FR, ease: "power3.out" }, 3.0);
+  tl.set("#wipe", { autoAlpha: 0 }, 3.3);
+  pop("#bi", 3.03); shadowIn("#bi-sh", 3.03);
+  idle("#bi", 3.4, 5.2);
+  tl.fromTo("#crack", { strokeDashoffset: 1.1 }, { strokeDashoffset: 0, duration: 4 * FR, ease: "power2.out" }, 3.98);
+  punch("#bi", 3.98, 1.1); shake(3.98, 16);
+  tl.fromTo("#g-pink", { scale: 1 }, { keyframes: [{ scale: 1.25, duration: 0.08 }, { scale: 1, duration: 0.4 }], immediateRender: false }, 3.98);
+  // out: lines leave together, biceps collapses into a red dot, the dot travels and becomes the alarm
+  tl.to("#s2-lines", { y: -40, autoAlpha: 0, filter: "blur(8px)", duration: 6 * FR, ease: "power3.in" }, 5.15);
+  tl.to("#bi", { scale: 0, rotation: 20, duration: 6 * FR, ease: "power3.in" }, 5.2);
+  tl.to("#bi-sh", { autoAlpha: 0, scaleX: 0, duration: 6 * FR, ease: "power3.in" }, 5.2);
+  tl.fromTo("#dot", { autoAlpha: 1, scale: 0, x: 0, y: 0 }, { autoAlpha: 1, scale: 1, x: 0, y: 0, duration: 4 * FR, ease: "back.out(2)" }, 5.3);
+  tl.to("#dot", { x: 0, y: -270, scale: 2.4, duration: 5 * FR, ease: "power3.inOut" }, 5.4334);
+  tl.to("#dot", { scale: 0, autoAlpha: 0, duration: 4 * FR, ease: "power2.in" }, 5.6);
+
+  // ===== 3 · alarm + counter =====
+  pop("#al", 5.58, -16);
+  idle("#al", 5.95, 9.2, 1);
+  tl.fromTo("#al .fl", { rotation: 0 }, { keyframes: [-9, 9, -7, 7, -4, 4, 0].map((r) => ({ rotation: r, duration: 0.05, ease: "none" })), immediateRender: false }, 7.93);
+  tl.fromTo("#count", { autoAlpha: 0, scale: 0.6, y: 30 }, { autoAlpha: 1, scale: 1, y: 0, duration: 0.25, ease: "back.out(2)" }, 6.86);
+  tl.fromTo("#tens", { yPercent: 0 }, { yPercent: -80, duration: 1.0, ease: "power3.out" }, 6.96);
+  tl.fromTo("#ones", { yPercent: 0 }, { yPercent: -96, duration: 1.0, ease: "power3.out" }, 6.96);
+  tl.fromTo("#count", { filter: "drop-shadow(0 0 22px rgba(255,159,28,.55)) drop-shadow(0 0 60px rgba(255,159,28,.3))" },
+    { keyframes: [{ filter: "drop-shadow(0 0 40px rgba(255,159,28,1)) drop-shadow(0 0 110px rgba(255,120,28,.7))", duration: 0.08 }, { filter: "drop-shadow(0 0 22px rgba(255,159,28,.55)) drop-shadow(0 0 60px rgba(255,159,28,.3))", duration: 0.5 }], immediateRender: false }, 7.93);
+  tl.fromTo("#count", { scale: 1 }, { keyframes: [{ scale: 1.1, duration: 0.07 }, { scale: 1, duration: 0.25, ease: "back.out(2)" }], immediateRender: false }, 7.93);
+  tl.fromTo("#hrs", { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, duration: 0.2, ease: "power3.out" }, 8.44);
+  // out: swoosh sweep (10 frames); the band covers the frame at 9.5 where the scenes swap
+  tl.fromTo("#sweep", { autoAlpha: 1, x: 2700, y: 1500 }, { autoAlpha: 1, x: -2700, y: -1500, duration: 10 * FR, ease: "power1.inOut" }, 9.333);
+  tl.set("#sweep", { autoAlpha: 0 }, 9.7);
+
+  // ===== 4 · three things =====
+  [["#o1", 11.0], ["#o2", 11.12], ["#o3", 11.24]].forEach(([id, t], k) => { pop(id, t, k === 1 ? 10 : -10); idle(id, t + 0.36, 13.5, k); });
+  [["#b1", "#o1", 11.67], ["#b2", "#o2", 12.18], ["#b3", "#o3", 12.74]].forEach(([b, o, t]) => {
+    const c = $(b).dataset.c;
+    tl.fromTo(b, { autoAlpha: 0, scale: 0.6, y: 16 }, { autoAlpha: 1, scale: 1, y: 0, duration: 0.22, ease: "back.out(2.4)" }, t - FR);
+    tl.fromTo(b + " .fill", { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.35, ease: "power2.in" }, t + 0.12);
+    tl.fromTo(b, { borderColor: "rgba(244,244,246,.55)", color: "#F4F4F6" }, { borderColor: c, color: c, duration: 0.3, ease: "none" }, t + 0.12);
+    punch(o, t - FR, 1.14);
+  });
+  // out: one frame of full accent red on the beat (frame 405)
+  tl.set("#flash", { autoAlpha: 1 }, 13.5);
+  tl.set("#flash", { autoAlpha: 0 }, 13.5333);
+
+  // ===== 5 · sunglasses =====
+  tl.fromTo("#s5 .dr", { scale: 1.1 }, { scale: 1.0, duration: 6 * FR, ease: "power3.out" }, 13.5333);
+  tl.fromTo("#s5 .dr", { scale: 1.0 }, { scale: 1.04, duration: 2.5667, ease: "none", immediateRender: false }, 13.7333);
+  pop("#sg", 13.55); shadowIn("#sg-sh", 13.55); idle("#sg", 13.9, 16.3);
+  tl.fromTo("#strike", { scaleX: 0 }, { scaleX: 1, duration: 5 * FR, ease: "power3.out" }, 14.70);
+  punch("#sg", 15.43, 1.1);
+  tl.fromTo("#glint", { autoAlpha: 1, backgroundPosition: "100% 0" }, { autoAlpha: 1, backgroundPosition: "0% 0", duration: 0.45, ease: "power2.inOut" }, 15.52);
+  tl.set("#glint", { autoAlpha: 0 }, 16.0);
+  // out: blur zoom 100 -> 130 % with radial speed lines (6 frames)
+  tl.to("#s5 .dr", { scale: 1.32, filter: "blur(14px)", duration: 6 * FR, ease: "power3.in", immediateRender: false }, 16.3);
+  tl.to("#s5", { autoAlpha: 0, duration: 2 * FR, ease: "none" }, 16.433);
+  tl.fromTo("#speed", { autoAlpha: 0, scale: 0.6 }, { keyframes: [{ autoAlpha: 1, scale: 1.0, duration: 6 * FR, ease: "power3.in" }, { autoAlpha: 0, scale: 1.5, duration: 6 * FR, ease: "power2.out" }] }, 16.3);
+
+  // ===== 6 · trophy + rest =====
+  tl.fromTo("#s6 .dr", { scale: 1.18, filter: "blur(12px)" }, { scale: 1.0, filter: "blur(0px)", duration: 7 * FR, ease: "power3.out" }, 16.5);
+  tl.fromTo("#s6 .dr", { scale: 1.0 }, { scale: 1.04, duration: 3.2, ease: "none", immediateRender: false }, 16.75);
+  tl.fromTo("#tr", { autoAlpha: 1, y: 700, scale: 0.9, rotation: -6 }, { autoAlpha: 1, y: 0, scale: 1, rotation: 0, duration: 0.55, ease: "back.out(1.4)" }, 16.52);
+  idle("#tr", 17.1, 19.9);
+  punch("#tr", 17.78, 1.08);
+  tl.fromTo("#uline", { scaleX: 0 }, { scaleX: 1, duration: 8 * FR, ease: "power3.out" }, 17.93);
+  tl.fromTo("#handle", { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: 0.3, ease: "power3.out" }, 18.38);
+  tl.fromTo("#fade", { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.55, ease: "power2.in" }, 19.4);
+  tl.set({}, {}, 20);
+})();
+</script>
+</body>
+</html>
