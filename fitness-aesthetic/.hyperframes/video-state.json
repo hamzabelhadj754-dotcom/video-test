@@ -211,5 +211,16 @@
     "latest": null,
     "revisions": {},
     "unversioned": []
-  }
+  },
+  "renders": {
+    "latest": {
+      "id": "fc2d18dd-99ed-4f31-8310-25f15b846694",
+      "completedAt": 1794144648576,
+      "output": "/home/user/video-test/fitness-aesthetic/renders/fitness_aesthetic_20s.mp4",
+      "status": "completed",
+      "revision": null
+    },
+    "retainedRevisions": []
+  },
+  "pendingArtifactCleanup": []
 }
