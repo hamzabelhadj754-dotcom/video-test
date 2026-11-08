@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Aesthetic 20s — style frames</title>
+<style>
+  @font-face { font-family: "Inter Tight"; src: url("../assets/fonts/InterTight-Variable.woff2") format("woff2"); font-weight: 100 900; }
+  @font-face { font-family: "Geist Mono"; src: url("../assets/fonts/GeistMono-Variable.woff2") format("woff2"); font-weight: 100 900; }
+  @font-face { font-family: "Instrument Serif"; src: url("../assets/fonts/InstrumentSerif-Regular.woff2") format("woff2"); font-style: normal; }
+  @font-face { font-family: "Instrument Serif"; src: url("../assets/fonts/InstrumentSerif-Italic.woff2") format("woff2"); font-style: italic; }
+  :root { --bg:#0A0A0D; --ink:#F3F1EC; --ink-2:rgba(243,241,236,.55); --line:rgba(243,241,236,.22); --accent:#FF6A3D; --glow-a:#3A2BFF; --glow-b:#FF6A3D; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #000; }
+  .frame { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: var(--bg); margin-bottom: 40px; color: var(--ink); font-family: "Inter Tight", sans-serif; }
+  .abs { position: absolute; }
+  .fill { position: absolute; inset: 0; }
+  .aur { position: absolute; border-radius: 50%; filter: blur(120px); }
+  .grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(243,241,236,.03) 1px, transparent 1px), linear-gradient(90deg, rgba(243,241,236,.03) 1px, transparent 1px); background-size: 64px 64px; background-position: 28px 0; }
+  .photo { position: absolute; background-size: cover; background-repeat: no-repeat; }
+  .vig { position: absolute; inset: 0; background: radial-gradient(ellipse 85% 70% at 50% 48%, transparent 45%, rgba(0,0,0,.6) 100%); }
+  .grain { position: absolute; inset: -40px; opacity: .05; mix-blend-mode: screen;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' seed='4' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); }
+  .txt { position: absolute; left: 70px; right: 70px; text-align: center; }
+  .l { display: block; white-space: nowrap; font: 500 60px/1.12 "Inter Tight"; letter-spacing: -0.025em; }
+  .g { font: 500 60px/1.12 "Inter Tight"; letter-spacing: -0.025em; }
+  .s { font: italic 400 190px/0.9 "Instrument Serif"; letter-spacing: -0.02em; }
+  .dim { color: var(--ink-2); }
+  .mono { font: 400 24px/1.3 "Geist Mono"; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); }
+  .acc { color: var(--accent); }
+  .hdr { position: absolute; left: 72px; right: 72px; top: 250px; display: flex; justify-content: space-between; }
+  .hdr i { font-style: normal; color: var(--ink); }
+  .rule { position: absolute; height: 1px; background: var(--line); }
+  svg { position: absolute; overflow: visible; }
+  .glass { position: absolute; border-radius: 28px; background: rgba(255,255,255,.035); border: 1px solid var(--line); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); overflow: hidden; }
+  .tag { position: absolute; left: 24px; top: 24px; font: 600 20px "Inter Tight"; color: rgba(255,255,255,.3); }
+  body.clean .tag { display: none; }
+</style>
+</head>
+<body>
+
+<!-- 1 · Your muscles don't grow in the gym -->
+<section class="frame" id="f1">
+  <div class="photo" style="left:-60px; top:-40px; width:1200px; height:1800px; background-image:url(../assets/photos/hero.jpg); background-position: 50% 20%"></div>
+  <div class="fill" style="background: linear-gradient(180deg, rgba(10,10,13,.85) 0%, rgba(10,10,13,.35) 16%, rgba(10,10,13,0) 26%, rgba(10,10,13,0) 42%, rgba(10,10,13,.92) 66%, #0A0A0D 82%)"></div>
+  <div class="aur" style="left:-260px; top:1180px; width:900px; height:700px; background:#3A2BFF; opacity:.24"></div>
+  <div class="aur" style="left:620px; top:1350px; width:700px; height:560px; background:#FF6A3D; opacity:.16"></div>
+  <div class="hdr mono"><span><i>N° 01</i> — Hypertrophy</span><span>A field guide</span></div>
+  <div class="txt" style="top:1120px">
+    <span class="l g">Your muscles don't</span>
+    <span class="l" style="margin-top:6px"><span class="s" style="position:relative">grow<svg width="520" height="40" viewBox="0 0 520 40" style="left:-70px; top:94px"><line x1="0" y1="30" x2="520" y2="6" stroke="#FF6A3D" stroke-width="3" stroke-linecap="round"/></svg></span> <span class="g">in the gym.</span></span>
+  </div>
+  <div class="vig"></div><div class="grain"></div><div class="tag">01 · 0:02.4</div>
+</section>
+
+<!-- 2 · Training breaks them down -->
+<section class="frame" id="f2">
+  <div class="photo" style="left:240px; top:420px; width:900px; height:1600px; background-image:url(../assets/photos/torso.jpg); background-position: 50% 30%; opacity:.34"></div>
+  <div class="fill" style="background: linear-gradient(90deg, #0A0A0D 18%, rgba(10,10,13,.2) 60%, rgba(10,10,13,.55) 100%), linear-gradient(180deg, #0A0A0D 22%, rgba(10,10,13,0) 40%, rgba(10,10,13,0) 70%, #0A0A0D 92%)"></div>
+  <div class="grid"></div>
+  <div class="aur" style="left:-200px; top:820px; width:820px; height:620px; background:#3A2BFF; opacity:.2"></div>
+  <div class="hdr mono"><span><i>N° 02</i> — Damage</span><span>Fig. 02</span></div>
+  <div class="txt" style="top:330px"><span class="l g">Training</span><span class="l"><span class="s">breaks</span> <span class="g">them down.</span></span></div>
+  <svg id="fib" width="1080" height="1920" viewBox="0 0 1080 1920" style="left:0; top:0"></svg>
+  <div class="vig"></div><div class="grain"></div><div class="tag">02 · 0:04.5</div>
+</section>
+
+<!-- 3 · recover, 48 hours -->
+<section class="frame" id="f3">
+  <div class="photo" style="left:0; top:860px; width:1080px; height:1350px; background-image:url(../assets/photos/bedroom.jpg); background-position: 50% 40%; opacity:.75"></div>
+  <div class="fill" style="background: linear-gradient(180deg, #0A0A0D 44%, rgba(10,10,13,.45) 64%, rgba(10,10,13,.5) 82%, #0A0A0D 96%)"></div>
+  <div class="aur" style="left:140px; top:760px; width:800px; height:700px; background:#3A2BFF; opacity:.2"></div>
+  <div class="hdr mono"><span><i>N° 03</i> — Repair window</span><span>Fig. 03</span></div>
+  <div class="txt" style="top:330px"><span class="l g">They grow while you</span><span class="l s">recover,</span></div>
+  <div class="abs" style="left:0; top:0; width:1080px; height:1920px; perspective:1600px">
+    <div class="abs" style="left:290px; top:830px; width:500px; height:500px; transform: rotateX(18deg); transform-origin:50% 50%">
+      <svg id="ring" width="500" height="500" viewBox="-250 -250 500 500" style="left:0; top:0"></svg>
+      <div class="abs" style="left:0; right:0; top:150px; text-align:center; font: 300 150px/1 'Geist Mono'; letter-spacing:-.04em">48</div>
+      <div class="abs mono" style="left:0; right:0; top:318px; text-align:center">HRS</div>
+    </div>
+  </div>
+  <div class="txt mono" style="top:1390px">over the next <span style="color:var(--ink)">48 hours</span></div>
+  <div class="vig"></div><div class="grain"></div><div class="tag">03 · 0:08.8</div>
+</section>
+
+<!-- 4 · three things -->
+<section class="frame" id="f4">
+  <div class="aur" style="left:-160px; top:820px; width:760px; height:760px; background:#3A2BFF; opacity:.26"></div>
+  <div class="aur" style="left:520px; top:980px; width:700px; height:640px; background:#FF6A3D; opacity:.18"></div>
+  <div class="grid" style="opacity:.6"></div>
+  <div class="hdr mono"><span><i>N° 04</i> — The inputs</span><span>3 / 3</span></div>
+  <div class="txt" style="top:330px"><span class="l g">Three things build</span><span class="l s">muscle:</span></div>
+  <div id="cols"></div>
+  <div class="vig"></div><div class="grain"></div><div class="tag">04 · 0:12.6</div>
+</section>
+
+<!-- 5 · not more hours -->
+<section class="frame" id="f5">
+  <div class="aur" style="left:420px; top:760px; width:820px; height:700px; background:#FF6A3D; opacity:.14"></div>
+  <div class="aur" style="left:-240px; top:1100px; width:760px; height:640px; background:#3A2BFF; opacity:.22"></div>
+  <div class="grid"></div>
+  <div class="hdr mono"><span><i>N° 05</i> — The trade</span><span>Fig. 05</span></div>
+  <div class="txt" style="top:330px"><span class="l g">Not more <span class="dim" style="position:relative">hours.<i style="position:absolute; left:-6px; right:-6px; top:52%; height:3px; background:#FF6A3D"></i></span></span><span class="l"><span class="g">Better</span> <span class="s">recovery.</span></span></div>
+  <svg id="chart" width="1080" height="1920" viewBox="0 0 1080 1920" style="left:0; top:0"></svg>
+  <div class="vig"></div><div class="grain"></div><div class="tag">05 · 0:15.6</div>
+</section>
+
+<!-- 6 · rest -->
+<section class="frame" id="f6">
+  <div class="aur" style="left:-120px; top:700px; width:760px; height:900px; background:#3A2BFF; opacity:.22"></div>
+  <div class="aur" style="left:500px; top:1100px; width:700px; height:600px; background:#FF6A3D; opacity:.14"></div>
+  <canvas id="parts" width="1080" height="1920" class="abs" style="left:0; top:0"></canvas>
+  <div class="abs" style="left:250px; top:690px; width:580px; height:780px; border-radius:290px 290px 0 0; overflow:hidden">
+    <div class="photo" style="inset:0; background-image:url(../assets/photos/rest.jpg); background-position: 50% 30%"></div>
+    <div class="fill" style="background: linear-gradient(180deg, rgba(10,10,13,.18) 0%, rgba(10,10,13,.12) 55%, rgba(10,10,13,.8) 100%)"></div>
+  </div>
+  <div class="abs" style="left:232px; top:672px; width:616px; height:816px; border-radius:308px 308px 0 0; border:1px solid var(--line); border-bottom:none"></div>
+  <div class="txt" style="top:330px"><span class="l g">Growth is built</span><span class="l"><span class="g">while you</span> <span class="s" style="position:relative">rest.<i style="position:absolute; left:6px; right:26px; bottom:-4px; height:3px; background:#FF6A3D"></i></span></span></div>
+  <div class="txt mono" style="top:1500px"><span style="color:var(--ink)">@YOURHANDLE</span></div>
+  <div class="vig"></div><div class="grain"></div><div class="tag">06 · 0:19.0</div>
+</section>
+
+<script>
+let seed = 11; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+const NS = "http://www.w3.org/2000/svg";
+const LINE = "rgba(243,241,236,.22)", INK2 = "rgba(243,241,236,.55)", ACC = "#FF6A3D";
+
+// ---- fig 2: a fusiform fibre bundle of 24 fine lines, five torn ----
+(() => {
+  const s = document.getElementById("fib"), x0 = 70, x1 = 1010, cy = 1120, H = 330;
+  const tears = { 3: .30, 8: .56, 12: .43, 16: .64, 20: .48 };
+  const yAt = (i, u) => { const v = (i / 23 - .5) * 2; return cy + v * H / 2 * Math.pow(Math.sin(Math.PI * (0.06 + u * 0.88)), 0.9) + Math.sin(u * 9 + i * .7) * 3; };
+  const path = (i, ua, ub) => { let d = ""; for (let k = 0; k <= 60; k++) { const u = ua + (ub - ua) * k / 60; d += (k ? "L" : "M") + (x0 + (x1 - x0) * u).toFixed(1) + " " + yAt(i, u).toFixed(1); } return d; };
+  let h = "";
+  for (let i = 0; i < 24; i++) {
+    if (tears[i] == null) h += `<path d="${path(i, 0, 1)}" stroke="${LINE}" stroke-width="1.5" fill="none"/>`;
+    else { const u = tears[i], g = .022;
+      h += `<path d="${path(i, 0, u - g)}" stroke="${LINE}" stroke-width="1.5" fill="none"/><path d="${path(i, u + g, 1)}" stroke="${LINE}" stroke-width="1.5" fill="none"/>`;
+      h += `<path d="${path(i, u - g - .05, u - g)}" stroke="${ACC}" stroke-width="2" fill="none"/><path d="${path(i, u + g, u + g + .05)}" stroke="${ACC}" stroke-width="2" fill="none"/>`;
+      const tx = x0 + (x1 - x0) * u, ty = yAt(i, u);
+      for (let k = 0; k < 14; k++) { const a = rnd() * 6.283, r = 6 + rnd() * 40; h += `<circle cx="${(tx + Math.cos(a) * r).toFixed(1)}" cy="${(ty + Math.sin(a) * r * .6).toFixed(1)}" r="${(0.8 + rnd() * 1.8).toFixed(1)}" fill="${ACC}" opacity="${(.35 + rnd() * .6).toFixed(2)}"/>`; }
+    }
+  }
+  // callout: node on the tear of fibre 8, dashed leader up to the label
+  const nx = x0 + (x1 - x0) * .56, ny = yAt(8, .56);
+  h += `<circle cx="${nx}" cy="${ny}" r="9" fill="none" stroke="${INK2}" stroke-width="1.5"/>`;
+  h += `<path d="M${nx + 6} ${ny - 7} L${nx + 120} ${ny - 190} L${nx + 300} ${ny - 190}" stroke="${INK2}" stroke-width="1.5" fill="none" stroke-dasharray="6 6"/>`;
+  h += `<text x="${nx + 128}" y="${ny - 206}" font-family="Geist Mono" font-size="24" letter-spacing="2" fill="#F3F1EC">MICRO-TEARS</text>`;
+  h += `<text x="${x0}" y="${cy + H / 2 + 120}" font-family="Geist Mono" font-size="22" letter-spacing="2" fill="${INK2}">FIG. 02 — FIBRE BUNDLE, 24 STRANDS</text>`;
+  h += `<line x1="${x0}" y1="${cy + H / 2 + 80}" x2="${x1}" y2="${cy + H / 2 + 80}" stroke="${LINE}" stroke-width="1"/>`;
+  for (let k = 0; k <= 10; k++) { const x = x0 + (x1 - x0) * k / 10; h += `<line x1="${x}" y1="${cy + H / 2 + 74}" x2="${x}" y2="${cy + H / 2 + 86}" stroke="${LINE}" stroke-width="1"/>`; }
+  s.innerHTML = h;
+})();
+
+// ---- fig 3: 48-hour progress ring ----
+(() => {
+  const s = document.getElementById("ring"), R = 220; let h = `<circle r="${R}" fill="none" stroke="${LINE}" stroke-width="1.5"/>`;
+  for (let k = 0; k < 48; k++) { const a = k / 48 * 6.283 - 1.5708, r0 = R + 16, r1 = R + (k % 6 ? 24 : 34);
+    h += `<line x1="${Math.cos(a) * r0}" y1="${Math.sin(a) * r0}" x2="${Math.cos(a) * r1}" y2="${Math.sin(a) * r1}" stroke="${k % 6 ? LINE : INK2}" stroke-width="1.5"/>`; }
+  const c = 2 * Math.PI * R; h += `<circle r="${R}" fill="none" stroke="${ACC}" stroke-width="3" stroke-linecap="round" stroke-dasharray="${c * .86} ${c}" transform="rotate(-90)"/>`;
+  const a = .86 * 6.283 - 1.5708; h += `<circle cx="${Math.cos(a) * R}" cy="${Math.sin(a) * R}" r="7" fill="${ACC}"/>`;
+  for (const [k, t] of [[0, "0H"], [12, "12"], [24, "24"], [36, "36"]]) { const b = k / 48 * 6.283 - 1.5708; h += `<text x="${Math.cos(b) * (R + 62)}" y="${Math.sin(b) * (R + 62) + 8}" text-anchor="middle" font-family="Geist Mono" font-size="22" fill="${INK2}">${t}</text>`; }
+  s.innerHTML = h;
+})();
+
+// ---- fig 4: three glass columns ----
+(() => {
+  const host = document.getElementById("cols"), W = 300, gap = 30, top = 660, HH = 820;
+  const cols = [["01", "load", "dumbbell.jpg", "50% 50%"], ["02", "protein", "eggs.jpg", "45% 55%"], ["03", "sleep", "bed.jpg", "50% 70%"]];
+  const glyph = (k, col) => {
+    if (k === 0) { let d = "M20 150"; for (let i = 0; i < 6; i++) d += ` H${20 + (i + 1) * 40} V${150 - (i + 1) * 21}`; return `<path d="${d}" stroke="${col}" stroke-width="2" fill="none"/>` + Array.from({ length: 6 }, (_, i) => `<circle cx="${20 + (i + 1) * 40}" cy="${150 - (i + 1) * 21}" r="4" fill="${col}"/>`).join(""); }
+    if (k === 1) { let h = ""; const hex = (cx, cy) => { let d = ""; for (let i = 0; i < 6; i++) { const a = i * 1.0472 + .5236; d += (i ? "L" : "M") + (cx + Math.cos(a) * 24).toFixed(1) + " " + (cy + Math.sin(a) * 24).toFixed(1); } return `<path d="${d}Z" stroke="${col}" stroke-width="2" fill="none"/>`; };
+      const P = [[50, 110], [92, 86], [134, 110], [176, 86], [218, 110]]; P.forEach(([x, y], i) => { h += hex(x, y); if (i) h += `<line x1="${P[i - 1][0] + 18}" y1="${P[i - 1][1] + (i % 2 ? -10 : 10)}" x2="${x - 18}" y2="${y + (i % 2 ? 10 : -10)}" stroke="${col}" stroke-width="2"/>`; }); return h; }
+    let d = "M14 150"; for (let x = 14; x <= 256; x += 4) d += ` L${x} ${150 + Math.sin(x / 14) * 8 * (1 - x / 300)}`;
+    return `<path d="M150 40 a42 42 0 1 0 46 58 a34 34 0 1 1 -46 -58Z" stroke="${col}" stroke-width="2" fill="none"/><path d="${d}" stroke="${col}" stroke-width="2" fill="none"/>`;
+  };
+  cols.forEach(([n, word, img, pos], k) => {
+    const x = 60 + k * (W + gap), on = k === 1, col = on ? ACC : "rgba(243,241,236,.7)";
+    host.insertAdjacentHTML("beforeend", `<div class="glass" style="left:${x}px; top:${top}px; width:${W}px; height:${HH}px; opacity:${on ? 1 : .4}; ${on ? "border-color:rgba(243,241,236,.38)" : ""}">
+      <div class="photo" style="left:14px; top:14px; right:14px; height:330px; border-radius:18px; background-image:url(../assets/photos/${img}); background-position:${pos}"></div>
+      <div class="mono" style="position:absolute; left:28px; top:372px; color:${on ? "#F3F1EC" : ""}">${n} — ${word}</div>
+      <svg width="270" height="190" viewBox="0 0 270 190" style="left:15px; top:430px">${glyph(k, col)}</svg>
+      <div style="position:absolute; left:0; right:0; bottom:44px; text-align:center; font: italic 400 96px/1 'Instrument Serif'; letter-spacing:-.02em">${word}</div></div>`);
+  });
+})();
+
+// ---- fig 5: chart — more hours plateaus, recovery keeps climbing ----
+(() => {
+  const s = document.getElementById("chart"), L = 120, R = 960, T = 760, B = 1340; let h = "";
+  for (let k = 0; k <= 4; k++) { const y = B - (B - T) * k / 4; h += `<line x1="${L}" y1="${y}" x2="${R}" y2="${y}" stroke="rgba(243,241,236,${k ? .08 : .3})" stroke-width="1" ${k ? 'stroke-dasharray="3 7"' : ""}/>`; }
+  for (let k = 0; k <= 8; k++) { const x = L + (R - L) * k / 8; h += `<line x1="${x}" y1="${B}" x2="${x}" y2="${B + 10}" stroke="${LINE}"/>`; if (k) h += `<text x="${x}" y="${B + 44}" text-anchor="middle" font-family="Geist Mono" font-size="22" fill="${INK2}">W${k}</text>`; }
+  h += `<text x="${L}" y="${T - 30}" font-family="Geist Mono" font-size="22" letter-spacing="2" fill="${INK2}">MUSCLE GROWTH</text>`;
+  const curve = (f) => { let d = ""; for (let k = 0; k <= 80; k++) { const u = k / 80; d += (k ? "L" : "M") + (L + (R - L) * u).toFixed(1) + " " + (B - (B - T) * f(u)).toFixed(1); } return d; };
+  const grey = (u) => .42 * (1 - Math.exp(-u * 5)), ember = (u) => .08 + .82 * Math.pow(u, 1.25);
+  h += `<path d="${curve(grey)}" stroke="rgba(243,241,236,.45)" stroke-width="2" fill="none" style="filter:blur(1.5px)"/>`;
+  h += `<text x="${R}" y="${B - (B - T) * grey(1) + 46}" text-anchor="end" font-family="Geist Mono" font-size="22" letter-spacing="2" fill="${INK2}" style="filter:blur(1px)">MORE HOURS</text>`;
+  h += `<path d="${curve(ember)} L${R} ${B} L${L} ${B}Z" fill="url(#eg)"/><defs><linearGradient id="eg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FF6A3D" stop-opacity=".16"/><stop offset="1" stop-color="#FF6A3D" stop-opacity="0"/></linearGradient></defs>`;
+  h += `<path d="${curve(ember)}" stroke="${ACC}" stroke-width="3" fill="none"/>`;
+  h += `<circle cx="${R}" cy="${B - (B - T) * ember(1)}" r="8" fill="${ACC}"/><circle cx="${R}" cy="${B - (B - T) * ember(1)}" r="20" fill="none" stroke="${ACC}" stroke-opacity=".4"/>`;
+  h += `<text x="${R - 34}" y="${B - (B - T) * ember(1) + 8}" text-anchor="end" font-family="Geist Mono" font-size="24" letter-spacing="2" fill="${ACC}">RECOVERY</text>`;
+  s.innerHTML = h;
+})();
+
+// ---- fig 6: particles gathering into the arch ----
+(() => {
+  const c = document.getElementById("parts"), g = c.getContext("2d");
+  for (let k = 0; k < 2200; k++) {
+    let x, y; const t = rnd();
+    if (t < .7) { // on the arch outline, slightly scattered
+      const p = rnd() * (Math.PI * 308 + 816 * 2), sc = Math.pow(rnd(), 2) * 26 * (rnd() < .5 ? -1 : 1);
+      if (p < 816) { x = 232 + sc; y = 1488 - p; } else if (p < 816 + Math.PI * 308) { const a = Math.PI + (p - 816) / 308; x = 540 + Math.cos(a) * (308 + sc); y = 980 + Math.sin(a) * (308 + sc); } else { x = 848 + sc; y = 980 + (p - 816 - Math.PI * 308); }
+    } else { x = 80 + rnd() * 920; y = 620 + rnd() * 980; }
+    g.fillStyle = rnd() < .08 ? "rgba(255,106,61,.8)" : `rgba(243,241,236,${(.12 + rnd() * .45).toFixed(2)})`;
+    g.beginPath(); g.arc(x, y, .6 + rnd() * 1.3, 0, 6.283); g.fill();
+  }
+})();
+</script>
+</body>
+</html>
