@@ -5,10 +5,36 @@
       inset: 0;
       overflow: hidden;
     }
+    #pattern-iris-y {
+      position: absolute;
+      inset: 0;
+      background: var(--color-yellow, #ffc400);
+    }
     #pattern-iris {
       position: absolute;
       inset: 0;
       background: var(--color-bone, #f1ece2);
+    }
+    #pattern-grid {
+      transform-origin: 960px 540px;
+    }
+    .pattern-ch {
+      display: inline-block;
+      transform-origin: 50% 50% -40px;
+    }
+    #pattern-plate-text {
+      display: inline-block;
+      perspective: 900px;
+    }
+    #pattern-shock {
+      position: absolute;
+      left: 900px;
+      top: 480px;
+      width: 120px;
+      height: 120px;
+      border: 8px solid var(--color-red, #ff3b1f);
+      opacity: 0;
+      z-index: 19;
     }
     #pattern-grid {
       position: absolute;
@@ -51,14 +77,26 @@
     }
   </style>
   <div id="root" data-composition-id="pattern" data-width="1920" data-height="1080">
+    <div id="pattern-iris-y"></div>
     <div id="pattern-iris">
       <div id="pattern-grid"></div>
-      <div id="pattern-plate">PATTERNS</div>
+      <div id="pattern-plate"><span id="pattern-plate-text">PATTERNS</span></div>
+      <div id="pattern-shock"></div>
       <div id="pattern-core"></div>
     </div>
   </div>
   <script>
     (function () {
+      const pt = document.querySelector("#pattern-plate-text");
+      const pw = pt.textContent;
+      pt.textContent = "";
+      pw.split("").forEach((ch) => {
+        const c = document.createElement("span");
+        c.className = "pattern-ch";
+        c.textContent = ch;
+        pt.appendChild(c);
+      });
+
       const tl = gsap.timeline({ paused: true });
       const COLS = 16;
       const ROWS = 9;
@@ -99,11 +137,25 @@
       wave(0);
 
       // Iris opens from the record label (1280, 560) onto this world.
+      // A yellow ring leads, the bone world follows right behind it.
+      tl.fromTo(
+        "#pattern-iris-y",
+        { clipPath: "circle(0px at 1280px 560px)" },
+        { clipPath: "circle(2400px at 1280px 560px)", duration: 0.55, ease: "power3.in" },
+        0,
+      );
       tl.fromTo(
         "#pattern-iris",
         { clipPath: "circle(0px at 1280px 560px)" },
         { clipPath: "circle(2400px at 1280px 560px)", duration: 0.55, ease: "power3.in" },
-        0,
+        0.09,
+      );
+      // The grid arrives spinning out of the iris and settles.
+      tl.fromTo(
+        "#pattern-grid",
+        { scale: 1.5, rotation: -25 },
+        { scale: 1, rotation: 0, duration: 1.2, ease: "expo.out" },
+        0.1,
       );
 
       const clock = { t: 0 };
@@ -121,20 +173,36 @@
         { clipPath: "inset(0 0% 0 0)", duration: 0.5, ease: "expo.out" },
         0.75,
       );
+      // Letters flip in like a split-flap board.
+      tl.fromTo(
+        "#pattern-plate .pattern-ch",
+        { rotationX: -95, opacity: 0 },
+        { rotationX: 0, opacity: 1, duration: 0.55, ease: "back.out(1.8)", stagger: 0.045 },
+        0.95,
+      );
+      tl.to("#pattern-plate .pattern-ch", { rotationX: 95, opacity: 0, duration: 0.2, ease: "power3.in", stagger: 0.02 }, 2.85);
       tl.to("#pattern-plate", { clipPath: "inset(0 0 0 100%)", duration: 0.25, ease: "power3.in" }, 3.0);
 
       // Everything collapses toward the centre, outer cells first; one red square remains.
       const ordered = cells.slice().sort((a, b) => b.dist - a.dist);
       tl.to(
         ordered.map((o) => o.c),
-        { scale: 0, duration: 0.35, ease: "power3.in", stagger: { each: 0.0045 } },
+        { scale: 0, rotation: 180, duration: 0.35, ease: "power3.in", stagger: { each: 0.0045 } },
         3.15,
       );
+      // Vortex: the whole grid twists into the centre as it collapses.
+      tl.to("#pattern-grid", { rotation: 90, scale: 0.6, duration: 1.0, ease: "power3.in" }, 3.15);
       tl.fromTo(
         "#pattern-core",
         { scale: 0, rotation: -90 },
         { scale: 1, rotation: 0, duration: 0.5, ease: "back.out(1.6)" },
         3.65,
+      );
+      tl.fromTo(
+        "#pattern-shock",
+        { scale: 1, opacity: 1, rotation: 0 },
+        { scale: 5, opacity: 0, rotation: 45, duration: 0.55, ease: "expo.out", immediateRender: false },
+        3.8,
       );
 
       window.__timelines["pattern"] = tl;

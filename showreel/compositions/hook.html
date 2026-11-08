@@ -16,12 +16,25 @@
       left: 0;
       right: 0;
       top: 300px;
+      height: 430px;
+    }
+    .hook-plate {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
       display: flex;
       justify-content: center;
       font-family: "Archivo Black", sans-serif;
       font-size: 410px;
       line-height: 1;
       letter-spacing: -0.02em;
+    }
+    .hook-plate.hook-yellow {
+      color: var(--color-yellow, #ffc400);
+    }
+    .hook-plate.hook-cobalt {
+      color: var(--color-cobalt, #1e3cff);
     }
     .hook-mask {
       display: inline-block;
@@ -31,6 +44,7 @@
     }
     .hook-letter {
       display: inline-block;
+      transform-origin: 50% 100%;
     }
     #hook-line {
       position: absolute;
@@ -48,6 +62,9 @@
     }
     #hook-can {
       white-space: nowrap;
+    }
+    .hook-can-word {
+      display: inline-block;
     }
     #hook-slot {
       position: relative;
@@ -71,28 +88,39 @@
     .hook-item.hook-final {
       color: var(--color-yellow, #ffc400);
     }
-    #hook-dot {
+    .hook-final-char {
+      display: inline-block;
+      transform-origin: 50% 100%;
+    }
+    #hook-dotwrap {
+      position: relative;
       flex: none;
       width: 44px;
       height: 44px;
       margin-left: -14px;
       margin-bottom: 4px;
+    }
+    .hook-dot {
+      position: absolute;
+      inset: 0;
       border-radius: 50%;
+    }
+    #hook-dot-y {
+      background: var(--color-yellow, #ffc400);
+    }
+    #hook-dot {
       background: var(--color-cobalt, #1e3cff);
     }
   </style>
   <div id="root" data-composition-id="hook" data-width="1920" data-height="1080">
     <div id="hook-stage">
-      <div id="hook-word" data-layout-allow-overflow>
-        <span class="hook-mask"><span class="hook-letter">M</span></span>
-        <span class="hook-mask"><span class="hook-letter">O</span></span>
-        <span class="hook-mask"><span class="hook-letter">T</span></span>
-        <span class="hook-mask"><span class="hook-letter">I</span></span>
-        <span class="hook-mask"><span class="hook-letter">O</span></span>
-        <span class="hook-mask"><span class="hook-letter">N</span></span>
+      <div id="hook-word" data-layout-allow-overflow data-layout-allow-overlap>
+        <div class="hook-plate hook-yellow" data-word="MOTION" aria-hidden="true" data-layout-ignore></div>
+        <div class="hook-plate hook-cobalt" data-word="MOTION" aria-hidden="true" data-layout-ignore></div>
+        <div class="hook-plate hook-ink" data-word="MOTION"></div>
       </div>
       <div id="hook-line">
-        <span id="hook-can">CAN SHOW</span>
+        <span id="hook-can"><span class="hook-can-word">CAN</span> <span class="hook-can-word">SHOW</span></span>
         <div id="hook-slot" data-layout-allow-overflow>
           <div id="hook-reel">
             <span class="hook-item">SPACE</span>
@@ -100,76 +128,149 @@
             <span class="hook-item">DATA</span>
             <span class="hook-item">CITIES</span>
             <span class="hook-item">PATTERNS</span>
-            <span class="hook-item hook-final">ANYTHING</span>
+            <span class="hook-item hook-final" id="hook-final">ANYTHING</span>
           </div>
         </div>
-        <div id="hook-dot"></div>
+        <div id="hook-dotwrap" data-layout-allow-overflow>
+          <div class="hook-dot" id="hook-dot-y"></div>
+          <div class="hook-dot" id="hook-dot"></div>
+        </div>
       </div>
     </div>
   </div>
   <script>
     (function () {
-      const tl = gsap.timeline({ paused: true });
-      const letters = document.querySelectorAll("#hook-word .hook-letter");
+      // Split each plate of MOTION into masked letters (built once, synchronously).
+      document.querySelectorAll("#hook-word .hook-plate").forEach((plate) => {
+        plate.dataset.word.split("").forEach((ch) => {
+          const m = document.createElement("span");
+          m.className = "hook-mask";
+          const l = document.createElement("span");
+          l.className = "hook-letter";
+          l.textContent = ch;
+          m.appendChild(l);
+          plate.appendChild(m);
+        });
+      });
+      // Split ANYTHING into characters so it can land letter by letter.
+      const fin = document.querySelector("#hook-final");
+      const word = fin.textContent;
+      fin.textContent = "";
+      word.split("").forEach((ch) => {
+        const s = document.createElement("span");
+        s.className = "hook-final-char";
+        s.textContent = ch;
+        fin.appendChild(s);
+      });
 
-      // 1. MOTION rises out of its masks, one letter after another.
+      const tl = gsap.timeline({ paused: true });
+      const plates = [
+        { sel: "#hook-word .hook-yellow .hook-letter", delay: 0 },
+        { sel: "#hook-word .hook-cobalt .hook-letter", delay: 0.06 },
+        { sel: "#hook-word .hook-ink .hook-letter", delay: 0.12 },
+      ];
+
+      // 1. MOTION is printed plate by plate: yellow, then cobalt, then ink, each letter
+      //    rising out of its mask stretched and skewed, landing square. The colour plates
+      //    lead, so every letter arrives trailing yellow and blue, and settles to ink.
+      plates.forEach((p) => {
+        tl.fromTo(
+          p.sel,
+          { yPercent: 190, scaleY: 1.9, skewX: -18 },
+          { yPercent: 0, scaleY: 1, skewX: 0, duration: 0.8, ease: "expo.out", stagger: 0.055 },
+          0.02 + p.delay,
+        );
+      });
+      // Off-register kick as the last letter lands: the colour plates jump apart, then re-register.
       tl.fromTo(
-        letters,
-        { yPercent: 105 },
-        { yPercent: 0, duration: 0.75, ease: "expo.out", stagger: 0.05 },
-        0.15,
+        "#hook-word .hook-yellow",
+        { x: 0, y: 0 },
+        { x: -16, y: -10, duration: 0.08, ease: "power2.out", yoyo: true, repeat: 1 },
+        0.95,
+      );
+      tl.fromTo(
+        "#hook-word .hook-cobalt",
+        { x: 0, y: 0 },
+        { x: 14, y: 8, duration: 0.08, ease: "power2.out", yoyo: true, repeat: 1 },
+        0.95,
       );
 
-      // 2. The word lifts to make room for the sentence (camera-like move, eases both ways).
+      // 2. The word lifts to make room for the sentence; the plates fan out while it moves.
       tl.fromTo(
         "#hook-word",
         { y: 0, scale: 1 },
         { y: -170, scale: 0.62, duration: 0.6, ease: "power3.inOut" },
         1.35,
       );
+      tl.to("#hook-word .hook-yellow", { x: -22, y: 18, duration: 0.3, ease: "power2.out" }, 1.35);
+      tl.to("#hook-word .hook-cobalt", { x: 12, y: 10, duration: 0.3, ease: "power2.out" }, 1.35);
+      tl.to(["#hook-word .hook-yellow", "#hook-word .hook-cobalt"], { x: 0, y: 0, duration: 0.45, ease: "expo.out" }, 1.75);
 
-      // 3. "CAN SHOW" blurs in as a whole line, the slot block wipes open beside it.
+      // 3. CAN / SHOW slam in word by word: big and blurred to sharp.
       tl.fromTo(
-        "#hook-can",
-        { opacity: 0, filter: "blur(10px)" },
-        { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power4.out" },
-        1.7,
+        "#hook-can .hook-can-word",
+        { opacity: 0, scale: 2.4, filter: "blur(16px)" },
+        { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.35, ease: "expo.out", stagger: 0.09 },
+        1.62,
       );
       tl.fromTo(
         "#hook-slot",
         { clipPath: "inset(0 100% 0 0)" },
         { clipPath: "inset(0 0% 0 0)", duration: 0.5, ease: "expo.out" },
-        1.8,
+        1.85,
       );
 
-      // 4. Slot machine: roll through subjects, about 0.16 s a roll, land on ANYTHING.
-      const rolls = [0, 1, 2, 3];
-      rolls.forEach((i) => {
+      // 4. Slot machine with a vertical smear while it spins, landing on ANYTHING.
+      [0, 1, 2, 3].forEach((i) => {
         tl.to(
           "#hook-reel",
           { y: -170 * (i + 1), duration: 0.12, ease: "power2.inOut" },
           2.15 + i * 0.17,
         );
       });
-      // Landing roll is slower, with a tiny settle.
+      tl.fromTo(
+        "#hook-reel",
+        { filter: "blur(0px)" },
+        { filter: "blur(5px)", duration: 0.1, ease: "power2.in" },
+        2.12,
+      );
       tl.fromTo(
         "#hook-reel",
         { y: -170 * 4 },
         { y: -170 * 5, duration: 0.4, ease: "back.out(1.8)", immediateRender: false },
         2.15 + 4 * 0.17,
       );
-
-      // 5. The full stop lands after ANYTHING...
+      tl.to("#hook-reel", { filter: "blur(0px)", duration: 0.18, ease: "power2.out" }, 2.86);
+      // ANYTHING's letters bounce into place after the reel stops: squash, then stretch, then still.
       tl.fromTo(
-        "#hook-dot",
+        "#hook-final .hook-final-char",
+        { scaleY: 0.55, scaleX: 1.25 },
+        { scaleY: 1, scaleX: 1, duration: 0.5, ease: "elastic.out(1, 0.45)", stagger: 0.03 },
+        2.95,
+      );
+      // The slot block punches with the landing.
+      tl.fromTo(
+        "#hook-slot",
+        { scale: 1.08 },
+        { scale: 1, duration: 0.45, ease: "expo.out", immediateRender: false },
+        2.95,
+      );
+
+      // 5. The full stop lands after ANYTHING.
+      tl.fromTo(
+        ["#hook-dot-y", "#hook-dot"],
         { scale: 0 },
-        { scale: 1, duration: 0.35, ease: "back.out(2)" },
+        { scale: 1, duration: 0.35, ease: "back.out(2.4)" },
         3.35,
       );
 
-      // 6. ...then becomes the next world: it floods the frame in cobalt.
-      tl.to(["#hook-word", "#hook-can", "#hook-slot"], { opacity: 0, filter: "blur(12px)", duration: 0.3, ease: "power2.in" }, 4.45);
-      tl.to("#hook-dot", { scale: 110, duration: 0.6, ease: "power3.in" }, 4.3);
+      // 6. Anticipation, then the dot becomes the world: the camera pulls back a touch,
+      //    then pushes into the dot while a yellow ring leads a cobalt flood.
+      tl.to("#hook-stage", { scale: 0.95, duration: 0.35, ease: "power2.out", transformOrigin: "1690px 690px" }, 3.9);
+      tl.to("#hook-stage", { scale: 1.6, rotation: -4, duration: 0.65, ease: "power3.in", transformOrigin: "1690px 690px" }, 4.25);
+      tl.to(["#hook-word", "#hook-can", "#hook-slot"], { opacity: 0, filter: "blur(14px)", duration: 0.3, ease: "power2.in" }, 4.5);
+      tl.to("#hook-dot-y", { scale: 120, duration: 0.6, ease: "power3.in" }, 4.22);
+      tl.to("#hook-dot", { scale: 120, duration: 0.6, ease: "power3.in" }, 4.36);
 
       window.__timelines["hook"] = tl;
     })();

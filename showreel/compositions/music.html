@@ -137,6 +137,13 @@
       width: 640px;
       height: 420px;
     }
+    .music-l,
+    .music-li {
+      display: inline-block;
+    }
+    #music-title {
+      overflow: visible;
+    }
     .music-bar {
       position: absolute;
       bottom: 0;
@@ -190,6 +197,22 @@
         bars.push(b);
       }
 
+      // Split MUSIC into letters: outer span enters, inner span bounces on the beat.
+      const titleEl = document.querySelector("#music-title");
+      const tw = titleEl.textContent;
+      titleEl.textContent = "";
+      const bounceEls = [];
+      tw.split("").forEach((ch) => {
+        const o = document.createElement("span");
+        o.className = "music-l";
+        const i = document.createElement("span");
+        i.className = "music-li";
+        i.textContent = ch;
+        o.appendChild(i);
+        titleEl.appendChild(o);
+        bounceEls.push(i);
+      });
+
       // Seeded phases (mulberry32) so every render is identical.
       function mulberry32(a) {
         return function () {
@@ -219,6 +242,12 @@
           v = Math.min(1, v) * gain;
           gsap.set(b, { scaleY: Math.max(0.03, v) });
         });
+        // The title dances: each letter hops on the kick, offset like a wave.
+        bounceEls.forEach((el, i) => {
+          const lb = beat - i * 0.12;
+          const k = lb > 0 ? Math.pow(1 - (((lb % 1) + 1) % 1), 4) : 0;
+          gsap.set(el, { y: -26 * k * gain, scaleY: 1 + 0.08 * k * gain, transformOrigin: "50% 100%" });
+        });
       }
       levels(0, 0);
 
@@ -242,17 +271,29 @@
 
       // Copy.
       tl.fromTo(
-        "#music-title",
-        { opacity: 0, filter: "blur(10px)" },
-        { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power4.out" },
-        0.3,
+        "#music-title .music-l",
+        { opacity: 0, y: -140, rotation: -25, scale: 1.4, filter: "blur(10px)" },
+        { opacity: 1, y: 0, rotation: 0, scale: 1, filter: "blur(0px)", duration: 0.6, ease: "back.out(2)", stagger: 0.06 },
+        0.25,
       );
       tl.fromTo(
         "#music-rpm",
-        { opacity: 0, filter: "blur(8px)" },
-        { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power4.out" },
-        0.5,
+        { opacity: 0, clipPath: "inset(0 100% 0 0)" },
+        { opacity: 1, clipPath: "inset(0 0% 0 0)", duration: 0.45, ease: "expo.out" },
+        0.7,
       );
+      // Needle drop: the record dips under the stylus.
+      tl.fromTo(
+        "#music-record",
+        { scale: 1 },
+        { keyframes: { scale: [1, 0.97, 1.015, 1] }, duration: 0.35, ease: "none", immediateRender: false },
+        1.45,
+      );
+      // Exit: the camera pushes into the label before the iris opens from it.
+      tl.to("#music-copy", { x: -120, opacity: 0, filter: "blur(12px)", duration: 0.3, ease: "power3.in" }, 5.3);
+      tl.to("#music-eq", { scaleY: 0, transformOrigin: "50% 100%", duration: 0.3, ease: "power3.in" }, 5.3);
+      tl.to("#music-arm", { x: 260, y: -200, rotation: 20, opacity: 0, duration: 0.35, ease: "power3.in" }, 5.25);
+      tl.to("#music-record", { scale: 1.9, rotation: 20, duration: 0.75, ease: "power3.in", immediateRender: false }, 5.25);
 
       // Equaliser comes alive when the needle lands.
       const clock = { t: 0, g: 0 };

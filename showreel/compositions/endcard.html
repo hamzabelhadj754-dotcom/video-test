@@ -15,11 +15,35 @@
       height: 120px;
       background: var(--color-red, #ff3b1f);
     }
+    #end-stage {
+      position: absolute;
+      inset: 0;
+    }
+    .end-ring {
+      position: absolute;
+      left: 810px;
+      top: 365px;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      border: 14px solid var(--color-cobalt, #1e3cff);
+      opacity: 0;
+    }
+    #end-ring-2 {
+      border-color: var(--color-yellow, #ffc400);
+    }
     #end-tagline {
       position: absolute;
       left: 0;
       right: 0;
       top: 170px;
+      height: 140px;
+    }
+    .end-plate {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
       text-align: center;
       font-family: "Archivo Black", sans-serif;
       font-size: 120px;
@@ -27,11 +51,36 @@
       letter-spacing: -0.02em;
       white-space: nowrap;
     }
-    .end-word {
-      display: inline-block;
+    .end-plate.end-p-yellow {
+      color: var(--color-yellow, #ffc400);
     }
-    .end-word.end-accent {
+    .end-plate.end-p-cobalt {
+      color: var(--color-cobalt, #1e3cff);
+    }
+    .end-mask {
+      display: inline-block;
+      overflow: hidden;
+      vertical-align: top;
+      height: 140px;
+      padding-top: 8px;
+    }
+    .end-ch {
+      display: inline-block;
+      transform-origin: 50% 100%;
+    }
+    .end-p-ink .end-accent .end-ch {
       color: var(--color-red, #ff3b1f);
+    }
+    .end-cta-ch {
+      opacity: 0;
+    }
+    #end-cursor {
+      display: inline-block;
+      width: 24px;
+      height: 46px;
+      margin-left: 6px;
+      vertical-align: -6px;
+      background: var(--color-yellow, #ffc400);
     }
     #end-lockup {
       position: absolute;
@@ -75,25 +124,58 @@
     }
   </style>
   <div id="root" data-composition-id="endcard" data-width="1920" data-height="1080">
-    <div id="end-core"></div>
-    <div id="end-tagline">
-      <span class="end-word end-accent">Anything.</span>
-      <span class="end-word">In</span>
-      <span class="end-word">motion.</span>
-    </div>
-    <div id="end-lockup">
-      <img src="assets/logo/hyperframes-wordmark.svg" alt="HyperFrames" />
-    </div>
-    <div id="end-cta"><span id="end-cta-prompt">$</span> npx hyperframes init</div>
-    <div id="end-credit" data-layout-ignore>
-      Built in HTML with HyperFrames · Sound: Vilkas_Sound, MeijstroAudio, elmasmalo1 (CC BY) · qubodup, ludvique (CC0) via Freesound
+    <div id="end-stage">
+      <div class="end-ring" id="end-ring-1"></div>
+      <div class="end-ring" id="end-ring-2"></div>
+      <div id="end-core"></div>
+      <div id="end-tagline" data-layout-allow-overlap data-layout-allow-overflow>
+        <div class="end-plate end-p-yellow" data-text="Anything.|In|motion." aria-hidden="true" data-layout-ignore></div>
+        <div class="end-plate end-p-cobalt" data-text="Anything.|In|motion." aria-hidden="true" data-layout-ignore></div>
+        <div class="end-plate end-p-ink" data-text="Anything.|In|motion."></div>
+      </div>
+      <div id="end-lockup">
+        <img src="assets/logo/hyperframes-wordmark.svg" alt="HyperFrames" />
+      </div>
+      <div id="end-cta"><span id="end-cta-prompt">$</span> <span id="end-cta-text">npx hyperframes init</span><span id="end-cursor"></span></div>
+      <div id="end-credit" data-layout-ignore>
+        Built in HTML with HyperFrames · Sound: Vilkas_Sound, MeijstroAudio, elmasmalo1 (CC BY) · qubodup, ludvique (CC0) via Freesound
+      </div>
     </div>
   </div>
   <script>
     (function () {
+      // Build the three print plates of the tagline: masked letters, word by word.
+      document.querySelectorAll("#end-tagline .end-plate").forEach((plate) => {
+        plate.dataset.text.split("|").forEach((w, wi) => {
+          const word = document.createElement("span");
+          word.className = "end-word" + (wi === 0 ? " end-accent" : "");
+          w.split("").forEach((ch) => {
+            const m = document.createElement("span");
+            m.className = "end-mask";
+            const c = document.createElement("span");
+            c.className = "end-ch";
+            c.textContent = ch;
+            m.appendChild(c);
+            word.appendChild(m);
+          });
+          plate.appendChild(word);
+          if (wi < 2) plate.appendChild(document.createTextNode(" "));
+        });
+      });
+      // The command, one character per span so it can be typed.
+      const cmd = document.querySelector("#end-cta-text");
+      const ct = cmd.textContent;
+      cmd.textContent = "";
+      ct.split("").forEach((ch) => {
+        const c = document.createElement("span");
+        c.className = "end-cta-ch";
+        c.textContent = ch;
+        cmd.appendChild(c);
+      });
+
       const tl = gsap.timeline({ paused: true });
 
-      // The red square implodes...
+      // The red square implodes with a twist...
       tl.fromTo(
         "#end-core",
         { scale: 1, rotation: 0 },
@@ -101,37 +183,70 @@
         0.05,
       );
 
-      // ...and the mark springs out of the same point.
+      // ...and the mark springs out of the same point, kicking two rings outward.
       tl.fromTo(
         "#end-lockup",
-        { x: 420, scale: 0.3, clipPath: "inset(0% 83.5% 0% 0%)" },
-        { scale: 1, duration: 0.55, ease: "back.out(1.6)" },
+        { x: 420, scale: 0, clipPath: "inset(0% 83.5% 0% 0%)", transformOrigin: "80px 75px" },
+        { scale: 1, duration: 0.55, ease: "back.out(1.8)" },
         0.38,
       );
-      // Then the wordmark wipes in beside it while the lockup settles to centre.
+      tl.fromTo(
+        "#end-ring-1",
+        { scale: 0.2, opacity: 1 },
+        { scale: 4.5, opacity: 0, duration: 0.8, ease: "expo.out", immediateRender: false },
+        0.4,
+      );
+      tl.fromTo(
+        "#end-ring-2",
+        { scale: 0.2, opacity: 1 },
+        { scale: 3.2, opacity: 0, duration: 0.8, ease: "expo.out", immediateRender: false },
+        0.48,
+      );
+      // Impact shake.
+      tl.to(
+        "#end-stage",
+        { keyframes: { x: [0, -14, 11, -7, 4, 0], y: [0, 9, -7, 4, -2, 0] }, duration: 0.32, ease: "none" },
+        0.42,
+      );
+      // The wordmark wipes in beside the mark while the lockup slides to centre.
       tl.to("#end-lockup", { x: 0, duration: 0.7, ease: "expo.out" }, 0.95);
       tl.to("#end-lockup", { clipPath: "inset(0% 0% 0% 0%)", duration: 0.7, ease: "expo.out" }, 0.95);
 
-      // Tagline, word by word, blur to sharp, no translate.
-      tl.fromTo(
-        "#end-tagline .end-word",
-        { opacity: 0, filter: "blur(8px)" },
-        { opacity: 1, filter: "blur(0px)", duration: 0.15, ease: "power4.out", stagger: 0.1 },
-        1.3,
-      );
+      // Tagline printed plate by plate, the colour plates leading the ink.
+      [
+        [".end-p-yellow", 0],
+        [".end-p-cobalt", 0.05],
+        [".end-p-ink", 0.1],
+      ].forEach(([sel, d]) => {
+        tl.fromTo(
+          "#end-tagline " + sel + " .end-ch",
+          { yPercent: 190, scaleY: 1.8, skewX: -16 },
+          { yPercent: 0, scaleY: 1, skewX: 0, duration: 0.7, ease: "expo.out", stagger: 0.028 },
+          1.2 + d,
+        );
+      });
 
-      // The call to action: the real command.
+      // The call to action: the block opens, the command types itself, the cursor blinks.
       tl.fromTo(
         "#end-cta",
         { clipPath: "inset(0 50% 0 50%)" },
-        { clipPath: "inset(0 0% 0 0%)", duration: 0.5, ease: "expo.out" },
+        { clipPath: "inset(0 0% 0 0%)", duration: 0.45, ease: "expo.out" },
         1.75,
+      );
+      document.querySelectorAll("#end-cta .end-cta-ch").forEach((c, i) => {
+        tl.fromTo(c, { opacity: 0 }, { opacity: 1, duration: 0.01, ease: "none" }, 2.0 + i * 0.035);
+      });
+      tl.fromTo(
+        "#end-cursor",
+        { opacity: 1 },
+        { opacity: 0, duration: 0.01, ease: "none", repeat: 5, repeatDelay: 0.25, yoyo: true },
+        2.75,
       );
       tl.fromTo(
         "#end-credit",
         { opacity: 0 },
         { opacity: 0.7, duration: 0.4, ease: "power2.out" },
-        2.0,
+        2.2,
       );
 
       window.__timelines["endcard"] = tl;
