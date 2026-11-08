@@ -1,0 +1,4 @@
+renders/*.log
+renders/work-*
+renders/.*transaction*
+.hyperframes/artifacts/

@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="en" data-composition-variables='[{"id":"handle","type":"string","label":"End-card handle","default":"@YOURHANDLE"}]'>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+<style>
+  @font-face { font-family: "Inter Tight"; src: url("assets/fonts/InterTight-Variable.woff2") format("woff2"); font-weight: 100 900; }
+  @font-face { font-family: "Geist Mono"; src: url("assets/fonts/GeistMono-Variable.woff2") format("woff2"); font-weight: 100 900; }
+  @font-face { font-family: "Instrument Serif"; src: url("assets/fonts/InstrumentSerif-Regular.woff2") format("woff2"); font-style: normal; }
+  @font-face { font-family: "Instrument Serif"; src: url("assets/fonts/InstrumentSerif-Italic.woff2") format("woff2"); font-style: italic; }
+  :root { --bg:#0A0A0D; --ink:#F3F1EC; --ink-2:rgba(243,241,236,.55); --line:rgba(243,241,236,.22); --accent:#FF6A3D; --glow-a:#3A2BFF; --glow-b:#FF6A3D; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; background: var(--bg); }
+  #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: var(--bg); color: var(--ink); font-family: "Inter Tight", sans-serif; }
+  .full { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+  .sc { visibility: hidden; overflow: hidden; }
+  .cam, .pk { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+  .photo { position: absolute; background-size: cover; background-repeat: no-repeat; }
+  .aur { position: absolute; border-radius: 50%; }
+  .aur.a { background: radial-gradient(circle, rgba(58,43,255,.30) 0%, rgba(58,43,255,.12) 38%, rgba(58,43,255,0) 68%); }
+  .aur.b { background: radial-gradient(circle, rgba(255,106,61,.22) 0%, rgba(255,106,61,.08) 38%, rgba(255,106,61,0) 68%); }
+  .grid { position: absolute; inset: -128px; background-image: linear-gradient(rgba(243,241,236,.03) 1px, transparent 1px), linear-gradient(90deg, rgba(243,241,236,.03) 1px, transparent 1px); background-size: 64px 64px; }
+  .hdr { position: absolute; left: 72px; right: 72px; top: 250px; display: flex; justify-content: space-between; }
+  .mono { font: 400 24px/1.3 "Geist Mono"; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); }
+  .mono b { font-weight: 400; color: var(--ink); }
+  .line { position: absolute; left: 0; width: 1080px; text-align: center; white-space: nowrap; font: 500 60px/1.12 "Inter Tight"; letter-spacing: -0.025em; }
+  .line.mono { font: 400 24px/1.3 "Geist Mono"; letter-spacing: .08em; }
+  .lw { display: inline-block; position: relative; }
+  .w { display: inline-block; position: relative; will-change: transform, opacity, filter; }
+  .w.s { font: italic 400 190px/0.9 "Instrument Serif"; letter-spacing: -0.02em; }
+  .w.dim { color: var(--ink-2); }
+  svg { position: absolute; overflow: visible; }
+  .glass { position: absolute; border-radius: 28px; background: rgba(255,255,255,.035); border: 1px solid var(--line); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); overflow: hidden; }
+  .cword { position: absolute; left: 0; right: 0; bottom: 44px; text-align: center; font: italic 400 96px/1 "Instrument Serif"; letter-spacing: -.02em; }
+  .dg { display: inline-block; height: 1em; overflow: hidden; }
+  .dg .st { display: block; }
+  .dg .st b { display: block; height: 1em; font-weight: 300; }
+  .vig { background: radial-gradient(ellipse 85% 70% at 50% 48%, transparent 45%, rgba(0,0,0,.6) 100%); pointer-events: none; }
+  #grain { position: absolute; left: -60px; top: -60px; width: 1200px; height: 2040px; opacity: .05; mix-blend-mode: screen; pointer-events: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' seed='4' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="20" data-width="1080" data-height="1920" data-fps="30">
+<svg width="0" height="0" style="position:absolute"><defs>
+  <filter id="hblur" x="-20%" y="-5%" width="140%" height="110%"><feGaussianBlur id="hblurk" stdDeviation="0 0"/></filter>
+  <linearGradient id="eg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FF6A3D" stop-opacity=".18"/><stop offset="1" stop-color="#FF6A3D" stop-opacity="0"/></linearGradient>
+</defs></svg>
+
+<!-- ============ 1 · grow ============ -->
+<section class="sc full" id="s1"><div class="cam"><div class="pk">
+  <div class="photo" id="s1-photo" style="left:-60px; top:-40px; width:1200px; height:1800px; background-image:url(assets/photos/hero.jpg); background-position: 50% 20%"></div>
+  <div class="full" style="background: linear-gradient(180deg, rgba(10,10,13,.85) 0%, rgba(10,10,13,.35) 16%, rgba(10,10,13,0) 26%, rgba(10,10,13,0) 42%, rgba(10,10,13,.92) 66%, #0A0A0D 82%)"></div>
+  <div class="aur a" id="s1-a" style="left:-460px; top:880px; width:1300px; height:1300px"></div>
+  <div class="aur b" id="s1-b" style="left:420px; top:1100px; width:1100px; height:1100px"></div>
+  <div class="hdr mono"><span class="scr" data-at="0.05" data-text="N° 01 — HYPERTROPHY"></span><span class="scr" data-at="0.2" data-text="A FIELD GUIDE"></span></div>
+  <div class="line" id="s1-l1" style="top:1120px"><span class="lw"><span class="w" data-t="0.47">Your</span> <span class="w" data-t="0.65">muscles</span> <span class="w" data-t="1.21">don't</span></span></div>
+  <div class="line" id="s1-l2" style="top:1193px"><span class="lw"><span class="w s" data-t="1.56">gr<span id="ohole">o</span>w<svg width="520" height="40" viewBox="0 0 520 40" style="left:-70px; top:94px"><path id="s1-strike" d="M0 30 L520 6" stroke="#FF6A3D" stroke-width="3" stroke-linecap="round" pathLength="1" stroke-dasharray="1 1.2" stroke-dashoffset="1.1" fill="none"/></svg></span> <span class="w" data-t="1.86">in</span> <span class="w" data-t="2.01">the</span> <span class="w" data-t="2.24">gym.</span></span></div>
+</div></div></section>
+
+<!-- ============ 2 · breaks ============ -->
+<section class="sc full" id="s2"><div class="cam"><div class="pk">
+  <div id="s2-bg" class="full">
+    <div class="photo" style="left:240px; top:420px; width:900px; height:1600px; background-image:url(assets/photos/torso.jpg); background-position: 50% 30%; opacity:.34"></div>
+    <div class="full" style="left:-60px; width:1200px; background: linear-gradient(90deg, #0A0A0D 18%, rgba(10,10,13,.2) 60%, rgba(10,10,13,.55) 100%), linear-gradient(180deg, #0A0A0D 22%, rgba(10,10,13,0) 40%, rgba(10,10,13,0) 70%, #0A0A0D 92%)"></div>
+    <div class="grid"></div>
+    <div class="aur a" id="s2-a" style="left:-420px; top:560px; width:1260px; height:1260px"></div>
+  </div>
+  <div class="hdr mono"><span class="scr" data-at="3.35" data-text="N° 02 — DAMAGE"></span><span class="scr" data-at="3.5" data-text="FIG. 02"></span></div>
+  <div class="line" id="s2-l1" style="top:330px"><span class="lw"><span class="w" data-t="3.49">Training</span></span></div>
+  <div class="line" id="s2-l2" style="top:403px"><span class="lw"><span class="w s" data-t="3.96">breaks</span> <span class="w" data-t="4.33">them</span> <span class="w" data-t="4.58">down.</span></span></div>
+  <div id="s2-mid" class="full"><svg id="fib" width="1080" height="1920" viewBox="0 0 1080 1920" style="left:0; top:0"></svg></div>
+</div></div></section>
+
+<!-- ============ 3 · recover / 48 h ============ -->
+<section class="sc full" id="s3"><div class="cam"><div class="pk">
+  <div id="s3-bg" class="full">
+    <div class="photo" id="s3-photo" style="left:0; top:860px; width:1080px; height:1350px; background-image:url(assets/photos/bedroom.jpg); background-position: 50% 40%; opacity:.75"></div>
+    <div class="full" style="background: linear-gradient(180deg, #0A0A0D 44%, rgba(10,10,13,.45) 64%, rgba(10,10,13,.5) 82%, #0A0A0D 96%)"></div>
+    <div class="aur a" id="s3-a" style="left:-110px; top:450px; width:1300px; height:1300px"></div>
+  </div>
+  <div class="hdr mono"><span class="scr" data-at="6.1" data-text="N° 03 — REPAIR WINDOW"></span><span class="scr" data-at="6.25" data-text="FIG. 03"></span></div>
+  <div class="line" id="s3-l1" style="top:330px"><span class="lw"><span class="w" data-t="6.16">They</span> <span class="w" data-t="6.42">grow</span> <span class="w" data-t="6.74">while</span> <span class="w" data-t="7.14">you</span></span></div>
+  <div class="line" id="s3-l2" style="top:403px"><span class="lw"><span class="w s" data-t="7.38">recover,</span></span></div>
+  <div class="full" style="perspective:1600px">
+    <div id="ring3d" style="position:absolute; left:290px; top:830px; width:500px; height:500px; transform-origin:50% 50%">
+      <svg id="ring" width="500" height="500" viewBox="-250 -250 500 500" style="left:0; top:0"></svg>
+      <div id="count" style="position:absolute; left:0; right:0; top:150px; text-align:center; font: 300 150px/1 'Geist Mono'; letter-spacing:-.04em"><span class="dg"><span class="st" id="tens"><b>0</b><b>1</b><b>2</b><b>3</b><b>4</b></span></span><span class="dg"><span class="st" id="ones"></span></span></div>
+      <div class="mono" id="hrs" style="position:absolute; left:0; right:0; top:318px; text-align:center">HRS</div>
+    </div>
+  </div>
+  <div class="line mono" id="s3-l3" style="top:1390px"><span class="lw"><span class="w" data-t="8.04">over</span> <span class="w" data-t="8.35">the</span> <span class="w" data-t="8.63">next</span> <span class="w" data-t="9.0" style="color:var(--ink)">48</span> <span class="w" data-t="9.56" style="color:var(--ink)">hours</span></span></div>
+</div></div></section>
+
+<!-- ============ 4 · three things ============ -->
+<section class="sc full" id="s4"><div class="cam"><div class="pk">
+  <div class="aur a" id="s4-a" style="left:-440px; top:550px; width:1300px; height:1300px"></div>
+  <div class="aur b" id="s4-b" style="left:330px; top:760px; width:1100px; height:1100px"></div>
+  <div class="grid" style="opacity:.6"></div>
+  <div class="hdr mono"><span class="scr" data-at="10.45" data-text="N° 04 — THE INPUTS"></span><span class="scr" data-at="10.6" data-text="3 / 3"></span></div>
+  <div class="line" id="s4-l1" style="top:330px"><span class="lw"><span class="w" data-t="10.60">Three</span> <span class="w" data-t="10.90">things</span> <span class="w" data-t="11.29">build</span></span></div>
+  <div class="line" id="s4-l2" style="top:403px"><span class="lw"><span class="w s" data-t="11.64">muscle:</span></span></div>
+  <div id="cols"></div>
+</div></div></section>
+
+<!-- ============ 5 · not more hours ============ -->
+<section class="sc full" id="s5"><div class="cam"><div class="pk">
+  <div class="aur b" id="s5-b" style="left:180px; top:450px; width:1300px; height:1300px"></div>
+  <div class="aur a" id="s5-a" style="left:-520px; top:780px; width:1260px; height:1260px"></div>
+  <div class="grid"></div>
+  <div class="hdr mono"><span class="scr" data-at="14.3" data-text="N° 05 — THE TRADE"></span><span class="scr" data-at="14.45" data-text="FIG. 05"></span></div>
+  <div class="line" id="s5-l1" style="top:330px"><span class="lw"><span class="w" data-t="14.45">Not</span> <span class="w" data-t="14.67">more</span> <span class="w" id="hours5" data-t="15.09">hours.<i id="s5-strike" style="position:absolute; left:-6px; right:-6px; top:52%; height:3px; background:#FF6A3D"></i></span></span></div>
+  <div class="line" id="s5-l2" style="top:403px"><span class="lw"><span class="w" data-t="15.82">Better</span> <span class="w s" data-t="16.23">recovery.</span></span></div>
+  <svg id="chart" width="1080" height="1920" viewBox="0 0 1080 1920" style="left:0; top:0"></svg>
+</div></div></section>
+
+<!-- ============ 6 · rest ============ -->
+<section class="sc full" id="s6"><div class="cam"><div class="pk">
+  <div class="aur a" id="s6-a" style="left:-380px; top:520px; width:1300px; height:1300px"></div>
+  <div class="aur b" id="s6-b" style="left:300px; top:850px; width:1100px; height:1100px"></div>
+  <div id="arch" style="position:absolute; left:250px; top:690px; width:580px; height:780px; border-radius:290px 290px 0 0; overflow:hidden">
+    <div class="photo" id="s6-photo" style="inset:0; background-image:url(assets/photos/rest.jpg); background-position: 50% 30%"></div>
+    <div class="full" style="width:auto; height:auto; inset:0; background: linear-gradient(180deg, rgba(10,10,13,.18) 0%, rgba(10,10,13,.12) 55%, rgba(10,10,13,.8) 100%)"></div>
+  </div>
+  <div id="archline" style="position:absolute; left:232px; top:672px; width:616px; height:816px; border-radius:308px 308px 0 0; border:1px solid var(--line); border-bottom:none"></div>
+  <div class="line" id="s6-l1" style="top:330px"><span class="lw"><span class="w" data-t="17.56">Growth</span> <span class="w" data-t="17.81">is</span> <span class="w" data-t="17.93">built</span></span></div>
+  <div class="line" id="s6-l2" style="top:403px"><span class="lw"><span class="w" data-t="18.23">while</span> <span class="w" data-t="18.53">you</span> <span class="w s" data-t="18.71">rest.<i id="s6-uline" style="position:absolute; left:6px; right:26px; bottom:-4px; height:3px; background:#FF6A3D"></i></span></span></div>
+  <div class="mono" id="handle" style="position:absolute; left:0; right:0; top:1500px; text-align:center; color:var(--ink)">@YOURHANDLE</div>
+</div></div></section>
+
+<!-- ============ overlays ============ -->
+<svg id="ovl" class="full" viewBox="0 0 1080 1920" style="pointer-events:none">
+  <path id="carry" fill="none" stroke="#FF6A3D" stroke-width="2.5" stroke-linecap="round" pathLength="1" stroke-dasharray="1 1.2" stroke-dashoffset="1.1"/>
+  <path id="morph" fill="none" stroke="rgba(243,241,236,.5)" stroke-width="1.5"/>
+</svg>
+<canvas id="parts" class="full" width="1080" height="1920" style="pointer-events:none"></canvas>
+<div class="full vig"></div>
+<div id="grain"></div>
+<div class="full" id="black" style="background:#000"></div>
+<div class="full" id="endfade" style="background:#0A0A0D"></div>
+
+<audio id="mix" class="clip" src="assets/audio/mix.wav" data-start="0" data-duration="20" data-track-index="1" data-volume="1"></audio>
+</div>
+
+<script>
+document.fonts.ready.then(() => {
+  const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+  const FR = 1 / 30;
+  const LINE = "rgba(243,241,236,.22)", INK2 = "rgba(243,241,236,.55)", INK = "#F3F1EC", ACC = "#FF6A3D";
+  let seed = 11; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+  const tl = gsap.timeline({ paused: true });
+  try { const v = window.__hyperframes && window.__hyperframes.getVariables && window.__hyperframes.getVariables(); if (v && v.handle) $("#handle").textContent = v.handle; } catch (e) {}
+
+  // ---------------- build: fibre bundle (fig 2) ----------------
+  const FX0 = 70, FX1 = 1010, FCY = 1120, FH = 330;
+  const TEARS = { 3: .30, 8: .56, 12: .43, 16: .64, 20: .48 };
+  const fy = (i, u) => { const v = (i / 23 - .5) * 2; return FCY + v * FH / 2 * Math.pow(Math.sin(Math.PI * (0.06 + u * 0.88)), 0.9) + Math.sin(u * 9 + i * .7) * 3; };
+  const fpath = (i, ua, ub) => { let d = ""; for (let k = 0; k <= 60; k++) { const u = ua + (ub - ua) * k / 60; d += (k ? "L" : "M") + (FX0 + (FX1 - FX0) * u).toFixed(1) + " " + fy(i, u).toFixed(1); } return d; };
+  { let h = ""; const G = .022;
+    for (let i = 0; i < 24; i++) {
+      h += `<path class="fbr" id="fb${i}" d="${fpath(i, 0, 1)}" stroke="${LINE}" stroke-width="1.5" fill="none" pathLength="1" stroke-dasharray="1 1.2" stroke-dashoffset="1.1"/>`;
+      if (TEARS[i] != null) { const u = TEARS[i];
+        h += `<g class="tear" id="tr${i}" opacity="0"><g class="tl"><path d="${fpath(i, 0, u - G)}" stroke="${LINE}" stroke-width="1.5" fill="none"/><path d="${fpath(i, u - G - .05, u - G)}" stroke="${ACC}" stroke-width="2" fill="none"/></g>`;
+        h += `<g class="trr"><path d="${fpath(i, u + G, 1)}" stroke="${LINE}" stroke-width="1.5" fill="none"/><path d="${fpath(i, u + G, u + G + .05)}" stroke="${ACC}" stroke-width="2" fill="none"/></g>`;
+        const tx = FX0 + (FX1 - FX0) * u, ty = fy(i, u);
+        for (let k = 0; k < 14; k++) { const a = rnd() * 6.283, r = 6 + rnd() * 40;
+          h += `<circle class="pt" data-x="${(tx + Math.cos(a) * r).toFixed(1)}" data-y="${(ty + Math.sin(a) * r * .6).toFixed(1)}" cx="${tx.toFixed(1)}" cy="${ty.toFixed(1)}" r="${(0.8 + rnd() * 1.8).toFixed(1)}" fill="${ACC}" data-o="${(.35 + rnd() * .6).toFixed(2)}" opacity="0"/>`; }
+        h += `</g>`; }
+    }
+    const nx = FX0 + (FX1 - FX0) * .56, ny = fy(8, .56);
+    h += `<circle id="cnode" cx="${nx}" cy="${ny}" r="9" fill="none" stroke="${INK2}" stroke-width="1.5" opacity="0"/>`;
+    h += `<path id="clead" opacity="0" d="M${nx + 6} ${ny - 7} L${nx + 120} ${ny - 190} L${nx + 300} ${ny - 190}" stroke="${INK2}" stroke-width="1.5" fill="none" stroke-dasharray="6 6"/>`;
+    h += `<text id="clabel" x="${nx + 128}" y="${ny - 206}" font-family="Geist Mono" font-size="24" letter-spacing="2" fill="${INK}" opacity="0">MICRO-TEARS</text>`;
+    h += `<g id="fcap" opacity="0"><text x="${FX0}" y="${FCY + FH / 2 + 120}" font-family="Geist Mono" font-size="22" letter-spacing="2" fill="${INK2}">FIG. 02 — FIBRE BUNDLE, 24 STRANDS</text>`;
+    h += `<line x1="${FX0}" y1="${FCY + FH / 2 + 80}" x2="${FX1}" y2="${FCY + FH / 2 + 80}" stroke="${LINE}" stroke-width="1"/>`;
+    for (let k = 0; k <= 10; k++) { const x = FX0 + (FX1 - FX0) * k / 10; h += `<line x1="${x}" y1="${FCY + FH / 2 + 74}" x2="${x}" y2="${FCY + FH / 2 + 86}" stroke="${LINE}" stroke-width="1"/>`; }
+    h += `</g>`;
+    $("#fib").innerHTML = h; }
+
+  // ---------------- build: 48-hour ring (fig 3) ----------------
+  const RR = 220, RC = 2 * Math.PI * RR;
+  { let h = `<circle id="rtrack" r="${RR}" fill="none" stroke="${LINE}" stroke-width="1.5"/><g id="rticks" opacity="0">`;
+    for (let k = 0; k < 48; k++) { const a = k / 48 * 6.283 - 1.5708, r0 = RR + 16, r1 = RR + (k % 6 ? 24 : 34);
+      h += `<line x1="${Math.cos(a) * r0}" y1="${Math.sin(a) * r0}" x2="${Math.cos(a) * r1}" y2="${Math.sin(a) * r1}" stroke="${k % 6 ? LINE : INK2}" stroke-width="1.5"/>`; }
+    for (const [k, t] of [[0, "0H"], [12, "12"], [24, "24"], [36, "36"]]) { const b = k / 48 * 6.283 - 1.5708; h += `<text x="${Math.cos(b) * (RR + 62)}" y="${Math.sin(b) * (RR + 62) + 8}" text-anchor="middle" font-family="Geist Mono" font-size="22" fill="${INK2}">${t}</text>`; }
+    h += `</g><circle id="rarc" r="${RR}" fill="none" stroke="${ACC}" stroke-width="3" stroke-linecap="round" stroke-dasharray="${RC} ${RC}" stroke-dashoffset="${RC}" transform="rotate(-90)"/>`;
+    const a = -1.5708; h += `<circle id="rdot" cx="${Math.cos(a) * RR}" cy="${Math.sin(a) * RR}" r="7" fill="${ACC}" opacity="0"/>`;
+    $("#ring").innerHTML = h;
+    const ones = $("#ones"); for (let k = 0; k < 50; k++) { const b = document.createElement("b"); b.textContent = k % 10; ones.appendChild(b); } }
+
+  // ---------------- build: three glass columns (fig 4) ----------------
+  const CW = 300, CGAP = 30, CTOP = 660, CH = 820;
+  const glyph = (k) => {
+    const P = (d) => `<path class="gl" d="${d}" stroke="${INK}" stroke-opacity=".7" stroke-width="2" fill="none" pathLength="1" stroke-dasharray="1 1.2" stroke-dashoffset="1.1"/>`;
+    if (k === 0) { let d = "M20 150"; for (let i = 0; i < 6; i++) d += ` H${20 + (i + 1) * 40} V${150 - (i + 1) * 21}`; return P(d); }
+    if (k === 1) { let h = ""; const hex = (cx, cy) => { let d = ""; for (let i = 0; i < 6; i++) { const a = i * 1.0472 + .5236; d += (i ? "L" : "M") + (cx + Math.cos(a) * 24).toFixed(1) + " " + (cy + Math.sin(a) * 24).toFixed(1); } return P(d + "Z"); };
+      const Q = [[50, 110], [92, 86], [134, 110], [176, 86], [218, 110]]; Q.forEach(([x, y], i) => { h += hex(x, y); if (i) h += P(`M${Q[i - 1][0] + 18} ${Q[i - 1][1] + (i % 2 ? -10 : 10)} L${x - 18} ${y + (i % 2 ? 10 : -10)}`); }); return h; }
+    let d = "M14 150"; for (let x = 18; x <= 256; x += 4) d += ` L${x} ${(150 + Math.sin(x / 14) * 8 * (1 - x / 300)).toFixed(1)}`;
+    return P("M150 40 a42 42 0 1 0 46 58 a34 34 0 1 1 -46 -58Z") + P(d);
+  };
+  [["01", "load", "dumbbell.jpg", "50% 50%"], ["02", "protein", "eggs.jpg", "45% 55%"], ["03", "sleep", "bed.jpg", "50% 70%"]].forEach(([n, word, img, pos], k) => {
+    $("#cols").insertAdjacentHTML("beforeend", `<div class="glass col" id="col${k}" style="left:${60 + k * (CW + CGAP)}px; top:${CTOP}px; width:${CW}px; height:${CH}px">
+      <div class="photo" style="left:14px; top:14px; right:14px; height:330px; border-radius:18px; background-image:url(assets/photos/${img}); background-position:${pos}"></div>
+      <div class="mono scr" data-at="${10.5 + k * 0.1}" data-text="${n} — ${word.toUpperCase()}" style="position:absolute; left:28px; top:372px"></div>
+      <svg width="270" height="190" viewBox="0 0 270 190" style="left:15px; top:430px">${glyph(k)}</svg>
+      <div class="cword" id="cw${k}">${word}</div></div>`);
+  });
+
+  // ---------------- build: chart (fig 5) ----------------
+  const CL = 120, CR = 960, CT = 760, CB = 1340;
+  const grey = (u) => .42 * (1 - Math.exp(-u * 5)), ember = (u) => .08 + .82 * Math.pow(u, 1.25);
+  const curve = (f) => { let d = ""; for (let k = 0; k <= 80; k++) { const u = k / 80; d += (k ? "L" : "M") + (CL + (CR - CL) * u).toFixed(1) + " " + (CB - (CB - CT) * f(u)).toFixed(1); } return d; };
+  { let h = "<g id='axes'>";
+    for (let k = 0; k <= 4; k++) { const y = CB - (CB - CT) * k / 4; h += `<path class="ax" d="M${CL} ${y} L${CR} ${y}" stroke="rgba(243,241,236,${k ? .1 : .3})" stroke-width="1" pathLength="1" stroke-dasharray="1 1.2" stroke-dashoffset="1.1"/>`; }
+    h += `</g><g id="xlab" opacity="0">`;
+    for (let k = 0; k <= 8; k++) { const x = CL + (CR - CL) * k / 8; h += `<line x1="${x}" y1="${CB}" x2="${x}" y2="${CB + 10}" stroke="${LINE}"/>`; if (k) h += `<text x="${x}" y="${CB + 44}" text-anchor="middle" font-family="Geist Mono" font-size="22" fill="${INK2}">W${k}</text>`; }
+    h += `</g><text id="ylab" x="${CL}" y="${CT - 30}" font-family="Geist Mono" font-size="22" letter-spacing="2" fill="${INK2}"></text>`;
+    h += `<g id="gline"><path id="gcurve" d="${curve(grey)}" stroke="rgba(243,241,236,.5)" stroke-width="2" fill="none" pathLength="1" stroke-dasharray="1 1.2" stroke-dashoffset="1.1"/>`;
+    h += `<text id="glab" x="${CR}" y="${CB - (CB - CT) * grey(1) + 46}" text-anchor="end" font-family="Geist Mono" font-size="22" letter-spacing="2" fill="${INK2}" opacity="0">MORE HOURS</text></g>`;
+    h += `<g id="eline"><path id="earea" d="${curve(ember)} L${CR} ${CB} L${CL} ${CB}Z" fill="url(#eg)" opacity="0"/>`;
+    h += `<path id="ecurve" d="${curve(ember)}" stroke="${ACC}" stroke-width="3" fill="none" pathLength="1" stroke-dasharray="1 1.2" stroke-dashoffset="1.1"/>`;
+    const ey = CB - (CB - CT) * ember(1);
+    h += `<g id="enode" opacity="0"><circle cx="${CR}" cy="${ey}" r="8" fill="${ACC}"/><circle cx="${CR}" cy="${ey}" r="20" fill="none" stroke="${ACC}" stroke-opacity=".4"/></g>`;
+    h += `<text id="elab" x="${CR - 34}" y="${ey + 8}" text-anchor="end" font-family="Geist Mono" font-size="24" letter-spacing="2" fill="${ACC}"></text></g>`;
+    $("#chart").innerHTML = h; }
+
+  // ---------------- reflow build: measure once, then glide each line to stay centred ----------------
+  const lineState = (line) => {
+    const lw = $(".lw", line), ws = $$(":scope > .w", lw), L0 = lw.offsetLeft;
+    return { lw, ws, dx: ws.map((w, k) => 540 - (L0 + ws[0].offsetLeft + (w.offsetLeft + w.offsetWidth - ws[0].offsetLeft) / 2)) };
+  };
+  const ohole = (() => { const o = $("#ohole"), r = o.getBoundingClientRect(), s = $("#s1").getBoundingClientRect(); return [r.left - s.left + r.width * 0.52, r.top - s.top + r.height * 0.6]; })();
+  const LINES = $$(".line").map(lineState);
+
+  // ---------------- initial states ----------------
+  gsap.set(".sc", { autoAlpha: 0 }); gsap.set("#s1", { autoAlpha: 1 });
+  gsap.set(".w", { autoAlpha: 0 });
+  gsap.set("#black, #endfade", { autoAlpha: 0 });
+  gsap.set(".scr", { autoAlpha: 0 });
+  gsap.set("#s1 .pk", { transformOrigin: `${ohole[0]}px ${ohole[1]}px` });
+  gsap.set("#s5-strike, #s6-uline", { scaleX: 0, transformOrigin: "0% 50%" });
+  gsap.set("#ring3d", { rotationX: 55 });
+  gsap.set("#count, #hrs", { autoAlpha: 0 });
+  gsap.set(".col", { autoAlpha: 0 });
+  gsap.set(".cword", { autoAlpha: 0 });
+  gsap.set("#arch", { clipPath: "inset(100% 0% 0% 0%)" }); gsap.set("#archline", { autoAlpha: 0 });
+  gsap.set("#handle", { autoAlpha: 0 });
+  gsap.set("#morph, #carry", { autoAlpha: 0 });
+  LINES.forEach((L) => gsap.set(L.lw, { x: L.dx[0] }));
+
+  // scene visibility (each scene sits on its own beat at 110 BPM)
+  [["#s2", 3.273, 6.0], ["#s3", 6.0, 10.364], ["#s4", 10.364, 14.2], ["#s5", 13.9, 17.455], ["#s6", 17.0, 20.01]].forEach(([id, a, b]) => {
+    tl.set(id, { autoAlpha: 1 }, a); if (b < 20) tl.set(id, { autoAlpha: 0 }, b);
+  });
+  tl.set("#s1", { autoAlpha: 0 }, 3.273);
+
+  // ---------------- words: reflow glide + entrances ----------------
+  LINES.forEach((L) => {
+    const ts = L.ws.map((w) => parseFloat(w.dataset.t) - FR);
+    L.ws.forEach((w, k) => {
+      const t = ts[k];
+      if (w.classList.contains("s")) tl.fromTo(w, { autoAlpha: 0, scale: 1.25, filter: "blur(12px)" }, { autoAlpha: 1, scale: 1, filter: "blur(0px)", duration: 0.45, ease: "expo.out", transformOrigin: "50% 70%" }, t);
+      else tl.fromTo(w, { autoAlpha: 0, y: 18, filter: "blur(8px)" }, { autoAlpha: 1, y: 0, filter: "blur(0px)", duration: 0.22, ease: "power3.out" }, t);
+      if (k > 0) { const nxt = k + 1 < ts.length ? ts[k + 1] - t : 0.35; tl.to(L.lw, { x: L.dx[k], duration: Math.min(0.35, nxt), ease: "power3.out" }, t); }
+    });
+  });
+  const lineOut = (ids, t, how = "blur") => tl.to(ids, how === "mask" ? { yPercent: 60, autoAlpha: 0, duration: 0.2, ease: "power3.in" } : { autoAlpha: 0, filter: "blur(10px)", y: -14, duration: 0.2, ease: "power3.in" }, t);
+
+  // ---------------- mono labels: scramble decode (seeded) ----------------
+  const GLY = "ABCDEFGHJKLMNPRSTUVWXYZ0123456789#%/+-";
+  const scramble = (el, text, t, d = 0.35) => {
+    const pr = { p: 0 }, n = text.length;
+    const put = () => { const f = Math.floor(pr.p * 14); let s = "";
+      for (let i = 0; i < n; i++) { const c = text[i]; s += (c === " " || i / n < pr.p) ? c : GLY[(i * 7 + f * 13 + n) % GLY.length]; } el.textContent = s; };
+    tl.fromTo(el, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.06, ease: "none" }, t);
+    tl.fromTo(pr, { p: 0 }, { p: 1, duration: d, ease: "power1.out", onUpdate: put }, t);
+  };
+  $$(".scr").forEach((el) => scramble(el, el.dataset.text, parseFloat(el.dataset.at)));
+
+  // ---------------- grain: re-seeded every 2 frames ----------------
+  tl.fromTo("#grain", { x: 0, y: 0 }, { keyframes: Array.from({ length: 300 }, () => ({ x: -Math.round(rnd() * 60), y: -Math.round(rnd() * 60), duration: 2 * FR, ease: "steps(1)" })) }, 0);
+
+  // ======================= 1 · grow (0 – 3.273) =======================
+  tl.fromTo("#s1 .cam", { scale: 1 }, { scale: 1.06, duration: 2.77, ease: "sine.inOut" }, 0);
+  tl.fromTo("#s1-photo", { scale: 1.04, y: 0 }, { scale: 1.0, y: -24, duration: 3.2, ease: "sine.inOut" }, 0);
+  tl.fromTo("#s1-a", { scale: 0.9, x: 0 }, { scale: 1.12, x: 60, duration: 3.2, ease: "sine.inOut" }, 0);
+  tl.fromTo("#s1-b", { scale: 1.1, x: 0 }, { scale: 0.92, x: -50, duration: 3.2, ease: "sine.inOut" }, 0);
+  tl.fromTo("#s1 .pk", { scale: 1 }, { keyframes: [{ scale: 1.03, duration: 0.25, ease: "power3.out" }, { scale: 1.015, duration: 0.4, ease: "power2.out" }] }, 1.53);
+  tl.fromTo("#s1-strike", { strokeDashoffset: 1.1 }, { strokeDashoffset: 0, duration: 0.4, ease: "power2.inOut" }, 1.95);
+  // zoom-through into the counter of the "o": 3-frame anticipation, x8 over 0.4 s, swap in the dark
+  tl.to("#s1 .pk", { scale: 1.0, duration: 3 * FR, ease: "power2.out" }, 2.773);
+  tl.to("#s1 .pk", { scale: 9, filter: "blur(6px)", duration: 0.4, ease: "power4.in" }, 2.873);
+  tl.fromTo("#black", { autoAlpha: 0 }, { autoAlpha: 1, duration: 4 * FR, ease: "power2.in" }, 3.14);
+
+  // ======================= 2 · breaks (3.273 – 6.0) =======================
+  tl.fromTo("#s2 .pk", { scale: 1.2 }, { scale: 1, duration: 0.5, ease: "expo.out" }, 3.273);
+  tl.to("#black", { autoAlpha: 0, duration: 3 * FR, ease: "power2.out" }, 3.273);
+  tl.fromTo("#s2-bg", { x: 0 }, { x: -50, duration: 2.3, ease: "sine.inOut" }, 3.5);
+  tl.fromTo("#s2-mid", { x: 0 }, { x: -16, duration: 2.3, ease: "sine.inOut" }, 3.5);
+  tl.fromTo("#s2-a", { scale: 0.95 }, { scale: 1.1, duration: 2.7, ease: "sine.inOut" }, 3.273);
+  $$(".fbr").forEach((p, i) => tl.fromTo(p, { strokeDashoffset: 1.1 }, { strokeDashoffset: 0, duration: 0.7, ease: "power2.inOut" }, 3.3 + i * 0.02 + (i % 3) * 0.03));
+  tl.fromTo("#fcap", { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "power2.out" }, 3.9);
+  // the tears on "breaks"
+  Object.keys(TEARS).forEach((i) => {
+    tl.set("#fb" + i, { autoAlpha: 0 }, 3.93); tl.set("#tr" + i, { opacity: 1 }, 3.93);
+    tl.fromTo(`#tr${i} .tl`, { x: 0 }, { x: -7, duration: 0.35, ease: "expo.out" }, 3.93);
+    tl.fromTo(`#tr${i} .trr`, { x: 0 }, { x: 7, duration: 0.35, ease: "expo.out" }, 3.93);
+    $$(`#tr${i} .pt`).forEach((c) => { const o = +c.dataset.o;
+      tl.fromTo(c, { attr: { cx: +c.getAttribute("cx"), cy: +c.getAttribute("cy") }, opacity: o }, { attr: { cx: +c.dataset.x, cy: +c.dataset.y - 10 }, duration: 0.9, ease: "expo.out" }, 3.93);
+      tl.to(c, { opacity: o * 0.35, duration: 0.9, ease: "power2.in" }, 4.4); });
+  });
+  tl.fromTo("#s2 .pk", { x: 0, y: 0 }, { keyframes: [{ x: 6, y: -4, duration: FR }, { x: -5, y: 3, duration: FR }, { x: 3, y: -2, duration: FR }, { x: 0, y: 0, duration: FR }], ease: "none", immediateRender: false }, 3.93);
+  tl.fromTo("#cnode", { opacity: 0, attr: { r: 2 } }, { opacity: 1, attr: { r: 9 }, duration: 0.3, ease: "back.out(2)" }, 4.3);
+  tl.fromTo("#clead", { opacity: 0, x: -10, y: 14 }, { opacity: 1, x: 0, y: 0, duration: 0.35, ease: "power3.out" }, 4.36);
+  { const el = $("#clabel"); scramble(el, "MICRO-TEARS", 4.55); }
+  // out: line carry — the torn end of fibre 8 runs out and curls into the tilted ring of shot 3
+  lineOut(["#s2-l1", "#s2-l2"], 5.4);
+  tl.to(["#s2-bg", "#fcap", "#clabel", "#clead", "#cnode"], { autoAlpha: 0, duration: 0.3, ease: "power2.in" }, 5.45);
+  tl.to(".fbr, .tear", { opacity: 0, duration: 0.3, ease: "power2.in" }, 5.55);
+  { const u = TEARS[8] + .022, sx = FX0 + (FX1 - FX0) * u - 16 + 7, sy = fy(8, u), ry = RR * Math.cos(55 * Math.PI / 180) * 0.97;
+    $("#carry").setAttribute("d", `M${sx.toFixed(1)} ${sy.toFixed(1)} C ${sx + 160} ${sy - 40}, ${760 + 90} ${1080 - 40}, 760 1080 A 220 ${ry.toFixed(1)} 0 1 1 320 1080 A 220 ${ry.toFixed(1)} 0 1 1 760 1080`); }
+  tl.fromTo("#carry", { autoAlpha: 1, strokeDashoffset: 1.1 }, { autoAlpha: 1, strokeDashoffset: 0, duration: 0.45, ease: "power2.inOut", immediateRender: false }, 5.55);
+  tl.to("#carry", { autoAlpha: 0, duration: 4 * FR, ease: "power2.out" }, 6.0);
+
+  // ======================= 3 · recover / 48 h (6.0 – 10.364) =======================
+  tl.fromTo("#ring3d", { rotationX: 55 }, { rotationX: 0, duration: 1.4, ease: "power2.inOut" }, 6.2);
+  tl.fromTo("#s3 .cam", { y: 40 }, { y: 0, duration: 1.4, ease: "power2.inOut" }, 6.2);
+  tl.fromTo("#s3-bg", { scale: 1 }, { scale: 1.05, duration: 4.3, ease: "sine.inOut" }, 6.0);
+  tl.fromTo("#s3-photo", { opacity: 0 }, { opacity: .75, duration: 1.0, ease: "power2.out" }, 6.0);
+  tl.fromTo("#rticks", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power2.out" }, 7.3);
+  tl.fromTo("#count", { autoAlpha: 0, filter: "blur(10px)" }, { autoAlpha: 1, filter: "blur(0px)", duration: 0.4, ease: "power3.out" }, 7.7);
+  tl.fromTo("#hrs", { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.3, ease: "power2.out" }, 7.8);
+  tl.fromTo("#tens", { yPercent: 0 }, { yPercent: -80, duration: 1.0, ease: "power3.out" }, 8.0);
+  tl.fromTo("#ones", { yPercent: 0, filter: "blur(3px)" }, { yPercent: -96, filter: "blur(0px)", duration: 1.0, ease: "power3.out" }, 8.0);
+  tl.fromTo("#rarc", { strokeDashoffset: RC }, { strokeDashoffset: 0, duration: 1.0, ease: "power3.out" }, 8.0);
+  tl.fromTo("#rdot", { opacity: 0 }, { opacity: 1, duration: 0.15, ease: "none" }, 8.95);
+  // out: shape morph — the ring becomes the outline of the first column
+  lineOut(["#s3-l1", "#s3-l2", "#s3-l3"], 9.95);
+  tl.to(["#count", "#hrs", "#rticks", "#rarc", "#rdot", "#s3-bg", "#s3 .hdr"], { autoAlpha: 0, duration: 0.2, ease: "power2.in" }, 10.0);
+  const circ = (cx, cy, r) => { const k = 0.5523 * r; return `M${cx} ${cy - r} L${cx} ${cy - r} C${cx + k} ${cy - r} ${cx + r} ${cy - k} ${cx + r} ${cy} L${cx + r} ${cy} C${cx + r} ${cy + k} ${cx + k} ${cy + r} ${cx} ${cy + r} L${cx} ${cy + r} C${cx - k} ${cy + r} ${cx - r} ${cy + k} ${cx - r} ${cy} L${cx - r} ${cy} C${cx - r} ${cy - k} ${cx - k} ${cy - r} ${cx} ${cy - r}`; };
+  const rrect = (x, y, w, h, r) => { const k = 0.5523 * r; return `M${x + r} ${y} L${x + w - r} ${y} C${x + w - r + k} ${y} ${x + w} ${y + r - k} ${x + w} ${y + r} L${x + w} ${y + h - r} C${x + w} ${y + h - r + k} ${x + w - r + k} ${y + h} ${x + w - r} ${y + h} L${x + r} ${y + h} C${x + r - k} ${y + h} ${x} ${y + h - r + k} ${x} ${y + h - r} L${x} ${y + r} C${x} ${y + r - k} ${x + r - k} ${y} ${x + r} ${y}`; };
+  $("#morph").setAttribute("d", circ(540, 1080, RR));
+  tl.set("#rtrack", { opacity: 0 }, 10.05);
+  tl.fromTo("#morph", { autoAlpha: 1, attr: { d: circ(540, 1080, RR) } }, { autoAlpha: 1, attr: { d: rrect(60 + 40, CTOP, CW, CH, 28) }, duration: 0.31, ease: "power3.inOut", immediateRender: false }, 10.05);
+  tl.to("#morph", { autoAlpha: 0, duration: 4 * FR, ease: "power2.out" }, 10.364);
+
+  // ======================= 4 · three things (10.364 – 14.182) =======================
+  tl.fromTo("#s4 .cam", { x: 40 }, { x: -40, duration: 3.5, ease: "sine.inOut" }, 10.364);
+  tl.fromTo("#s4-a", { scale: .9, x: 0 }, { scale: 1.1, x: 80, duration: 3.8, ease: "sine.inOut" }, 10.364);
+  tl.fromTo("#s4-b", { scale: 1.1, x: 0 }, { scale: .95, x: -60, duration: 3.8, ease: "sine.inOut" }, 10.364);
+  tl.fromTo("#col0", { autoAlpha: 0 }, { autoAlpha: 0.55, duration: 4 * FR, ease: "power2.out" }, 10.364);
+  ["#col1", "#col2"].forEach((c, k) => tl.fromTo(c, { autoAlpha: 0, y: 60 }, { autoAlpha: 0.55, y: 0, duration: 0.5, ease: "expo.out" }, 10.42 + k * 0.08));
+  const ACT = [[0, 12.19], [1, 12.72], [2, 13.46]];
+  ACT.forEach(([k, t], j) => {
+    const c = "#col" + k;
+    tl.to(c, { autoAlpha: 1, scale: 1.04, borderColor: "rgba(243,241,236,.4)", duration: 0.4, ease: "power3.out" }, t - 0.05);
+    if (j > 0) { const p = "#col" + ACT[j - 1][0]; tl.to(p, { autoAlpha: 0.4, scale: 1, borderColor: "rgba(243,241,236,.22)", duration: 0.4, ease: "power3.out" }, t - 0.05);
+      tl.to(`${p} .gl`, { attr: { stroke: INK, "stroke-opacity": .7 }, duration: 0.3, ease: "none" }, t - 0.05); }
+    else { tl.to(["#col1", "#col2"], { autoAlpha: 0.4, duration: 0.4, ease: "power3.out" }, t - 0.05); }
+    tl.fromTo(`${c} .gl`, { attr: { stroke: ACC, "stroke-opacity": 1 } }, { attr: { stroke: ACC, "stroke-opacity": 1 }, duration: 0.01, ease: "none" }, t - 0.06);
+    tl.fromTo(`${c} .gl`, { strokeDashoffset: 1.1 }, { strokeDashoffset: 0, duration: 0.55, stagger: 0.04, ease: "power2.inOut" }, t);
+    tl.fromTo("#cw" + k, { autoAlpha: 0, scale: 1.25, filter: "blur(12px)" }, { autoAlpha: 1, scale: 1, filter: "blur(0px)", duration: 0.45, ease: "expo.out" }, t - FR);
+  });
+  // out: whip pan right (anticipation, 0.28 s power4.inOut, directional blur peaking at 30 px)
+  lineOut(["#s4-l1", "#s4-l2"], 13.75, "mask");
+  tl.to("#s4 .pk", { x: 18, duration: 3 * FR, ease: "power2.out" }, 13.8);
+  tl.fromTo("#s4 .pk", { x: 18 }, { x: -1080, duration: 0.28, ease: "power4.inOut", immediateRender: false }, 13.9);
+  tl.fromTo("#s5 .pk", { x: 1080 }, { x: 0, duration: 0.28, ease: "power4.inOut" }, 13.9);
+  tl.set(["#s4 .pk", "#s5 .pk"], { filter: "url(#hblur)" }, 13.9);
+  tl.fromTo("#hblurk", { attr: { stdDeviation: "0 0" } }, { keyframes: [{ attr: { stdDeviation: "30 0" }, duration: 0.14, ease: "power2.in" }, { attr: { stdDeviation: "0 0" }, duration: 0.14, ease: "power2.out" }] }, 13.9);
+  tl.set(["#s4 .pk", "#s5 .pk"], { filter: "none" }, 14.19);
+
+  // ======================= 5 · not more hours (14.182 – 17.455) =======================
+  tl.fromTo("#s5 .cam", { scale: 1 }, { scale: 1.03, duration: 2.8, ease: "sine.inOut" }, 14.25);
+  tl.fromTo("#s5-a", { scale: 1, x: 0 }, { scale: 1.12, x: 70, duration: 3.2, ease: "sine.inOut" }, 14.182);
+  tl.fromTo("#s5-b", { scale: 1.08 }, { scale: .95, duration: 3.2, ease: "sine.inOut" }, 14.182);
+  $$("#s5 .ax").forEach((p, k) => tl.fromTo(p, { strokeDashoffset: 1.1 }, { strokeDashoffset: 0, duration: 0.3, ease: "power2.inOut" }, 13.4 + k * 0.03));
+  tl.fromTo("#xlab", { opacity: 0 }, { opacity: 1, duration: 0.2, ease: "power2.out" }, 13.6);
+  scramble($("#ylab"), "MUSCLE GROWTH", 14.5);
+  tl.fromTo("#gcurve", { strokeDashoffset: 1.1 }, { strokeDashoffset: 0, duration: 1.25, ease: "power2.inOut" }, 14.2);
+  tl.fromTo("#glab", { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "power2.out" }, 15.45);
+  tl.fromTo("#s5-strike", { scaleX: 0 }, { scaleX: 1, duration: 0.25, ease: "power2.inOut" }, 15.42);
+  tl.to("#hours5", { color: "rgba(243,241,236,.35)", duration: 0.3, ease: "power2.out" }, 15.67);
+  tl.fromTo("#ecurve", { strokeDashoffset: 1.1 }, { strokeDashoffset: 0, duration: 0.95, ease: "power2.inOut" }, 15.8);
+  tl.fromTo("#earea", { opacity: 0 }, { opacity: 1, duration: 0.6, ease: "power2.out" }, 16.3);
+  tl.fromTo("#enode", { opacity: 0, scale: 0.4, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(2)" }, 16.72);
+  scramble($("#elab"), "RECOVERY", 16.7);
+  // rack focus: the grey line was sharp; at "recovery" focus pulls to the ember line
+  tl.fromTo("#eline", { filter: "blur(8px)" }, { filter: "blur(8px)", duration: 0.01, ease: "none" }, 15.79);
+  tl.to("#eline", { filter: "blur(0px)", duration: 0.5, ease: "power2.inOut" }, 16.2);
+  tl.fromTo("#gline", { filter: "blur(0px)" }, { filter: "blur(8px)", duration: 0.5, ease: "power2.inOut" }, 16.2);
+  // out: particle dissolve (the canvas below takes the lines from here)
+  lineOut(["#s5-l1", "#s5-l2"], 17.0);
+  tl.to(["#chart", "#s5 .hdr"], { autoAlpha: 0, duration: 0.18, ease: "power2.in" }, 17.05);
+  tl.to(["#s5-a", "#s5-b"], { autoAlpha: 0, duration: 0.4, ease: "power2.inOut" }, 17.05);
+
+  // ======================= 6 · rest (17.455 – 20) =======================
+  const s6s = (t) => t < 17.455 ? 1.08 : 1.08 - 0.08 * Math.sin(Math.min(1, (t - 17.455) / 2.1) * Math.PI / 2);
+  tl.fromTo("#s6 .cam", { scale: 1.08 }, { scale: 1.0, duration: 2.1, ease: "sine.out" }, 17.455);
+  tl.fromTo(["#s6-a", "#s6-b"], { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.6, ease: "power2.out" }, 17.2);
+  tl.fromTo("#arch", { clipPath: "inset(100% 0% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 0.6, ease: "power3.out" }, 18.12);
+  tl.fromTo("#s6-photo", { scale: 1.12 }, { scale: 1.0, duration: 1.5, ease: "expo.out" }, 18.12);
+  tl.fromTo("#archline", { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.5, ease: "power2.out" }, 18.4);
+  tl.fromTo("#s6-uline", { scaleX: 0 }, { scaleX: 1, duration: 0.4, ease: "power2.inOut" }, 18.85);
+  tl.fromTo("#handle", { autoAlpha: 0, filter: "blur(10px)", y: 10 }, { autoAlpha: 1, filter: "blur(0px)", y: 0, duration: 0.6, ease: "power3.out" }, 19.0);
+  tl.fromTo("#endfade", { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.4, ease: "power2.in" }, 19.56);
+
+  // ---------------- particles: chart lines -> drift up -> assemble the arch ----------------
+  { const cv = $("#parts"), g = cv.getContext("2d"), N = 1900, P = [];
+    const sc5 = 1.03, c5 = (x, y) => [540 + (x - 540) * sc5, 960 + (y - 960) * sc5];
+    for (let i = 0; i < N; i++) {
+      const fromE = rnd() < 0.55, u = rnd(), f = fromE ? ember : grey;
+      const [sx, sy] = c5(CL + (CR - CL) * u + (rnd() - .5) * 6, CB - (CB - CT) * f(u) + (rnd() - .5) * 6);
+      let tx, ty; const r = rnd();
+      if (r < 0.72) { const per = Math.PI * 308 + 816 * 2, p = rnd() * per, s = Math.pow(rnd(), 2) * 26 * (rnd() < .5 ? -1 : 1);
+        if (p < 816) { tx = 232 + s; ty = 1488 - p; } else if (p < 816 + Math.PI * 308) { const a = Math.PI + (p - 816) / 308; tx = 540 + Math.cos(a) * (308 + s); ty = 980 + Math.sin(a) * (308 + s); } else { tx = 848 + s; ty = 980 + (p - 816 - Math.PI * 308); }
+      } else { tx = 80 + rnd() * 920; ty = 620 + rnd() * 980; }
+      P.push({ sx, sy, up: 60 + rnd() * 220, dx: (rnd() - .5) * 60, tx, ty, r: .6 + rnd() * 1.3, a: .15 + rnd() * .5, e: fromE, d: rnd() * .25, ph: rnd() * 6.283, ac: rnd() < .08 });
+    }
+    const ease3 = (p) => p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2, eo = (p) => 1 - Math.pow(1 - p, 3);
+    const draw = (t) => {
+      g.clearRect(0, 0, 1080, 1920); if (t < 17.05) return;
+      const s = s6s(t), fade = t > 19.56 ? Math.max(0, 1 - (t - 19.56) / 0.4) : 1;
+      for (const q of P) {
+        const a = Math.min(1, Math.max(0, (t - 17.05) / 0.5)), b = ease3(Math.min(1, Math.max(0, (t - 17.3 - q.d) / 0.75)));
+        const mx = q.sx + q.dx * eo(a), my = q.sy - q.up * eo(a);
+        const wob = Math.sin(t * 1.4 + q.ph) * 2.2;
+        const tx = 540 + (q.tx + wob - 540) * s, ty = 960 + (q.ty + Math.cos(t * 1.1 + q.ph) * 2.2 - 960) * s;
+        const x = mx + (tx - mx) * b, y = my + (ty - my) * b;
+        const al = Math.min(1, a * 4) * (q.a + (1 - b) * .35) * fade;
+        const em = (q.e && b < 1) ? (1 - b) : (q.ac ? 1 : 0);
+        g.fillStyle = em > .5 ? `rgba(255,106,61,${al.toFixed(3)})` : `rgba(243,241,236,${al.toFixed(3)})`;
+        g.beginPath(); g.arc(x, y, q.r, 0, 6.283); g.fill();
+      }
+    };
+    const pr = { v: 0 };
+    tl.fromTo(pr, { v: 0 }, { v: 1, duration: 3.0, ease: "none", onUpdate: () => draw(17.0 + pr.v * 3.0) }, 17.0);
+  }
+
+  tl.set({}, {}, 20);
+  window.__timelines = window.__timelines || {};
+  window.__timelines["main"] = tl;
+});
+</script>
+</body>
+</html>
