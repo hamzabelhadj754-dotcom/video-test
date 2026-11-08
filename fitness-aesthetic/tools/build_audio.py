@@ -180,7 +180,8 @@ kenv = np.zeros(N)
 for b in range(0, 32):
     i = int(beat(b) * SR); m = int(0.25 * SR); kenv[i:i + m] = np.maximum(kenv[i:i + m], np.exp(-np.arange(min(m, N - i)) / SR / 0.08))
 music *= (1 - 0.45 * kenv)[:, None]
-bed = music * 0.55 + drums * 0.75
+MUSIC = False   # the client adds their own track: VO + sound design only
+bed = (music * 0.55 + drums * 0.75) * (1.0 if MUSIC else 0.0)
 
 # ---------------- VO + ducking ----------------
 vo, vsr = sf.read(A("vo48.wav"), dtype="float64")
@@ -195,7 +196,7 @@ db = lambda x: 20 * np.log10(np.sqrt((x ** 2).mean()) + 1e-12)
 spk = np.clip(sm / 0.08, 0, 1)[np.minimum(np.arange(N) // hop, len(sm) - 1)] > 0.5
 print("VO %.1f | bed under VO %.1f | bed in rests %.1f | sfx %.1f" % (db(vo2[spk]), db((bed * duck[:, None] * 0.35)[spk]), db((bed * 0.35)[~spk]), db(sfx * 0.4)))
 mix = mix / np.abs(mix).max() * 0.89
-sf.write(A("music.wav"), (bed / np.abs(bed).max() * 0.89).astype(np.float32), SR)
+if MUSIC: sf.write(A("music.wav"), (bed / np.abs(bed).max() * 0.89).astype(np.float32), SR)
 sf.write(A("sfx.wav"), (sfx / np.abs(sfx).max() * 0.89).astype(np.float32), SR)
 sf.write(A("mix_pre.wav"), mix.astype(np.float32), SR)
 e = (bed + sfx).mean(1); h = SR // 10; rms = np.sqrt((e[: len(e) // h * h].reshape(-1, h) ** 2).mean(1)); rms = np.clip(rms / (np.percentile(rms, 98) + 1e-9), 0, 1)
