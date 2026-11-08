@@ -1,0 +1,274 @@
+<template>
+  <style>
+    #root {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      background: var(--color-ink, #111111);
+      color: var(--color-bone, #f1ece2);
+    }
+    #music-record {
+      position: absolute;
+      left: 850px;
+      top: 130px;
+      width: 860px;
+      height: 860px;
+    }
+    #music-disc {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background:
+        repeating-radial-gradient(circle at 50% 50%, #1b1b1b 0 3px, #262626 3px 5px, #1d1d1d 5px 9px),
+        #1b1b1b;
+      box-shadow: 0 0 0 6px #2c2c2c;
+    }
+    #music-label {
+      position: absolute;
+      left: 280px;
+      top: 280px;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background: var(--color-red, #ff3b1f);
+      color: var(--color-ink, #111111);
+      font-family: "Archivo Black", sans-serif;
+      text-align: center;
+    }
+    #music-label-top {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 62px;
+      font-size: 34px;
+      letter-spacing: 0.02em;
+    }
+    #music-label-bottom {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 62px;
+      font-family: "Montserrat", sans-serif;
+      font-weight: 700;
+      font-size: 30px;
+    }
+    #music-hole {
+      position: absolute;
+      left: 138px;
+      top: 138px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--color-ink, #111111);
+    }
+    #music-sheen {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: conic-gradient(
+        from 20deg,
+        rgba(255, 255, 255, 0) 0deg,
+        rgba(255, 255, 255, 0.16) 30deg,
+        rgba(255, 255, 255, 0) 70deg,
+        rgba(255, 255, 255, 0) 200deg,
+        rgba(255, 255, 255, 0.12) 230deg,
+        rgba(255, 255, 255, 0) 265deg
+      );
+      -webkit-mask: radial-gradient(circle, transparent 0 150px, #000 151px);
+      mask: radial-gradient(circle, transparent 0 150px, #000 151px);
+    }
+    #music-arm {
+      position: absolute;
+      left: 1790px;
+      top: 120px;
+      width: 0;
+      height: 0;
+      z-index: 5;
+    }
+    #music-arm-base {
+      position: absolute;
+      left: -46px;
+      top: -46px;
+      width: 92px;
+      height: 92px;
+      border-radius: 50%;
+      background: var(--color-bone, #f1ece2);
+    }
+    #music-arm-rod {
+      position: absolute;
+      left: -9px;
+      top: 0;
+      width: 18px;
+      height: 560px;
+      border-radius: 9px;
+      background: var(--color-bone, #f1ece2);
+    }
+    #music-arm-head {
+      position: absolute;
+      left: -28px;
+      top: 540px;
+      width: 56px;
+      height: 90px;
+      border-radius: 8px;
+      background: var(--color-yellow, #ffc400);
+    }
+    #music-copy {
+      position: absolute;
+      left: 120px;
+      top: 110px;
+    }
+    #music-title {
+      font-family: "Archivo Black", sans-serif;
+      font-size: 150px;
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+    }
+    #music-rpm {
+      margin-top: 16px;
+      font-family: "League Gothic", sans-serif;
+      font-size: 96px;
+      line-height: 1;
+      color: var(--color-yellow, #ffc400);
+    }
+    #music-eq {
+      position: absolute;
+      left: 120px;
+      top: 470px;
+      width: 640px;
+      height: 420px;
+    }
+    .music-bar {
+      position: absolute;
+      bottom: 0;
+      width: 22px;
+      height: 420px;
+      background: var(--color-bone, #f1ece2);
+      transform-origin: bottom center;
+    }
+    .music-bar.music-hot {
+      background: var(--color-red, #ff3b1f);
+    }
+  </style>
+  <div id="root" data-composition-id="music" data-width="1920" data-height="1080">
+    <div id="music-copy">
+      <div id="music-title">MUSIC</div>
+      <div id="music-rpm">33⅓ RPM</div>
+    </div>
+    <div id="music-eq"></div>
+    <div id="music-record" data-layout-allow-overflow>
+      <div id="music-disc">
+        <div id="music-label">
+          <div id="music-label-top">SIDE A</div>
+          <div id="music-hole"></div>
+          <div id="music-label-bottom">HyperFrames</div>
+        </div>
+      </div>
+      <div id="music-sheen"></div>
+    </div>
+    <div id="music-arm" data-layout-allow-overflow>
+      <div id="music-arm-rod-wrap">
+        <div id="music-arm-rod"></div>
+        <div id="music-arm-head"></div>
+      </div>
+      <div id="music-arm-base"></div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+
+      // Build the equaliser bars once (static markup count, deterministic).
+      const eq = document.querySelector("#music-eq");
+      const N = 20;
+      const bars = [];
+      for (let i = 0; i < N; i++) {
+        const b = document.createElement("div");
+        b.className = "music-bar" + (i % 5 === 2 ? " music-hot" : "");
+        b.id = "music-bar-" + i;
+        b.style.left = i * 32 + "px";
+        eq.appendChild(b);
+        bars.push(b);
+      }
+
+      // Seeded phases (mulberry32) so every render is identical.
+      function mulberry32(a) {
+        return function () {
+          a |= 0;
+          a = (a + 0x6d2b79f5) | 0;
+          let t = Math.imul(a ^ (a >>> 15), 1 | a);
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+          return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        };
+      }
+      const rnd = mulberry32(33);
+      const phases = bars.map(() => [rnd() * 6.28, rnd() * 6.28, rnd() * 6.28]);
+
+      const BPM = 120;
+      function levels(t, gain) {
+        const beat = (t * BPM) / 60;
+        const kick = Math.pow(1 - (beat % 1), 3); // decays every beat
+        bars.forEach((b, i) => {
+          const p = phases[i];
+          const low = 1 - i / N; // bass bars hit harder on the kick
+          let v =
+            0.18 +
+            0.32 * Math.abs(Math.sin(t * 7.1 + p[0])) +
+            0.2 * Math.abs(Math.sin(t * 13.3 + p[1])) +
+            0.1 * Math.abs(Math.sin(t * 3.7 + p[2])) +
+            0.35 * kick * low;
+          v = Math.min(1, v) * gain;
+          gsap.set(b, { scaleY: Math.max(0.03, v) });
+        });
+      }
+      levels(0, 0);
+
+      // Record arrives from the right, blurred, and sharpens.
+      tl.fromTo(
+        "#music-record",
+        { x: 900, filter: "blur(20px)" },
+        { x: 0, filter: "blur(0px)", duration: 0.7, ease: "expo.out" },
+        0.0,
+      );
+      // It turns at a real 33 1/3 rpm = 200 deg/s. Linear: constant speed is the point.
+      tl.fromTo("#music-disc", { rotation: 0 }, { rotation: 1200, duration: 6, ease: "none" }, 0);
+
+      // Tonearm swings onto the record.
+      tl.fromTo(
+        "#music-arm-rod-wrap",
+        { rotation: -8 },
+        { rotation: 22, duration: 0.6, ease: "power2.inOut", transformOrigin: "0px 0px" },
+        0.85,
+      );
+
+      // Copy.
+      tl.fromTo(
+        "#music-title",
+        { opacity: 0, filter: "blur(10px)" },
+        { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power4.out" },
+        0.3,
+      );
+      tl.fromTo(
+        "#music-rpm",
+        { opacity: 0, filter: "blur(8px)" },
+        { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power4.out" },
+        0.5,
+      );
+
+      // Equaliser comes alive when the needle lands.
+      const clock = { t: 0, g: 0 };
+      tl.fromTo(
+        clock,
+        { t: 0, g: 0 },
+        {
+          t: 4.55,
+          duration: 4.55,
+          ease: "none",
+          onUpdate: () => levels(clock.t, Math.min(1, clock.t / 0.25)),
+        },
+        1.45,
+      );
+
+      window.__timelines["music"] = tl;
+    })();
+  </script>
+</template>

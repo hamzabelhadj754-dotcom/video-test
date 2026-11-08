@@ -1,0 +1,177 @@
+<template>
+  <style>
+    #root {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      background: var(--color-red, #ff3b1f);
+      color: var(--color-ink, #111111);
+    }
+    #hook-stage {
+      position: absolute;
+      inset: 0;
+    }
+    #hook-word {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 300px;
+      display: flex;
+      justify-content: center;
+      font-family: "Archivo Black", sans-serif;
+      font-size: 410px;
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+    .hook-mask {
+      display: inline-block;
+      overflow: hidden;
+      height: 430px;
+      padding: 0 2px;
+    }
+    .hook-letter {
+      display: inline-block;
+    }
+    #hook-line {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 600px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 34px;
+      font-family: "Archivo Black", sans-serif;
+      font-size: 124px;
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+    #hook-can {
+      white-space: nowrap;
+    }
+    #hook-slot {
+      position: relative;
+      height: 170px;
+      width: 860px;
+      overflow: hidden;
+      background: var(--color-ink, #111111);
+      color: var(--color-bone, #f1ece2);
+    }
+    #hook-reel {
+      position: absolute;
+      left: 40px;
+      top: 0;
+    }
+    .hook-item {
+      display: block;
+      height: 170px;
+      line-height: 170px;
+      white-space: nowrap;
+    }
+    .hook-item.hook-final {
+      color: var(--color-yellow, #ffc400);
+    }
+    #hook-dot {
+      flex: none;
+      width: 44px;
+      height: 44px;
+      margin-left: -14px;
+      margin-bottom: 4px;
+      border-radius: 50%;
+      background: var(--color-cobalt, #1e3cff);
+    }
+  </style>
+  <div id="root" data-composition-id="hook" data-width="1920" data-height="1080">
+    <div id="hook-stage">
+      <div id="hook-word" data-layout-allow-overflow>
+        <span class="hook-mask"><span class="hook-letter">M</span></span>
+        <span class="hook-mask"><span class="hook-letter">O</span></span>
+        <span class="hook-mask"><span class="hook-letter">T</span></span>
+        <span class="hook-mask"><span class="hook-letter">I</span></span>
+        <span class="hook-mask"><span class="hook-letter">O</span></span>
+        <span class="hook-mask"><span class="hook-letter">N</span></span>
+      </div>
+      <div id="hook-line">
+        <span id="hook-can">CAN SHOW</span>
+        <div id="hook-slot" data-layout-allow-overflow>
+          <div id="hook-reel">
+            <span class="hook-item">SPACE</span>
+            <span class="hook-item">MUSIC</span>
+            <span class="hook-item">DATA</span>
+            <span class="hook-item">CITIES</span>
+            <span class="hook-item">PATTERNS</span>
+            <span class="hook-item hook-final">ANYTHING</span>
+          </div>
+        </div>
+        <div id="hook-dot"></div>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      const letters = document.querySelectorAll("#hook-word .hook-letter");
+
+      // 1. MOTION rises out of its masks, one letter after another.
+      tl.fromTo(
+        letters,
+        { yPercent: 105 },
+        { yPercent: 0, duration: 0.75, ease: "expo.out", stagger: 0.05 },
+        0.15,
+      );
+
+      // 2. The word lifts to make room for the sentence (camera-like move, eases both ways).
+      tl.fromTo(
+        "#hook-word",
+        { y: 0, scale: 1 },
+        { y: -170, scale: 0.62, duration: 0.6, ease: "power3.inOut" },
+        1.35,
+      );
+
+      // 3. "CAN SHOW" blurs in as a whole line, the slot block wipes open beside it.
+      tl.fromTo(
+        "#hook-can",
+        { opacity: 0, filter: "blur(10px)" },
+        { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power4.out" },
+        1.7,
+      );
+      tl.fromTo(
+        "#hook-slot",
+        { clipPath: "inset(0 100% 0 0)" },
+        { clipPath: "inset(0 0% 0 0)", duration: 0.5, ease: "expo.out" },
+        1.8,
+      );
+
+      // 4. Slot machine: roll through subjects, about 0.16 s a roll, land on ANYTHING.
+      const rolls = [0, 1, 2, 3];
+      rolls.forEach((i) => {
+        tl.to(
+          "#hook-reel",
+          { y: -170 * (i + 1), duration: 0.12, ease: "power2.inOut" },
+          2.15 + i * 0.17,
+        );
+      });
+      // Landing roll is slower, with a tiny settle.
+      tl.fromTo(
+        "#hook-reel",
+        { y: -170 * 4 },
+        { y: -170 * 5, duration: 0.4, ease: "back.out(1.8)", immediateRender: false },
+        2.15 + 4 * 0.17,
+      );
+
+      // 5. The full stop lands after ANYTHING...
+      tl.fromTo(
+        "#hook-dot",
+        { scale: 0 },
+        { scale: 1, duration: 0.35, ease: "back.out(2)" },
+        3.35,
+      );
+
+      // 6. ...then becomes the next world: it floods the frame in cobalt.
+      tl.to(["#hook-word", "#hook-can", "#hook-slot"], { opacity: 0, filter: "blur(12px)", duration: 0.3, ease: "power2.in" }, 4.45);
+      tl.to("#hook-dot", { scale: 110, duration: 0.6, ease: "power3.in" }, 4.3);
+
+      window.__timelines["hook"] = tl;
+    })();
+  </script>
+</template>

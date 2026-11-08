@@ -1,0 +1,143 @@
+<template>
+  <style>
+    #root {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+    }
+    #pattern-iris {
+      position: absolute;
+      inset: 0;
+      background: var(--color-bone, #f1ece2);
+    }
+    #pattern-grid {
+      position: absolute;
+      inset: 0;
+    }
+    .pattern-cell {
+      position: absolute;
+      width: 120px;
+      height: 120px;
+    }
+    .pattern-shape {
+      position: absolute;
+      left: 18px;
+      top: 18px;
+      width: 84px;
+      height: 84px;
+    }
+    #pattern-plate {
+      position: absolute;
+      left: 120px;
+      top: 720px;
+      height: 240px;
+      padding: 0 56px;
+      background: var(--color-ink, #111111);
+      color: var(--color-bone, #f1ece2);
+      font-family: "Archivo Black", sans-serif;
+      font-size: 150px;
+      line-height: 240px;
+      letter-spacing: -0.02em;
+      z-index: 10;
+    }
+    #pattern-core {
+      position: absolute;
+      left: 900px;
+      top: 480px;
+      width: 120px;
+      height: 120px;
+      background: var(--color-red, #ff3b1f);
+      z-index: 20;
+    }
+  </style>
+  <div id="root" data-composition-id="pattern" data-width="1920" data-height="1080">
+    <div id="pattern-iris">
+      <div id="pattern-grid"></div>
+      <div id="pattern-plate">PATTERNS</div>
+      <div id="pattern-core"></div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      const COLS = 16;
+      const ROWS = 9;
+      const inks = ["#FF3B1F", "#1E3CFF", "#FFC400", "#111111"];
+      const grid = document.querySelector("#pattern-grid");
+      const cells = [];
+      for (let j = 0; j < ROWS; j++) {
+        for (let i = 0; i < COLS; i++) {
+          const c = document.createElement("div");
+          c.className = "pattern-cell";
+          c.id = "pattern-cell-" + i + "-" + j;
+          c.style.left = i * 120 + "px";
+          c.style.top = j * 120 + "px";
+          const s = document.createElement("div");
+          s.className = "pattern-shape";
+          c.appendChild(s);
+          grid.appendChild(c);
+          const dx = i * 120 + 60 - 960;
+          const dy = j * 120 + 60 - 540;
+          cells.push({ c, s, i, j, dist: Math.sqrt(dx * dx + dy * dy) });
+        }
+      }
+
+      // A diagonal wave: every cell's shape is a pure function of time and position.
+      function wave(t) {
+        cells.forEach(({ s, i, j }) => {
+          const phi = (i + j) * 0.42 - t * 4.2;
+          const k = 0.5 + 0.5 * Math.sin(phi);
+          const band = Math.floor((((phi / (Math.PI * 2)) % 4) + 4) % 4);
+          gsap.set(s, {
+            borderRadius: (k * 50).toFixed(1) + "%",
+            rotation: (1 - k) * 90,
+            scale: 0.35 + 0.65 * k,
+            backgroundColor: inks[band],
+          });
+        });
+      }
+      wave(0);
+
+      // Iris opens from the record label (1280, 560) onto this world.
+      tl.fromTo(
+        "#pattern-iris",
+        { clipPath: "circle(0px at 1280px 560px)" },
+        { clipPath: "circle(2400px at 1280px 560px)", duration: 0.55, ease: "power3.in" },
+        0,
+      );
+
+      const clock = { t: 0 };
+      tl.fromTo(
+        clock,
+        { t: 0 },
+        { t: 4.4, duration: 4.4, ease: "none", onUpdate: () => wave(clock.t) },
+        0,
+      );
+
+      // The plate prints in, holds, prints out.
+      tl.fromTo(
+        "#pattern-plate",
+        { clipPath: "inset(0 100% 0 0)" },
+        { clipPath: "inset(0 0% 0 0)", duration: 0.5, ease: "expo.out" },
+        0.75,
+      );
+      tl.to("#pattern-plate", { clipPath: "inset(0 0 0 100%)", duration: 0.25, ease: "power3.in" }, 3.0);
+
+      // Everything collapses toward the centre, outer cells first; one red square remains.
+      const ordered = cells.slice().sort((a, b) => b.dist - a.dist);
+      tl.to(
+        ordered.map((o) => o.c),
+        { scale: 0, duration: 0.35, ease: "power3.in", stagger: { each: 0.0045 } },
+        3.15,
+      );
+      tl.fromTo(
+        "#pattern-core",
+        { scale: 0, rotation: -90 },
+        { scale: 1, rotation: 0, duration: 0.5, ease: "back.out(1.6)" },
+        3.65,
+      );
+
+      window.__timelines["pattern"] = tl;
+    })();
+  </script>
+</template>
