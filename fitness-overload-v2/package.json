@@ -1,0 +1,10 @@
+{
+  "name": "fitness-overload-v2",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "npx --yes hyperframes@0.9.19 preview",
+    "check": "npx --yes hyperframes@0.9.19 check",
+    "render": "npx --yes hyperframes@0.9.19 render --quality delivery -o renders/fitness_overload_v2.mp4"
+  }
+}
