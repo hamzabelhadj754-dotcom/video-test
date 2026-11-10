@@ -33,10 +33,16 @@
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' seed='9' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); }
   .row { display: flex; align-items: center; gap: 18px; }
   .row svg { width: 38px; height: 38px; stroke: #fff; flex: none; }
+  .card { position: absolute; left: 150px; right: 150px; border: 2px solid rgba(255,255,255,.55); background: linear-gradient(180deg, #D3223A 0%, #9C1527 100%); box-shadow: 0 30px 60px rgba(0,0,0,.45), 0 0 60px rgba(227,36,59,.25); padding: 26px 34px 34px; }
+  .card h4 { font: 600 34px/1 Inter; color: #fff; padding-bottom: 18px; border-bottom: 2px solid rgba(255,255,255,.6); margin-bottom: 30px; }
+  .icons { display: flex; justify-content: space-around; }
+  .ic { display: flex; flex-direction: column; align-items: center; gap: 14px; font: 500 28px/1.1 Inter; color: #fff; text-align: center; width: 230px; }
+  .ic .ico { width: 108px; height: 108px; display: block; }
+  .ico svg { width: 100%; height: 100%; stroke: #fff; stroke-width: 1.6; overflow: visible; }
 </style>
 </head>
 <body>
-<div id="root" data-composition-id="main" data-start="0" data-duration="10" data-width="1080" data-height="1920" data-fps="30">
+<div id="root" data-composition-id="main" data-start="0" data-duration="31" data-width="1080" data-height="1920" data-fps="30">
 
 <!-- ===== 1 · HOOK (dark) ===== -->
 <section class="sc full dark" id="s1"><div class="cam full">
@@ -63,6 +69,54 @@
   <div class="chip handle">@YOURHANDLE</div>
 </div><div class="vigL"></div></section>
 
+<!-- ===== 3 · MECHANISM (dark grid) ===== -->
+<section class="sc full dark" id="s3"><div class="cam full"><div class="pk full">
+  <div class="grid" id="s3-grid"></div>
+  <div class="center bebas" style="top:330px; font-size:120px; line-height:1"><span style="display:inline-block; position:relative"><span class="w" id="w-signal1">The</span> <span class="w" id="w-signal2">signal</span><i id="s3-ul" style="position:absolute; left:0; right:0; bottom:-6px; height:4px; background:#fff"></i></span></div>
+  <div class="abs" style="left:540px; top:1080px; width:0; height:0">
+    <svg class="abs" width="700" height="700" viewBox="-350 -350 700 700" style="left:-350px; top:-350px; overflow:visible"><circle id="s3-ring" r="330" fill="none" stroke="rgba(255,255,255,.45)" stroke-width="2" stroke-dasharray="10 10"/></svg>
+    <div class="abs" id="s3-core" style="left:-190px; top:-190px; width:380px; height:380px; border-radius:50%; background: radial-gradient(circle at 40% 35%, #FF4A5F, #E3243B 55%, #A3142A); box-shadow: 0 0 90px rgba(227,36,59,.7), 0 0 200px rgba(227,36,59,.35)"></div>
+    <div class="abs ico draw" data-i="dumbbell" id="s3-db" style="left:-110px; top:-110px; width:220px; height:220px"></div>
+    <div class="abs" id="orbit" style="left:0; top:0; width:0; height:0"></div>
+  </div>
+  <div class="center bebas" style="top:1520px; font-size:66px; letter-spacing:.06em"><span class="w" id="w-m1">Muscle</span> <span class="w" id="w-m2">adapts</span> <span class="w" id="w-m3">to</span> <span class="w" id="w-m4" style="color:var(--red)">demand</span></div>
+  <div class="chip handle">@YOURHANDLE</div>
+</div></div><div class="full vig"></div></section>
+
+<!-- ===== 4 · PROGRESSION (dark grid) ===== -->
+<section class="sc full dark" id="s4"><div class="cam full"><div class="pk full">
+  <div class="grid"></div>
+  <div class="center script" id="s4-script" style="top:300px; font-size:110px; line-height:1.15; transform: rotate(-5deg)">then…</div>
+  <div class="center bebas" style="top:410px; font-size:170px; line-height:.92; white-space:nowrap"><span class="w" id="w-r1">Raise</span> <span class="w" id="w-r2">the</span> <span class="w" id="w-r3" style="color:var(--red)">load</span></div>
+  <svg id="bars" class="abs" width="1080" height="1920" viewBox="0 0 1080 1920" style="left:0; top:0; overflow:visible"></svg>
+  <div class="chip handle">@YOURHANDLE</div>
+</div></div><div class="full vig"></div></section>
+
+<!-- ===== 5 · TAKEAWAY (dark grid) ===== -->
+<section class="sc full" id="s5" style="color:#fff"><div class="cam full"><div class="pk full">
+  <div class="full dark" style="left:-60px; top:-60px; width:1200px; height:2040px"></div>
+  <div class="grid"></div>
+  <div class="center bebas" style="top:330px; font-size:120px; line-height:1"><span style="display:inline-block; position:relative"><span class="w" id="w-rule1">The</span> <span class="w" id="w-rule2">rule</span><i id="s5-ul" style="position:absolute; left:0; right:0; bottom:-6px; height:4px; background:#fff"></i></span></div>
+  <div class="card" id="card-do" style="top:560px"><h4>Do:</h4><div class="icons">
+    <div class="ic"><span class="ico" data-i="repeat"></span>+1 rep</div>
+    <div class="ic"><span class="ico" data-i="weight"></span>+ a little weight</div>
+    <div class="ic"><span class="ico" data-i="moon"></span>Sleep &amp; protein</div></div></div>
+  <div class="card" id="card-dont" style="top:1030px"><h4>Don't:</h4><div class="icons">
+    <div class="ic"><span class="ico" data-i="hourglass"></span>Same weight forever</div>
+    <div class="ic"><span class="ico" data-i="flame"></span>Ego jumps</div>
+    <div class="ic"><span class="ico" data-i="circle-x"></span>Skip recovery</div></div></div>
+  <div class="chip handle">@YOURHANDLE</div>
+</div></div><div class="full vig"></div></section>
+
+<!-- ===== 6 · OUTRO (cream) ===== -->
+<section class="sc full light" id="s6"><div class="cam full">
+  <svg class="abs" width="1080" height="1920" viewBox="0 0 1080 1920" style="left:0; top:0; overflow:visible"><path id="s6-swoosh" d="M1250 300 C 700 520, 520 900, 820 1350 S 900 1900, 300 2200" stroke="#CFCBC3" stroke-width="170" fill="none" stroke-linecap="round" pathLength="1" stroke-dasharray="1 1.2" stroke-dashoffset="1.1"/></svg>
+  <div class="center script" id="s6-script" style="top:640px; font-size:150px; line-height:1.15; transform: rotate(-6deg)">note</div>
+  <div class="center" style="top:820px"><span style="font:600 66px/1.1 Inter; letter-spacing:-.02em"><span class="w" id="w-s1">Small</span> <span class="w" id="w-s2">steps.</span></span><br><span style="font:900 128px/1 Inter; letter-spacing:-.045em; color:var(--red); white-space:nowrap"><span class="w" id="w-e1">Every</span> <span class="w" id="w-e2">week.</span></span></div>
+  <div class="center handle" id="s6-handle" style="top:1130px; font:700 30px/1 Inter; letter-spacing:.2em; color:#111">@YOURHANDLE</div>
+</div><div class="vigL"></div></section>
+
+<svg width="0" height="0" style="position:absolute"><defs><filter id="vblur" x="-5%" y="-30%" width="110%" height="160%"><feGaussianBlur id="vblurk" stdDeviation="0 0"/></filter></defs></svg>
 <!-- transition layers -->
 <div class="abs" id="disc" style="left:518px; top:836px; width:44px; height:44px; border-radius:50%; background:#E3243B">
   <div class="abs" id="pinhl" style="inset:0; border-radius:50%; background: radial-gradient(circle at 35% 30%, #FF6B78, #D01C2F 60%, #8E0F1E); box-shadow: 0 8px 14px rgba(0,0,0,.35)"></div>
@@ -74,7 +128,7 @@
 
 <script>
 const IC = {};
-Promise.all(["calendar-days", "circle-x"].map((n) => fetch(`assets/icons/${n}.svg`).then((r) => r.text()).then((t) => { IC[n] = t.replace(new RegExp("<" + "!--[\\s\\S]*?--" + ">"), ""); })))
+Promise.all(["calendar-days", "circle-x", "dumbbell", "repeat", "weight", "moon", "hourglass", "flame", "trending-up"].map((n) => fetch(`assets/icons/${n}.svg`).then((r) => r.text()).then((t) => { IC[n] = t.replace(new RegExp("<" + "!--[\\s\\S]*?--" + ">"), ""); })))
   .then(() => document.fonts.ready).then(() => {
   const $ = (s) => document.querySelector(s), $$ = (s) => Array.from(document.querySelectorAll(s)), FR = 1 / 30;
   let seed = 5; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
@@ -82,10 +136,30 @@ Promise.all(["calendar-days", "circle-x"].map((n) => fetch(`assets/icons/${n}.sv
   $("#logrows").innerHTML = [["W1", "20 kg"], ["W6", "20 kg"], ["W12", "20 kg"]].map(([w, v]) => `<div class="row lr">${IC["calendar-days"]}<span style="opacity:.8; width:90px">${w}</span><span>${v}</span></div>`).join("")
     + `<div class="row lr" id="nochange" style="color:#FFD3D8">${IC["circle-x"].replace("<svg", '<svg style="stroke:#FF8C99"')}No change</div>`;
 
+  // icons: inline the Lucide SVGs; card + core icons get a draw-on stroke
+  $$(".ico").forEach((el) => { el.innerHTML = IC[el.dataset.i]; if (el.classList.contains("draw") || el.closest(".ic")) el.querySelectorAll("path, line, circle, rect, polyline").forEach((g) => { g.setAttribute("pathLength", "1"); g.setAttribute("stroke-dasharray", "1 1.2"); g.setAttribute("stroke-dashoffset", "1.1"); }); });
+  // orbit chips around the core
+  [["repeat", "REPS"], ["weight", "LOAD"], ["trending-up", "PROGRESS"], ["calendar-days", "WEEKS"], ["flame", "EFFORT"], ["moon", "RECOVERY"]].forEach(([n, l], k) => {
+    const a = -Math.PI / 2 + k / 6 * Math.PI * 2, x = Math.cos(a) * 330, y = Math.sin(a) * 330;
+    $("#orbit").insertAdjacentHTML("beforeend", `<div class="abs orb-item" style="left:${x - 100}px; top:${y - 52}px; width:200px; height:170px"><div class="abs" style="left:48px; top:0; width:104px; height:104px; border-radius:22px; background:#1A0B0F; border:2px solid #E3243B; box-shadow:0 0 30px rgba(227,36,59,.45); display:flex; align-items:center; justify-content:center"><span style="width:58px; height:58px; display:block">${IC[n].replace("<svg", '<svg width="58" height="58" style="stroke:#fff"')}</span></div><div class="abs bebas" style="left:0; top:114px; width:200px; text-align:center; font-size:30px; letter-spacing:.08em; color:rgba(255,255,255,.8)">${l}</div></div>`);
+  });
+  // rising bars (example progression)
+  { const L = 150, R = 930, B = 1560, H = 640, v = [20, 22.5, 25, 27.5, 30, 32.5], max = 34, bw = (R - L) / v.length;
+    let h = `<defs><linearGradient id="rb" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F0364C"/><stop offset="1" stop-color="#8E1424"/></linearGradient><filter id="bgl"><feGaussianBlur stdDeviation="14"/></filter></defs>`;
+    v.forEach((x, i) => { const hh = H * x / max, X = L + i * bw + 16, W = bw - 32, last = i === v.length - 1, cx = X + W / 2;
+      if (last) h += `<rect id="barglow" x="${X}" y="${B - hh}" width="${W}" height="${hh}" fill="#E3243B" opacity="0" filter="url(#bgl)"/>`;
+      h += `<rect class="bar" data-v="${x}" data-cx="${cx}" x="${X}" y="${B - hh}" width="${W}" height="${hh}" fill="${last ? "url(#rb)" : "rgba(255,255,255,.1)"}" stroke="${last ? "#FF5A6E" : "rgba(255,255,255,.45)"}" stroke-width="2"/>`;
+      h += `<text id="bv${i}" x="${cx}" y="${B - hh - 22}" text-anchor="middle" font-family="Bebas" font-size="${last ? 54 : 40}" fill="${last ? "#fff" : "rgba(255,255,255,.7)"}">20 KG</text>`;
+      h += `<text id="bw${i}" x="${cx}" y="${B + 50}" text-anchor="middle" font-family="Bebas" font-size="34" letter-spacing="3" fill="${last ? "#E3243B" : "rgba(255,255,255,.55)"}">WEEK ${i * 2 + 1}</text>`; });
+    h += `<line id="bars-axis" x1="${L}" y1="${B}" x2="${R}" y2="${B}" stroke="#fff" stroke-width="2"/>`;
+    let d = ""; v.forEach((x, i) => { d += (i ? " L" : "M") + (L + i * bw + bw / 2) + " " + (B - H * x / max - 90); });
+    h += `<path id="trend" d="${d}" stroke="#fff" stroke-width="2.5" fill="none" pathLength="1" stroke-dasharray="1 1.2" stroke-dashoffset="1.1" opacity=".7"/>`;
+    h += `<text id="bex" x="${R}" y="${B + 110}" text-anchor="end" font-family="Inter" font-weight="600" font-size="24" letter-spacing="3" fill="rgba(255,255,255,.5)">EXAMPLE PROGRESSION</text>`;
+    $("#bars").innerHTML = h; }
   const tl = gsap.timeline({ paused: true });
   // split every masked word into letters (the word box is the mask)
   const splitEl = (w) => { w.innerHTML = Array.from(w.textContent).map((c) => `<span class="ch">${c === " " ? "&nbsp;" : c}</span>`).join(""); };
-  $$(".w").forEach(splitEl); splitEl($("#s1-sub"));
+  $$(".w").forEach(splitEl); splitEl($("#s1-sub")); splitEl($("#s6-handle"));
   const chars = (id) => $$(id + " .ch");
   // letters rise out of the mask, de-blur and settle
   const wordIn = (id, t, o = {}) => tl.fromTo(chars(id), { yPercent: 115, rotationX: -65, autoAlpha: 0, filter: "blur(8px)", scale: o.s || 1 },
@@ -142,8 +216,93 @@ Promise.all(["calendar-days", "circle-x"].map((n) => fetch(`assets/icons/${n}.sv
   tl.to("#card", { rotation: 8, y: 30, duration: 0.5, ease: "power2.in" }, 9.15);
   tl.set("#bdisc", { autoAlpha: 1, scale: 0 }, 9.4);
   tl.to("#bdisc", { scale: 120, duration: 0.6, ease: "power3.in" }, 9.4);
+  tl.set("#disc", { autoAlpha: 0 }, 9.95);
 
-  tl.set({}, {}, 10);
+  // ===== 3 · MECHANISM 10.0 – 15.5 =====
+  tl.set("#s3", { autoAlpha: 1 }, 10.0); tl.set("#s2", { autoAlpha: 0 }, 10.0);
+  tl.to("#bdisc", { autoAlpha: 0, duration: 0.5, ease: "power2.out" }, 10.0);
+  tl.fromTo("#s3 .cam", { scale: 1.18, filter: "blur(10px)" }, { scale: 1.0, filter: "blur(0px)", duration: 1.1, ease: "expo.out" }, 10.0);
+  tl.to("#s3 .cam", { scale: 1.05, duration: 3.6, ease: "sine.inOut" }, 11.1);
+  tl.fromTo("#s3-grid", { y: 0 }, { y: -60, duration: 5.5, ease: "sine.inOut" }, 10.0);
+  wordIn("#w-signal1", 10.3, { d: 1.0, st: 0.06 }); wordIn("#w-signal2", 10.55, { d: 1.0, st: 0.06 });
+  tl.fromTo("#s3-ul", { scaleX: 0 }, { scaleX: 1, duration: 0.8, ease: "power3.inOut" }, 11.0);
+  tl.fromTo("#s3-core", { scale: 0 }, { scale: 1, duration: 1.0, ease: "back.out(1.6)" }, 10.45);
+  tl.fromTo("#s3-db path, #s3-db line, #s3-db circle", { strokeDashoffset: 1.1 }, { strokeDashoffset: 0, duration: 1.0, ease: "power2.inOut", stagger: 0.08 }, 10.8);
+  tl.fromTo("#s3-ring", { strokeDashoffset: 0, opacity: 0 }, { opacity: 1, duration: 0.6, ease: "power2.out" }, 11.0);
+  tl.fromTo("#s3-ring", { rotation: 0, svgOrigin: "0 0" }, { rotation: 60, svgOrigin: "0 0", duration: 4.5, ease: "none" }, 11.0);
+  tl.fromTo("#orbit", { rotation: 0 }, { rotation: 40, duration: 4.4, ease: "sine.inOut" }, 11.1);
+  $$(".orb-item").forEach((el, k) => {
+    tl.fromTo(el, { autoAlpha: 0, scale: 0.3, filter: "blur(8px)" }, { autoAlpha: 1, scale: 1, filter: "blur(0px)", duration: 0.7, ease: "back.out(2)" }, 11.25 + k * 0.22);
+    tl.fromTo(el, { rotation: 0 }, { rotation: -40, duration: 4.4, ease: "sine.inOut" }, 11.1);
+  });
+  [12.9, 14.0].forEach((t) => tl.fromTo("#s3-core", { scale: 1 }, { keyframes: [{ scale: 1.07, duration: 0.18, ease: "power2.out" }, { scale: 1, duration: 0.5, ease: "power2.inOut" }], immediateRender: false }, t));
+  wordIn("#w-m1", 12.85); wordIn("#w-m2", 13.15); wordIn("#w-m3", 13.45); wordIn("#w-m4", 13.65, { s: 1.2, d: 1.0 });
+  // OUT: zoom-blur push into the core
+  lineOut(["#w-signal1", "#w-signal2", "#w-m1", "#w-m2", "#w-m3", "#w-m4"], 14.75);
+  tl.to("#s3-ul", { scaleX: 0, transformOrigin: "100% 50%", duration: 0.4, ease: "power3.in" }, 14.8);
+  tl.to("#s3 .pk", { scale: 0.97, duration: 3 * FR, ease: "power2.out" }, 14.9);
+  tl.to("#s3 .pk", { scale: 3.2, filter: "blur(18px)", duration: 0.5, ease: "power3.in" }, 15.0);
+
+  // ===== 4 · PROGRESSION 15.5 – 21.0 =====
+  tl.set("#s3", { autoAlpha: 0 }, 15.5); tl.set("#s4", { autoAlpha: 1 }, 15.5);
+  tl.fromTo("#s4 .cam", { scale: 1.4, filter: "blur(14px)" }, { scale: 1.0, filter: "blur(0px)", duration: 1.0, ease: "expo.out" }, 15.5);
+  tl.to("#s4 .cam", { scale: 1.05, x: -12, duration: 4.0, ease: "sine.inOut" }, 16.5);
+  tl.fromTo("#s4-script", { clipPath: "inset(0% 100% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 1.0, ease: "power2.inOut" }, 15.8);
+  wordIn("#w-r1", 16.15, { d: 1.0, st: 0.06 }); wordIn("#w-r2", 16.5, { d: 1.0, st: 0.06 }); wordIn("#w-r3", 16.85, { d: 1.1, st: 0.07, s: 1.2 });
+  tl.fromTo("#bars-axis", { scaleX: 0, svgOrigin: "150 1560" }, { scaleX: 1, svgOrigin: "150 1560", duration: 0.8, ease: "power3.inOut" }, 17.0);
+  $$(".bar").forEach((b, i) => {
+    const t = 17.3 + i * 0.35, lab = $("#bv" + i), v = +b.dataset.v, pr = { v: 20 };
+    tl.fromTo(b, { scaleY: 0, svgOrigin: `${b.dataset.cx} 1560` }, { scaleY: 1, svgOrigin: `${b.dataset.cx} 1560`, duration: 0.8, ease: "expo.out" }, t);
+    tl.fromTo(lab, { autoAlpha: 0, y: 30 }, { autoAlpha: 1, y: 0, duration: 0.6, ease: "expo.out" }, t + 0.05);
+    tl.fromTo(pr, { v: 20 }, { v, duration: 0.7, ease: "power3.out", onUpdate: () => { lab.textContent = (Math.round(pr.v * 2) / 2).toFixed(1).replace(".0", "") + " KG"; } }, t + 0.05);
+    tl.fromTo("#bw" + i, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.4, ease: "power2.out" }, t + 0.1);
+  });
+  tl.fromTo("#trend", { strokeDashoffset: 1.1 }, { strokeDashoffset: 0, duration: 1.0, ease: "power2.inOut" }, 19.4);
+  tl.fromTo("#barglow", { opacity: 0 }, { keyframes: [{ opacity: 0.85, duration: 0.25 }, { opacity: 0.55, duration: 0.6 }] }, 19.2);
+  tl.fromTo("#bex", { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.5, ease: "power2.out" }, 19.6);
+  // OUT: vertical whip with motion blur
+  lineOut(["#w-r1", "#w-r2", "#w-r3"], 19.95);
+  tl.to("#s4-script", { autoAlpha: 0, y: -30, filter: "blur(8px)", duration: 0.45, ease: "power3.in" }, 19.95);
+  tl.to("#s4 .pk", { y: 24, duration: 3 * FR, ease: "power2.out" }, 20.55);
+  tl.fromTo("#s4 .pk", { y: 24 }, { y: -1000, duration: 0.17, ease: "power3.in", immediateRender: false }, 20.65);
+  tl.to("#s4 .pk", { y: -1920, duration: 0.2, ease: "expo.out" }, 20.82);
+  tl.set("#s5", { autoAlpha: 1 }, 20.65);
+  tl.fromTo("#s5 .pk", { y: 1920 }, { y: 920, duration: 0.17, ease: "power3.in" }, 20.65);
+  tl.to("#s5 .pk", { y: 0, duration: 0.28, ease: "expo.out" }, 20.82);
+  tl.fromTo(["#s4 .pk", "#s5 .pk"], { filter: "blur(0px)" }, { keyframes: [{ filter: "blur(16px)", duration: 0.17, ease: "power2.in" }, { filter: "blur(0px)", duration: 0.22, ease: "power3.out" }] }, 20.65);
+  tl.set("#s4", { autoAlpha: 0 }, 21.05);
+
+  // ===== 5 · TAKEAWAY 21.0 – 26.5 =====
+  tl.fromTo("#s5 .cam", { scale: 1.0 }, { scale: 1.04, duration: 4.6, ease: "sine.inOut" }, 21.1);
+  wordIn("#w-rule1", 20.85, { d: 1.0, st: 0.06 }); wordIn("#w-rule2", 21.1, { d: 1.0, st: 0.06 });
+  tl.fromTo("#s5-ul", { scaleX: 0 }, { scaleX: 1, duration: 0.8, ease: "power3.inOut" }, 21.5);
+  [["#card-do", 21.55], ["#card-dont", 23.0]].forEach(([c, t]) => {
+    tl.fromTo(c, { autoAlpha: 0, y: 140, filter: "blur(12px)" }, { autoAlpha: 1, y: 0, filter: "blur(0px)", duration: 1.0, ease: "expo.out" }, t);
+    $$(c + " .ic").forEach((ic, k) => {
+      tl.fromTo(ic, { autoAlpha: 0, y: 24, scale: 0.6 }, { autoAlpha: 1, y: 0, scale: 1, duration: 0.7, ease: "back.out(2)" }, t + 0.45 + k * 0.25);
+      tl.fromTo($$(c + " .ic")[k].querySelectorAll("path, line, circle, rect, polyline"), { strokeDashoffset: 1.1 }, { strokeDashoffset: 0, duration: 0.8, ease: "power2.inOut" }, t + 0.5 + k * 0.25);
+    });
+  });
+  // OUT: red circle wipe from the centre into the cream outro
+  lineOut(["#w-rule1", "#w-rule2"], 25.55);
+  tl.to("#s5-ul", { scaleX: 0, transformOrigin: "100% 50%", duration: 0.4, ease: "power3.in" }, 25.6);
+  tl.to(["#card-do", "#card-dont"], { y: 80, autoAlpha: 0, filter: "blur(10px)", duration: 0.5, ease: "power3.in", stagger: 0.08 }, 25.6);
+  tl.set("#pinhl", { opacity: 0 }, 25.95);
+  tl.set("#disc", { autoAlpha: 1, x: 0, y: 960 - 858, scale: 0 }, 25.95);
+  tl.to("#disc", { scale: 115, duration: 0.55, ease: "power3.in" }, 25.95);
+
+  // ===== 6 · OUTRO 26.5 – 31.0 =====
+  tl.set("#s5", { autoAlpha: 0 }, 26.5); tl.set("#s6", { autoAlpha: 1 }, 26.5);
+  tl.to("#disc", { scale: 0, duration: 0.85, ease: "expo.inOut" }, 26.5);
+  tl.fromTo("#s6 .cam", { scale: 1.1 }, { scale: 1.0, duration: 1.2, ease: "expo.out" }, 26.5);
+  tl.to("#s6 .cam", { scale: 1.04, duration: 3.3, ease: "sine.inOut" }, 27.7);
+  tl.fromTo("#s6-swoosh", { strokeDashoffset: 1.1 }, { strokeDashoffset: 0, duration: 1.5, ease: "power3.out" }, 26.6);
+  tl.fromTo("#s6-script", { clipPath: "inset(0% 100% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 1.0, ease: "power2.inOut" }, 27.1);
+  wordIn("#w-s1", 27.7); wordIn("#w-s2", 27.95);
+  wordIn("#w-e1", 28.45, { d: 1.0, st: 0.06, s: 1.15 }); wordIn("#w-e2", 28.8, { d: 1.0, st: 0.06, s: 1.15 });
+  tl.fromTo("#s6-handle .ch", { autoAlpha: 0, y: 16, filter: "blur(8px)" }, { autoAlpha: 1, y: 0, filter: "blur(0px)", duration: 0.7, ease: "expo.out", stagger: { each: 0.03, from: "center" } }, 29.6);
+
+  tl.set({}, {}, 31);
   window.__timelines = window.__timelines || {}; window.__timelines["main"] = tl;
 });
 </script>
