@@ -3,3 +3,4 @@ refs/sheet_*
 renders/*.log
 renders/work-*
 .hyperframes/artifacts/
+assets/sfx_src/
