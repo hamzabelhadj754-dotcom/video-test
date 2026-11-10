@@ -4,7 +4,7 @@ import json, os
 import numpy as np, soundfile as sf
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 A = lambda p: os.path.join(ROOT, "assets/audio", p)
-SR, DUR = 48000, 12.2
+SR, DUR = 48000, 31.5
 N = int(SR * DUR); BPM = 120; B = 60 / BPM
 rng = np.random.default_rng(120)
 def midi(m): return 440.0 * 2 ** ((m - 69) / 12)
@@ -114,7 +114,7 @@ add(sfx, 2.95, tick(0.16, 1900)); soft_hit(3.25)
 add(sfx, 4.45, whoosh(0.4, 0.45), pan=0.5); add(sfx, 4.92, kick(0.7)); add(sfx, 4.92, boom(0.3))
 for t in (5.05, 5.28): add(sfx, t, tick(0.16, 2200))
 soft_hit(5.62, 0.9); soft_hit(5.98, 1.1)
-add(sfx, 6.55, whoosh(0.5, 0.5), pan=-0.3)
+
 add(sfx, 7.15, pop(0.5, 520)); add(sfx, 7.3, whoosh(0.3, 0.18))
 for t in (7.35, 7.55): add(sfx, t, tick(0.16, 2000))
 soft_hit(7.9)
@@ -125,7 +125,27 @@ add(sfx, 9.45, whoosh(0.6, 0.3))
 add(sfx, 9.85, rev_swell(0.5, 0.15)); add(sfx, 10.2, shimmer(0.9, 0.08))
 soft_hit(10.55, 1.2); add(sfx, 10.55, ring(0.18, 176))
 add(sfx, 11.15, tick(0.16, 1700))
-i0 = int(11.7 * SR); sfx[i0:] *= np.linspace(1, 0, len(sfx) - i0)[:, None]
+# ---- smooth-transition updates for 0-12 s ----
+add(sfx, 6.2, rev_swell(0.3, 0.1)); add(sfx, 6.5, whoosh(0.7, 0.35)); add(sfx, 7.1, boom(0.25))
+# ---- scenes 6-10 ----
+add(sfx, 12.0, whoosh(0.6, 0.25), pan=-0.2); add(sfx, 12.6, shimmer(0.8, 0.07))
+for t in (12.85, 13.05): add(sfx, t, tick(0.16, 2000))
+add(sfx, 13.25, whoosh(0.3, 0.2)); soft_hit(13.55)
+for i in range(6): add(sfx, 13.6 + i * 0.3, tick(0.22, 1500 + 160 * i)); add(sfx, 13.6 + i * 0.3, pop(0.12, 400 + 60 * i))
+add(sfx, 15.15, glass_lock(0.25)); add(sfx, 15.3, whoosh(0.5, 0.15))
+add(sfx, 15.95, rev_swell(0.3, 0.1)); add(sfx, 16.2, whoosh(0.7, 0.35)); add(sfx, 16.8, boom(0.25))
+add(sfx, 16.85, whoosh(0.5, 0.35), pan=-0.4); add(sfx, 17.1, tick(0.16, 1900)); soft_hit(17.35); add(sfx, 17.85, chirp(0.08))
+add(sfx, 19.0, whoosh(0.45, 0.4), pan=-0.5); add(sfx, 19.25, whoosh(0.7, 0.3)); add(sfx, 19.85, boom(0.3)); add(sfx, 19.85, kick(0.5))
+for i in range(8): add(sfx, 20.05 + i * 0.07, tick(0.1, 2600))
+add(sfx, 20.6, whoosh(0.5, 0.25)); add(sfx, 21.9, whoosh(0.5, 0.25))
+for t in (21.0, 21.22, 21.44, 22.3, 22.52, 22.74): add(sfx, t, pop(0.25, 560)); add(sfx, t, tick(0.08, 2400))
+add(sfx, 23.75, whoosh(0.5, 0.25)); add(sfx, 24.15, rev_swell(0.5, 0.12)); add(sfx, 24.4, shimmer(1.2, 0.08))
+add(sfx, 24.75, tick(0.16, 1800)); soft_hit(25.1, 1.0)
+add(sfx, 26.6, rev_swell(0.3, 0.1)); add(sfx, 26.85, whoosh(0.7, 0.35)); add(sfx, 27.45, boom(0.25))
+add(sfx, 27.7, shimmer(0.9, 0.08))
+for t in (28.15, 28.35): add(sfx, t, tick(0.16, 2000))
+soft_hit(28.75, 0.9); soft_hit(29.05, 1.1); add(sfx, 29.05, ring(0.15, 264)); add(sfx, 29.7, shimmer(0.8, 0.08))
+i0 = int(30.8 * SR); sfx[i0:] *= np.linspace(1, 0, len(sfx) - i0)[:, None]
 def reverb(x, rt, wet, seed):
     r = np.random.default_rng(seed); n = int(rt * SR); t = np.arange(n) / SR; out = np.zeros_like(x)
     for ch in range(2):
