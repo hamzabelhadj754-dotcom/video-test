@@ -1,7 +1,7 @@
 {
   "version": 1,
   "historyId": "be2dcfea-40be-43a4-a4b2-5a189454b04f",
-  "currentRevision": "7bf624d3-cf90-4156-b139-bdbba84a04ac",
+  "currentRevision": "56b8c18e-a2ce-4bb7-b0d7-9668b87f3b3d",
   "pendingChanges": false,
   "files": {
     "assets/fonts/Anton-Regular.woff2": {
@@ -93,8 +93,8 @@
       "content": "/root/.cache/hyperframes/history/be2dcfea-40be-43a4-a4b2-5a189454b04f/blobs/53/53dbce1e19aa713cbb12ee0bc4d206143b45ab15e6ffbfcaa8f69572d4d24d50"
     },
     "index.html": {
-      "hash": "6d5f6202889d45272abc57a8b77693b6eb116358b250c993f142ab9f48821440",
-      "content": "/root/.cache/hyperframes/history/be2dcfea-40be-43a4-a4b2-5a189454b04f/blobs/6d/6d5f6202889d45272abc57a8b77693b6eb116358b250c993f142ab9f48821440"
+      "hash": "39462f81d99de19a3739f0b977735711dec5bc8e1c4070dab29c554f75b788e7",
+      "content": "/root/.cache/hyperframes/history/be2dcfea-40be-43a4-a4b2-5a189454b04f/blobs/39/39462f81d99de19a3739f0b977735711dec5bc8e1c4070dab29c554f75b788e7"
     },
     "package.json": {
       "hash": "ee0257d57a8d536fb3b8a1751f72a11f7385d986af64debe62873738f4a042f5",
@@ -237,6 +237,21 @@
           "after": "/root/.cache/hyperframes/history/be2dcfea-40be-43a4-a4b2-5a189454b04f/blobs/a3/a3acc8a6d1970655c8109f721ff30d4bef8f7116891f1c98154464eb4d4f426d"
         }
       }
+    },
+    "56b8c18e-a2ce-4bb7-b0d7-9668b87f3b3d": {
+      "actor": {
+        "kind": "outside",
+        "name": "Outside"
+      },
+      "label": "Changed outside the app",
+      "startedAt": 1794307634032,
+      "endedAt": 1794307634033,
+      "files": {
+        "index.html": {
+          "before": "/root/.cache/hyperframes/history/be2dcfea-40be-43a4-a4b2-5a189454b04f/blobs/6d/6d5f6202889d45272abc57a8b77693b6eb116358b250c993f142ab9f48821440",
+          "after": "/root/.cache/hyperframes/history/be2dcfea-40be-43a4-a4b2-5a189454b04f/blobs/39/39462f81d99de19a3739f0b977735711dec5bc8e1c4070dab29c554f75b788e7"
+        }
+      }
     }
   },
   "checks": {
@@ -251,15 +266,15 @@
   },
   "renders": {
     "latest": {
-      "id": "68f2e3dc-7a2f-479e-9715-66fbfa29dda5",
-      "completedAt": 1794307405040,
+      "id": "de62cacb-16d2-4ae2-b059-b1d69750b9ab",
+      "completedAt": 1794307811051,
       "output": "/home/user/video-test/fitness-overload-v2/renders/gainsdom_progressive_overload.mp4",
       "status": "completed",
-      "revision": "7bf624d3-cf90-4156-b139-bdbba84a04ac"
+      "revision": "56b8c18e-a2ce-4bb7-b0d7-9668b87f3b3d"
     },
     "retainedRevisions": [
-      "7bf624d3-cf90-4156-b139-bdbba84a04ac",
-      "3af81305-eaaf-4c14-88b5-d60d34f92c59"
+      "56b8c18e-a2ce-4bb7-b0d7-9668b87f3b3d",
+      "7bf624d3-cf90-4156-b139-bdbba84a04ac"
     ]
   },
   "pendingArtifactCleanup": []
