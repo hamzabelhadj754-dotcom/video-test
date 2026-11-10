@@ -26,6 +26,8 @@
   .chip { position: absolute; right: 120px; top: 250px; padding: 8px 14px; background: #fff; color: #111; font: 800 18px/1 Inter; letter-spacing: .06em; }
   .light .chip { background: #111; color: #fff; }
   .w { display: inline-block; overflow: hidden; vertical-align: bottom; padding: .06em .05em .14em; margin: -.06em -.05em -.14em; }
+  .sweep { position: absolute; left: 0; top: 8%; right: 0; bottom: 10%; background: #E3243B; box-shadow: 0 0 30px rgba(227,36,59,.6); }
+  .w { position: relative; }
   .ch { display: inline-block; will-change: transform, opacity, filter; transform-origin: 50% 100%; }
   .vig { background: radial-gradient(ellipse 90% 75% at 50% 50%, transparent 55%, rgba(0,0,0,.5) 100%); pointer-events: none; }
   .light .vigL { position: absolute; inset: 0; background: radial-gradient(ellipse 90% 75% at 50% 50%, transparent 60%, rgba(120,110,95,.18) 100%); }
@@ -48,7 +50,10 @@
 <section class="sc full dark" id="s1"><div class="cam full">
   <div class="grid fadeTop" id="s1-grid"></div>
   <div class="abs" id="s1-circle" style="left:110px; top:930px; width:860px; height:860px; border-radius:50%; background: radial-gradient(circle at 50% 45%, #F23A50 0%, #E3243B 55%, #B8162B 100%); box-shadow: 0 0 120px rgba(227,36,59,.55), 0 0 260px rgba(227,36,59,.3)"></div>
+  <svg class="abs" id="s1-hud" width="1080" height="1080" viewBox="-540 -540 1080 1080" style="left:0; top:820px; overflow:visible"><circle r="480" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="2" stroke-dasharray="2 14"/><path d="M 0 -520 A 520 520 0 0 1 368 -368" fill="none" stroke="#E3243B" stroke-width="4" stroke-linecap="round"/><path d="M 0 520 A 520 520 0 0 1 -368 368" fill="none" stroke="rgba(255,255,255,.6)" stroke-width="2"/></svg>
+  <div class="abs" id="s1-pulse" style="left:110px; top:930px; width:860px; height:860px; border-radius:50%; border:3px solid rgba(227,36,59,.8)"></div>
   <img class="abs" id="s1-hero" src="assets/photos/flex_bw.png" alt="" style="left:-20px; top:1000px; width:1120px; filter: drop-shadow(0 -10px 40px rgba(0,0,0,.6)) contrast(1.05)" />
+  <div class="abs" id="s1-sweep" style="left:-20px; top:1000px; width:1120px; height:935px; -webkit-mask: url(assets/photos/flex_bw.png) 0 0 / 100% auto no-repeat; mask: url(assets/photos/flex_bw.png) 0 0 / 100% auto no-repeat; background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,.55) 50%, transparent 60%); background-size: 300% 100%; background-position: 100% 0; mix-blend-mode: screen"></div>
   <div class="abs" style="left:0; right:0; bottom:0; height:380px; background: linear-gradient(180deg, transparent, rgba(40,8,14,.95))"></div>
   <div id="s1-text" class="full">
     <div class="center script" id="s1-script" style="top:300px; font-size:120px; line-height:1.15; transform: rotate(-6deg)">same weight…</div>
@@ -75,6 +80,10 @@
   <div class="center bebas" style="top:330px; font-size:120px; line-height:1"><span style="display:inline-block; position:relative"><span class="w" id="w-signal1">The</span> <span class="w" id="w-signal2">signal</span><i id="s3-ul" style="position:absolute; left:0; right:0; bottom:-6px; height:4px; background:#fff"></i></span></div>
   <div class="abs" style="left:540px; top:1080px; width:0; height:0">
     <svg class="abs" width="700" height="700" viewBox="-350 -350 700 700" style="left:-350px; top:-350px; overflow:visible"><circle id="s3-ring" r="330" fill="none" stroke="rgba(255,255,255,.45)" stroke-width="2" stroke-dasharray="10 10"/></svg>
+    <svg class="abs" width="1000" height="1000" viewBox="-500 -500 1000 1000" style="left:-500px; top:-500px; overflow:visible"><g id="s3-arcA"><path d="M -250 0 A 250 250 0 0 1 0 -250" fill="none" stroke="#E3243B" stroke-width="5" stroke-linecap="round"/><path d="M 250 0 A 250 250 0 0 1 0 250" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="2"/></g><g id="s3-arcB"><circle r="430" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="1.5" stroke-dasharray="3 9"/><path d="M 304 -304 A 430 430 0 0 1 430 0" fill="none" stroke="#E3243B" stroke-width="3" stroke-linecap="round"/></g></svg>
+    <div class="abs s3-wave" style="left:-190px; top:-190px; width:380px; height:380px; border-radius:50%; border:3px solid rgba(227,36,59,.9)"></div>
+    <div class="abs s3-wave" style="left:-190px; top:-190px; width:380px; height:380px; border-radius:50%; border:2px solid rgba(255,255,255,.7)"></div>
+    <div class="abs s3-wave" style="left:-190px; top:-190px; width:380px; height:380px; border-radius:50%; border:3px solid rgba(227,36,59,.9)"></div>
     <div class="abs" id="s3-core" style="left:-190px; top:-190px; width:380px; height:380px; border-radius:50%; background: radial-gradient(circle at 40% 35%, #FF4A5F, #E3243B 55%, #A3142A); box-shadow: 0 0 90px rgba(227,36,59,.7), 0 0 200px rgba(227,36,59,.35)"></div>
     <div class="abs ico draw" data-i="dumbbell" id="s3-db" style="left:-110px; top:-110px; width:220px; height:220px"></div>
     <div class="abs" id="orbit" style="left:0; top:0; width:0; height:0"></div>
@@ -118,10 +127,11 @@
 
 <svg width="0" height="0" style="position:absolute"><defs><filter id="vblur" x="-5%" y="-30%" width="110%" height="160%"><feGaussianBlur id="vblurk" stdDeviation="0 0"/></filter></defs></svg>
 <!-- transition layers -->
+<canvas id="dust" class="full" width="1080" height="1920" style="pointer-events:none"></canvas>
+<div class="abs" id="bdisc" style="left:518px; top:836px; width:44px; height:44px; border-radius:50%; background:#050506"></div>
 <div class="abs" id="disc" style="left:518px; top:836px; width:44px; height:44px; border-radius:50%; background:#E3243B">
   <div class="abs" id="pinhl" style="inset:0; border-radius:50%; background: radial-gradient(circle at 35% 30%, #FF6B78, #D01C2F 60%, #8E0F1E); box-shadow: 0 8px 14px rgba(0,0,0,.35)"></div>
 </div>
-<div class="abs" id="bdisc" style="left:518px; top:836px; width:44px; height:44px; border-radius:50%; background:#050506"></div>
 <div class="full vig" id="vigAll" style="opacity:.0"></div>
 <div id="grain"></div>
 </div>
@@ -164,6 +174,16 @@ Promise.all(["calendar-days", "circle-x", "dumbbell", "repeat", "weight", "moon"
   // letters rise out of the mask, de-blur and settle
   const wordIn = (id, t, o = {}) => tl.fromTo(chars(id), { yPercent: 115, rotationX: -65, autoAlpha: 0, filter: "blur(8px)", scale: o.s || 1 },
     { yPercent: 0, rotationX: 0, autoAlpha: 1, filter: "blur(0px)", scale: 1, duration: o.d || 0.9, ease: "expo.out", stagger: o.st || 0.045 }, t);
+  // other entrances so the text is not all letter-by-letter
+  const wordRise = (id, t, o = {}) => tl.fromTo(chars(id), { yPercent: 110, skewY: 9, autoAlpha: 0 }, { yPercent: 0, skewY: 0, autoAlpha: 1, duration: o.d || 0.8, ease: "expo.out" }, t);
+  const wordPop = (id, t, o = {}) => tl.fromTo(id, { scale: 0.35, autoAlpha: 0, filter: "blur(14px)", rotation: o.r || -6 }, { scale: 1, autoAlpha: 1, filter: "blur(0px)", rotation: 0, duration: o.d || 0.75, ease: "back.out(2.4)" }, t);
+  const wordSlide = (id, t, o = {}) => tl.fromTo(id, { x: o.x || -90, skewX: -18, autoAlpha: 0, filter: "blur(12px)" }, { x: 0, skewX: 0, autoAlpha: 1, filter: "blur(0px)", duration: o.d || 0.75, ease: "power4.out" }, t);
+  const typeIn = (id, t, o = {}) => tl.fromTo(chars(id), { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.01, ease: "none", stagger: o.st || 0.07 }, t);
+  const wordSweep = (id, t) => { const w = $(id), b = document.createElement("i"); b.className = "sweep"; w.appendChild(b);
+    tl.fromTo(b, { scaleX: 0, transformOrigin: "0% 50%" }, { scaleX: 1, duration: 0.3, ease: "power3.in" }, t);
+    tl.fromTo(chars(id), { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.01 }, t + 0.3);
+    tl.to(b, { scaleX: 0, transformOrigin: "100% 50%", duration: 0.4, ease: "power3.out" }, t + 0.31);
+    tl.fromTo(id, { scale: 1.15 }, { scale: 1, duration: 0.6, ease: "expo.out", immediateRender: false }, t + 0.3); };
   // the whole line leaves together, letters slipping up out of the mask
   const lineOut = (ids, t) => tl.to(ids.map(chars).flat(), { yPercent: -115, autoAlpha: 0, filter: "blur(6px)", duration: 0.55, ease: "power3.in", stagger: 0.012 }, t);
 
@@ -183,6 +203,16 @@ Promise.all(["calendar-days", "circle-x", "dumbbell", "repeat", "weight", "moon"
   tl.fromTo("#s1-circle", { scale: 0 }, { scale: 1, duration: 1.3, ease: "expo.out" }, 0.1);
   tl.fromTo("#s1-hero", { y: 200, scale: 1.08, filter: "blur(14px) contrast(1.05)", autoAlpha: 0 }, { y: 0, scale: 1, filter: "blur(0px) contrast(1.05)", autoAlpha: 1, duration: 1.6, ease: "expo.out" }, 0.3);
   tl.to("#s1-hero", { y: -28, scale: 1.03, duration: 2.2, ease: "sine.inOut" }, 1.9);
+  tl.fromTo("#s1 .cam", { rotation: -0.8 }, { rotation: 0.6, duration: 4.5, ease: "sine.inOut" }, 0);
+  tl.fromTo("#s1-hud", { rotation: -40, scale: 0.6, autoAlpha: 0 }, { rotation: 0, scale: 1, autoAlpha: 1, duration: 1.4, ease: "expo.out" }, 0.35);
+  tl.to("#s1-hud", { rotation: 70, duration: 3.0, ease: "none" }, 1.75);
+  tl.to("#s1-hud", { autoAlpha: 0, scale: 1.3, duration: 0.4, ease: "power2.in" }, 4.1);
+  gsap.set("#s1-pulse", { opacity: 0 });
+  [0.15, 2.4].forEach((t) => tl.fromTo("#s1-pulse", { scale: 1, opacity: 0.9 }, { scale: 1.45, opacity: 0, duration: 1.1, ease: "expo.out", immediateRender: false }, t));
+  tl.fromTo("#s1-sweep", { backgroundPosition: "100% 0", autoAlpha: 1 }, { backgroundPosition: "0% 0", autoAlpha: 1, duration: 1.0, ease: "power2.inOut", immediateRender: false }, 2.6);
+  gsap.set("#s1-sweep", { autoAlpha: 0 });
+  tl.to("#s1-sweep", { y: -28, scale: 1.03, duration: 1.45, ease: "sine.inOut" }, 1.9);
+  tl.to("#s1-sweep", { y: 380, autoAlpha: 0, duration: 0.45, ease: "power3.in" }, 4.1);
   tl.fromTo("#s1-chip", { autoAlpha: 0, y: -10 }, { autoAlpha: 1, y: 0, duration: 0.6, ease: "expo.out" }, 0.6);
   tl.fromTo("#s1-script", { clipPath: "inset(0% 100% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 1.3, ease: "power2.inOut" }, 0.9);
   wordIn("#w-same", 1.7, { d: 1.0, st: 0.06 });
@@ -206,37 +236,43 @@ Promise.all(["calendar-days", "circle-x", "dumbbell", "repeat", "weight", "moon"
   tl.fromTo("#s2-swoosh", { strokeDashoffset: 1.1 }, { strokeDashoffset: 0, duration: 1.5, ease: "power3.out" }, 5.05);
   tl.fromTo("#card", { autoAlpha: 0, rotation: -28, y: -40 }, { autoAlpha: 1, y: 0, duration: 0.4, ease: "power2.out" }, 5.75);
   tl.fromTo("#card", { rotation: -28 }, { rotation: -4, duration: 1.8, ease: "elastic.out(1, 0.4)", immediateRender: false }, 5.75);
-  wordIn("#w-your", 5.9); wordIn("#w-muscles", 6.15);
-  wordIn("#w-stop", 6.7, { d: 1.0, st: 0.06, s: 1.15 }); wordIn("#w-growing", 7.05, { d: 1.0, st: 0.06, s: 1.15 });
+  wordRise("#w-your", 5.9); wordRise("#w-muscles", 6.12);
+  wordPop("#w-stop", 6.7, { r: -8 }); wordPop("#w-growing", 7.0, { r: 5 });
   $$(".lr").forEach((r, i) => tl.fromTo(r, { autoAlpha: 0, x: -24, filter: "blur(6px)" }, { autoAlpha: 1, x: 0, filter: "blur(0px)", duration: 0.6, ease: "expo.out" }, 7.6 + i * 0.3));
   tl.fromTo("#nochange", { x: 0 }, { keyframes: [-8, 8, -5, 5, 0].map((x) => ({ x, duration: 0.05 })), ease: "none", immediateRender: false }, 8.65);
   tl.fromTo("#s2 .cam", { x: 0 }, { keyframes: [{ x: 6, duration: FR }, { x: -5, duration: FR }, { x: 0, duration: FR }], immediateRender: false }, 8.65);
-  // OUT: text slips away, the card tips, a black circle grows from the pin
-  lineOut(["#w-your", "#w-muscles", "#w-stop", "#w-growing"], 9.05);
-  tl.to("#card", { rotation: 8, y: 30, duration: 0.5, ease: "power2.in" }, 9.15);
-  tl.set("#bdisc", { autoAlpha: 1, scale: 0 }, 9.4);
-  tl.to("#bdisc", { scale: 120, duration: 0.6, ease: "power3.in" }, 9.4);
-  tl.set("#disc", { autoAlpha: 0 }, 9.95);
+  // OUT: the words blow out, the card drops off its pin, the pin itself travels and becomes the core of scene 3
+  tl.to(["#w-your", "#w-muscles", "#w-stop", "#w-growing"], { scale: 1.25, autoAlpha: 0, filter: "blur(14px)", duration: 0.45, ease: "power2.in", stagger: 0.05 }, 9.0);
+  tl.to("#card", { rotation: 32, y: 1300, duration: 0.75, ease: "power3.in" }, 9.15);
+  tl.to("#disc", { scale: 1.5, duration: 0.18, ease: "power2.out" }, 9.45);
+  tl.to("#disc", { scale: 1, duration: 0.07, ease: "power2.in" }, 9.63);
+  tl.set("#bdisc", { autoAlpha: 1, scale: 0, y: 0 }, 9.7);
+  tl.to("#bdisc", { scale: 120, y: 222, duration: 0.6, ease: "power2.inOut" }, 9.7);
+  tl.to("#disc", { y: 222, scale: 380 / 44, duration: 0.7, ease: "expo.inOut" }, 9.7);
+  tl.set("#s3", { autoAlpha: 1 }, 10.3); tl.set("#s2", { autoAlpha: 0 }, 10.3); tl.set("#bdisc", { autoAlpha: 0 }, 10.3);
+  tl.set("#disc", { autoAlpha: 0 }, 10.42); tl.set("#pinhl", { opacity: 0 }, 10.42);
 
-  // ===== 3 · MECHANISM 10.0 – 15.5 =====
-  tl.set("#s3", { autoAlpha: 1 }, 10.0); tl.set("#s2", { autoAlpha: 0 }, 10.0);
-  tl.to("#bdisc", { autoAlpha: 0, duration: 0.5, ease: "power2.out" }, 10.0);
-  tl.fromTo("#s3 .cam", { scale: 1.18, filter: "blur(10px)" }, { scale: 1.0, filter: "blur(0px)", duration: 1.1, ease: "expo.out" }, 10.0);
-  tl.to("#s3 .cam", { scale: 1.05, duration: 3.6, ease: "sine.inOut" }, 11.1);
-  tl.fromTo("#s3-grid", { y: 0 }, { y: -60, duration: 5.5, ease: "sine.inOut" }, 10.0);
-  wordIn("#w-signal1", 10.3, { d: 1.0, st: 0.06 }); wordIn("#w-signal2", 10.55, { d: 1.0, st: 0.06 });
-  tl.fromTo("#s3-ul", { scaleX: 0 }, { scaleX: 1, duration: 0.8, ease: "power3.inOut" }, 11.0);
-  tl.fromTo("#s3-core", { scale: 0 }, { scale: 1, duration: 1.0, ease: "back.out(1.6)" }, 10.45);
-  tl.fromTo("#s3-db path, #s3-db line, #s3-db circle", { strokeDashoffset: 1.1 }, { strokeDashoffset: 0, duration: 1.0, ease: "power2.inOut", stagger: 0.08 }, 10.8);
-  tl.fromTo("#s3-ring", { strokeDashoffset: 0, opacity: 0 }, { opacity: 1, duration: 0.6, ease: "power2.out" }, 11.0);
-  tl.fromTo("#s3-ring", { rotation: 0, svgOrigin: "0 0" }, { rotation: 60, svgOrigin: "0 0", duration: 4.5, ease: "none" }, 11.0);
+  // ===== 3 · MECHANISM 10.3 – 15.5 =====
+  tl.fromTo("#s3 .cam", { scale: 1.0, rotation: 0 }, { scale: 1.06, rotation: 0.8, duration: 4.6, ease: "sine.inOut" }, 10.3);
+  tl.fromTo("#s3-grid", { y: 0 }, { y: -80, duration: 5.2, ease: "sine.inOut" }, 10.3);
+  tl.fromTo("#s3-core", { scale: 1 }, { keyframes: [{ scale: 1.14, duration: 0.12, ease: "power2.out" }, { scale: 1, duration: 0.5, ease: "elastic.out(1, 0.5)" }] }, 10.4);
+  $$(".s3-wave").forEach((w, k) => [10.42, 12.9, 14.0].forEach((t) => tl.fromTo(w, { scale: 1, opacity: 0.9 }, { scale: 2.4 + k * 0.4, opacity: 0, duration: 1.1, ease: "expo.out", immediateRender: false }, t + k * 0.09)));
+  gsap.set(".s3-wave", { opacity: 0 });
+  tl.fromTo("#s3-db", { rotation: -200, scale: 0 }, { rotation: 0, scale: 1, duration: 1.0, ease: "back.out(1.7)" }, 10.45);
+  tl.fromTo("#s3-db path, #s3-db line, #s3-db circle", { strokeDashoffset: 1.1 }, { strokeDashoffset: 0, duration: 0.8, ease: "power2.inOut", stagger: 0.06 }, 10.5);
+  tl.fromTo("#s3-arcA", { rotation: -90, opacity: 0, svgOrigin: "0 0" }, { rotation: 270, opacity: 1, svgOrigin: "0 0", duration: 5.0, ease: "power1.inOut" }, 10.5);
+  tl.fromTo("#s3-arcB", { rotation: 0, opacity: 0, svgOrigin: "0 0" }, { rotation: -150, opacity: 1, svgOrigin: "0 0", duration: 5.0, ease: "power1.inOut" }, 10.6);
+  tl.fromTo("#s3-ring", { opacity: 0 }, { opacity: 1, duration: 0.6, ease: "power2.out" }, 10.6);
+  tl.fromTo("#s3-ring", { rotation: 0, svgOrigin: "0 0" }, { rotation: 60, svgOrigin: "0 0", duration: 4.9, ease: "none" }, 10.6);
   tl.fromTo("#orbit", { rotation: 0 }, { rotation: 40, duration: 4.4, ease: "sine.inOut" }, 11.1);
-  $$(".orb-item").forEach((el, k) => {
-    tl.fromTo(el, { autoAlpha: 0, scale: 0.3, filter: "blur(8px)" }, { autoAlpha: 1, scale: 1, filter: "blur(0px)", duration: 0.7, ease: "back.out(2)" }, 11.25 + k * 0.22);
-    tl.fromTo(el, { rotation: 0 }, { rotation: -40, duration: 4.4, ease: "sine.inOut" }, 11.1);
-  });
-  [12.9, 14.0].forEach((t) => tl.fromTo("#s3-core", { scale: 1 }, { keyframes: [{ scale: 1.07, duration: 0.18, ease: "power2.out" }, { scale: 1, duration: 0.5, ease: "power2.inOut" }], immediateRender: false }, t));
-  wordIn("#w-m1", 12.85); wordIn("#w-m2", 13.15); wordIn("#w-m3", 13.45); wordIn("#w-m4", 13.65, { s: 1.2, d: 1.0 });
+  // chips burst out of the core to their places on the orbit
+  $$(".orb-item").forEach((el, k) => { const a = -Math.PI / 2 + k / 6 * Math.PI * 2;
+    tl.fromTo(el, { x: -Math.cos(a) * 330, y: -Math.sin(a) * 330, autoAlpha: 0, scale: 0.2 }, { x: 0, y: 0, autoAlpha: 1, scale: 1, duration: 0.85, ease: "back.out(1.6)" }, 10.75 + k * 0.1);
+    tl.fromTo(el, { rotation: 0 }, { rotation: -40, duration: 4.4, ease: "sine.inOut" }, 11.1); });
+  [12.9, 14.0].forEach((t) => tl.fromTo("#s3-core", { scale: 1 }, { keyframes: [{ scale: 1.08, duration: 0.15, ease: "power2.out" }, { scale: 1, duration: 0.5, ease: "power2.inOut" }], immediateRender: false }, t));
+  typeIn("#w-signal1", 10.9, { st: 0.07 }); typeIn("#w-signal2", 11.15, { st: 0.07 });
+  tl.fromTo("#s3-ul", { scaleX: 0 }, { scaleX: 1, duration: 0.7, ease: "power3.inOut" }, 11.6);
+  wordSlide("#w-m1", 12.85, { x: -110 }); wordSlide("#w-m2", 13.1, { x: -110 }); wordSlide("#w-m3", 13.32, { x: -110 }); wordSweep("#w-m4", 13.55);
   // OUT: zoom-blur push into the core
   lineOut(["#w-signal1", "#w-signal2", "#w-m1", "#w-m2", "#w-m3", "#w-m4"], 14.75);
   tl.to("#s3-ul", { scaleX: 0, transformOrigin: "100% 50%", duration: 0.4, ease: "power3.in" }, 14.8);
@@ -248,7 +284,7 @@ Promise.all(["calendar-days", "circle-x", "dumbbell", "repeat", "weight", "moon"
   tl.fromTo("#s4 .cam", { scale: 1.4, filter: "blur(14px)" }, { scale: 1.0, filter: "blur(0px)", duration: 1.0, ease: "expo.out" }, 15.5);
   tl.to("#s4 .cam", { scale: 1.05, x: -12, duration: 4.0, ease: "sine.inOut" }, 16.5);
   tl.fromTo("#s4-script", { clipPath: "inset(0% 100% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 1.0, ease: "power2.inOut" }, 15.8);
-  wordIn("#w-r1", 16.15, { d: 1.0, st: 0.06 }); wordIn("#w-r2", 16.5, { d: 1.0, st: 0.06 }); wordIn("#w-r3", 16.85, { d: 1.1, st: 0.07, s: 1.2 });
+  wordRise("#w-r1", 16.15); wordRise("#w-r2", 16.4); wordSweep("#w-r3", 16.7);
   tl.fromTo("#bars-axis", { scaleX: 0, svgOrigin: "150 1560" }, { scaleX: 1, svgOrigin: "150 1560", duration: 0.8, ease: "power3.inOut" }, 17.0);
   $$(".bar").forEach((b, i) => {
     const t = 17.3 + i * 0.35, lab = $("#bv" + i), v = +b.dataset.v, pr = { v: 20 };
@@ -274,7 +310,7 @@ Promise.all(["calendar-days", "circle-x", "dumbbell", "repeat", "weight", "moon"
 
   // ===== 5 · TAKEAWAY 21.0 – 26.5 =====
   tl.fromTo("#s5 .cam", { scale: 1.0 }, { scale: 1.04, duration: 4.6, ease: "sine.inOut" }, 21.1);
-  wordIn("#w-rule1", 20.85, { d: 1.0, st: 0.06 }); wordIn("#w-rule2", 21.1, { d: 1.0, st: 0.06 });
+  typeIn("#w-rule1", 20.85); typeIn("#w-rule2", 21.1);
   tl.fromTo("#s5-ul", { scaleX: 0 }, { scaleX: 1, duration: 0.8, ease: "power3.inOut" }, 21.5);
   [["#card-do", 21.55], ["#card-dont", 23.0]].forEach(([c, t]) => {
     tl.fromTo(c, { autoAlpha: 0, y: 140, filter: "blur(12px)" }, { autoAlpha: 1, y: 0, filter: "blur(0px)", duration: 1.0, ease: "expo.out" }, t);
@@ -298,12 +334,22 @@ Promise.all(["calendar-days", "circle-x", "dumbbell", "repeat", "weight", "moon"
   tl.to("#s6 .cam", { scale: 1.04, duration: 3.3, ease: "sine.inOut" }, 27.7);
   tl.fromTo("#s6-swoosh", { strokeDashoffset: 1.1 }, { strokeDashoffset: 0, duration: 1.5, ease: "power3.out" }, 26.6);
   tl.fromTo("#s6-script", { clipPath: "inset(0% 100% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 1.0, ease: "power2.inOut" }, 27.1);
-  wordIn("#w-s1", 27.7); wordIn("#w-s2", 27.95);
+  wordRise("#w-s1", 27.7); wordRise("#w-s2", 27.92);
   wordIn("#w-e1", 28.45, { d: 1.0, st: 0.06, s: 1.15 }); wordIn("#w-e2", 28.8, { d: 1.0, st: 0.06, s: 1.15 });
   tl.fromTo("#s6-handle .ch", { autoAlpha: 0, y: 16, filter: "blur(8px)" }, { autoAlpha: 1, y: 0, filter: "blur(0px)", duration: 0.7, ease: "expo.out", stagger: { each: 0.03, from: "center" } }, 29.6);
 
+  { const cv = $("#dust"), g = cv.getContext("2d"), P = Array.from({ length: 70 }, () => ({ x: rnd() * 1080, y: rnd() * 1920, r: 1 + rnd() * 2.6, v: 18 + rnd() * 50, ph: rnd() * 6.28, red: rnd() < 0.45 }));
+    const vis = (t) => { const f = (a, b) => Math.max(0, Math.min(1, (t - a) / 0.4, (b - t) / 0.4)); return Math.max(f(0, 4.6), f(10.3, 26.2)); };
+    const draw = (t) => { g.clearRect(0, 0, 1080, 1920); const k = vis(t); if (k <= 0) return;
+      for (const q of P) { const y = ((q.y - q.v * t) % 1920 + 1920) % 1920, x = q.x + Math.sin(t * 0.8 + q.ph) * 14, a = (0.25 + 0.35 * (0.5 + 0.5 * Math.sin(t * 2.2 + q.ph))) * k;
+        g.fillStyle = q.red ? `rgba(240,60,80,${a})` : `rgba(255,255,255,${a * 0.8})`; g.shadowColor = q.red ? "rgba(227,36,59,.9)" : "rgba(255,255,255,.6)"; g.shadowBlur = 8;
+        g.beginPath(); g.arc(x, y, q.r, 0, 6.283); g.fill(); } };
+    const pr = { v: 0 }; tl.fromTo(pr, { v: 0 }, { v: 1, duration: 31, ease: "none", onUpdate: () => draw(pr.v * 31) }, 0); }
+
   tl.set({}, {}, 31);
-  window.__timelines = window.__timelines || {}; window.__timelines["main"] = tl;
+  let reg = tl; const ts = document.documentElement.dataset.testStart;
+  if (ts != null) { const a = +ts, b = +document.documentElement.dataset.testEnd; reg = gsap.timeline({ paused: true }); reg.add(tl.tweenFromTo(a, b, { ease: "none" })); }
+  window.__timelines = window.__timelines || {}; window.__timelines["main"] = reg;
 });
 </script>
 </body>
