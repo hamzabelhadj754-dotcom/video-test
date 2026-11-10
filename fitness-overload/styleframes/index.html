@@ -2,201 +2,145 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>Overload — style frames</title>
+<title>Overload v2 — style frames</title>
 <style>
-  @font-face { font-family: "Anton"; src: url("../assets/fonts/Anton-Regular.woff2") format("woff2"); }
+  @font-face { font-family: "Bebas"; src: url("../assets/fonts/BebasNeue-Regular.woff2") format("woff2"); }
   @font-face { font-family: "Inter"; src: url("../assets/fonts/Inter-Variable.woff2") format("woff2"); font-weight: 100 900; }
-  @font-face { font-family: "JetBrains Mono"; src: url("../assets/fonts/JetBrainsMono-Variable.woff2") format("woff2"); font-weight: 100 900; }
-  :root { --bg:#0B0B0D; --lime:#C6FF3D; --ink:#F2EFE9; --mute:#7A7A80; --line:rgba(242,239,233,.28); --faint:rgba(242,239,233,.07); }
+  @font-face { font-family: "Script"; src: url("../assets/fonts/MrsSaintDelafield-Regular.woff2") format("woff2"); }
+  :root { --red:#E3243B; --cream:#F3EFE7; --ink:#111113; --white:#FFFFFF; }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { background: #000; }
-  .frame { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: var(--bg); margin-bottom: 40px; color: var(--ink); font-family: "Inter", sans-serif; }
-  .grid { position: absolute; inset: 0; background-image: linear-gradient(var(--faint) 1px, transparent 1px), linear-gradient(90deg, var(--faint) 1px, transparent 1px); background-size: 60px 60px; background-position: 0 10px; }
-  .grid2 { position: absolute; inset: 0; background-image: linear-gradient(rgba(242,239,233,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(242,239,233,.035) 1px, transparent 1px); background-size: 12px 12px; -webkit-mask: radial-gradient(circle at 50% 55%, #000 0%, transparent 55%); }
-  .glow { position: absolute; width: 1400px; height: 1400px; left: -160px; border-radius: 50%; background: radial-gradient(circle, rgba(198,255,61,.10), rgba(198,255,61,.03) 35%, transparent 62%); }
-  .vig { position: absolute; inset: 0; background: radial-gradient(ellipse 85% 70% at 50% 50%, transparent 50%, rgba(0,0,0,.65) 100%); }
-  .grain { position: absolute; inset: -40px; opacity: .06; mix-blend-mode: screen;
+  .frame { position: relative; width: 1080px; height: 1920px; overflow: hidden; margin-bottom: 40px; font-family: "Inter", sans-serif; }
+  .dark { background: linear-gradient(180deg, #050506 0%, #0B0708 38%, #3A0D16 78%, #5E1622 100%); color: #fff; }
+  .light { background: var(--cream); color: var(--ink); }
+  .grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,.08) 1.5px, transparent 1.5px), linear-gradient(90deg, rgba(255,255,255,.08) 1.5px, transparent 1.5px); background-size: 120px 120px; background-position: 60px 0; }
+  .grid.fadeTop { -webkit-mask: linear-gradient(180deg, transparent 0%, #000 30%); }
+  .grain { position: absolute; inset: -40px; opacity: .07; mix-blend-mode: overlay; pointer-events: none;
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' seed='9' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); }
-  .mono { font: 500 24px/1.3 "JetBrains Mono"; letter-spacing: .08em; text-transform: uppercase; color: var(--mute); }
-  .mono b { color: var(--ink); font-weight: 500; }
-  .mono .l { color: var(--lime); }
-  .hdr { position: absolute; left: 120px; right: 120px; top: 250px; display: flex; justify-content: space-between; }
-  .ftr { position: absolute; left: 120px; right: 120px; top: 1640px; display: flex; justify-content: space-between; }
-  .h { position: absolute; left: 120px; right: 120px; font: 400 140px/0.92 "Anton"; text-transform: uppercase; letter-spacing: .005em; }
-  .h .lime { color: var(--lime); text-shadow: 0 0 34px rgba(198,255,61,.35); }
-  .br { position: absolute; width: 44px; height: 44px; border-color: var(--line); border-style: solid; }
-  svg { position: absolute; overflow: visible; }
-  .tag { position: absolute; right: 24px; bottom: 24px; font: 600 20px Inter; color: rgba(255,255,255,.3); }
+  .vig { position: absolute; inset: 0; background: radial-gradient(ellipse 90% 75% at 50% 50%, transparent 55%, rgba(0,0,0,.5) 100%); }
+  .light .vig { background: radial-gradient(ellipse 90% 75% at 50% 50%, transparent 60%, rgba(120,110,95,.18) 100%); }
+  .chip { position: absolute; right: 120px; top: 250px; padding: 8px 14px; background: #fff; color: #111; font: 800 18px/1 Inter; letter-spacing: .06em; }
+  .light .chip { background: #111; color: #fff; }
+  .bebas { font-family: "Bebas"; text-transform: uppercase; letter-spacing: .01em; }
+  .script { font-family: "Script"; color: var(--red); }
+  .center { position: absolute; left: 120px; right: 120px; text-align: center; }
+  .glowR { text-shadow: 0 0 24px rgba(227,36,59,.55), 0 0 60px rgba(227,36,59,.3); }
+  .ul { display: inline-block; padding-bottom: 10px; border-bottom: 4px solid #fff; }
+  .card { position: absolute; left: 150px; right: 150px; border: 2px solid rgba(255,255,255,.55); background: linear-gradient(180deg, #D3223A 0%, #9C1527 100%); box-shadow: 0 30px 60px rgba(0,0,0,.45), 0 0 60px rgba(227,36,59,.25); padding: 26px 34px 34px; }
+  .card h4 { font: 600 34px/1 Inter; color: #fff; padding-bottom: 18px; border-bottom: 2px solid rgba(255,255,255,.6); margin-bottom: 30px; }
+  .icons { display: flex; justify-content: space-around; }
+  .ic { display: flex; flex-direction: column; align-items: center; gap: 14px; font: 500 28px/1.1 Inter; color: #fff; text-align: center; width: 230px; }
+  .ic svg { width: 108px; height: 108px; stroke: #fff; stroke-width: 1.6; }
+  svg { overflow: visible; }
+  .abs { position: absolute; }
+  .tag { position: absolute; left: 24px; bottom: 24px; font: 600 20px Inter; color: rgba(128,128,128,.6); }
   body.clean .tag { display: none; }
 </style>
 </head>
 <body>
 
-<!-- 1 · HOOK -->
-<section class="frame" id="f1" data-fig="01" data-lab="THE SUBJECT">
-  <div class="glow" style="top:560px"></div><div class="grid"></div>
-  <svg id="plate" width="1080" height="1920" viewBox="0 0 1080 1920" style="left:0; top:0"></svg>
-  <div class="h" style="top:330px">Same weight.<br><span class="lime">Same body.</span></div>
-  <div class="vig"></div><div class="grain"></div><div class="tag">01 HOOK · 0–2.5s</div>
+<!-- 1 · HOOK (dark): B&W cutout on a glowing red circle, script + condensed title -->
+<section class="frame dark" id="f1">
+  <div class="grid fadeTop"></div>
+  <div class="abs" style="left:110px; top:930px; width:860px; height:860px; border-radius:50%; background: radial-gradient(circle at 50% 45%, #F23A50 0%, #E3243B 55%, #B8162B 100%); box-shadow: 0 0 120px rgba(227,36,59,.55), 0 0 260px rgba(227,36,59,.3)"></div>
+  <img class="abs" src="../assets/photos/flex_bw.png" style="left:-20px; top:1000px; width:1120px; filter: drop-shadow(0 -10px 40px rgba(0,0,0,.6)) contrast(1.05)" />
+  <div class="abs" style="left:0; right:0; bottom:0; height:380px; background: linear-gradient(180deg, transparent, rgba(40,8,14,.95))"></div>
+  <div class="center script" style="top:300px; font-size:120px; line-height:1; transform: rotate(-6deg)">same weight…</div>
+  <div class="center bebas" style="top:420px; font-size:205px; line-height:.9; color:#fff; white-space:nowrap">Same body.</div>
+  <div class="center bebas glowR" style="top:620px; font-size:58px; letter-spacing:.12em; color:var(--red)">No new muscle</div>
+  <div class="chip">@YOURHANDLE</div>
+  <div class="vig"></div><div class="grain"></div><div class="tag">01 HOOK · 0–3s · slow push-in, words snap in</div>
 </section>
 
-<!-- 2 · PROBLEM -->
-<section class="frame" id="f2" data-fig="02" data-lab="12 WEEKS, NO CHANGE">
-  <div class="glow" style="top:600px; opacity:.5"></div><div class="grid"></div>
-  <div class="h" style="top:330px; font-size:124px">Your muscles<br>stop <span class="lime">adapting.</span></div>
-  <svg id="flat" width="1080" height="1920" viewBox="0 0 1080 1920" style="left:0; top:0"></svg>
-  <div class="vig"></div><div class="grain"></div><div class="tag">02 PROBLEM · 2.5–5s</div>
+<!-- 2 · PROBLEM (cream flip): grey swoosh, word-by-word, pinned card -->
+<section class="frame light" id="f2">
+  <svg class="abs" width="1080" height="1920" viewBox="0 0 1080 1920" style="left:0; top:0"><path d="M-120 380 C 420 520, 620 980, 300 1500 S 260 2100, 700 2300" stroke="#CFCBC3" stroke-width="170" fill="none" stroke-linecap="round"/></svg>
+  <div class="center" style="top:430px"><span style="font:600 62px/1 Inter; letter-spacing:-.02em">Your muscles</span><br><span class="glowR" style="font:900 150px/1 Inter; letter-spacing:-.045em; color:var(--red); text-shadow: 0 0 30px rgba(227,36,59,.25)">stop growing</span></div>
+  <div class="abs" style="left:300px; top:880px; width:480px; transform: rotate(-4deg); background: linear-gradient(180deg,#8F8F94,#76767B); box-shadow: 0 40px 70px rgba(60,50,40,.35), 0 8px 18px rgba(60,50,40,.25); padding: 44px 40px 46px; color:#fff">
+    <div class="abs" style="left:50%; top:-22px; width:44px; height:44px; margin-left:-22px; border-radius:50%; background: radial-gradient(circle at 35% 30%, #FF6B78, #D01C2F 60%, #8E0F1E); box-shadow: 0 8px 14px rgba(0,0,0,.35)"></div>
+    <div style="font:700 64px/1 Inter; letter-spacing:-.02em; padding-bottom:18px; border-bottom:3px solid rgba(255,255,255,.75)">Your log</div>
+    <div id="logrows" style="margin-top:26px; display:flex; flex-direction:column; gap:22px; font:600 34px/1 Inter"></div>
+  </div>
+  <div class="chip">@YOURHANDLE</div>
+  <div class="vig"></div><div class="grain"></div><div class="tag">02 PROBLEM · 3–6s · light flip, card drops in & tilts</div>
 </section>
 
-<!-- 3 · TENSION -->
-<section class="frame" id="f3" data-fig="03" data-lab="MECHANICAL TENSION">
-  <div class="glow" style="top:520px"></div><div class="grid"></div><div class="grid2"></div>
-  <div class="h" style="top:330px">Tension is<br>the <span class="lime">signal.</span></div>
-  <svg id="arm" width="1080" height="1920" viewBox="0 0 1080 1920" style="left:0; top:0"></svg>
-  <div class="vig"></div><div class="grain"></div><div class="tag">03 TENSION · 5–8s</div>
+<!-- 3 · MECHANISM (dark grid): underlined title, glowing core with orbiting icon chips -->
+<section class="frame dark" id="f3">
+  <div class="grid"></div>
+  <div class="center bebas" style="top:330px; font-size:120px; line-height:1"><span class="ul">The signal</span></div>
+  <div class="abs" style="left:540px; top:1080px; width:0; height:0">
+    <div class="abs" style="left:-330px; top:-330px; width:660px; height:660px; border-radius:50%; border:2px dashed rgba(255,255,255,.45)"></div>
+    <div class="abs" style="left:-190px; top:-190px; width:380px; height:380px; border-radius:50%; background: radial-gradient(circle at 40% 35%, #FF4A5F, #E3243B 55%, #A3142A); box-shadow: 0 0 90px rgba(227,36,59,.7), 0 0 200px rgba(227,36,59,.35)"></div>
+    <div class="abs ico" data-i="dumbbell" style="left:-110px; top:-110px; width:220px; height:220px; color:#fff"></div>
+    <div id="orbit"></div>
+  </div>
+  <div class="center bebas" style="top:1520px; font-size:66px; letter-spacing:.06em">Muscle adapts to <span style="color:var(--red)" class="glowR">demand</span></div>
+  <div class="chip">@YOURHANDLE</div>
+  <div class="vig"></div><div class="grain"></div><div class="tag">03 MECHANISM · 6–10s · icons orbit, core pulses</div>
 </section>
 
-<!-- 4 · ADAPTATION -->
-<section class="frame" id="f4" data-fig="04" data-lab="CROSS-SECTION">
-  <div class="glow" style="top:560px"></div><div class="grid"></div><div class="grid2"></div>
-  <div class="h" style="top:330px">Your body adapts.<br>Fibres <span class="lime">thicken.</span></div>
-  <svg id="xs" width="1080" height="1920" viewBox="0 0 1080 1920" style="left:0; top:0"></svg>
-  <div class="vig"></div><div class="grain"></div><div class="tag">04 ADAPT · 8–11s</div>
+<!-- 4 · PROGRESSION (dark grid): B&W cutout small + rising red bars -->
+<section class="frame dark" id="f4">
+  <div class="grid"></div>
+  <div class="center script" style="top:300px; font-size:110px; line-height:1; transform: rotate(-5deg)">then…</div>
+  <div class="center bebas" style="top:410px; font-size:170px; line-height:.92">Raise the <span style="color:var(--red)" class="glowR">load</span></div>
+  <svg id="bars" class="abs" width="1080" height="1920" viewBox="0 0 1080 1920" style="left:0; top:0"></svg>
+  <div class="chip">@YOURHANDLE</div>
+  <div class="vig"></div><div class="grain"></div><div class="tag">04 PROGRESSION · 10–14s · bars rise week by week, vertical whip out</div>
 </section>
 
-<!-- 5 · PROGRESSION -->
-<section class="frame" id="f5" data-fig="05" data-lab="LOAD, WEEK BY WEEK">
-  <div class="glow" style="top:640px"></div><div class="grid"></div>
-  <div class="h" style="top:330px">Then raise<br>the <span class="lime">demand.</span></div>
-  <svg id="bars" width="1080" height="1920" viewBox="0 0 1080 1920" style="left:0; top:0"></svg>
-  <div class="vig"></div><div class="grain"></div><div class="tag">05 PROGRESS · 11–14.5s</div>
+<!-- 5 · TAKEAWAY (dark grid): red Do / Don't cards like the reference -->
+<section class="frame dark" id="f5">
+  <div class="grid"></div>
+  <div class="center bebas" style="top:330px; font-size:120px; line-height:1"><span class="ul">The rule</span></div>
+  <div class="card" style="top:560px"><h4>Do:</h4><div class="icons">
+    <div class="ic"><span class="ico" data-i="repeat"></span>+1 rep</div>
+    <div class="ic"><span class="ico" data-i="weight"></span>+ a little weight</div>
+    <div class="ic"><span class="ico" data-i="moon"></span>Sleep & protein</div></div></div>
+  <div class="card" style="top:1030px"><h4>Don't:</h4><div class="icons">
+    <div class="ic"><span class="ico" data-i="hourglass"></span>Same weight forever</div>
+    <div class="ic"><span class="ico" data-i="flame"></span>Ego jumps</div>
+    <div class="ic"><span class="ico" data-i="circle-x"></span>Skip recovery</div></div></div>
+  <div class="chip">@YOURHANDLE</div>
+  <div class="vig"></div><div class="grain"></div><div class="tag">05 TAKEAWAY · 14–18s · cards slide up with blur, icons pop</div>
 </section>
 
-<!-- 6 · TAKEAWAY -->
-<section class="frame" id="f6" data-fig="06" data-lab="THE RULE">
-  <div class="glow" style="top:560px; opacity:.6"></div><div class="grid"></div>
-  <div class="h" style="top:330px; font-size:124px">How to<br><span class="lime">overload.</span></div>
-  <div id="list" style="position:absolute; left:120px; right:120px; top:700px"></div>
-  <div class="vig"></div><div class="grain"></div><div class="tag">06 TAKEAWAY · 14.5–18.5s</div>
-</section>
-
-<!-- 7 · OUTRO -->
-<section class="frame" id="f7" data-fig="07" data-lab="SUMMARY" data-nohdr="1">
-  <div class="glow" style="top:300px"></div><div class="grid"></div>
-  <div class="h" style="top:720px; text-align:center; font-size:150px">Small steps.<br><span class="lime">Every week.</span></div>
-  <svg width="1080" height="40" viewBox="0 0 1080 40" style="left:0; top:1035px"><line x1="330" y1="20" x2="750" y2="20" stroke="#C6FF3D" stroke-width="4" stroke-linecap="round" style="filter:drop-shadow(0 0 10px rgba(198,255,61,.7))"/></svg>
-  <div class="mono" style="position:absolute; left:0; right:0; top:1210px; text-align:center; font-size:28px; color:#C6FF3D; text-shadow:0 0 18px rgba(198,255,61,.6)">@YOURHANDLE</div>
-  <div class="vig"></div><div class="grain"></div><div class="tag">07 OUTRO · 18.5–20.5s</div>
+<!-- 6 · OUTRO (cream flip): note + handle -->
+<section class="frame light" id="f6">
+  <svg class="abs" width="1080" height="1920" viewBox="0 0 1080 1920" style="left:0; top:0"><path d="M1250 300 C 700 520, 520 900, 820 1350 S 900 1900, 300 2200" stroke="#CFCBC3" stroke-width="170" fill="none" stroke-linecap="round"/></svg>
+  <div class="center script" style="top:640px; font-size:150px; line-height:1; transform: rotate(-6deg)">note</div>
+  <div class="center" style="top:820px"><span style="font:600 66px/1.1 Inter; letter-spacing:-.02em">Small steps.</span><br><span style="font:900 128px/1 Inter; letter-spacing:-.045em; color:var(--red); white-space:nowrap; text-shadow: 0 0 30px rgba(227,36,59,.25)">Every week.</span></div>
+  <div class="center" style="top:1130px; font:700 30px/1 Inter; letter-spacing:.2em; color:#111">@YOURHANDLE</div>
+  <div class="vig"></div><div class="grain"></div><div class="tag">06 OUTRO · 18–20s · circle wipe in, hold</div>
 </section>
 
 <script>
-const LIME = "#C6FF3D", INK = "#F2EFE9", MUTE = "#7A7A80", LINE = "rgba(242,239,233,.28)", FAINT = "rgba(242,239,233,.12)";
-const T = (x, y, s, o = {}) => `<text x="${x}" y="${y}" font-family="JetBrains Mono" font-size="${o.fs || 22}" letter-spacing="2" fill="${o.c || MUTE}" text-anchor="${o.a || "start"}" font-weight="500">${s}</text>`;
-const glowF = `<defs><filter id="gl" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>`;
-
-// shared chrome: header, footer ruler, corner brackets
-document.querySelectorAll(".frame").forEach((f) => {
-  if (!f.dataset.nohdr) f.insertAdjacentHTML("beforeend", `<div class="hdr mono"><span><b>FIG. ${f.dataset.fig}</b> — ${f.dataset.lab}</span><span>PROGRESSIVE OVERLOAD</span></div>`);
-  let r = ""; for (let k = 0; k <= 42; k++) { const x = 120 + k * 20; r += `<line x1="${x}" y1="0" x2="${x}" y2="${k % 6 ? 8 : 18}" stroke="${LINE}" stroke-width="1.5"/>`; }
-  f.insertAdjacentHTML("beforeend", `<svg width="1080" height="20" viewBox="0 0 1080 20" style="left:0; top:1600px">${r}</svg><div class="ftr mono" style="top:1630px"><span>${f.dataset.fig} / 07</span><span>REF. HYPERTROPHY</span></div>`);
-  [[72, 200, "border-width:2px 0 0 2px"], [964, 200, "border-width:2px 2px 0 0"], [72, 1676, "border-width:0 0 2px 2px"], [964, 1676, "border-width:0 2px 2px 0"]]
-    .forEach(([x, y, b]) => f.insertAdjacentHTML("beforeend", `<div class="br" style="left:${x}px; top:${y}px; ${b}"></div>`));
-});
-
-// 1 · technical drawing of a 20 kg plate
-(() => { const cx = 540, cy = 1130, R = 380; let h = glowF;
-  h += `<circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="${LINE}" stroke-width="2"/>`;
-  h += `<circle cx="${cx}" cy="${cy}" r="${R - 34}" fill="none" stroke="${FAINT}" stroke-width="1.5"/>`;
-  h += `<circle cx="${cx}" cy="${cy}" r="${R - 120}" fill="none" stroke="${FAINT}" stroke-width="1.5" stroke-dasharray="4 8"/>`;
-  h += `<circle cx="${cx}" cy="${cy}" r="92" fill="none" stroke="${LINE}" stroke-width="2"/>`;
-  h += `<circle cx="${cx}" cy="${cy}" r="25" fill="none" stroke="${LIME}" stroke-width="3" filter="url(#gl)"/>`;
-  for (let k = 0; k < 120; k++) { const a = k / 120 * 6.283, r0 = R + 14, r1 = R + (k % 10 ? 24 : 40); h += `<line x1="${cx + Math.cos(a) * r0}" y1="${cy + Math.sin(a) * r0}" x2="${cx + Math.cos(a) * r1}" y2="${cy + Math.sin(a) * r1}" stroke="${k % 10 ? FAINT : LINE}" stroke-width="1.5"/>`; }
-  h += `<line x1="${cx - R - 80}" y1="${cy}" x2="${cx + R + 80}" y2="${cy}" stroke="${FAINT}" stroke-dasharray="10 6 2 6"/><line x1="${cx}" y1="${cy - R - 80}" x2="${cx}" y2="${cy + R + 80}" stroke="${FAINT}" stroke-dasharray="10 6 2 6"/>`;
-  h += `<text x="${cx}" y="${cy - 170}" text-anchor="middle" font-family="Anton" font-size="96" fill="${INK}" opacity=".9">20 KG</text>`;
-  // dimension line
-  h += `<line x1="${cx - R}" y1="${cy + R + 90}" x2="${cx + R}" y2="${cy + R + 90}" stroke="${MUTE}" stroke-width="1.5"/><line x1="${cx - R}" y1="${cy + R + 76}" x2="${cx - R}" y2="${cy + R + 104}" stroke="${MUTE}"/><line x1="${cx + R}" y1="${cy + R + 76}" x2="${cx + R}" y2="${cy + R + 104}" stroke="${MUTE}"/>`;
-  h += T(cx, cy + R + 80, "Ø 450 MM", { a: "middle" });
-  // callout to the bore
-  h += `<path d="M${cx + 20} ${cy + 18} L${cx + 190} ${cy + 190} L${cx + 330} ${cy + 190}" stroke="${LIME}" stroke-width="1.5" fill="none"/><circle cx="${cx + 20}" cy="${cy + 18}" r="5" fill="${LIME}"/>`;
-  h += T(cx + 196, cy + 178, "WEEK 1 = WEEK 12", { c: LIME });
-  document.getElementById("plate").innerHTML = h; })();
-
-// 2 · the flat graph
-(() => { const L = 160, R = 920, Tp = 860, B = 1340; let h = glowF;
-  for (let k = 0; k <= 4; k++) { const y = B - (B - Tp) * k / 4; h += `<line x1="${L}" y1="${y}" x2="${R}" y2="${y}" stroke="${k ? FAINT : LINE}" stroke-width="1.5" ${k ? 'stroke-dasharray="3 7"' : ""}/>`; }
-  h += `<line x1="${L}" y1="${Tp - 30}" x2="${L}" y2="${B}" stroke="${LINE}" stroke-width="1.5"/>`;
-  for (let k = 1; k <= 12; k++) { const x = L + (R - L) * k / 12; h += `<line x1="${x}" y1="${B}" x2="${x}" y2="${B + 12}" stroke="${LINE}"/>`; if (k % 2 === 0) h += T(x, B + 46, "W" + k, { a: "middle" }); }
-  h += T(L, Tp - 50, "MUSCLE SIZE");
-  const y = B - (B - Tp) * .28; let d = `M${L} ${y + 10}`; for (let k = 1; k <= 60; k++) { const x = L + (R - L) * k / 60; d += ` L${x.toFixed(1)} ${(y + Math.sin(k * 1.3) * 3).toFixed(1)}`; }
-  h += `<path d="${d}" stroke="${INK}" stroke-width="3" fill="none"/>`;
-  h += `<circle cx="${R}" cy="${y}" r="10" fill="${LIME}" filter="url(#gl)"/><circle cx="${R}" cy="${y}" r="24" fill="none" stroke="${LIME}" stroke-opacity=".45"/>`;
-  h += `<rect x="${L + 20}" y="${B - 150}" width="300" height="104" rx="8" fill="rgba(11,11,13,.8)" stroke="${LINE}"/>`;
-  h += T(L + 44, B - 108, "LOAD") + `<text x="${L + 44}" y="${B - 62}" font-family="JetBrains Mono" font-size="40" font-weight="600" fill="${INK}">20 KG</text>` + T(L + 300, B - 62, "=", { a: "end", fs: 32, c: LIME });
-  h += T(R, y - 44, "PLATEAU", { a: "end", c: LIME });
-  document.getElementById("flat").innerHTML = h; })();
-
-// 3 · flexed arm, biceps filled lime, tension gauge
-(() => { let h = glowF; const ox = 150, oy = 760, s = 1.15, P = (x, y) => `${(ox + x * s).toFixed(1)} ${(oy + y * s).toFixed(1)}`;
-  const outline = `M${P(40, 360)} C${P(130, 290)} ${P(330, 260)} ${P(450, 385)} C${P(500, 330)} ${P(545, 250)} ${P(548, 175)} L${P(632, 172)} C${P(632, 270)} ${P(600, 420)} ${P(530, 525)} C${P(470, 560)} ${P(300, 565)} ${P(50, 520)}`;
-  h += `<path d="${outline}" stroke="${INK}" stroke-width="2.5" fill="none" stroke-linejoin="round"/>`;
-  h += `<path d="M${P(66, 448)} L${P(500, 488)}" stroke="${MUTE}" stroke-width="1.5" stroke-dasharray="10 8"/>`;              // humerus
-  h += `<path d="M${P(500, 488)} L${P(590, 190)}" stroke="${MUTE}" stroke-width="1.5" stroke-dasharray="10 8"/>`;            // forearm bones
-  h += `<circle cx="${ox + 500 * s}" cy="${oy + 488 * s}" r="14" fill="none" stroke="${INK}" stroke-width="2"/>`;           // elbow joint
-  const bi = `M${P(95, 380)} C${P(170, 300)} ${P(340, 285)} ${P(440, 400)} C${P(380, 440)} ${P(220, 448)} ${P(95, 420)} Z`;
-  h += `<path d="${bi}" fill="${LIME}" fill-opacity=".9" filter="url(#gl)"/>`;
-  for (let k = 1; k < 6; k++) { const t = k / 6; h += `<path d="M${P(110, 388 + t * 30)} C${P(190, 320 + t * 90)} ${P(330, 310 + t * 95)} ${P(425, 405 + t * 20)}" stroke="#0B0B0D" stroke-opacity=".35" stroke-width="2" fill="none"/>`; }
-  h += `<path d="M${P(440, 400)} L${P(492, 452)}" stroke="${LIME}" stroke-width="3"/>`;                                        // tendon
-  // fist + dumbbell
-  h += `<rect x="${ox + 530 * s}" y="${oy + 100 * s}" width="${120 * s}" height="${90 * s}" rx="${26 * s}" fill="none" stroke="${INK}" stroke-width="2.5"/>`;
-  h += `<line x1="${ox + 470 * s}" y1="${oy + 145 * s}" x2="${ox + 712 * s}" y2="${oy + 145 * s}" stroke="${INK}" stroke-width="2.5"/>`;
-  [[440, 70], [690, 70]].forEach(([x]) => { h += `<rect x="${ox + x * s}" y="${oy + 75 * s}" width="${32 * s}" height="${140 * s}" rx="6" fill="none" stroke="${INK}" stroke-width="2.5"/>`; });
-  // callout
-  h += `<circle cx="${ox + 260 * s}" cy="${oy + 350 * s}" r="6" fill="${INK}"/><path d="M${P(260, 350)} L${P(210, 190)} L${P(40, 190)}" stroke="${INK}" stroke-width="1.5" fill="none"/>`;
-  h += T(ox + 40 * s, oy + 176 * s, "BICEPS BRACHII", { c: INK });
-  // tension gauge
-  const gx = 540, gy = 1560, gr = 150; let g = "";
-  for (let k = 0; k <= 30; k++) { const a = Math.PI + k / 30 * Math.PI, r0 = gr - (k % 5 ? 12 : 22); g += `<line x1="${gx + Math.cos(a) * r0}" y1="${gy + Math.sin(a) * r0}" x2="${gx + Math.cos(a) * gr}" y2="${gy + Math.sin(a) * gr}" stroke="${k > 22 ? LIME : LINE}" stroke-width="2"/>`; }
-  const na = Math.PI + .86 * Math.PI; g += `<line x1="${gx}" y1="${gy}" x2="${gx + Math.cos(na) * (gr - 30)}" y2="${gy + Math.sin(na) * (gr - 30)}" stroke="${LIME}" stroke-width="4" stroke-linecap="round" filter="url(#gl)"/><circle cx="${gx}" cy="${gy}" r="8" fill="${LIME}"/>`;
-  g += T(gx - gr, gy + 36, "LOW") + T(gx + gr, gy + 36, "HIGH", { a: "end", c: LIME }) + T(gx, gy - gr - 24, "TENSION", { a: "middle", c: INK });
-  h += g;
-  document.getElementById("arm").innerHTML = h; })();
-
-// 4 · muscle cross-section, fibres thickening
-(() => { const cx = 540, cy = 1130, R = 340; let h = glowF;
-  h += `<circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="${INK}" stroke-width="2.5"/><circle cx="${cx}" cy="${cy}" r="${R + 16}" fill="none" stroke="${FAINT}" stroke-dasharray="4 8"/>`;
-  const fr = 46, pts = []; for (let q = -4; q <= 4; q++) for (let r = -4; r <= 4; r++) { const x = cx + (q + r / 2) * fr * 2.05, y = cy + r * fr * 1.78; if (Math.hypot(x - cx, y - cy) < R - fr - 6) pts.push([x, y]); }
-  const grow = new Set([2, 5, 8, 11, 12, 15, 18, 21, 24, 27, 30]);
-  pts.forEach(([x, y], i) => { const g = grow.has(i % 33);
-    h += `<circle cx="${x}" cy="${y}" r="${fr - 14}" fill="none" stroke="${LINE}" stroke-width="1.5" stroke-dasharray="${g ? "3 5" : "0"}"/>`;
-    if (g) h += `<circle cx="${x}" cy="${y}" r="${fr - 4}" fill="rgba(198,255,61,.12)" stroke="${LIME}" stroke-width="2.5" filter="url(#gl)"/>`;
-    h += `<circle cx="${x}" cy="${y}" r="3" fill="${g ? LIME : MUTE}"/>`; });
-  // callout + legend
-  const [px, py] = pts[12] || [cx, cy];
-  h += `<circle cx="${px}" cy="${py}" r="58" fill="none" stroke="${INK}" stroke-width="1.5"/><path d="M${px + 42} ${py - 42} L${px + 200} ${py - 260} L${960} ${py - 260}" stroke="${INK}" stroke-width="1.5" fill="none"/>`;
-  h += T(px + 208, py - 274, "REPAIR →", { c: INK }) + T(px + 208, py - 240, "THICKER FIBRES", { c: LIME });
-  h += `<circle cx="160" cy="1560" r="14" fill="none" stroke="${LINE}" stroke-dasharray="3 5"/>` + T(190, 1568, "BEFORE") + `<circle cx="400" cy="1560" r="18" fill="rgba(198,255,61,.12)" stroke="${LIME}" stroke-width="2.5"/>` + T(432, 1568, "AFTER", { c: LIME });
-  document.getElementById("xs").innerHTML = h; })();
-
-// 5 · bar chart climbing week by week
-(() => { const L = 160, R = 920, B = 1400, H = 560; let h = glowF; const loads = [20, 20, 22.5, 22.5, 25, 25, 27.5, 30], max = 32;
-  for (let k = 0; k <= 4; k++) { const y = B - H * k / 4; h += `<line x1="${L}" y1="${y}" x2="${R}" y2="${y}" stroke="${k ? FAINT : LINE}" stroke-width="1.5" ${k ? 'stroke-dasharray="3 7"' : ""}/>`; }
-  const bw = (R - L) / 8;
-  loads.forEach((v, i) => { const x = L + i * bw + 18, w = bw - 36, hh = H * v / max, last = i === 7;
-    h += `<rect x="${x}" y="${B - hh}" width="${w}" height="${hh}" rx="4" fill="${last ? LIME : "rgba(242,239,233,.08)"}" stroke="${last ? LIME : LINE}" stroke-width="1.5" ${last ? 'filter="url(#gl)"' : ""}/>`;
-    h += T(x + w / 2, B + 44, "W" + (i + 1), { a: "middle", c: last ? LIME : MUTE });
-    h += T(x + w / 2, B - hh - 16, v, { a: "middle", fs: 20, c: last ? LIME : MUTE }); });
-  let d = ""; loads.forEach((v, i) => { const x = L + i * bw + bw / 2, y = B - H * v / max - 60; d += (i ? " L" : "M") + x + " " + y; });
-  h += `<path d="${d}" stroke="${INK}" stroke-width="1.5" stroke-dasharray="6 6" fill="none"/>`;
-  h += `<rect x="${L}" y="${B - H - 120}" width="340" height="96" rx="8" fill="rgba(11,11,13,.8)" stroke="${LINE}"/>` + T(L + 24, B - H - 82, "LOAD") + `<text x="${L + 24}" y="${B - H - 40}" font-family="JetBrains Mono" font-size="40" font-weight="600" fill="${LIME}">30 KG</text>` + T(L + 316, B - H - 40, "+2.5", { a: "end", c: LIME, fs: 26 });
-  h += T(R, B - H - 82, "EXAMPLE", { a: "end" });
-  document.getElementById("bars").innerHTML = h; })();
-
-// 6 · checklist
-(() => { const items = [["01", "Add a rep or a little weight"], ["02", "Keep your form clean"], ["03", "Recover: sleep + protein"]];
-  document.getElementById("list").innerHTML = items.map(([n, s], i) => `
-    <div style="display:flex; align-items:center; gap:34px; padding:44px 0; border-top:1px solid rgba(242,239,233,.16); ${i === 2 ? "border-bottom:1px solid rgba(242,239,233,.16)" : ""}">
-      <svg width="72" height="72" viewBox="0 0 72 72" style="position:relative; flex:none"><rect x="2" y="2" width="68" height="68" rx="10" fill="${i < 2 ? "rgba(198,255,61,.12)" : "none"}" stroke="${i < 2 ? LIME : LINE}" stroke-width="2.5"/>${i < 2 ? `<path d="M18 37 L31 50 L55 22" stroke="${LIME}" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round" style="filter:drop-shadow(0 0 8px rgba(198,255,61,.7))"/>` : ""}</svg>
-      <div><div class="mono" style="color:${i < 2 ? LIME : MUTE}">STEP ${n}</div><div style="font:600 50px/1.15 Inter; letter-spacing:-.02em; color:${i < 2 ? INK : "rgba(242,239,233,.45)"}">${s}</div></div></div>`).join(""); })();
+(async () => {
+  const names = ["dumbbell", "repeat", "weight", "moon", "hourglass", "flame", "circle-x", "trending-up", "calendar-days", "egg"];
+  const IC = {}; await Promise.all(names.map(async (n) => { IC[n] = (await (await fetch(`../assets/icons/${n}.svg`)).text()).replace(/<!--.*?-->/s, ""); }));
+  // orbiting icon chips around the core (frame 3)
+  const orb = document.getElementById("orbit"); [["repeat", "REPS"], ["weight", "LOAD"], ["trending-up", "PROGRESS"], ["calendar-days", "WEEKS"], ["flame", "EFFORT"], ["moon", "RECOVERY"]].forEach(([n, l], k) => {
+    const a = -Math.PI / 2 + k / 6 * Math.PI * 2, x = Math.cos(a) * 330, y = Math.sin(a) * 330;
+    orb.insertAdjacentHTML("beforeend", `<div class="abs" style="left:${x - 52}px; top:${y - 52}px; width:104px; height:104px; border-radius:22px; background:#1A0B0F; border:2px solid #E3243B; box-shadow:0 0 30px rgba(227,36,59,.45); display:flex; align-items:center; justify-content:center"><span class="ico" data-i="${n}" style="width:58px; height:58px; color:#fff"></span></div><div class="abs bebas" style="left:${x - 100}px; top:${y + 62}px; width:200px; text-align:center; font-size:30px; letter-spacing:.08em; color:rgba(255,255,255,.8)">${l}</div>`);
+  });
+  document.querySelectorAll(".ico").forEach((el) => { el.innerHTML = IC[el.dataset.i]; const s = el.querySelector("svg"); s.setAttribute("width", "100%"); s.setAttribute("height", "100%"); if (!el.closest(".ic")) { s.style.stroke = "#fff"; s.style.strokeWidth = 1.6; } });
+  // pinned log card rows (frame 2)
+  document.getElementById("logrows").innerHTML = [["W1", "20 kg"], ["W6", "20 kg"], ["W12", "20 kg"]].map(([w, v]) => `<div style="display:flex; align-items:center; gap:18px"><span style="width:38px; height:38px; display:inline-block; color:#fff">${IC["calendar-days"].replace('<svg', '<svg width="38" height="38" style="stroke:#fff"')}</span><span style="opacity:.8; width:90px">${w}</span><span>${v}</span></div>`).join("") + `<div style="display:flex; align-items:center; gap:18px; color:#FFD3D8"><span style="width:38px; height:38px; display:inline-block">${IC["circle-x"].replace('<svg', '<svg width="38" height="38" style="stroke:#FF8C99"')}</span>No change</div>`;
+  // rising bars (frame 4)
+  { const L = 150, R = 930, B = 1560, H = 640, v = [20, 22.5, 25, 27.5, 30, 32.5], max = 34; let h = `<defs><linearGradient id="rb" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F0364C"/><stop offset="1" stop-color="#8E1424"/></linearGradient><filter id="g"><feGaussianBlur stdDeviation="14"/></filter></defs>`;
+    const bw = (R - L) / v.length;
+    v.forEach((x, i) => { const hh = H * x / max, X = L + i * bw + 16, W = bw - 32, last = i === v.length - 1;
+      if (last) h += `<rect x="${X}" y="${B - hh}" width="${W}" height="${hh}" fill="#E3243B" opacity=".6" filter="url(#g)"/>`;
+      h += `<rect x="${X}" y="${B - hh}" width="${W}" height="${hh}" fill="${last ? "url(#rb)" : "rgba(255,255,255,.1)"}" stroke="${last ? "#FF5A6E" : "rgba(255,255,255,.45)"}" stroke-width="2"/>`;
+      h += `<text x="${X + W / 2}" y="${B - hh - 22}" text-anchor="middle" font-family="Bebas" font-size="${last ? 54 : 40}" fill="${last ? "#fff" : "rgba(255,255,255,.7)"}">${x} KG</text>`;
+      h += `<text x="${X + W / 2}" y="${B + 50}" text-anchor="middle" font-family="Bebas" font-size="34" letter-spacing="3" fill="${last ? "#E3243B" : "rgba(255,255,255,.55)"}">WEEK ${i * 2 + 1}</text>`; });
+    h += `<line x1="${L}" y1="${B}" x2="${R}" y2="${B}" stroke="#fff" stroke-width="2"/>`;
+    let d = ""; v.forEach((x, i) => { d += (i ? " L" : "M") + (L + i * bw + bw / 2) + " " + (B - H * x / max - 90); }); h += `<path d="${d}" stroke="#fff" stroke-width="2.5" stroke-dasharray="8 8" fill="none"/>`;
+    h += `<text x="${R}" y="${B + 110}" text-anchor="end" font-family="Inter" font-weight="600" font-size="24" letter-spacing="3" fill="rgba(255,255,255,.5)">EXAMPLE PROGRESSION</text>`;
+    document.getElementById("bars").innerHTML = h; }
+  await document.fonts.ready; document.body.dataset.ready = "1";
+})();
 </script>
 </body>
 </html>
