@@ -86,7 +86,10 @@
 </div><div class="vig"></div></section>
 
 <!-- transition layers -->
-<svg class="full" viewBox="0 0 1080 1920" style="pointer-events:none; overflow:visible"><path id="wipeband" d="M-500 2300 C 100 1500, 900 1400, 600 700 S 300 -200, 1500 -500" stroke="#F3EFE7" stroke-width="2600" fill="none" stroke-linecap="round" pathLength="1" stroke-dasharray="1 1.2" stroke-dashoffset="1.1"/></svg>
+<svg class="full" viewBox="0 0 1080 1920" style="pointer-events:none; overflow:visible">
+  <path id="wipefill" d="M-160 300 C 420 460, 640 960, 320 1480 S 280 2100, 720 2300" stroke="#F3EFE7" stroke-width="3000" fill="none" stroke-linecap="round" pathLength="1" stroke-dasharray="1 1.2" stroke-dashoffset="1.1"/>
+  <path id="wipelead" d="M-160 300 C 420 460, 640 960, 320 1480 S 280 2100, 720 2300" stroke="#CFCBC3" stroke-width="170" fill="none" stroke-linecap="round" pathLength="1" stroke-dasharray="1 1.2" stroke-dashoffset="1.1"/>
+</svg>
 <div class="abs" id="disc" style="left:518px; top:856px; width:44px; height:44px; border-radius:50%; background:#E3243B">
   <div class="abs" id="pinhl" style="inset:0; border-radius:50%; background: radial-gradient(circle at 35% 30%, #FF6B78, #D01C2F 60%, #8E0F1E); box-shadow: 0 8px 14px rgba(0,0,0,.35)"></div>
 </div>
@@ -144,33 +147,37 @@ Promise.all(["calendar-days", "circle-x"].map((n) => fetch(`assets/icons/${n}.sv
   plain("#w3a", 5.05); plain("#w3b", 5.28); accent("#w3c", 5.62); accent("#w3d", 5.98);
   tl.fromTo("#s3-glow", { scale: 1 }, { keyframes: [{ scale: 1.15, duration: 0.15 }, { scale: 1, duration: 0.6, ease: "sine.inOut" }], immediateRender: false }, 6.0);
   // OUT: a cream band sweeps across the frame (ref A swoosh) and leaves scene 4 behind it
-  tl.fromTo("#wipeband", { strokeDashoffset: 1.1 }, { strokeDashoffset: 0, duration: 0.42, ease: "power3.inOut" }, 6.6);
-  tl.set("#s3", { autoAlpha: 0 }, 7.02); tl.set("#s4", { autoAlpha: 1 }, 7.02);
-  tl.set("#wipeband", { autoAlpha: 0 }, 7.03);
+  tl.to(["#w3a", "#w3b", "#w3c", "#w3d"], { autoAlpha: 0, filter: "blur(10px)", scale: 1.08, duration: 0.35, ease: "power2.in", stagger: 0.03 }, 6.35);
+  tl.fromTo("#wipelead", { strokeDashoffset: 1.1 }, { strokeDashoffset: 0, duration: 0.75, ease: "power2.inOut" }, 6.35);
+  tl.fromTo("#wipefill", { strokeDashoffset: 1.1 }, { strokeDashoffset: 0, duration: 0.73, ease: "power2.inOut" }, 6.47);
+  tl.fromTo("#s3 .cam", { x: 0 }, { x: -40, duration: 0.75, ease: "power2.in", immediateRender: false }, 6.35);
+  tl.set("#s3", { autoAlpha: 0 }, 7.2); tl.set("#s4", { autoAlpha: 1 }, 7.2);
+  tl.set(["#wipelead", "#wipefill"], { autoAlpha: 0 }, 7.2);
 
   // ===== 4 · 7.0 – 9.4 =====
   tl.fromTo("#s4 .cam", { scale: 1.0 }, { scale: 1.05, duration: 2.4, ease: "sine.inOut" }, 7.02);
-  tl.fromTo("#s4-band", { strokeDashoffset: 1.1 }, { strokeDashoffset: 0, duration: 1.0, ease: "power3.out" }, 7.0);
-  tl.set("#disc", { autoAlpha: 1, scale: 0, y: 0 }, 7.15); tl.set("#pinhl", { opacity: 1 }, 7.15);
-  tl.to("#disc", { scale: 1, duration: 0.4, ease: "back.out(3)" }, 7.15);
+  gsap.set("#s4-band", { strokeDashoffset: 0 });
+  tl.set("#disc", { autoAlpha: 1, scale: 0, y: 0 }, 7.25); tl.set("#pinhl", { opacity: 1 }, 7.25);
+  tl.to("#disc", { scale: 1, duration: 0.5, ease: "back.out(2.2)" }, 7.25);
   tl.fromTo("#card", { autoAlpha: 0, rotation: -28, y: -40 }, { autoAlpha: 1, y: 0, duration: 0.3, ease: "power2.out" }, 7.3);
   tl.fromTo("#card", { rotation: -28 }, { rotation: -4, duration: 1.4, ease: "elastic.out(1, 0.45)", immediateRender: false }, 7.3);
-  plain("#w4a", 7.35); plain("#w4b", 7.55); accent("#w4c", 7.9);
+  plain("#w4a", 7.25); plain("#w4b", 7.45); accent("#w4c", 7.8);
   $$(".lr").forEach((r, i) => tl.fromTo(r, { autoAlpha: 0, x: -20 }, { autoAlpha: 1, x: 0, duration: 0.45, ease: "expo.out" }, 8.0 + i * 0.18));
   tl.fromTo("#nochange", { x: 0 }, { keyframes: [-8, 8, -5, 5, 0].map((x) => ({ x, duration: 0.04 })), ease: "none", immediateRender: false }, 8.62);
   // OUT: the pushpin swells into a full red screen …
   tl.to(["#w4a", "#w4b", "#w4c"], { yPercent: -100, autoAlpha: 0, duration: 0.3, ease: "power3.in", stagger: 0.04 }, 8.95);
   tl.to("#card", { rotation: 25, y: 1200, duration: 0.5, ease: "power3.in" }, 8.98);
-  tl.to("#disc", { scale: 120, duration: 0.4, ease: "power3.in" }, 9.0);
+  tl.to("#disc", { scale: 120, duration: 0.47, ease: "power2.in" }, 8.95);
+  tl.to("#pinhl", { opacity: 0, duration: 0.3, ease: "power1.in" }, 8.95);
   tl.set("#s4", { autoAlpha: 0 }, 9.4); tl.set("#s5", { autoAlpha: 1 }, 9.4);
 
   // ===== 5 · 9.4 – 12.2 … which shrinks into the red circle behind the athlete (ref B) =====
-  tl.set("#pinhl", { opacity: 0 }, 9.4); tl.set("#s5-circle", { autoAlpha: 0 }, 9.4);
-  tl.to("#disc", { scale: 860 / 44, y: 1360 - 878, duration: 0.7, ease: "expo.inOut" }, 9.4);
-  tl.set("#disc", { autoAlpha: 0 }, 10.1); tl.set("#s5-circle", { autoAlpha: 1 }, 10.1);
+  tl.set("#s5-circle", { autoAlpha: 0 }, 9.4); tl.set("#disc", { y: 1360 - 878 }, 9.42);
+  tl.to("#disc", { scale: 860 / 44, duration: 0.75, ease: "expo.inOut" }, 9.42);
+  tl.set("#disc", { autoAlpha: 0 }, 10.17); tl.set("#s5-circle", { autoAlpha: 1 }, 10.17);
   tl.fromTo("#s5 .cam", { scale: 1.0 }, { scale: 1.05, duration: 2.8, ease: "sine.inOut" }, 9.4);
   tl.fromTo("#s5-grid", { y: 0 }, { y: -40, duration: 2.8, ease: "sine.inOut" }, 9.4);
-  tl.fromTo("#s5-hero", { y: 220, autoAlpha: 0, filter: "blur(14px) contrast(1.05)" }, { y: 0, autoAlpha: 1, filter: "blur(0px) contrast(1.05)", duration: 1.2, ease: "expo.out" }, 9.85);
+  tl.fromTo("#s5-hero", { y: 220, autoAlpha: 0, filter: "blur(14px) contrast(1.05)" }, { y: 0, autoAlpha: 1, filter: "blur(0px) contrast(1.05)", duration: 1.2, ease: "expo.out" }, 10.18);
   tl.fromTo("#s5-script", { clipPath: "inset(0% 100% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 0.9, ease: "power2.inOut" }, 10.2);
   tl.fromTo("#s5-title", { autoAlpha: 0, filter: "blur(22px)", scale: 1.12 }, { autoAlpha: 1, filter: "blur(0px)", scale: 1, duration: 0.9, ease: "expo.out" }, 10.55);
   tl.fromTo("#s5-sub", { autoAlpha: 0, y: 20, filter: "blur(8px)" }, { autoAlpha: 1, y: 0, filter: "blur(0px)", duration: 0.6, ease: "expo.out" }, 11.15);
