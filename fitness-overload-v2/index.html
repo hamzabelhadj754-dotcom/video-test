@@ -90,6 +90,7 @@
   <path id="wipefill" d="M-160 300 C 420 460, 640 960, 320 1480 S 280 2100, 720 2300" stroke="#F3EFE7" stroke-width="3000" fill="none" stroke-linecap="round" pathLength="1" stroke-dasharray="1 1.2" stroke-dashoffset="1.1"/>
   <path id="wipelead" d="M-160 300 C 420 460, 640 960, 320 1480 S 280 2100, 720 2300" stroke="#CFCBC3" stroke-width="170" fill="none" stroke-linecap="round" pathLength="1" stroke-dasharray="1 1.2" stroke-dashoffset="1.1"/>
 </svg>
+<div class="abs" id="iris" style="left:490px; top:910px; width:100px; height:100px; border-radius:50%; background:#F3EFE7"></div>
 <div class="abs" id="disc" style="left:518px; top:856px; width:44px; height:44px; border-radius:50%; background:#E3243B">
   <div class="abs" id="pinhl" style="inset:0; border-radius:50%; background: radial-gradient(circle at 35% 30%, #FF6B78, #D01C2F 60%, #8E0F1E); box-shadow: 0 8px 14px rgba(0,0,0,.35)"></div>
 </div>
@@ -149,19 +150,18 @@ Promise.all(["calendar-days", "circle-x"].map((n) => fetch(`assets/icons/${n}.sv
   plain("#w3a", 5.05); plain("#w3b", 5.28); accent("#w3c", 5.62); accent("#w3d", 5.98);
   tl.fromTo("#s3-glow", { scale: 1 }, { keyframes: [{ scale: 1.15, duration: 0.15 }, { scale: 1, duration: 0.6, ease: "sine.inOut" }], immediateRender: false }, 6.0);
   // OUT: a cream band sweeps across the frame (ref A swoosh) and leaves scene 4 behind it
-  tl.to(["#w3a", "#w3b", "#w3c", "#w3d"], { autoAlpha: 0, filter: "blur(10px)", scale: 1.08, duration: 0.35, ease: "power2.in", stagger: 0.03 }, 6.35);
-  tl.fromTo("#wipelead", { strokeDashoffset: 1.1 }, { strokeDashoffset: 0, duration: 0.55, ease: "power2.inOut" }, 6.3);
-  gsap.set("#wipefill", { strokeDashoffset: 0, attr: { "stroke-width": 0 } });
-  tl.fromTo("#wipefill", { attr: { "stroke-width": 0 } }, { attr: { "stroke-width": 4600 }, duration: 0.5, ease: "power2.in", immediateRender: false }, 6.7);
-  tl.fromTo("#s3 .cam", { x: 0 }, { x: -40, duration: 0.75, ease: "power2.in", immediateRender: false }, 6.35);
-  tl.set("#s3", { autoAlpha: 0 }, 7.2); tl.set("#s4", { autoAlpha: 1 }, 7.2);
-  tl.set(["#wipelead", "#wipefill"], { autoAlpha: 0 }, 7.2);
-  tl.fromTo("#s4 .vigL", { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.6, ease: "power1.out" }, 7.2);
+  tl.to(["#w3a", "#w3b", "#w3c", "#w3d"], { autoAlpha: 0, filter: "blur(10px)", scale: 1.08, duration: 0.4, ease: "power2.in", stagger: 0.03 }, 6.2);
+  tl.to("#s3-glow", { scale: 1.6, autoAlpha: 0.5, duration: 0.9, ease: "power2.inOut" }, 6.3);
+  gsap.set("#iris", { scale: 0, autoAlpha: 1 });
+  tl.fromTo("#iris", { scale: 0 }, { scale: 24, duration: 0.7, ease: "power2.inOut", immediateRender: false }, 6.52);
+  tl.set("#iris", { autoAlpha: 0 }, 7.12);
+  tl.set("#s3", { autoAlpha: 0 }, 7.1); tl.set("#s4", { autoAlpha: 1 }, 7.1);
+  tl.fromTo("#s4 .vigL", { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.6, ease: "power1.out" }, 7.1);
   tl.fromTo("#s2 .vigL", { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.6, ease: "power1.out" }, 2.62);
 
   // ===== 4 · 7.0 – 9.4 =====
   tl.fromTo("#s4 .cam", { scale: 1.0 }, { scale: 1.05, duration: 2.4, ease: "sine.inOut" }, 7.02);
-  gsap.set("#s4-band", { strokeDashoffset: 0 });
+  tl.fromTo("#s4-band", { strokeDashoffset: 1.1 }, { strokeDashoffset: 0, duration: 1.1, ease: "power3.out" }, 7.1);
   tl.set("#disc", { autoAlpha: 1, scale: 0, y: 0 }, 7.25); tl.set("#pinhl", { opacity: 1 }, 7.25);
   tl.to("#disc", { scale: 1, duration: 0.5, ease: "back.out(2.2)" }, 7.25);
   tl.fromTo("#card", { autoAlpha: 0, rotation: -28, y: -40 }, { autoAlpha: 1, y: 0, duration: 0.3, ease: "power2.out" }, 7.3);

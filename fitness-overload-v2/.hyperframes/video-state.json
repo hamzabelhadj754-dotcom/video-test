@@ -1,7 +1,7 @@
 {
   "version": 1,
   "historyId": "be2dcfea-40be-43a4-a4b2-5a189454b04f",
-  "currentRevision": "de3e5c7b-3b82-44f6-8ca4-de760b37ca7e",
+  "currentRevision": "3af81305-eaaf-4c14-88b5-d60d34f92c59",
   "pendingChanges": false,
   "files": {
     "assets/fonts/Anton-Regular.woff2": {
@@ -93,8 +93,8 @@
       "content": "/root/.cache/hyperframes/history/be2dcfea-40be-43a4-a4b2-5a189454b04f/blobs/53/53dbce1e19aa713cbb12ee0bc4d206143b45ab15e6ffbfcaa8f69572d4d24d50"
     },
     "index.html": {
-      "hash": "ec749d668e6a1d621cb97fe52bbd13d180b6210facbb3235b3a27ac648f0f210",
-      "content": "/root/.cache/hyperframes/history/be2dcfea-40be-43a4-a4b2-5a189454b04f/blobs/ec/ec749d668e6a1d621cb97fe52bbd13d180b6210facbb3235b3a27ac648f0f210"
+      "hash": "8df57bda2d6e4ef01e5a442b37d37cfa6926593bb5476d05a4ee82c4af927ca9",
+      "content": "/root/.cache/hyperframes/history/be2dcfea-40be-43a4-a4b2-5a189454b04f/blobs/8d/8df57bda2d6e4ef01e5a442b37d37cfa6926593bb5476d05a4ee82c4af927ca9"
     },
     "package.json": {
       "hash": "ee0257d57a8d536fb3b8a1751f72a11f7385d986af64debe62873738f4a042f5",
@@ -195,6 +195,21 @@
           "after": "/root/.cache/hyperframes/history/be2dcfea-40be-43a4-a4b2-5a189454b04f/blobs/ec/ec749d668e6a1d621cb97fe52bbd13d180b6210facbb3235b3a27ac648f0f210"
         }
       }
+    },
+    "3af81305-eaaf-4c14-88b5-d60d34f92c59": {
+      "actor": {
+        "kind": "outside",
+        "name": "Outside"
+      },
+      "label": "Changed outside the app",
+      "startedAt": 1794306961222,
+      "endedAt": 1794306961223,
+      "files": {
+        "index.html": {
+          "before": "/root/.cache/hyperframes/history/be2dcfea-40be-43a4-a4b2-5a189454b04f/blobs/ec/ec749d668e6a1d621cb97fe52bbd13d180b6210facbb3235b3a27ac648f0f210",
+          "after": "/root/.cache/hyperframes/history/be2dcfea-40be-43a4-a4b2-5a189454b04f/blobs/8d/8df57bda2d6e4ef01e5a442b37d37cfa6926593bb5476d05a4ee82c4af927ca9"
+        }
+      }
     }
   },
   "checks": {
@@ -209,15 +224,15 @@
   },
   "renders": {
     "latest": {
-      "id": "76466223-ed3e-4a91-9c9d-067fa614127f",
-      "completedAt": 1794306850378,
+      "id": "10e760ad-acf1-42bf-843e-68269b79f31d",
+      "completedAt": 1794307035925,
       "output": "/home/user/video-test/fitness-overload-v2/renders/overload_v2_test_12s.mp4",
       "status": "completed",
-      "revision": "de3e5c7b-3b82-44f6-8ca4-de760b37ca7e"
+      "revision": "3af81305-eaaf-4c14-88b5-d60d34f92c59"
     },
     "retainedRevisions": [
-      "de3e5c7b-3b82-44f6-8ca4-de760b37ca7e",
-      "89c92068-cc4d-4a9b-88ab-b9c414543ca6"
+      "3af81305-eaaf-4c14-88b5-d60d34f92c59",
+      "de3e5c7b-3b82-44f6-8ca4-de760b37ca7e"
     ]
   },
   "pendingArtifactCleanup": []
