@@ -1,7 +1,7 @@
 {
   "version": 1,
   "historyId": "2845da05-45cb-4dc6-b087-19e1f5bc328d",
-  "currentRevision": "f41e7bb9-aa7b-4dc5-8da9-8a2f00fa2354",
+  "currentRevision": "00e600e2-6563-48a5-98bb-c0445e22b713",
   "pendingChanges": false,
   "files": {
     "ASSETS.md": {
@@ -93,8 +93,8 @@
       "content": "/root/.cache/hyperframes/history/2845da05-45cb-4dc6-b087-19e1f5bc328d/blobs/53/53dbce1e19aa713cbb12ee0bc4d206143b45ab15e6ffbfcaa8f69572d4d24d50"
     },
     "index.html": {
-      "hash": "932efe54c24d94719b6ae9ed14b63859d4163306795d3b63333a36fda5265df6",
-      "content": "/root/.cache/hyperframes/history/2845da05-45cb-4dc6-b087-19e1f5bc328d/blobs/93/932efe54c24d94719b6ae9ed14b63859d4163306795d3b63333a36fda5265df6"
+      "hash": "f0203092e7618084350eb6174337623b8243509ac8e9c46d5bd9302c7b10f8d6",
+      "content": "/root/.cache/hyperframes/history/2845da05-45cb-4dc6-b087-19e1f5bc328d/blobs/f0/f0203092e7618084350eb6174337623b8243509ac8e9c46d5bd9302c7b10f8d6"
     },
     "package.json": {
       "hash": "2363685c2bfc0d864a4bc782269ef4c77c528f4abc3d71d54b864172b6e8af33",
@@ -263,10 +263,6 @@
     "styleframes-v1/png/f7.png": {
       "hash": "49a243f41c546e91059b09631629767d6fb87c02e4762cd6981f163f2c5d0e04",
       "content": "/root/.cache/hyperframes/history/2845da05-45cb-4dc6-b087-19e1f5bc328d/blobs/49/49a243f41c546e91059b09631629767d6fb87c02e4762cd6981f163f2c5d0e04"
-    },
-    "test.html": {
-      "hash": "1a628680f2d745e231e32b024ed967101186a15999ba15694146e51b948d79c1",
-      "content": "/root/.cache/hyperframes/history/2845da05-45cb-4dc6-b087-19e1f5bc328d/blobs/1a/1a628680f2d745e231e32b024ed967101186a15999ba15694146e51b948d79c1"
     }
   },
   "revisions": {
@@ -318,6 +314,25 @@
           "after": "/root/.cache/hyperframes/history/2845da05-45cb-4dc6-b087-19e1f5bc328d/blobs/1a/1a628680f2d745e231e32b024ed967101186a15999ba15694146e51b948d79c1"
         }
       }
+    },
+    "00e600e2-6563-48a5-98bb-c0445e22b713": {
+      "actor": {
+        "kind": "outside",
+        "name": "Outside"
+      },
+      "label": "Changed outside the app",
+      "startedAt": 1794302386533,
+      "endedAt": 1794302386541,
+      "files": {
+        "index.html": {
+          "before": "/root/.cache/hyperframes/history/2845da05-45cb-4dc6-b087-19e1f5bc328d/blobs/93/932efe54c24d94719b6ae9ed14b63859d4163306795d3b63333a36fda5265df6",
+          "after": "/root/.cache/hyperframes/history/2845da05-45cb-4dc6-b087-19e1f5bc328d/blobs/f0/f0203092e7618084350eb6174337623b8243509ac8e9c46d5bd9302c7b10f8d6"
+        },
+        "test.html": {
+          "before": "/root/.cache/hyperframes/history/2845da05-45cb-4dc6-b087-19e1f5bc328d/blobs/1a/1a628680f2d745e231e32b024ed967101186a15999ba15694146e51b948d79c1",
+          "after": null
+        }
+      }
     }
   },
   "checks": {
@@ -332,15 +347,15 @@
   },
   "renders": {
     "latest": {
-      "id": "697d4569-3545-48c3-8d73-a5b2f5d8146c",
-      "completedAt": 1794301799315,
+      "id": "c8682dd1-7046-454c-beef-8e54e59b3cd3",
+      "completedAt": 1794302588242,
       "output": "/home/user/video-test/fitness-overload/renders/fitness_overload_31s.mp4",
       "status": "completed",
-      "revision": "f41e7bb9-aa7b-4dc5-8da9-8a2f00fa2354"
+      "revision": "00e600e2-6563-48a5-98bb-c0445e22b713"
     },
     "retainedRevisions": [
-      "f41e7bb9-aa7b-4dc5-8da9-8a2f00fa2354",
-      "2761ed14-c20f-4c9e-b9be-139c0dd232cd"
+      "00e600e2-6563-48a5-98bb-c0445e22b713",
+      "f41e7bb9-aa7b-4dc5-8da9-8a2f00fa2354"
     ]
   },
   "pendingArtifactCleanup": []
