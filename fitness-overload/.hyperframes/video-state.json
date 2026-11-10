@@ -332,9 +332,9 @@
   },
   "renders": {
     "latest": {
-      "id": "58a10380-3ca8-4641-bf59-1280595cafd0",
-      "completedAt": 1794301539891,
-      "output": "/home/user/video-test/fitness-overload/renders/overload_test_6-17s.mp4",
+      "id": "697d4569-3545-48c3-8d73-a5b2f5d8146c",
+      "completedAt": 1794301799315,
+      "output": "/home/user/video-test/fitness-overload/renders/fitness_overload_31s.mp4",
       "status": "completed",
       "revision": "f41e7bb9-aa7b-4dc5-8da9-8a2f00fa2354"
     },
