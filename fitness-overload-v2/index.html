@@ -153,7 +153,7 @@
 </div>
 <div class="full" id="flash" style="background:#fff; pointer-events:none"></div>
 <div id="grain"></div>
-<audio id="sfx" class="clip" src="assets/audio/sfx.wav" data-start="0" data-duration="31.5" data-track-index="1" data-volume="1"></audio>
+<audio id="sfx" class="clip" src="assets/audio/mix.wav" data-start="0" data-duration="31.5" data-track-index="1" data-volume="1"></audio>
 </div>
 
 <script>
@@ -337,34 +337,34 @@ Promise.all(["calendar-days", "circle-x", "repeat", "weight", "moon", "hourglass
 
   // ================= CAMERA: one real move per scene (on .cam) =================
   const move = (sc, t, from, keys) => tl.fromTo(sc + " > .cam", from, { keyframes: keys }, t);
-  move("#s1", 0, { scale: 1.22, y: 70, rotation: -2 }, [{ scale: 1.0, y: 0, rotation: 0, duration: 1.6, ease: "expo.out" }, { scale: 1.05, y: -12, duration: 1.0, ease: "sine.inOut" }]);                 // pull-back reveal
-  move("#s2", 2.62, { x: 170, scale: 1.12, rotation: 2 }, [{ x: 0, scale: 1.0, rotation: 0, duration: 1.2, ease: "expo.out" }, { x: -30, scale: 1.03, duration: 1.08, ease: "sine.inOut" }]);      // pan with the dumbbell
-  move("#s3", 4.92, { scale: 1.0, rotation: -1.5 }, [{ scale: 1.15, rotation: 1, duration: 2.15, ease: "power1.inOut" }]);                                                                        // slow dolly-in + roll
+  move("#s1", 0, { scale: 1.22, y: 70 }, [{ scale: 1.0, y: 0, duration: 1.6, ease: "expo.out" }, { scale: 1.05, y: -12, duration: 1.0, ease: "sine.inOut" }]);                 // pull-back reveal
+  move("#s2", 2.62, { x: 170, scale: 1.12 }, [{ x: 0, scale: 1.0, duration: 1.2, ease: "expo.out" }, { x: -30, scale: 1.03, duration: 1.08, ease: "sine.inOut" }]);      // pan with the dumbbell
+  move("#s3", 4.92, { scale: 1.0 }, [{ scale: 1.12, duration: 2.15, ease: "sine.inOut" }]);                                                                        // slow dolly-in + roll
   move("#s4", 7.1, { y: 150, scale: 1.1 }, [{ y: 0, scale: 1.0, duration: 1.1, ease: "expo.out" }, { y: -30, scale: 1.04, duration: 1.2, ease: "sine.inOut" }]);                                // tilt down onto the card
   move("#s5", 10.17, { y: 0, scale: 1.0 }, [{ y: -24, scale: 1.07, duration: 2.0, ease: "sine.inOut" }]);   // slow push on the athlete
   move("#s6", 12.48, { x: 0, scale: 1.0 }, [{ x: -90, scale: 1.08, duration: 4.3, ease: "sine.inOut" }]);                                                                                         // lateral track along the bars
-  move("#s7", 16.8, { x: -170, rotation: -2, scale: 1.12 }, [{ x: 0, rotation: 0, scale: 1.0, duration: 1.1, ease: "expo.out" }, { x: 30, scale: 1.04, duration: 2.0, ease: "sine.inOut" }]);  // pan in from the left
+  move("#s7", 16.8, { x: -170, scale: 1.12 }, [{ x: 0, scale: 1.0, duration: 1.1, ease: "expo.out" }, { x: 30, scale: 1.04, duration: 2.0, ease: "sine.inOut" }]);  // pan in from the left
   move("#s8", 19.85, { scale: 1.16, y: -90 }, [{ scale: 1.0, y: 0, duration: 1.2, ease: "expo.out" }, { scale: 1.05, y: -20, duration: 3.1, ease: "sine.inOut" }]);                             // drop-in, slow push
-  move("#s9", 24.15, { scale: 1.0, rotation: 0 }, [{ scale: 1.2, rotation: 1.5, duration: 3.3, ease: "power1.inOut" }]);                                                                         // creeping zoom on the moon
+  move("#s9", 24.15, { scale: 1.0 }, [{ scale: 1.16, duration: 3.3, ease: "sine.inOut" }]);                                                                         // creeping zoom on the moon
   move("#s10", 27.45, { scale: 1.18, y: -60 }, [{ scale: 1.0, y: 0, duration: 1.6, ease: "expo.out" }, { scale: 1.04, duration: 2.45, ease: "sine.inOut" }]);                                    // pull-back to the end card
 
   // ================= PUNCHES on the key words (on .pk) =================
-  const punch = (sc, t, a = 1.06) => tl.fromTo(sc + " .pk", { scale: 1 }, { keyframes: [{ scale: a, duration: 0.1, ease: "power2.out" }, { scale: 1, duration: 0.45, ease: "power3.out" }], immediateRender: false }, t);
-  punch("#s1", 1.4); punch("#s2", 3.25, 1.07); punch("#s3", 5.98, 1.08); punch("#s5", 10.55, 1.06); punch("#s6", 15.15, 1.05); punch("#s7", 17.35, 1.07); punch("#s9", 25.1, 1.07); punch("#s10", 29.05, 1.06);
+  const punch = (sc, t, a = 1.06) => tl.fromTo(sc + " .pk", { scale: 1 }, { keyframes: [{ scale: a, duration: 0.16, ease: "power2.out" }, { scale: 1, duration: 0.7, ease: "sine.inOut" }], immediateRender: false }, t);
+  punch("#s1", 1.4, 1.035); punch("#s2", 3.25, 1.04); punch("#s3", 5.98, 1.045); punch("#s5", 10.55, 1.035); punch("#s6", 15.15, 1.03); punch("#s7", 17.62, 1.04); punch("#s9", 25.1, 1.04); punch("#s10", 29.05, 1.035);
   tl.fromTo("#s4 .pk", { x: 0 }, { keyframes: [{ x: 10, duration: FR }, { x: -8, duration: FR }, { x: 5, duration: FR }, { x: 0, duration: FR }], immediateRender: false }, 8.62);
 
   // ================= TRANSITIONS =================
   // 2 -> 3 zoom-whip: the camera dives into the dumbbell, scene 3 lands out of the blur
   tl.fromTo("#s2 .pk", { scale: 1, filter: "blur(0px)" }, { scale: 1.7, filter: "blur(16px)", duration: 0.32, ease: "power3.in", immediateRender: false }, 4.6);
-  tl.fromTo("#s3 .pk", { scale: 1.45, filter: "blur(16px)" }, { scale: 1, filter: "blur(0px)", duration: 0.65, ease: "expo.out" }, 4.92);
+  tl.fromTo("#s3 .pk", { scale: 1.45, filter: "blur(16px)" }, { scale: 1, filter: "blur(0px)", duration: 0.9, ease: "expo.out" }, 4.92);
   // 3 -> 4 and every circle opening: push into the circle, the next scene settles back
   [["#s3", "#s4", 6.55, 7.1], ["#s6", "#s7", 16.2, 16.8], ["#s7", "#s8", 19.25, 19.85], ["#s9", "#s10", 26.85, 27.45]].forEach(([a, b, t0, t1]) => {
     tl.fromTo(a + " .pk", { scale: 1 }, { scale: 1.18, duration: t1 - t0, ease: "power2.in", immediateRender: false }, t0);
-    tl.fromTo(b + " .pk", { scale: 1.12 }, { scale: 1, duration: 0.5, ease: "expo.out" }, t1);
+    tl.fromTo(b + " .pk", { scale: 1.1 }, { scale: 1, duration: 0.8, ease: "expo.out" }, t1);
   });
   // 5 -> 6 vertical whip with motion blur (same dark world, so it reads as one camera move)
   tl.fromTo("#s5 .pk", { y: 0, filter: "blur(0px)" }, { y: -900, filter: "blur(18px)", duration: 0.32, ease: "power3.in", immediateRender: false }, 12.16);
-  tl.fromTo("#s6 .pk", { y: 1000, filter: "blur(18px)" }, { y: 0, filter: "blur(0px)", duration: 0.6, ease: "expo.out" }, 12.48);
+  tl.fromTo("#s6 .pk", { y: 1000, filter: "blur(18px)" }, { y: 0, filter: "blur(0px)", duration: 0.85, ease: "expo.out" }, 12.48);
   // 8 -> 9 zoom-blur push through the cards into the black
   tl.fromTo("#s8 .pk", { scale: 1, filter: "blur(0px)" }, { scale: 1.55, filter: "blur(14px)", duration: 0.45, ease: "power3.in", immediateRender: false }, 23.85);
   tl.fromTo("#s9 .pk", { scale: 0.85, filter: "blur(12px)" }, { scale: 1, filter: "blur(0px)", duration: 0.8, ease: "expo.out" }, 24.2);

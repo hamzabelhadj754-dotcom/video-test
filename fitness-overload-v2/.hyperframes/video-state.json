@@ -1,7 +1,7 @@
 {
   "version": 1,
   "historyId": "be2dcfea-40be-43a4-a4b2-5a189454b04f",
-  "currentRevision": "331ce7af-755a-4a69-b305-0955a02044de",
+  "currentRevision": "5a2ff100-92e7-42ec-95fe-93f8d2b34616",
   "pendingChanges": false,
   "files": {
     "assets/fonts/Anton-Regular.woff2": {
@@ -93,8 +93,8 @@
       "content": "/root/.cache/hyperframes/history/be2dcfea-40be-43a4-a4b2-5a189454b04f/blobs/53/53dbce1e19aa713cbb12ee0bc4d206143b45ab15e6ffbfcaa8f69572d4d24d50"
     },
     "index.html": {
-      "hash": "39462f81d99de19a3739f0b977735711dec5bc8e1c4070dab29c554f75b788e7",
-      "content": "/root/.cache/hyperframes/history/be2dcfea-40be-43a4-a4b2-5a189454b04f/blobs/39/39462f81d99de19a3739f0b977735711dec5bc8e1c4070dab29c554f75b788e7"
+      "hash": "0f8028f9b3e98e278eabb2971856b3429150fc2574998365fe3faabc002844dc",
+      "content": "/root/.cache/hyperframes/history/be2dcfea-40be-43a4-a4b2-5a189454b04f/blobs/0f/0f8028f9b3e98e278eabb2971856b3429150fc2574998365fe3faabc002844dc"
     },
     "package.json": {
       "hash": "ee0257d57a8d536fb3b8a1751f72a11f7385d986af64debe62873738f4a042f5",
@@ -207,6 +207,38 @@
     "tools/mix_sfx.py": {
       "hash": "2b763aa54f8f24b39122354f9b34785ad454da1eb9d362a80bfbf25dd46d5c59",
       "content": "/root/.cache/hyperframes/history/be2dcfea-40be-43a4-a4b2-5a189454b04f/blobs/2b/2b763aa54f8f24b39122354f9b34785ad454da1eb9d362a80bfbf25dd46d5c59"
+    },
+    "ASSETS.md": {
+      "hash": "2711805895c7f4e1b0c9ecfa2b3cd4cd767bafd9d1e0e671684d13dd0d41b411",
+      "content": "/root/.cache/hyperframes/history/be2dcfea-40be-43a4-a4b2-5a189454b04f/blobs/27/2711805895c7f4e1b0c9ecfa2b3cd4cd767bafd9d1e0e671684d13dd0d41b411"
+    },
+    "assets/music_src/song_source.mp4": {
+      "hash": "088d2a4db5cb66998d56df395eebd68fadf2f8ff18449a78ea7b79e419051bbc",
+      "content": "/root/.cache/hyperframes/history/be2dcfea-40be-43a4-a4b2-5a189454b04f/blobs/08/088d2a4db5cb66998d56df395eebd68fadf2f8ff18449a78ea7b79e419051bbc"
+    },
+    "assets/music_src/song.wav": {
+      "hash": "297dba98b951c94ad44586c6d62abc16936953cd7608cc7ca8d839db973fc282",
+      "content": "/root/.cache/hyperframes/history/be2dcfea-40be-43a4-a4b2-5a189454b04f/blobs/29/297dba98b951c94ad44586c6d62abc16936953cd7608cc7ca8d839db973fc282"
+    },
+    "tools/build_mix.py": {
+      "hash": "72fabca1af918ba1c8d34b633e4ffa62228ec35b38b78eadf36e80c707f88690",
+      "content": "/root/.cache/hyperframes/history/be2dcfea-40be-43a4-a4b2-5a189454b04f/blobs/72/72fabca1af918ba1c8d34b633e4ffa62228ec35b38b78eadf36e80c707f88690"
+    },
+    "assets/music_src/slowed.wav": {
+      "hash": "eea812ff45c372a5a47d19e7a1db55404c4dead682e6af88f7a7d8fbd15b9317",
+      "content": "/root/.cache/hyperframes/history/be2dcfea-40be-43a4-a4b2-5a189454b04f/blobs/ee/eea812ff45c372a5a47d19e7a1db55404c4dead682e6af88f7a7d8fbd15b9317"
+    },
+    "assets/audio/mix_pre.wav": {
+      "hash": "1b4ec6e5d6c700c3e6e1774638614e6cc74ab1293cc421b93642f6572690eb87",
+      "content": "/root/.cache/hyperframes/history/be2dcfea-40be-43a4-a4b2-5a189454b04f/blobs/1b/1b4ec6e5d6c700c3e6e1774638614e6cc74ab1293cc421b93642f6572690eb87"
+    },
+    "assets/audio/music_bed.wav": {
+      "hash": "6bf5b1ccaf9761e0fed808aa5bd19608a508920c80860777848f4aed962ba19b",
+      "content": "/root/.cache/hyperframes/history/be2dcfea-40be-43a4-a4b2-5a189454b04f/blobs/6b/6bf5b1ccaf9761e0fed808aa5bd19608a508920c80860777848f4aed962ba19b"
+    },
+    "assets/audio/mix.wav": {
+      "hash": "02f88a42ebb4f4526eb9be69389b1dc9c7edd633c3aa1d0828dafa92cd2b2379",
+      "content": "/root/.cache/hyperframes/history/be2dcfea-40be-43a4-a4b2-5a189454b04f/blobs/02/02f88a42ebb4f4526eb9be69389b1dc9c7edd633c3aa1d0828dafa92cd2b2379"
     }
   },
   "revisions": {
@@ -407,6 +439,53 @@
           "after": "/root/.cache/hyperframes/history/be2dcfea-40be-43a4-a4b2-5a189454b04f/blobs/2b/2b763aa54f8f24b39122354f9b34785ad454da1eb9d362a80bfbf25dd46d5c59"
         }
       }
+    },
+    "5a2ff100-92e7-42ec-95fe-93f8d2b34616": {
+      "actor": {
+        "kind": "outside",
+        "name": "Outside"
+      },
+      "label": "Changed outside the app",
+      "startedAt": 1794308794907,
+      "endedAt": 1794308794988,
+      "files": {
+        "ASSETS.md": {
+          "before": null,
+          "after": "/root/.cache/hyperframes/history/be2dcfea-40be-43a4-a4b2-5a189454b04f/blobs/27/2711805895c7f4e1b0c9ecfa2b3cd4cd767bafd9d1e0e671684d13dd0d41b411"
+        },
+        "assets/audio/mix_pre.wav": {
+          "before": null,
+          "after": "/root/.cache/hyperframes/history/be2dcfea-40be-43a4-a4b2-5a189454b04f/blobs/1b/1b4ec6e5d6c700c3e6e1774638614e6cc74ab1293cc421b93642f6572690eb87"
+        },
+        "assets/audio/mix.wav": {
+          "before": null,
+          "after": "/root/.cache/hyperframes/history/be2dcfea-40be-43a4-a4b2-5a189454b04f/blobs/02/02f88a42ebb4f4526eb9be69389b1dc9c7edd633c3aa1d0828dafa92cd2b2379"
+        },
+        "assets/audio/music_bed.wav": {
+          "before": null,
+          "after": "/root/.cache/hyperframes/history/be2dcfea-40be-43a4-a4b2-5a189454b04f/blobs/6b/6bf5b1ccaf9761e0fed808aa5bd19608a508920c80860777848f4aed962ba19b"
+        },
+        "assets/music_src/slowed.wav": {
+          "before": null,
+          "after": "/root/.cache/hyperframes/history/be2dcfea-40be-43a4-a4b2-5a189454b04f/blobs/ee/eea812ff45c372a5a47d19e7a1db55404c4dead682e6af88f7a7d8fbd15b9317"
+        },
+        "assets/music_src/song_source.mp4": {
+          "before": null,
+          "after": "/root/.cache/hyperframes/history/be2dcfea-40be-43a4-a4b2-5a189454b04f/blobs/08/088d2a4db5cb66998d56df395eebd68fadf2f8ff18449a78ea7b79e419051bbc"
+        },
+        "assets/music_src/song.wav": {
+          "before": null,
+          "after": "/root/.cache/hyperframes/history/be2dcfea-40be-43a4-a4b2-5a189454b04f/blobs/29/297dba98b951c94ad44586c6d62abc16936953cd7608cc7ca8d839db973fc282"
+        },
+        "index.html": {
+          "before": "/root/.cache/hyperframes/history/be2dcfea-40be-43a4-a4b2-5a189454b04f/blobs/39/39462f81d99de19a3739f0b977735711dec5bc8e1c4070dab29c554f75b788e7",
+          "after": "/root/.cache/hyperframes/history/be2dcfea-40be-43a4-a4b2-5a189454b04f/blobs/0f/0f8028f9b3e98e278eabb2971856b3429150fc2574998365fe3faabc002844dc"
+        },
+        "tools/build_mix.py": {
+          "before": null,
+          "after": "/root/.cache/hyperframes/history/be2dcfea-40be-43a4-a4b2-5a189454b04f/blobs/72/72fabca1af918ba1c8d34b633e4ffa62228ec35b38b78eadf36e80c707f88690"
+        }
+      }
     }
   },
   "checks": {
@@ -421,15 +500,15 @@
   },
   "renders": {
     "latest": {
-      "id": "23a4ed10-ce26-4b6c-91d8-ea14b15128cd",
-      "completedAt": 1794308225426,
+      "id": "fd9c418d-3830-497e-9454-a4176f342a1d",
+      "completedAt": 1794308965143,
       "output": "/home/user/video-test/fitness-overload-v2/renders/gainsdom_progressive_overload.mp4",
       "status": "completed",
-      "revision": "331ce7af-755a-4a69-b305-0955a02044de"
+      "revision": "5a2ff100-92e7-42ec-95fe-93f8d2b34616"
     },
     "retainedRevisions": [
-      "331ce7af-755a-4a69-b305-0955a02044de",
-      "56b8c18e-a2ce-4bb7-b0d7-9668b87f3b3d"
+      "5a2ff100-92e7-42ec-95fe-93f8d2b34616",
+      "331ce7af-755a-4a69-b305-0955a02044de"
     ]
   },
   "pendingArtifactCleanup": []

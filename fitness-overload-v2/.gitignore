@@ -4,3 +4,7 @@ renders/*.log
 renders/work-*
 .hyperframes/artifacts/
 assets/sfx_src/
+assets/music_src/
+assets/audio/music_bed.wav
+assets/audio/mix.wav
+assets/audio/mix_pre.wav
