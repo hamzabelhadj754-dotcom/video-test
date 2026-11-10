@@ -121,12 +121,14 @@ Promise.all(["calendar-days", "circle-x"].map((n) => fetch(`assets/icons/${n}.sv
   tl.fromTo("#s1 .cam", { scale: 1.0 }, { scale: 1.05, duration: 2.6, ease: "sine.inOut" }, 0);
   tl.fromTo("#s1-body", { y: 160, autoAlpha: 0, filter: "blur(10px)" }, { y: 0, autoAlpha: 1, filter: "blur(0px)", duration: 1.2, ease: "expo.out" }, 0.05);
   tl.fromTo("#s1-head", { scale: 0 }, { scale: 1, duration: 0.9, ease: "back.out(1.4)" }, 0.15);
-  tl.fromTo("#s1-head", { boxShadow: "0 0 60px rgba(255,255,255,.55), 0 0 160px rgba(255,255,255,.25)" }, { keyframes: [{ boxShadow: "0 0 90px rgba(255,255,255,.75), 0 0 220px rgba(255,255,255,.35)", duration: 0.8 }, { boxShadow: "0 0 60px rgba(255,255,255,.55), 0 0 160px rgba(255,255,255,.25)", duration: 0.8 }], ease: "sine.inOut" }, 0.9);
+  tl.fromTo("#s1-head", { boxShadow: "0 0 60px rgba(255,255,255,.55), 0 0 160px rgba(255,255,255,.25)" }, { keyframes: [{ boxShadow: "0 0 90px rgba(255,255,255,.75), 0 0 220px rgba(255,255,255,.35)", duration: 0.6 }, { boxShadow: "0 0 60px rgba(255,255,255,.55), 0 0 160px rgba(255,255,255,.25)", duration: 0.6 }], ease: "sine.inOut" }, 0.9);
   plain("#w1a", 0.55); plain("#w1b", 0.78); accent("#w1c", 1.1); accent("#w1d", 1.4);
   // OUT: the head circle grows into the cream world of scene 2
   tl.to("#s1-q", { scale: 0.9, autoAlpha: 0, filter: "blur(6px)", duration: 0.25, ease: "power2.in" }, 2.2);
   tl.to("#s1-body", { y: 200, autoAlpha: 0, duration: 0.3, ease: "power3.in" }, 2.25);
-  tl.to("#s1-head", { scale: 6.2, duration: 0.42, ease: "power3.in" }, 2.2);
+  tl.to("#s1-head", { scale: 6.2, duration: 0.5, ease: "power2.in" }, 2.12);
+  tl.to("#s1-head", { boxShadow: "0 0 0px rgba(255,255,255,0), 0 0 0px rgba(255,255,255,0)", backgroundColor: "#F3EFE7", duration: 0.3, ease: "power1.in" }, 2.12);
+  tl.to("#s1 .vig", { autoAlpha: 0, duration: 0.35, ease: "power1.in" }, 2.15);
   tl.set("#s1", { autoAlpha: 0 }, 2.62); tl.set("#s2", { autoAlpha: 1 }, 2.62);
 
   // ===== 2 · 2.6 – 4.9 =====
@@ -148,11 +150,14 @@ Promise.all(["calendar-days", "circle-x"].map((n) => fetch(`assets/icons/${n}.sv
   tl.fromTo("#s3-glow", { scale: 1 }, { keyframes: [{ scale: 1.15, duration: 0.15 }, { scale: 1, duration: 0.6, ease: "sine.inOut" }], immediateRender: false }, 6.0);
   // OUT: a cream band sweeps across the frame (ref A swoosh) and leaves scene 4 behind it
   tl.to(["#w3a", "#w3b", "#w3c", "#w3d"], { autoAlpha: 0, filter: "blur(10px)", scale: 1.08, duration: 0.35, ease: "power2.in", stagger: 0.03 }, 6.35);
-  tl.fromTo("#wipelead", { strokeDashoffset: 1.1 }, { strokeDashoffset: 0, duration: 0.75, ease: "power2.inOut" }, 6.35);
-  tl.fromTo("#wipefill", { strokeDashoffset: 1.1 }, { strokeDashoffset: 0, duration: 0.73, ease: "power2.inOut" }, 6.47);
+  tl.fromTo("#wipelead", { strokeDashoffset: 1.1 }, { strokeDashoffset: 0, duration: 0.55, ease: "power2.inOut" }, 6.3);
+  gsap.set("#wipefill", { strokeDashoffset: 0, attr: { "stroke-width": 0 } });
+  tl.fromTo("#wipefill", { attr: { "stroke-width": 0 } }, { attr: { "stroke-width": 4600 }, duration: 0.5, ease: "power2.in", immediateRender: false }, 6.7);
   tl.fromTo("#s3 .cam", { x: 0 }, { x: -40, duration: 0.75, ease: "power2.in", immediateRender: false }, 6.35);
   tl.set("#s3", { autoAlpha: 0 }, 7.2); tl.set("#s4", { autoAlpha: 1 }, 7.2);
   tl.set(["#wipelead", "#wipefill"], { autoAlpha: 0 }, 7.2);
+  tl.fromTo("#s4 .vigL", { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.6, ease: "power1.out" }, 7.2);
+  tl.fromTo("#s2 .vigL", { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.6, ease: "power1.out" }, 2.62);
 
   // ===== 4 · 7.0 – 9.4 =====
   tl.fromTo("#s4 .cam", { scale: 1.0 }, { scale: 1.05, duration: 2.4, ease: "sine.inOut" }, 7.02);
