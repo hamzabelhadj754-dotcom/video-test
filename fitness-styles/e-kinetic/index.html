@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+<style>
+  @font-face { font-family: "Inter"; src: url("assets/fonts/Inter-Variable.woff2") format("woff2"); font-weight: 100 900; }
+  @font-face { font-family: "Mono"; src: url("assets/fonts/JetBrainsMono-Variable.woff2") format("woff2"); font-weight: 100 900; }
+  :root { --red:#E8262F; --ink:#0B0B0C; --paper:#F2EFEA; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; background: var(--ink); }
+  #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: var(--ink); font-family: Inter, sans-serif; }
+  .full { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+  .abs { position: absolute; }
+  .sc { visibility: hidden; overflow: hidden; }
+  .m { display: block; overflow: hidden; }
+  .m > span { display: block; }
+  .row { position: absolute; left: 0; right: 0; text-align: center; white-space: nowrap; }
+  .xl { font: 900 210px/.88 Inter; letter-spacing: -.055em; }
+  .lg { font: 800 120px/.92 Inter; letter-spacing: -.045em; }
+  .md { font: 500 46px/1 Inter; letter-spacing: -.01em; }
+  .mono { font: 500 22px/1 Mono; letter-spacing: .14em; text-transform: uppercase; }
+  .hair { position: absolute; background: currentColor; }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="6" data-width="1080" data-height="1920" data-fps="30">
+  <div class="full" id="cam">
+
+  <!-- 1 · black: the line opens the sentence -->
+  <section class="sc full" id="s1" style="background:var(--ink); color:#fff">
+    <div class="abs mono" id="lab1" style="left:120px; top:250px; color:rgba(255,255,255,.55)">01 — Recovery</div>
+    <div class="abs mono" id="lab1b" style="right:120px; top:250px; color:rgba(255,255,255,.55)">Gainsdom</div>
+    <div class="row" style="top:770px"><div class="m"><span class="xl" id="a1">Your</span></div><div class="m"><span class="xl" id="a2">muscles</span></div></div>
+    <div class="hair" id="line1" style="left:120px; width:840px; top:1149px; height:4px; color:var(--red)"></div>
+    <div class="row" style="top:1180px"><div class="m"><span class="lg" id="a3" style="color:var(--red)">don't grow</span></div></div>
+  </section>
+
+  <!-- 2 · red: IN THE GYM -->
+  <section class="sc full" id="s2" style="background:var(--red); color:#fff">
+    <div class="row" style="top:640px"><div class="m"><span class="md" id="b0" style="font-weight:600; letter-spacing:.3em; text-transform:uppercase">in the</span></div></div>
+    <div class="row" style="top:740px"><div class="m"><span id="b1" style="font: 900 400px/.82 Inter; letter-spacing:-.06em">GYM</span></div></div>
+    <div class="abs mono" id="b2" style="left:120px; right:120px; top:1230px; text-align:center; color:rgba(255,255,255,.85)">That's where you break them down</div>
+  </section>
+
+  <!-- 3 · paper: THEY GROW WHEN YOU REST -->
+  <section class="sc full" id="s3" style="background:var(--paper); color:var(--ink)">
+    <div class="abs mono" id="c0" style="left:120px; top:250px; color:rgba(0,0,0,.5)">02 — The truth</div>
+    <div class="row" style="top:690px; text-align:left; left:120px"><div class="m"><span class="lg" id="c1">They grow</span></div><div class="m"><span class="lg" id="c2" style="color:rgba(11,11,12,.45)">when you</span></div></div>
+    <div class="abs" style="left:120px; top:935px; width:840px">
+      <div class="m"><span id="c3" style="font: 900 300px/.86 Inter; letter-spacing:-.06em; color:var(--red)">rest.</span></div>
+      <svg class="abs" width="760" height="360" viewBox="0 0 760 360" style="left:-40px; top:-30px; overflow:visible"><ellipse id="ring" cx="330" cy="170" rx="380" ry="165" fill="none" stroke="#0B0B0C" stroke-width="5" pathLength="1" stroke-dasharray="1 1.2" stroke-dashoffset="1.1" transform="rotate(-4 330 170)"/></svg>
+    </div>
+    <div class="abs" id="c4" style="left:120px; top:1340px; width:840px; display:flex; gap:24px">
+      <div class="chipx" style="flex:1; border-top:3px solid var(--ink); padding-top:18px"><div class="mono" style="color:rgba(0,0,0,.5)">Sleep</div><div style="font:800 64px/1.1 Inter; letter-spacing:-.03em"><span class="num" data-v="8">0</span>h</div></div>
+      <div class="chipx" style="flex:1; border-top:3px solid var(--ink); padding-top:18px"><div class="mono" style="color:rgba(0,0,0,.5)">Protein</div><div style="font:800 64px/1.1 Inter; letter-spacing:-.03em"><span class="num" data-v="1.6" data-d="1">0</span>g/kg</div></div>
+      <div class="chipx" style="flex:1; border-top:3px solid var(--red); padding-top:18px"><div class="mono" style="color:var(--red)">Repair</div><div style="font:800 64px/1.1 Inter; letter-spacing:-.03em; color:var(--red)"><span class="num" data-v="48">0</span>h</div></div>
+    </div>
+  </section>
+
+  <!-- 4 · black end -->
+  <section class="sc full" id="s4" style="background:var(--ink); color:#fff">
+    <div class="row" style="top:850px"><div class="m"><span class="lg" id="d1">Train hard.</span></div><div class="m"><span class="lg" id="d2" style="color:var(--red)">Rest harder.</span></div></div>
+    <div class="hair" id="line4" style="left:470px; width:140px; top:1150px; height:3px; color:#fff"></div>
+    <div class="row mono" id="d3" style="top:1190px; color:rgba(255,255,255,.7)">@gainsdom</div>
+  </section>
+
+  </div>
+  <!-- transition shapes -->
+  <div class="abs" id="tbar" style="left:0; top:1149px; width:1080px; height:4px; background:var(--red)"></div>
+  <div id="stripes"></div>
+  <div class="abs" id="tdot" style="left:540px; top:960px; width:40px; height:40px; margin:-20px 0 0 -20px; border-radius:50%; background:var(--ink)"></div>
+  <audio id="snd" class="clip" src="assets/audio/sfx.wav" data-start="0" data-duration="6" data-track-index="1" data-volume="1"></audio>
+</div>
+<script>
+document.fonts.ready.then(() => {
+  const $ = (s) => document.querySelector(s), $$ = (s) => Array.from(document.querySelectorAll(s)), FR = 1 / 30;
+  // 6 horizontal stripes for the red → paper transition
+  let h = ""; for (let i = 0; i < 6; i++) h += `<div class="abs stp" style="left:0; top:${i * 320}px; width:1080px; height:322px; background:var(--paper)"></div>`; $("#stripes").innerHTML = h;
+  const tl = gsap.timeline({ paused: true });
+  const up = (id, t, d = 0.75) => tl.fromTo(id, { yPercent: 110 }, { yPercent: 0, duration: d, ease: "expo.out" }, t);
+  const down = (id, t, d = 0.75) => tl.fromTo(id, { yPercent: -110 }, { yPercent: 0, duration: d, ease: "expo.out" }, t);
+  const outUp = (ids, t) => tl.to(ids, { yPercent: -110, duration: 0.35, ease: "power3.in", stagger: 0.03 }, t);
+
+  gsap.set(".sc", { autoAlpha: 0 }); gsap.set("#s1", { autoAlpha: 1 });
+  gsap.set(["#tbar", "#tdot"], { autoAlpha: 0 }); gsap.set(".stp", { xPercent: -101 });
+  gsap.set(["#lab1", "#lab1b", "#b2", "#c0", "#d3"], { autoAlpha: 0 });
+
+  // camera: slow constant push on every scene
+  tl.fromTo("#cam", { scale: 1.0 }, { scale: 1.04, duration: 6, ease: "none" }, 0);
+
+  // ===== 1 · 0 – 1.55 =====
+  tl.fromTo("#line1", { scaleX: 0, transformOrigin: "50% 50%" }, { scaleX: 1, duration: 0.6, ease: "expo.inOut" }, 0.05);
+  up("#a1", 0.35); up("#a2", 0.45);
+  down("#a3", 0.62);
+  tl.fromTo(["#lab1", "#lab1b"], { autoAlpha: 0, y: -10 }, { autoAlpha: 1, y: 0, duration: 0.5, ease: "expo.out" }, 0.3);
+  // OUT: words leave, the red hairline takes over and opens to a full red screen
+  outUp(["#a1", "#a2"], 1.2); tl.to("#a3", { yPercent: 110, duration: 0.35, ease: "power3.in" }, 1.2);
+  tl.to(["#lab1", "#lab1b"], { autoAlpha: 0, duration: 0.2 }, 1.2);
+  tl.set("#tbar", { autoAlpha: 1 }, 1.5); tl.set("#line1", { autoAlpha: 0 }, 1.5);
+  tl.fromTo("#tbar", { scaleY: 1, y: 0 }, { scaleY: 500, y: 960 - 1151, duration: 0.42, ease: "expo.inOut" }, 1.5);
+  tl.set("#s1", { autoAlpha: 0 }, 1.92); tl.set("#s2", { autoAlpha: 1 }, 1.92); tl.set("#tbar", { autoAlpha: 0 }, 1.92);
+
+  // ===== 2 · 1.92 – 3.2 =====
+  up("#b0", 1.9, 0.6);
+  tl.fromTo("#b1", { yPercent: 100, scaleY: 1.4, transformOrigin: "50% 100%" }, { yPercent: 0, scaleY: 1, duration: 0.8, ease: "expo.out" }, 1.98);
+  tl.fromTo("#b2", { autoAlpha: 0, scaleX: 1.25 }, { autoAlpha: 1, scaleX: 1, duration: 0.7, ease: "expo.out" }, 2.35);
+  // OUT: paper stripes sweep in, alternating directions
+  $$(".stp").forEach((s, i) => tl.fromTo(s, { xPercent: i % 2 ? 101 : -101 }, { xPercent: 0, duration: 0.45, ease: "expo.inOut" }, 2.9 + i * 0.035));
+  tl.set("#s2", { autoAlpha: 0 }, 3.45); tl.set("#s3", { autoAlpha: 1 }, 3.45); tl.set(".stp", { autoAlpha: 0 }, 3.46);
+
+  // ===== 3 · 3.45 – 5.0 =====
+  tl.fromTo("#c0", { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.4 }, 3.45);
+  up("#c1", 3.42); up("#c2", 3.55); up("#c3", 3.7, 0.85);
+  tl.fromTo("#ring", { strokeDashoffset: 1.1 }, { strokeDashoffset: 0, duration: 0.6, ease: "power2.inOut" }, 4.0);
+  tl.fromTo(".chipx", { autoAlpha: 0, y: 30 }, { autoAlpha: 1, y: 0, duration: 0.6, ease: "expo.out", stagger: 0.08 }, 3.9);
+  $$(".num").forEach((n) => { const v = +n.dataset.v, d = +(n.dataset.d || 0), pr = { v: 0 };
+    tl.fromTo(pr, { v: 0 }, { v, duration: 0.8, ease: "power3.out", onUpdate: () => { n.textContent = pr.v.toFixed(d); } }, 3.95); });
+  // OUT: a black dot grows from the centre
+  outUp(["#c1", "#c2", "#c3"], 4.7);
+  tl.set("#tdot", { autoAlpha: 1, scale: 0 }, 4.72);
+  tl.to("#tdot", { scale: 60, duration: 0.45, ease: "expo.in" }, 4.72);
+  tl.set("#s3", { autoAlpha: 0 }, 5.17); tl.set("#s4", { autoAlpha: 1 }, 5.17); tl.set("#tdot", { autoAlpha: 0 }, 5.18);
+
+  // ===== 4 · 5.17 – 6.0 =====
+  up("#d1", 5.15, 0.6); up("#d2", 5.25, 0.6);
+  tl.fromTo("#line4", { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "expo.inOut" }, 5.35);
+  tl.fromTo("#d3", { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: 0.45, ease: "expo.out" }, 5.45);
+
+  tl.set({}, {}, 6);
+  window.__timelines = window.__timelines || {}; window.__timelines["main"] = tl;
+});
+</script>
+</body>
+</html>

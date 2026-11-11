@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+<style>
+  @font-face { font-family: "Inter"; src: url("assets/fonts/Inter-Variable.woff2") format("woff2"); font-weight: 100 900; }
+  @font-face { font-family: "Pinyon"; src: url("assets/fonts/PinyonScript-Regular.woff2") format("woff2"); }
+  :root { --red:#E8262F; --ink:#111113; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; background: #cfcfcf; }
+  #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; font-family: Inter, sans-serif; color: var(--ink);
+    background: radial-gradient(ellipse 75% 55% at 50% 48%, #f7f7f7 0%, #e3e3e3 45%, #b9b9b9 100%); }
+  .full { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+  .abs { position: absolute; }
+  .sc { visibility: hidden; }
+  .b { font: 800 96px/1 Inter; letter-spacing: -.04em; }
+  .s { font: 400 104px/1 Pinyon; letter-spacing: 0; }
+  .tile { position: absolute; border-radius: 26%; overflow: hidden; box-shadow: 0 40px 60px rgba(0,0,0,.22), 0 10px 18px rgba(0,0,0,.12); }
+  .dark { background: linear-gradient(160deg, #2a2a2e, #0e0e10); }
+  .ico svg { width: 100%; height: 100%; stroke: #fff; stroke-width: 1.7; }
+  .m { display: inline-block; overflow: hidden; vertical-align: bottom; padding: .05em .04em .12em; margin: -.05em -.04em -.12em; }
+  .m > span { display: inline-block; }
+  .num { font-variant-numeric: tabular-nums; }
+  .grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(0,0,0,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,.035) 1px, transparent 1px); background-size: 60px 60px; -webkit-mask: radial-gradient(ellipse 60% 45% at 50% 45%, #000, transparent 80%); mask: radial-gradient(ellipse 60% 45% at 50% 45%, #000, transparent 80%); }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="9" data-width="1080" data-height="1920" data-fps="30">
+<div class="full" id="cam">
+  <div class="grid" id="grid"></div>
+  <!-- big black organic shapes framing scene 1 (like the reference's ink shapes) -->
+  <svg class="abs" id="ink" width="1080" height="1920" viewBox="0 0 1080 1920" style="left:0; top:0; overflow:visible">
+    <path id="inkA" d="M820 -60 C 900 120, 1000 180, 1160 150 L 1160 -60 Z M760 -60 C 790 60, 860 120, 960 130 C 860 170, 820 260, 840 380 C 780 260, 700 200, 600 210 C 700 160, 750 80, 760 -60 Z" fill="#111113"/>
+    <path id="inkB" d="M-80 1640 C 60 1600, 160 1680, 200 1820 C 240 1700, 330 1640, 460 1660 C 330 1700, 270 1800, 300 1990 L -80 1990 Z" fill="#111113"/>
+  </svg>
+
+  <!-- 1 · app tile + "went from / to" -->
+  <section class="sc full" id="s1">
+    <div class="abs" style="left:0; right:0; top:330px; text-align:center"><span class="m"><span class="b" id="t1">Gainsdom</span></span></div>
+    <div class="abs" style="left:0; right:0; top:420px; text-align:center"><span class="m"><span class="s" id="t2" style="color:#222">went from</span></span></div>
+    <div class="tile" id="app" style="left:300px; top:620px; width:480px; height:480px; background: linear-gradient(160deg, #ff4a52, #c8141e)">
+      <img src="assets/flex_bw.png" alt="" style="position:absolute; left:-140px; top:70px; width:760px; filter: grayscale(1) contrast(1.15) brightness(.95); mix-blend-mode: multiply" />
+      <div class="abs" style="inset:0; background: linear-gradient(180deg, rgba(255,255,255,.35), transparent 35%)"></div>
+    </div>
+    <div class="abs" style="left:0; right:0; top:1170px; text-align:center"><span class="m"><span id="t3" style="font: 900 150px/1 Inter; letter-spacing:-.05em; color:var(--red)"><span class="num" id="kg">60</span> kg</span></span></div>
+    <div class="abs" style="left:0; right:0; top:1330px; text-align:center"><span class="m"><span class="s" id="t4" style="font-size:88px; color:#333">in one year.</span></span></div>
+  </section>
+
+  <!-- 2 · profile header over the big cut-out athlete -->
+  <section class="sc full" id="s2">
+    <img class="abs" id="hero" src="assets/flex_bw.png" alt="" style="left:-140px; top:780px; width:1360px; filter: grayscale(1) contrast(1.1) drop-shadow(0 40px 60px rgba(0,0,0,.35))" />
+    <div class="abs" id="prof" style="left:120px; top:300px; display:flex; align-items:center; gap:30px">
+      <div style="width:150px; height:150px; border-radius:50%; overflow:hidden; border:5px solid #fff; box-shadow:0 14px 30px rgba(0,0,0,.2); background:#ddd url(assets/flex_bw.png) 49% 4% / 600px auto no-repeat; filter: grayscale(1)"></div>
+      <div>
+        <div style="display:flex; align-items:center; gap:12px; font:800 46px/1 Inter; letter-spacing:-.02em">gainsdom <span style="display:inline-grid; place-items:center; width:34px; height:34px; border-radius:50%; background:#3897f0; color:#fff; font:900 20px/1 Inter">✓</span></div>
+        <div style="display:flex; gap:42px; margin-top:16px">
+          <div><div class="num" style="font:800 40px/1 Inter" id="st1">0</div><div style="font:500 22px/1.4 Inter; color:#555">workouts</div></div>
+          <div><div class="num" style="font:800 40px/1 Inter" id="st2">0</div><div style="font:500 22px/1.4 Inter; color:#555">kg now</div></div>
+          <div><div class="num" style="font:800 40px/1 Inter" id="st3">0</div><div style="font:500 22px/1.4 Inter; color:#555">rest days</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 · 3D dumbbell + counter -->
+  <section class="sc full" id="s3">
+    <div class="abs" id="shad3" style="left:290px; top:1150px; width:500px; height:60px; border-radius:50%; background: radial-gradient(ellipse, rgba(0,0,0,.35), transparent 70%)"></div>
+    <img class="abs" id="db" src="assets/dumbbell.png" alt="" style="left:240px; top:620px; width:600px; filter: drop-shadow(0 30px 40px rgba(0,0,0,.35))" />
+    <div class="abs" style="left:0; right:0; top:1250px; text-align:center"><span class="m"><span class="s" id="u1" style="color:#333">lifted in total</span></span></div>
+    <div class="abs" style="left:0; right:0; top:1360px; text-align:center"><span class="m"><span id="u2" style="font: 900 170px/1 Inter; letter-spacing:-.05em; color:var(--red)"><span class="num" id="ton">0</span>t</span></span></div>
+  </section>
+
+  <!-- 4 · circular avatar + orbit of exercise tiles -->
+  <section class="sc full" id="s4">
+    <div class="abs" id="orbitWrap" style="left:540px; top:960px; width:0; height:0"><div id="orbit" class="abs" style="left:0; top:0"></div></div>
+    <div class="abs" id="ava" style="left:330px; top:750px; width:420px; height:420px; border-radius:50%; overflow:hidden; border:8px solid #fff; box-shadow:0 30px 60px rgba(0,0,0,.25); background:#ddd url(assets/flex_bw.png) 49% 3% / 1500px auto no-repeat; filter: grayscale(1) contrast(1.05)"></div>
+    <div class="abs" id="v1" style="left:330px; top:1215px"><div style="font: 900 96px/1 Inter; letter-spacing:-.04em"><span class="num" id="hrs">0</span></div><div style="font: 600 34px/1.1 Inter; color:#333">hours trained</div></div>
+  </section>
+
+  <!-- 5 · timeline -->
+  <section class="sc full" id="s5">
+    <div class="abs" style="left:0; right:0; top:620px; text-align:center"><span class="m"><span class="s" id="w0" style="font-size:150px">The Plan</span></span></div>
+    <svg class="abs" width="1080" height="400" viewBox="0 0 1080 400" style="left:0; top:830px; overflow:visible"><path id="dash" d="M200 200 L 880 200" stroke="#111" stroke-width="4" stroke-dasharray="10 12" fill="none"/></svg>
+    <div id="tl3"></div>
+  </section>
+</div>
+<div class="full" id="flash" style="background:#fff; pointer-events:none"></div>
+<audio id="snd" class="clip" src="assets/audio/mix.wav" data-start="0" data-duration="9" data-track-index="1" data-volume="1"></audio>
+</div>
+<script>
+const IC = {};
+Promise.all(["dumbbell", "flame", "moon", "beef", "egg", "repeat", "trending-up", "lock", "lock-open", "check"].map((n) => fetch(`assets/icons/${n}.svg`).then((r) => r.text()).then((t) => { IC[n] = t.replace(new RegExp("<" + "!--[\\s\\S]*?--" + ">"), ""); })))
+  .then(() => document.fonts.ready).then(() => {
+  const $ = (s) => document.querySelector(s), $$ = (s) => Array.from(document.querySelectorAll(s)), FR = 1 / 30;
+  // orbit tiles
+  const ORB = ["dumbbell", "flame", "moon", "beef", "repeat", "egg", "trending-up"];
+  $("#orbit").innerHTML = ORB.map((n, k) => { const a = -Math.PI / 2 + k / ORB.length * Math.PI * 2, R = 360, x = Math.cos(a) * R, y = Math.sin(a) * R, red = k === 0;
+    return `<div class="tile orb ${red ? "" : "dark"}" data-a="${a}" style="left:${x - 75}px; top:${y - 75}px; width:150px; height:150px; ${red ? "background:linear-gradient(160deg,#ff4a52,#c8141e)" : ""}; transform: rotate(${(k * 37) % 30 - 15}deg)"><div class="ico" style="position:absolute; inset:34px">${IC[n]}</div></div>`; }).join("");
+  // timeline tiles
+  const TLD = [["WEEK 1", "lock-open", "#f5c542", "Start"], ["WEEK 12", null, null, "Now"], ["WEEK 52", "lock", "#f5c542", "?"]];
+  $("#tl3").innerHTML = TLD.map(([lab, ic, col, sub], k) => { const x = 200 + k * 340, big = k === 1, w = big ? 210 : 150;
+    return `<div class="abs tlx" style="left:${x - w / 2}px; top:${1030 - w / 2}px; width:${w}px">
+      <div style="font:800 26px/1 Inter; text-align:center; margin-bottom:16px; letter-spacing:.02em">${lab}</div>
+      <div class="tile ${big ? "" : "dark"}" style="position:relative; width:${w}px; height:${w}px; ${big ? "background:#111 url(assets/flex_bw.png) 49% 4% / 820px auto no-repeat" : ""}">${ic ? `<div class="ico" style="position:absolute; inset:38px">${IC[ic].replace("<svg", `<svg style="stroke:${col}"`)}</div>` : ""}</div>
+      <div style="font:700 26px/1 Inter; text-align:center; margin-top:16px; color:${big ? "var(--red)" : "#444"}">${sub}</div></div>`; }).join("");
+
+  const tl = gsap.timeline({ paused: true });
+  const up = (id, t, d = 0.7) => tl.fromTo(id, { yPercent: 110 }, { yPercent: 0, duration: d, ease: "expo.out" }, t);
+  const scr = (id, t, d = 0.8) => tl.fromTo(id, { clipPath: "inset(0% 100% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: d, ease: "power2.inOut" }, t);
+  const count = (id, a, b, t, d = 0.9, fmt = (v) => Math.round(v).toLocaleString("en-US")) => { const el = $(id), pr = { v: a }; tl.fromTo(pr, { v: a }, { v: b, duration: d, ease: "power3.out", onUpdate: () => (el.textContent = fmt(pr.v)) }, t); };
+  gsap.set(".sc", { autoAlpha: 0 }); gsap.set("#s1", { autoAlpha: 1 }); gsap.set("#flash", { autoAlpha: 0 });
+
+  // background grid parallax for the whole piece
+  tl.fromTo("#grid", { y: 0 }, { y: -120, duration: 9, ease: "none" }, 0);
+
+  // ===== 1 · 0 – 2.2 =====
+  tl.fromTo("#cam", { scale: 1.08 }, { scale: 1.0, duration: 2.2, ease: "power2.out" }, 0);
+  tl.fromTo("#inkA", { x: 260, y: -200, rotation: 20, svgOrigin: "900 100" }, { x: 0, y: 0, rotation: 0, svgOrigin: "900 100", duration: 1.1, ease: "expo.out" }, 0);
+  tl.fromTo("#inkB", { x: -260, y: 220, rotation: -20, svgOrigin: "150 1800" }, { x: 0, y: 0, rotation: 0, svgOrigin: "150 1800", duration: 1.1, ease: "expo.out" }, 0.05);
+  tl.fromTo("#app", { scale: 0.2, rotation: -18, autoAlpha: 0 }, { scale: 1, rotation: 0, autoAlpha: 1, duration: 0.9, ease: "back.out(1.6)" }, 0.15);
+  tl.fromTo("#app img", { y: 120, scale: 1.1 }, { y: 0, scale: 1, duration: 1.2, ease: "expo.out" }, 0.25);
+  up("#t1", 0.3); scr("#t2", 0.6);
+  up("#t3", 0.95, 0.6); count("#kg", 60, 85, 1.25, 0.8);
+  scr("#t4", 1.5, 0.7);
+  // OUT: camera dives into the app tile → the photo becomes scene 2
+  tl.to("#inkA", { x: 400, y: -300, duration: 0.45, ease: "power3.in" }, 1.95); tl.to("#inkB", { x: -400, y: 300, duration: 0.45, ease: "power3.in" }, 1.95);
+  tl.to(["#t1", "#t2", "#t3", "#t4"], { yPercent: -110, duration: 0.35, ease: "power3.in", stagger: 0.03 }, 1.95);
+  tl.to("#app", { scale: 4.2, y: 260, borderRadius: "0%", duration: 0.5, ease: "power3.in" }, 2.05);
+  tl.set("#s1", { autoAlpha: 0 }, 2.55); tl.set("#s2", { autoAlpha: 1 }, 2.55);
+  tl.fromTo("#flash", { autoAlpha: 0 }, { keyframes: [{ autoAlpha: 0.7, duration: FR }, { autoAlpha: 0, duration: 0.25 }] }, 2.55);
+
+  // ===== 2 · 2.55 – 4.1 =====
+  tl.fromTo("#hero", { scale: 1.25, y: 120 }, { scale: 1, y: 0, duration: 0.9, ease: "expo.out" }, 2.55);
+  tl.to("#hero", { scale: 1.05, y: -20, duration: 0.7, ease: "sine.inOut" }, 3.45);
+  tl.fromTo("#prof", { y: -40, autoAlpha: 0, filter: "blur(8px)" }, { y: 0, autoAlpha: 1, filter: "blur(0px)", duration: 0.6, ease: "expo.out" }, 2.75);
+  count("#st1", 0, 312, 2.9); count("#st2", 0, 85, 2.95); count("#st3", 0, 104, 3.0);
+  // OUT: whip pan left with blur
+  tl.to("#s2", { x: -1080, filter: "blur(14px)", duration: 0.32, ease: "power3.in" }, 3.8);
+  tl.set("#s2", { autoAlpha: 0 }, 4.12); tl.set("#s3", { autoAlpha: 1 }, 4.0);
+  tl.fromTo("#s3", { x: 1080, filter: "blur(14px)" }, { x: 0, filter: "blur(0px)", duration: 0.5, ease: "expo.out" }, 4.0);
+
+  // ===== 3 · 4.0 – 5.6 =====
+  tl.fromTo("#db", { y: -900, rotation: -30 }, { y: 0, rotation: -8, duration: 0.55, ease: "power2.in" }, 4.05);
+  tl.to("#db", { keyframes: [{ y: -40, rotation: -4, duration: 0.18, ease: "power2.out" }, { y: 0, rotation: -6, duration: 0.22, ease: "bounce.out" }] }, 4.6);
+  tl.fromTo("#shad3", { scaleX: 0.3, autoAlpha: 0 }, { scaleX: 1, autoAlpha: 1, duration: 0.55, ease: "power2.in" }, 4.05);
+  tl.fromTo("#cam", { y: 0 }, { keyframes: [{ y: 14, duration: FR }, { y: -10, duration: FR }, { y: 0, duration: 2 * FR }], immediateRender: false }, 4.6);
+  tl.to("#db", { rotation: 4, y: -18, duration: 0.5, ease: "sine.inOut" }, 5.0);
+  scr("#u1", 4.65, 0.7); up("#u2", 4.8, 0.6); count("#ton", 0, 412, 4.85, 0.8);
+  // OUT: everything shrinks into a circle → avatar
+  tl.to(["#u1", "#u2"], { yPercent: -110, duration: 0.3, ease: "power3.in" }, 5.5);
+  tl.to("#db", { scale: 0.2, rotation: 90, autoAlpha: 0, duration: 0.35, ease: "power3.in" }, 5.5);
+  tl.to("#shad3", { autoAlpha: 0, duration: 0.2 }, 5.5);
+  tl.set("#s3", { autoAlpha: 0 }, 5.85); tl.set("#s4", { autoAlpha: 1 }, 5.75);
+
+  // ===== 4 · 5.75 – 7.4 =====
+  tl.fromTo("#ava", { scale: 0, rotation: -30 }, { scale: 1, rotation: 0, duration: 0.7, ease: "back.out(1.6)" }, 5.75);
+  tl.fromTo("#v1", { autoAlpha: 0, x: -30 }, { autoAlpha: 1, x: 0, duration: 0.5, ease: "expo.out" }, 6.0); count("#hrs", 0, 1460, 6.0, 0.8);
+  tl.fromTo("#cam", { scale: 1.0 }, { scale: 1.06, duration: 1.6, ease: "sine.inOut", immediateRender: false }, 5.75);
+  // the stat drops away as the tiles fly in and orbit
+  tl.to("#v1", { autoAlpha: 0, y: 30, duration: 0.3, ease: "power2.in" }, 6.75);
+  $$(".orb").forEach((o, k) => { const a = +o.dataset.a;
+    tl.fromTo(o, { x: Math.cos(a) * 900, y: Math.sin(a) * 900, scale: 0.4, autoAlpha: 0 }, { x: 0, y: 0, scale: 1, autoAlpha: 1, duration: 0.7, ease: "expo.out" }, 6.6 + k * 0.05); });
+  tl.fromTo("#orbit", { rotation: 0 }, { rotation: 60, duration: 1.3, ease: "power1.inOut" }, 6.6);
+  // OUT: the orbit flies up and out, camera tilts up into the plan
+  tl.to(["#ava", "#orbitWrap"], { y: -1500, duration: 0.45, ease: "power3.in" }, 7.45);
+  tl.set("#s4", { autoAlpha: 0 }, 7.9); tl.set("#s5", { autoAlpha: 1 }, 7.6);
+
+  // ===== 5 · 7.6 – 9.0 =====
+  tl.fromTo("#s5", { y: 900 }, { y: 0, duration: 0.6, ease: "expo.out" }, 7.6);
+  scr("#w0", 7.75, 0.8);
+  tl.fromTo("#dash", { strokeDashoffset: 600 }, { strokeDashoffset: 0, duration: 0.7, ease: "power2.inOut" }, 7.9);
+  gsap.set("#dash", { attr: { "stroke-dasharray": "10 12" } });
+  $$(".tlx").forEach((x, k) => tl.fromTo(x, { scale: 0, autoAlpha: 0 }, { scale: 1.4, autoAlpha: 1, duration: 0.55, ease: "back.out(1.8)" }, 7.95 + k * 0.15));
+  tl.fromTo("#cam", { scale: 1.06 }, { scale: 1.0, duration: 1.4, ease: "sine.out", immediateRender: false }, 7.6);
+  tl.set({}, {}, 9);
+  window.__timelines = window.__timelines || {}; window.__timelines["main"] = tl;
+});
+</script>
+</body>
+</html>
