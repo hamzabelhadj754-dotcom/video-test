@@ -26,6 +26,8 @@
   #grain{position:absolute;inset:0;width:100%;height:100%;mix-blend-mode:overlay;opacity:.16;pointer-events:none}
   #vignette{position:absolute;inset:0;pointer-events:none;
     background:radial-gradient(120% 95% at 50% 46%, rgba(0,0,0,0) 55%, rgba(60,40,20,.13) 100%);mix-blend-mode:multiply}
+  #light{position:absolute;inset:0;pointer-events:none;mix-blend-mode:soft-light;
+    background:radial-gradient(75% 60% at 18% 8%, rgba(255,250,236,.85), rgba(255,250,236,0) 70%), radial-gradient(80% 70% at 95% 105%, rgba(40,25,10,.35), rgba(40,25,10,0) 70%)}
   #warm{position:absolute;inset:0;pointer-events:none;background:#ffb070;mix-blend-mode:soft-light;opacity:.07}
 </style>
 </head>
@@ -40,12 +42,25 @@
         <feColorMatrix type="matrix" values="0 0 0 0 0.2  0 0 0 0 0.14  0 0 0 0 0.08  0 0 0 .14 0"/>
         <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
       </filter>
-      <radialGradient id="emberWash" cx="50%" cy="58%" r="70%">
-        <stop offset="0" stop-color="#FF6A3D" stop-opacity=".95"/>
-        <stop offset=".45" stop-color="#FF9A5C" stop-opacity=".55"/>
-        <stop offset="1" stop-color="#F3F0E8" stop-opacity="0"/>
+      <radialGradient id="emberWash" cx="50%" cy="52%" r="85%">
+        <stop offset="0" stop-color="#FF7A45" stop-opacity=".62"/>
+        <stop offset=".42" stop-color="#FFAE78" stop-opacity=".42"/>
+        <stop offset="1" stop-color="#EBCFAE" stop-opacity=".38"/>
       </radialGradient>
-      <clipPath id="frameClip"><rect x="5312" y="342" width="576" height="676"/></clipPath>
+      <clipPath id="frameClip"><rect x="5572" y="342" width="576" height="676"/></clipPath>
+      <filter id="cast" filterUnits="userSpaceOnUse" x="-2000" y="-4000" width="12000" height="10000" color-interpolation-filters="sRGB">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="5"/>
+        <feOffset dx="4" dy="10" result="b"/>
+        <feColorMatrix in="b" type="matrix" values="0 0 0 0 0.16  0 0 0 0 0.11  0 0 0 0 0.06  0 0 0 .26 0" result="sh"/>
+        <feGaussianBlur in="SourceAlpha" stdDeviation="1.4"/>
+        <feOffset dx="1" dy="2.5"/>
+        <feColorMatrix type="matrix" values="0 0 0 0 0.1  0 0 0 0 0.07  0 0 0 0 0.04  0 0 0 .22 0" result="contact"/>
+        <feMerge><feMergeNode in="sh"/><feMergeNode in="contact"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+      <radialGradient id="bead" cx="38%" cy="32%" r="75%">
+        <stop offset="0" stop-color="#EAF2FF"/><stop offset=".18" stop-color="#7FB1FF"/>
+        <stop offset=".55" stop-color="#0866FF"/><stop offset="1" stop-color="#0340A8"/>
+      </radialGradient>
       <clipPath id="logoClip"><circle cx="0" cy="0" r="110"/></clipPath>
     </defs>
     <!-- BG layer (parallax .3) -->
@@ -60,6 +75,7 @@
   </svg>
   <canvas id="grain" width="540" height="675"></canvas>
   <div id="warm"></div>
+  <div id="light"></div>
   <div id="vignette"></div>
 </div>
 <script src="film.js"></script>
