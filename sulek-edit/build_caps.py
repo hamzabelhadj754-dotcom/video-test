@@ -17,6 +17,33 @@ for i, w in enumerate(W):
     caps.append({"lead": " ".join(x["s"] for x in lead), "leadAt": round(lead[0]["t"], 3) if lead else None,
                  "main": w["s"], "at": round(w["t"], 3), "end": round(end, 3), "acc": w["s"] in ACC})
     lead = []
+# no caption may still be on screen when the next one starts
+for i in range(len(caps) - 1):
+    nx = caps[i + 1]["leadAt"] if caps[i + 1]["leadAt"] is not None else caps[i + 1]["at"]
+    caps[i]["end"] = round(min(caps[i]["end"], nx - 1 / 30), 3)
+
+# placement from the athlete matte: behind the body only where the word stays readable
+import subprocess
+MW, MH = 270, 480
+raw = subprocess.run(["ffmpeg", "-loglevel", "error", "-c:v", "libvpx-vp9", "-i", P("assets/subject.webm"), "-vf", f"alphaextract,scale={MW}:{MH},fps=30",
+                      "-f", "rawvideo", "-pix_fmt", "gray", "-"], capture_output=True, check=True).stdout
+mat = np.frombuffer(raw, np.uint8).reshape(-1, MH, MW).astype(np.float32) / 255
+def cover(t0, t1, top, size, n):
+    w = min(960, n * 0.5 * size); h = 0.86 * size; x0, x1 = (540 - w / 2) / 4, (540 + w / 2) / 4; y0, y1 = top / 4, (top + h) / 4
+    fr = [min(len(mat) - 1, int(t * 30)) for t in np.linspace(t0, max(t0, t1 - 0.04), 4)]
+    xs = np.linspace(x0, x1, 5)   # the worst quarter of the word counts, so no letters disappear
+    return max(float(mat[f, int(y0):int(y1), int(xs[k]):int(xs[k + 1])].mean()) * (0.5 if k in (0, 3) else 1) + 0.5 * float(mat[f, int(y0):int(y1), int(x0):int(x1)].mean()) for f in fr for k in range(4))
+for c in caps:
+    n = len(c["main"]); size = min(360 if c["acc"] else 300, int(960 / max(1, n * 0.5)))
+    c["size"] = size; best = None
+    for top in (520, 300, 1180):
+        cv = cover(c["at"], c["end"], top, size, n)
+        if cv <= 0.38: best = (top, "back", round(cv, 2)); break
+    if best is None:   # in front, where it hides the least of the athlete
+        best = min(((top, "front", round(cover(c["at"], c["end"], top, size, n), 2)) for top in (300, 1180, 1400)), key=lambda x: x[2])
+        if best[2] > 0.6: best = (1180, "front", best[2])   # close-ups: keep the face clear, sit on the chest
+    c["top"], c["layer"], c["cov"] = best
+    print(f'{c["main"]:10s} top {best[0]:5d} {best[1]:5s} covered {best[2]}')
 json.dump(caps, open(P("assets/caps.json"), "w"), indent=1)
 
 voice, sr = sf.read(P("audio/speech_v2.wav")); assert sr == SR
