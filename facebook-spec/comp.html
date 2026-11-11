@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Your weird has a group</title>
+<style>
+@font-face{font-family:"Bricolage";src:url(assets/fonts/bricolage.woff2) format("woff2");font-weight:200 800;font-stretch:75% 100%;font-display:block}
+@font-face{font-family:"ISans";src:url(assets/fonts/instrument-sans.woff2) format("woff2");font-weight:400 700;font-stretch:75% 100%;font-display:block}
+@font-face{font-family:"ISerif";src:url(assets/fonts/instrument-serif.woff2) format("woff2");font-display:block}
+@font-face{font-family:"ISerif";src:url(assets/fonts/instrument-serif-italic.woff2) format("woff2");font-style:italic;font-display:block}
+:root{
+  --fb:#0866FF;--ink:#0B0C10;--bone:#F4F1EA;--flour:#EDE5D6;--crust:#8A5A2B;--night:#0C1020;--lamp:#FFC46B;
+  --mint:#BFDCCB;--moss:#22372A;--plum:#170D2B;--pink:#FF8FB8;
+  --m:84px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:1350px;overflow:hidden;background:var(--ink)}
+#stage{position:absolute;inset:0;overflow:hidden}
+.scene{position:absolute;inset:0;overflow:hidden;visibility:hidden}
+.cam{position:absolute;inset:0;transform-origin:50% 50%}
+.label{position:absolute;left:var(--m);top:96px;font-family:"ISans";font-weight:500;font-size:34px;letter-spacing:-0.01em;z-index:6}
+.meta{position:absolute;bottom:92px;left:var(--m);font-family:"ISans";font-weight:500;font-size:22px;letter-spacing:.08em;text-transform:uppercase;z-index:6}
+.disp{font-family:"Bricolage";font-weight:800;font-stretch:75%;font-variation-settings:"opsz" 96;letter-spacing:-0.012em;line-height:.84}
+.line{display:block;overflow:hidden;padding:.07em 0 .02em;margin:-.07em 0 -.02em}
+.ch{display:inline-block;will-change:transform}
+.grain{position:absolute;left:-120px;top:-120px;pointer-events:none;mix-blend-mode:overlay;opacity:.2;z-index:50}
+.vignette{position:absolute;inset:0;pointer-events:none;z-index:49;background:radial-gradient(120% 90% at 50% 45%,transparent 55%,rgba(0,0,0,.28) 100%)}
+
+/* bubbles */
+.float{position:absolute;z-index:8;padding:30px 40px;border-radius:44px;font-family:"ISans";font-weight:600;font-size:46px;letter-spacing:-0.015em;line-height:1.1;white-space:nowrap;
+  box-shadow:0 40px 80px -20px rgba(0,0,0,.35),0 8px 20px rgba(0,0,0,.12)}
+.float.you{background:var(--fb);color:#fff;border-bottom-right-radius:12px}
+.float.them{background:#FBF9F4;color:var(--ink);border-bottom-left-radius:12px}
+.who{font-family:"ISans";font-weight:600;font-size:22px;letter-spacing:.02em}
+
+/* phone */
+.phoneWrap{position:absolute;z-index:5}
+.phone{position:relative;width:520px;height:1060px;border-radius:84px;background:#111318;padding:18px;box-shadow:inset 0 0 0 2px rgba(255,255,255,.08)}
+.phone::after{content:"";position:absolute;inset:0;border-radius:84px;pointer-events:none;background:linear-gradient(115deg,rgba(255,255,255,.18) 0%,rgba(255,255,255,0) 28%,rgba(255,255,255,0) 70%,rgba(255,255,255,.06) 100%)}
+.screen{position:relative;width:100%;height:100%;border-radius:68px;overflow:hidden;background:#FBF9F4}
+.island{position:absolute;top:22px;left:50%;width:132px;height:38px;margin-left:-66px;border-radius:20px;background:#0A0B0E;z-index:3}
+.shadow{position:absolute;border-radius:50%;filter:blur(40px)}
+.chathead{position:absolute;left:0;right:0;top:0;height:200px;padding:96px 34px 0;display:flex;align-items:center;gap:16px;border-bottom:1px solid rgba(11,12,16,.08);background:#FBF9F4;z-index:2}
+.stack{display:flex}
+.av{width:52px;height:52px;border-radius:50%;border:3px solid #FBF9F4;margin-left:-14px;display:grid;place-items:center;font-family:"ISans";font-weight:600;font-size:21px;color:#fff}
+.stack .av:first-child{margin-left:0}
+.gname{font-family:"ISans";font-weight:600;font-size:28px;color:var(--ink);letter-spacing:-0.01em;line-height:1.1}
+.gsub{font-family:"ISans";font-weight:500;font-size:19px;color:rgba(11,12,16,.5);margin-top:4px}
+.thread{position:absolute;left:28px;right:28px;bottom:120px;display:flex;flex-direction:column;gap:12px}
+.msg{display:flex;align-items:flex-end;gap:12px}
+.msg.me{justify-content:flex-end}
+.msg .av{margin:0;width:44px;height:44px;font-size:18px;border:none;flex:none}
+.b{max-width:340px;padding:18px 24px;border-radius:30px;font-family:"ISans";font-weight:500;font-size:28px;line-height:1.22;letter-spacing:-0.01em}
+.them .b{background:#ECE7DD;color:var(--ink);border-bottom-left-radius:10px}
+.me .b{background:var(--fb);color:#fff;border-bottom-right-radius:10px}
+.thread .who{font-size:18px;color:rgba(11,12,16,.45);margin:0 0 -4px 58px;letter-spacing:0}
+.typing{display:flex;gap:7px;padding:22px 26px;background:#ECE7DD;border-radius:30px;border-bottom-left-radius:10px;width:max-content}
+.typing i{width:11px;height:11px;border-radius:50%;background:rgba(11,12,16,.35)}
+.composer{position:absolute;left:28px;right:28px;bottom:34px;height:64px;border-radius:32px;background:#F0ECE4;font-family:"ISans";font-size:22px;color:rgba(11,12,16,.35);display:flex;align-items:center;padding:0 26px;z-index:2}
+.tmask{position:absolute;left:0;right:0;bottom:0;height:120px;background:#FBF9F4;z-index:1}
+
+/* S1 feed */
+#s1{background:#E6E0D5}
+#feed{position:absolute;left:100px;top:0;width:880px;display:flex;flex-direction:column;gap:28px}
+.card{background:#FBF9F4;border-radius:36px;padding:34px;box-shadow:0 20px 40px -24px rgba(0,0,0,.25)}
+.card .hd{display:flex;gap:18px;align-items:center}
+.card .ca{width:64px;height:64px;border-radius:50%}
+.card .bar{height:16px;border-radius:8px;background:#DDD6CA}
+.card .img{margin-top:26px;border-radius:24px}
+.card .ln{margin-top:22px}
+#land{background:var(--flour);padding:44px}
+#zoom .lc{position:absolute;left:44px;top:44px;right:44px}
+#zoom{position:absolute;z-index:30;background:var(--flour);visibility:hidden}
+
+/* S2 sourdough */
+#s2{background:var(--flour)}
+#s2 .warm{position:absolute;inset:-60px;background:radial-gradient(80% 60% at 75% 30%,#F8F1E3 0%,transparent 70%),radial-gradient(70% 50% at 0% 100%,#DDCEB4 0%,transparent 70%)}
+#s2 .label{color:rgba(11,12,16,.62)}
+#s2 .big{position:absolute;left:66px;top:236px;font-size:262px;color:var(--ink);z-index:2}
+#s2 .phoneWrap{left:560px;top:330px}
+#s2 .phone{transform:perspective(2400px) rotateY(-18deg) rotateX(6deg) rotateZ(5deg) scale(.86);transform-origin:50% 0}
+#s2 .shadow{left:520px;top:1240px;width:560px;height:110px;background:rgba(80,50,20,.35);z-index:4}
+#s2 .meta{color:rgba(11,12,16,.5)}
+
+/* S3 vespas */
+#s3{background:var(--mint)}
+#s3 .speed{position:absolute;inset:-40px -400px;background:repeating-linear-gradient(to bottom,transparent 0 46px,rgba(11,12,16,.07) 46px 48px)}
+#s3 .dash{position:absolute;left:-400px;right:-400px;top:1180px;height:8px;background:repeating-linear-gradient(to right,rgba(11,12,16,.25) 0 120px,transparent 120px 220px)}
+#s3 .label{color:rgba(11,12,16,.62)}
+#s3 .big{position:absolute;left:66px;top:236px;font-size:262px;color:var(--ink)}
+
+/* S4 birds */
+#s4{background:linear-gradient(to bottom,#F7CDB4 0%,#F3DCCD 55%,#DCE3EE 100%)}
+#s4 .sun{position:absolute;left:520px;top:640px;width:440px;height:440px;border-radius:50%;background:radial-gradient(circle at 50% 45%,#FFB98F,#F7956A)}
+#s4 .horizon{position:absolute;left:0;right:0;top:1000px;bottom:0;background:linear-gradient(to bottom,#E9D9CF,#DCE3EE)}
+#s4 .label{color:rgba(11,12,16,.62)}
+#s4 .big{position:absolute;left:66px;top:236px;font-size:262px;color:var(--ink);z-index:2}
+
+/* S5 chess */
+#s5{background:var(--night)}
+#s5 .floor{position:absolute;left:50%;top:760px;width:2400px;height:2400px;margin-left:-1200px;transform:perspective(900px) rotateX(68deg);transform-origin:50% 0;overflow:hidden;
+  -webkit-mask-image:linear-gradient(to bottom,transparent,#000 8%,#000 55%,transparent 100%)}
+#s5 .board{position:absolute;left:0;top:-720px;width:2400px;height:3300px;background:conic-gradient(#161C36 25%,#0D1226 0 50%,#161C36 0 75%,#0D1226 0) 0 0/180px 180px}
+#s5 .lit{position:absolute;left:1260px;top:900px;width:180px;height:180px;background:var(--lamp);opacity:0;box-shadow:0 0 160px 60px rgba(255,196,107,.28)}
+#s5 .label{color:rgba(244,241,234,.6)}
+#s5 .big{position:absolute;left:66px;top:170px;font-size:250px;color:var(--bone);z-index:2}
+#s5 .big .am{color:var(--lamp)}
+#s5 .phoneWrap{left:430px;top:420px}
+#s5 .phone{transform:perspective(2400px) rotateY(16deg) rotateX(10deg) rotateZ(-6deg);background:#08090C}
+#s5 .screen{background:radial-gradient(120% 70% at 50% 0%,#24305E,#0B0F22 70%)}
+#s5 .lock{position:absolute;left:0;right:0;top:120px;text-align:center;color:#F4F1EA}
+#s5 .lock .t{font-family:"Bricolage";font-weight:600;font-stretch:90%;font-size:150px;letter-spacing:-0.02em;line-height:1}
+#s5 .lock .d{font-family:"ISans";font-weight:500;font-size:24px;opacity:.7;margin-top:8px}
+#s5 .notes{position:absolute;left:24px;right:24px;top:400px;display:flex;flex-direction:column;gap:12px}
+.note{background:rgba(244,241,234,.13);border-radius:30px;padding:20px 22px;display:flex;gap:16px;align-items:flex-start;color:#F4F1EA}
+.note .av{margin:0;border:none;width:52px;height:52px;flex:none}
+.note .h{font-family:"ISans";font-weight:600;font-size:22px;display:flex;justify-content:space-between;width:100%}
+.note .h span{opacity:.5;font-weight:500}
+.note .m{font-family:"ISans";font-weight:500;font-size:26px;line-height:1.25;margin-top:2px;opacity:.92}
+.note .col{flex:1}
+#s5 .shadow{left:420px;top:1290px;width:560px;height:80px;background:rgba(0,0,0,.6);z-index:4}
+#s5 .meta{color:rgba(244,241,234,.45)}
+
+/* S6 terrarium + karaoke */
+#s6{background:var(--moss)}
+#s6 .jar{position:absolute;left:560px;top:700px;width:480px;height:480px;border-radius:50%;border:3px solid rgba(244,241,234,.32);
+  background:radial-gradient(60% 30% at 50% 92%,#5E8F5A 0%,#3E6B3F 60%,transparent 61%),radial-gradient(circle at 30% 25%,rgba(255,255,255,.14),transparent 30%)}
+#s6 .label{color:rgba(244,241,234,.6)}
+#s6 .big{position:absolute;left:66px;top:236px;font-size:200px;color:var(--bone)}
+#s7{background:var(--plum)}
+#s7 .label{color:rgba(244,241,234,.6)}
+#s7 .big{position:absolute;left:66px;top:236px;font-size:262px;color:rgba(255,143,184,.26)}
+#s7 .fill{position:absolute;left:66px;top:236px;font-size:262px;color:var(--pink);clip-path:inset(0 100% 0 0)}
+#s7 .spot{position:absolute;left:-200px;top:-300px;width:1100px;height:1100px;background:radial-gradient(closest-side,rgba(255,143,184,.18),transparent)}
+#blue{position:absolute;z-index:30;background:var(--fb);visibility:hidden}
+
+/* S8 end */
+#s8{background:var(--fb)}
+#s8 .light{position:absolute;inset:0;background:radial-gradient(90% 70% at 20% 10%,rgba(255,255,255,.16),transparent 60%),radial-gradient(80% 60% at 100% 100%,rgba(0,20,90,.35),transparent 70%)}
+#s8 .cloud .float{box-shadow:0 30px 60px -20px rgba(0,20,80,.45)}
+#s8 .word{position:absolute;left:78px;top:640px;font-size:190px;line-height:.88;letter-spacing:-0.01em;color:#FBFAF7;z-index:9}
+#s8 .word em{font-family:"ISerif";font-style:italic;font-weight:400;letter-spacing:-0.02em;font-size:212px}
+#s8 .w{display:inline-block}
+#s8 .logo{position:absolute;left:var(--m);bottom:96px;width:84px;height:84px;z-index:9}
+#s8 .cta{position:absolute;left:190px;bottom:118px;font-family:"ISans";font-weight:600;font-size:34px;color:#FBFAF7;z-index:9}
+#s8 .spec{position:absolute;right:var(--m);bottom:104px;font-family:"ISans";font-weight:500;font-size:18px;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.55);text-align:right;line-height:1.5;z-index:9}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute">
+  <filter id="vblur" x="-5%" y="-20%" width="110%" height="140%"><feGaussianBlur id="vb" stdDeviation="0 0"/></filter>
+  <filter id="hblur2" x="-30%" y="-5%" width="160%" height="110%"><feGaussianBlur id="hb2" stdDeviation="0 0"/></filter>
+  <filter id="hblur3" x="-30%" y="-5%" width="160%" height="110%"><feGaussianBlur id="hb3" stdDeviation="0 0"/></filter>
+</svg>
+<div id="stage">
+
+<!-- S1 FEED -->
+<section class="scene" id="s1"><div class="cam"><div id="feed" style="filter:url(#vblur)"></div></div></section>
+<div id="zoom"></div>
+
+<!-- S2 SOURDOUGH -->
+<section class="scene" id="s2"><div class="cam" style="filter:url(#hblur2)">
+  <div class="warm"></div>
+  <canvas id="dust" width="1200" height="1470" style="position:absolute;left:-60px;top:-60px"></canvas>
+  <div class="label">There’s a group for</div>
+  <div class="big disp" data-split><span class="line">SOUR</span><span class="line">DOUGH.</span></div>
+  <div class="shadow"></div>
+  <div class="phoneWrap"><div class="phone"><div class="screen">
+    <div class="island"></div>
+    <div class="chathead">
+      <div class="stack"><div class="av" style="background:#C77D3A">M</div><div class="av" style="background:#6E8B5A">T</div><div class="av" style="background:#B85C5C">A</div></div>
+      <div><div class="gname">Starter Club</div><div class="gsub">Maya, Theo, Ana + you</div></div>
+    </div>
+    <div class="thread" id="t2">
+      <div class="who" data-g="0">Maya</div>
+      <div class="msg them" data-g="0"><div class="av" style="background:#C77D3A">M</div><div class="b">ok weird question</div></div>
+      <div class="msg them" data-g="1"><div class="av" style="visibility:hidden"></div><div class="b">does anyone else name their starter</div></div>
+      <div class="msg me" data-g="2"><div class="b" id="meb">Doughlores. She’s 4.</div></div>
+      <div class="who" data-g="3">Theo</div>
+      <div class="msg them" data-g="3"><div class="av" style="background:#6E8B5A">T</div><div class="b">mine’s Bread Pitt</div></div>
+      <div class="msg them" data-g="4"><div class="av" style="background:#B85C5C">A</div><div class="typing"><i></i><i></i><i></i></div></div>
+    </div>
+    <div class="tmask"></div>
+    <div class="composer">Message</div>
+  </div></div></div>
+  <div class="float you" id="lift2" style="left:84px;top:880px">Doughlores. She’s 4.</div>
+  <div class="meta">Day 4 · still rising</div>
+</div></section>
+
+<!-- S3 VESPAS -->
+<section class="scene" id="s3"><div class="cam" style="filter:url(#hblur3)">
+  <div class="speed"></div><div class="dash"></div>
+  <div class="label">There’s a group for</div>
+  <div class="big disp" data-split><span class="line">VINTAGE</span><span class="line">VESPAS.</span></div>
+  <div class="who" id="w3" style="position:absolute;left:110px;top:792px;color:rgba(11,12,16,.55)">Rosa</div>
+  <div class="float them" id="b3a" style="left:84px;top:830px">found a ’63 in a barn</div>
+  <div class="float you" id="b3b" style="right:84px;top:980px">send pics. now.</div>
+</div></section>
+
+<!-- S4 BIRDS -->
+<section class="scene" id="s4"><div class="cam">
+  <div class="sun"></div><div class="horizon"></div>
+  <div class="label">There’s a group for</div>
+  <div class="big disp" data-split><span class="line">BIRDS</span><span class="line">AT 5AM.</span></div>
+  <div class="who" id="w4" style="position:absolute;left:110px;top:1032px;color:rgba(11,12,16,.55);z-index:8">Kofi</div>
+  <div class="float them" id="b4a" style="left:84px;top:1070px">was that a kestrel??</div>
+  <div class="float you" id="b4b" style="right:84px;top:1190px">it was a kestrel.</div>
+</div></section>
+
+<!-- S5 CHESS -->
+<section class="scene" id="s5"><div class="cam">
+  <div class="floor"><div class="board"><div class="lit"></div></div></div>
+  <div class="label">There’s a group for</div>
+  <div class="big disp" data-split><span class="line"><span class="am">3AM</span> CHESS.</span></div>
+  <div class="shadow"></div>
+  <div class="phoneWrap"><div class="phone"><div class="screen">
+    <div class="island"></div>
+    <div class="lock"><div class="t">3:07</div><div class="d">Thursday</div></div>
+    <div class="notes" id="n5">
+      <div class="note"><div class="av" style="background:#8A5AB8">P</div><div class="col"><div class="h">Night Owl Chess <span>now</span></div><div class="m">Priya: rematch at 4?</div></div></div>
+      <div class="note"><div class="av" style="background:#D69A3A">J</div><div class="col"><div class="h">Night Owl Chess <span>now</span></div><div class="m">Jun: bold. Nf3</div></div></div>
+      <div class="note"><div class="av" style="background:#5A6FD6">S</div><div class="col"><div class="h">Night Owl Chess <span>now</span></div><div class="m">Sam: you awake? e4</div></div></div>
+    </div>
+  </div></div></div>
+  <div class="float you" id="b5" style="left:84px;top:1010px">e5. obviously.</div>
+  <div class="meta">Your move</div>
+</div></section>
+
+<!-- S6 TERRARIUMS -->
+<section class="scene" id="s6"><div class="cam">
+  <div class="jar"></div>
+  <div class="label">There’s a group for</div>
+  <div class="big disp" data-split="grow"><span class="line">TINY</span><span class="line">TERRARIUMS.</span></div>
+</div></section>
+
+<!-- S7 KARAOKE -->
+<section class="scene" id="s7"><div class="cam">
+  <div class="spot"></div>
+  <div class="label">There’s a group for</div>
+  <div class="big disp"><span class="line">BAD</span><span class="line">KARAOKE.</span></div>
+  <div class="fill disp"><span class="line">BAD</span><span class="line">KARAOKE.</span></div>
+  <div class="float you" id="b7" style="left:84px;top:960px">duet?</div>
+</div></section>
+<div id="blue"></div>
+
+<!-- S8 END -->
+<section class="scene" id="s8"><div class="cam">
+  <div class="light"></div>
+  <div class="cloud">
+    <div class="float them c" style="left:560px;top:110px;color:var(--fb);font-size:34px;padding:22px 30px" data-r="4" data-d="1">Doughlores. She’s 4.</div>
+    <div class="float c" style="left:90px;top:200px;background:var(--lamp);color:var(--ink);font-size:28px;padding:18px 26px;filter:blur(2px);opacity:.85" data-r="-5" data-d="2.2">you awake? e4</div>
+    <div class="float c" style="left:640px;top:330px;background:#C9E4D6;color:var(--ink);font-size:24px;padding:16px 22px;filter:blur(3px);opacity:.7" data-r="-3" data-d="3">found a ’63 in a barn</div>
+    <div class="float them c" style="left:150px;top:410px;font-size:30px;padding:20px 28px" data-r="2" data-d="1.4">was that a kestrel??</div>
+    <div class="float c" style="left:520px;top:500px;background:#F2C9D8;color:var(--ink);font-size:26px;padding:16px 24px;filter:blur(1.5px);opacity:.85" data-r="6" data-d="2.6">duet?</div>
+  </div>
+  <div class="word disp"><span class="line"><span class="w">Your</span> <em class="w">weird</em></span><span class="line"><span class="w">has</span> <span class="w">a</span> <span class="w">group.</span></span></div>
+  <img class="logo" src="assets/fb_logo_white.png" alt="">
+  <div class="cta">Find yours.</div>
+  <div class="spec">Spec ad · not affiliated<br>with Meta Platforms, Inc.</div>
+</div></section>
+
+<div class="vignette"></div>
+<canvas class="grain" id="grain" width="1320" height="1590"></canvas>
+</div>
+
+<script src="node_modules/gsap/dist/gsap.min.js"></script>
+<script src="node_modules/gsap/dist/CustomEase.min.js"></script>
+<script>
+gsap.registerPlugin(CustomEase);
+CustomEase.create("eOut","M0,0 C0.16,1 0.3,1 1,1");
+CustomEase.create("eIn","M0,0 C0.64,0 0.78,0 1,1");
+CustomEase.create("cam","M0,0 C0.65,0 0.35,1 1,1");
+CustomEase.create("zoom","M0,0 C0.7,0 0.15,1 1,1");
+const pop="back.out(1.7)";
+
+function rng(s){return()=>{s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+(function(){const c=grain,x=c.getContext('2d'),r=rng(11),img=x.createImageData(c.width,c.height);
+  for(let i=0;i<img.data.length;i+=4){const v=r()*255;img.data[i]=img.data[i+1]=img.data[i+2]=v;img.data[i+3]=255}x.putImageData(img,0,0)})();
+(function(){const x=dust.getContext('2d'),r=rng(3);
+  for(let i=0;i<1000;i++){x.fillStyle=`rgba(255,255,255,${.25+r()*.5})`;x.beginPath();x.arc(r()*1200,r()*1470,r()*2.2+.3,0,7);x.fill()}
+  for(let i=0;i<300;i++){x.fillStyle=`rgba(138,90,43,${.08+r()*.18})`;x.beginPath();x.arc(r()*1200,r()*1470,r()*1.4+.3,0,7);x.fill()}})();
+
+// feed cards (abstract, not real app UI)
+(function(){const r=rng(5);const cols=['#CFE0D3','#F2D2BF','#1C2340','#D9CDE8','#C9D8EE','#E8D9B8','#2B3D30','#F2C9D8','#DCD3C3','#BFD3E6','#E9C9B0','#CFE0D3'];
+  for(let i=0;i<12;i++){const c=document.createElement('div');c.className='card';
+    const ih=200+Math.floor(r()*220);
+    c.innerHTML=`<div class="hd"><div class="ca" style="background:${['#C77D3A','#6E8B5A','#5A6FD6','#B85C5C','#8A5AB8','#D69A3A'][i%6]}"></div><div><div class="bar" style="width:${160+r()*120|0}px"></div><div class="bar" style="width:${90+r()*60|0}px;margin-top:12px;opacity:.6"></div></div></div>`+
+      `<div class="bar ln" style="width:${70+r()*25|0}%"></div><div class="bar" style="width:${40+r()*30|0}%;margin-top:12px"></div>`+
+      `<div class="img" style="height:${ih}px;background:${cols[i]}"></div>`;
+    if(i===9){c.id='land';c.innerHTML=`<div class="lc"><div class="stack"><div class="av" style="background:#C77D3A;border-color:#EDE5D6">M</div><div class="av" style="background:#6E8B5A;border-color:#EDE5D6">T</div><div class="av" style="background:#B85C5C;border-color:#EDE5D6">A</div></div><div class="gname" style="font-size:34px;margin-top:22px">Starter Club</div><div style="font-family:ISans;font-weight:500;font-size:40px;line-height:1.2;color:#0B0C10;margin-top:150px;letter-spacing:-0.01em">Maya: ok weird question</div><div style="font-family:ISans;font-weight:500;font-size:24px;color:rgba(11,12,16,.5);margin-top:10px">3 new messages</div></div>`}
+    feed.appendChild(c)}})();
+
+// split display lines into letters
+document.querySelectorAll('[data-split]').forEach(el=>{
+  el.querySelectorAll('.line').forEach(l=>{
+    const walk=n=>{[...n.childNodes].forEach(k=>{
+      if(k.nodeType===3){const f=document.createDocumentFragment();[...k.textContent].forEach(ch=>{const s=document.createElement('span');s.className='ch';s.textContent=ch===' '?' ':ch;f.appendChild(s)});k.replaceWith(f)}
+      else walk(k)})};walk(l)})});
+
+const tl=gsap.timeline({paused:true});
+const show=(id,t)=>tl.set('#'+id,{visibility:'visible'},t);
+const hide=(id,t)=>tl.set('#'+id,{visibility:'hidden'},t);
+const reveal=(sel,t,{dur=.7,st=.035,grow=false}={})=>{
+  const chs=document.querySelectorAll(sel+' .ch');
+  if(grow) tl.fromTo(chs,{scaleY:0,transformOrigin:'50% 100%'},{scaleY:1,duration:dur,ease:'eOut',stagger:st},t);
+  else tl.fromTo(chs,{yPercent:110},{yPercent:0,duration:dur,ease:'eOut',stagger:st},t);
+};
+const popIn=(sel,t,origin='0% 100%')=>tl.fromTo(sel,{scale:.4,autoAlpha:0,y:24,transformOrigin:origin},{scale:1,autoAlpha:1,y:0,duration:.42,ease:pop},t);
+
+function build(){
+const items=[...document.querySelectorAll('#t2 > *')];
+const H=items.map(e=>e.offsetHeight+12);
+const yAfter=g=>items.reduce((s,e,i)=>s+(+e.dataset.g>g?H[i]:0),0);
+// lift "you" bubble out of the screen
+gsap.set('#t2',{y:yAfter(2)});items.forEach(e=>gsap.set(e,{autoAlpha:1}));
+const mr=document.getElementById('meb').getBoundingClientRect();
+const lift=document.getElementById('lift2');const fr={left:84,top:880,w:lift.offsetWidth,h:lift.offsetHeight};
+gsap.set('#t2',{clearProps:'all'});items.forEach(e=>gsap.set(e,{clearProps:'all'}));
+/* ---------------- S1 FEED 0 – 1.95 ---------------- */
+show('s1',0);
+const land=document.getElementById('land');
+const finalY=415-land.offsetTop;
+tl.fromTo('#feed',{y:finalY+4600},{y:finalY,duration:1.45,ease:'expo.out'},0);
+tl.fromTo('#vb',{attr:{stdDeviation:'0 46'}},{attr:{stdDeviation:'0 0'},duration:1.25,ease:'power3.out'},0);
+tl.fromTo('#s1 .cam',{scale:1.04},{scale:1,duration:1.5,ease:'eOut'},0);
+// freeze + scale-through: the landing card becomes the sourdough world
+zoom.innerHTML=land.innerHTML;
+tl.fromTo('#land',{scale:1},{keyframes:[{scale:1.045,duration:.05,ease:'power2.out'},{scale:1,duration:.2,ease:'eOut'}]},1.5);
+tl.fromTo('#s1 .cam',{y:0},{keyframes:[{y:10,duration:.04},{y:-4,duration:.06},{y:0,duration:.1}],ease:'sine.inOut'},1.5);
+tl.set('#zoom',{visibility:'visible',left:100,top:415,width:880,height:land.offsetHeight,borderRadius:36},1.58);
+tl.to('#zoom',{left:0,top:0,width:1080,height:1350,borderRadius:0,duration:.42,ease:'zoom'},1.58);
+tl.fromTo('#zoom',{filter:'blur(0px)'},{keyframes:[{filter:'blur(14px)',duration:.21,ease:'sine.in'},{filter:'blur(0px)',duration:.21,ease:'sine.out'}]},1.58);
+tl.to('#zoom .lc',{autoAlpha:0,scale:1.15,transformOrigin:'0% 0%',duration:.22,ease:'eIn'},1.58);
+show('s2',1.95);hide('s1',1.97);hide('zoom',1.97);
+
+/* ---------------- S2 SOURDOUGH 1.95 – 5.0 ---------------- */
+tl.fromTo('#s2 .cam',{scale:1.0},{scale:1.05,duration:3.05,ease:'none'},1.95);
+tl.fromTo('#s2 .label',{y:24,autoAlpha:0},{y:0,autoAlpha:1,duration:.6,ease:'eOut'},1.98);
+reveal('#s2 .big',2.0);
+tl.fromTo('#dust',{y:0},{y:-40,duration:3,ease:'none'},1.95);
+tl.fromTo('#s2 .phoneWrap',{x:620,y:380,rotation:22},{x:0,y:0,rotation:0,duration:.85,ease:'eOut'},2.25);
+tl.fromTo('#s2 .shadow',{x:500,autoAlpha:0},{x:0,autoAlpha:1,duration:.85,ease:'eOut'},2.25);
+tl.fromTo('#s2 .meta',{autoAlpha:0},{autoAlpha:1,duration:.5},2.6);
+// chat thread
+const groups=[[0,2.85],[1,3.15],[2,3.5],[3,4.25],[4,4.55]];
+tl.set('#t2',{y:yAfter(-1)},0);
+items.forEach(e=>tl.set(e,{autoAlpha:0},0));
+groups.forEach(([g,t])=>{
+  tl.to('#t2',{y:yAfter(g),duration:.4,ease:'eOut'},t);
+  items.filter(e=>+e.dataset.g===g).forEach((e,k)=>popIn(e,t+k*.05,e.classList.contains('me')?'100% 100%':'0% 100%'));
+});
+const sx=mr.width/fr.w;
+tl.set('#lift2',{autoAlpha:0},0);
+tl.fromTo('#lift2',{autoAlpha:1,x:(mr.left+mr.width/2)-(fr.left+fr.w/2),y:(mr.top+mr.height/2)-(fr.top+fr.h/2),scale:sx,rotation:5},
+  {x:0,y:0,scale:1,rotation:-4,duration:.6,ease:'eOut',immediateRender:false},3.95);
+tl.to('#meb',{backgroundColor:'rgba(8,102,255,0)',color:'rgba(255,255,255,0)',boxShadow:'inset 0 0 0 2px rgba(8,102,255,.25)',duration:.01},3.95);
+tl.to('#lift2',{y:-14,duration:.45,ease:'sine.inOut'},4.55);
+// whip out
+tl.to('#s2 .cam',{x:-1500,duration:.28,ease:'eIn'},4.72);
+tl.to('#hb2',{attr:{stdDeviation:'70 0'},duration:.28,ease:'eIn'},4.72);
+show('s3',5.0);hide('s2',5.0);
+
+/* ---------------- S3 VESPAS 5.0 – 6.5 ---------------- */
+tl.fromTo('#s3 .cam',{x:1500},{x:0,duration:.45,ease:'eOut'},5.0);
+tl.fromTo('#hb3',{attr:{stdDeviation:'70 0'}},{attr:{stdDeviation:'0 0'},duration:.4,ease:'eOut'},5.0);
+tl.fromTo('#s3 .speed',{x:0},{x:-300,duration:1.5,ease:'none'},5.0);
+tl.fromTo('#s3 .dash',{x:0},{x:-1100,duration:1.5,ease:'none'},5.0);
+reveal('#s3 .big',5.06,{dur:.5,st:.02});
+tl.fromTo('#w3',{autoAlpha:0},{autoAlpha:1,duration:.3},5.42);
+popIn('#b3a',5.42);
+popIn('#b3b',5.85,'100% 100%');
+tl.fromTo('#s3 .cam',{scale:1},{scale:1.03,duration:1.5,ease:'none'},5.0);
+show('s4',6.5);hide('s3',6.5);
+
+/* ---------------- S4 BIRDS 6.5 – 7.5 ---------------- */
+tl.fromTo('#s4 .sun',{y:300},{y:0,duration:1.0,ease:'eOut'},6.5);
+tl.fromTo('#s4 .cam',{scale:1.06},{scale:1.0,duration:1.0,ease:'eOut'},6.5);
+reveal('#s4 .big',6.5,{dur:.45,st:.02});
+tl.fromTo('#w4',{autoAlpha:0},{autoAlpha:1,duration:.3},6.72);
+popIn('#b4a',6.72);
+popIn('#b4b',7.05,'100% 100%');
+show('s5',7.5);hide('s4',7.5);
+
+/* ---------------- S5 CHESS 7.5 – 10.5 ---------------- */
+tl.fromTo('#s5 .board',{y:0},{y:360,duration:3,ease:'none'},7.5);
+tl.fromTo('#s5 .cam',{scale:1},{scale:1.04,duration:3,ease:'none'},7.5);
+reveal('#s5 .big',7.55,{dur:.6,st:.03});
+tl.fromTo('#s5 .phoneWrap',{y:900,rotation:-12,x:120},{y:0,rotation:0,x:0,duration:.9,ease:'eOut'},7.7);
+tl.fromTo('#s5 .shadow',{autoAlpha:0},{autoAlpha:1,duration:.9},7.7);
+const notes=[...document.querySelectorAll('#n5 .note')];const NH=notes.map(n=>n.offsetHeight+12);
+tl.set('#n5',{y:-(NH[0]+NH[1])},0);notes.forEach(n=>tl.set(n,{autoAlpha:0},0));
+const noteIn=(i,t)=>{tl.to('#n5',{y:-NH.slice(0,i).reduce((a,b)=>a+b,0),duration:.45,ease:'eOut'},t);
+  tl.fromTo(notes[i],{autoAlpha:0,scale:.92,y:-16},{autoAlpha:1,scale:1,y:0,duration:.45,ease:'eOut'},t);
+  tl.fromTo('#s5 .phoneWrap',{x:0},{keyframes:{x:[0,-7,7,-5,5,0]},duration:.28,ease:'none'},t)};
+noteIn(2,8.55);
+popIn('#b5',9.1,'0% 100%');
+tl.fromTo('#s5 .lit',{opacity:0},{opacity:.85,duration:.18,ease:'power2.out'},9.15);
+noteIn(1,9.6);
+noteIn(0,10.0);
+tl.fromTo('#s5 .meta',{autoAlpha:0},{autoAlpha:1,duration:.4},8.2);
+show('s6',10.5);hide('s5',10.5);
+
+/* ---------------- S6 TERRARIUMS 10.5 – 11.0 ---------------- */
+reveal('#s6 .big',10.5,{dur:.38,st:.018,grow:true});
+tl.fromTo('#s6 .jar',{scale:.8,rotation:-8},{scale:1,rotation:0,duration:.5,ease:'eOut'},10.5);
+tl.fromTo('#s6 .cam',{scale:1},{scale:1.03,duration:.5,ease:'none'},10.5);
+show('s7',11.0);hide('s6',11.0);
+
+/* ---------------- S7 KARAOKE 11.0 – 11.62 ---------------- */
+tl.fromTo('#s7 .fill',{clipPath:'inset(0 100% 0 0)'},{clipPath:'inset(0 0% 0 0)',duration:.3,ease:'none'},11.0);
+tl.fromTo('#s7 .spot',{x:0},{x:300,duration:.62,ease:'none'},11.0);
+popIn('#b7',11.04);
+// color field: your blue bubble floods the frame
+const b7=document.getElementById('b7');
+tl.set('#blue',{visibility:'visible',left:84,top:960,width:()=>b7.offsetWidth,height:()=>b7.offsetHeight,borderRadius:44},11.2);
+tl.to('#blue',{left:0,top:0,width:1080,height:1350,borderRadius:0,duration:.3,ease:'zoom'},11.2);
+tl.fromTo('#blue',{filter:'blur(0px)'},{keyframes:[{filter:'blur(18px)',duration:.15,ease:'sine.in'},{filter:'blur(0px)',duration:.15,ease:'sine.out'}]},11.2);
+show('s8',11.5);hide('s7',11.51);hide('blue',11.51);
+
+/* ---------------- S8 END 11.66 – 15.0 ---------------- */
+tl.fromTo('#s8 .cam',{scale:1.0},{scale:1.035,duration:3.5,ease:'sine.out'},11.5);
+document.querySelectorAll('#s8 .c').forEach((c,i)=>{
+  const ang=[-.9,2.4,.2,3.6,1.3][i], dist=900;
+  tl.fromTo(c,{x:Math.cos(ang)*dist,y:Math.sin(ang)*dist,scale:.4,rotation:0,autoAlpha:0},
+    {x:0,y:0,scale:1,rotation:+c.dataset.r,autoAlpha:1,duration:.75,ease:'eOut'},11.52+i*.06);
+  tl.to(c,{y:-24*c.dataset.d,duration:2.6,ease:'sine.inOut'},12.25+i*.06);
+});
+const ws=document.querySelectorAll('#s8 .w');
+tl.fromTo(ws,{yPercent:110},{yPercent:0,duration:.7,ease:'eOut',stagger:{each:.1}},12.0);
+tl.fromTo('#s8 .logo',{scale:.6,autoAlpha:0},{scale:1,autoAlpha:1,duration:.6,ease:pop},13.0);
+tl.fromTo('#s8 .cta',{x:-20,autoAlpha:0},{x:0,autoAlpha:1,duration:.6,ease:'eOut'},13.12);
+tl.fromTo('#s8 .spec',{autoAlpha:0},{autoAlpha:1,duration:.6},13.3);
+tl.set({}, {}, 15.0);
+}
+
+window.seek=t=>{tl.seek(t,false);
+  const r=rng(Math.floor(t*24)+1);grain.style.transform=`translate(${(r()*120)|0}px,${(r()*120)|0}px)`;};
+document.fonts.ready.then(()=>{build();seek(0);document.body.dataset.ready=1;window.DUR=tl.duration()});
+</script>
+</body>
+</html>

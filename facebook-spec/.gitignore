@@ -1,0 +1,7 @@
+node_modules/
+render/
+out/*_v01_*.mp4
+out/*_v02_*.mp4
+out/contact_v01.png
+frames/sf2_board.png
+frames/styleframes_board.png
