@@ -1,0 +1,7 @@
+src/
+audio/
+renders/*.log
+renders/work-*
+.hyperframes/artifacts/
+renders/*.mp3
+renders/*.mp4
