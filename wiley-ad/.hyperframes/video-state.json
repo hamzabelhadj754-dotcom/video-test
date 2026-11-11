@@ -1107,5 +1107,16 @@
         "attribution": "unversioned"
       }
     ]
-  }
+  },
+  "renders": {
+    "latest": {
+      "id": "4c7d33d2-9a45-46bd-86c4-f888bb0164fc",
+      "completedAt": 1794420911872,
+      "output": "/home/user/video-test/wiley-ad/renders/wiley-video-only.mp4",
+      "status": "completed",
+      "revision": null
+    },
+    "retainedRevisions": []
+  },
+  "pendingArtifactCleanup": []
 }
