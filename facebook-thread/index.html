@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The Thread</title>
+<style>
+  /* ---------- Design tokens ---------- */
+  :root{
+    --blue:#0866FF;   /* the thread: the only saturated colour */
+    --paper:#F3F0E8;  /* world */
+    --ink:#0D0F14;    /* type */
+    --ember:#FF6A3D;  /* used once: memories */
+    --fog:#B9B4A8;    /* hairlines, secondary */
+    --W:1080px; --H:1350px;
+  }
+  @font-face{font-family:Brico;src:url(assets/fonts/Bricolage-800.ttf);font-weight:800}
+  @font-face{font-family:Brico;src:url(assets/fonts/Bricolage-700.ttf);font-weight:700}
+  @font-face{font-family:Brico;src:url(assets/fonts/Bricolage-500.ttf);font-weight:500}
+  @font-face{font-family:ISans;src:url(assets/fonts/InstrumentSans-400.ttf);font-weight:400}
+  @font-face{font-family:ISans;src:url(assets/fonts/InstrumentSans-500.ttf);font-weight:500}
+  @font-face{font-family:ISans;src:url(assets/fonts/InstrumentSans-600.ttf);font-weight:600}
+  @font-face{font-family:ISerif;src:url(assets/fonts/InstrumentSerif-Italic.ttf);font-style:italic}
+  html,body{margin:0;background:var(--paper);overflow:hidden}
+  #stage{position:relative;width:var(--W);height:var(--H);overflow:hidden;background:var(--paper)}
+  svg{position:absolute;inset:0;display:block}
+  #grain{position:absolute;inset:0;width:100%;height:100%;mix-blend-mode:overlay;opacity:.16;pointer-events:none}
+  #vignette{position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(120% 95% at 50% 46%, rgba(0,0,0,0) 55%, rgba(60,40,20,.13) 100%);mix-blend-mode:multiply}
+  #warm{position:absolute;inset:0;pointer-events:none;background:#ffb070;mix-blend-mode:soft-light;opacity:.07}
+</style>
+</head>
+<body>
+<div id="stage">
+  <svg id="svg" width="1080" height="1350" viewBox="0 0 1080 1350">
+    <defs>
+      <filter id="fgBlur" filterUnits="userSpaceOnUse" x="-700" y="-700" width="2600" height="2900"><feGaussianBlur stdDeviation="26"/></filter>
+      <filter id="softShadow" x="-20%" y="-20%" width="140%" height="160%">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="10"/>
+        <feOffset dy="12"/>
+        <feColorMatrix type="matrix" values="0 0 0 0 0.2  0 0 0 0 0.14  0 0 0 0 0.08  0 0 0 .14 0"/>
+        <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+      <radialGradient id="emberWash" cx="50%" cy="58%" r="70%">
+        <stop offset="0" stop-color="#FF6A3D" stop-opacity=".95"/>
+        <stop offset=".45" stop-color="#FF9A5C" stop-opacity=".55"/>
+        <stop offset="1" stop-color="#F3F0E8" stop-opacity="0"/>
+      </radialGradient>
+      <clipPath id="frameClip"><rect x="5312" y="342" width="576" height="676"/></clipPath>
+      <clipPath id="logoClip"><circle cx="0" cy="0" r="110"/></clipPath>
+    </defs>
+    <!-- BG layer (parallax .3) -->
+    <g id="bg"><image id="bgImg" href="assets/paper.png" x="0" y="0" width="1700" height="2000" preserveAspectRatio="none"/></g>
+    <!-- Mid layer: the world, driven by camera -->
+    <g id="cam"><g id="world"></g></g>
+    <!-- screen-space layers -->
+    <g id="rows"></g>
+    <g id="hud"></g>
+    <!-- FG layer (parallax 1.7, defocused) -->
+    <g id="fg"></g>
+  </svg>
+  <canvas id="grain" width="540" height="675"></canvas>
+  <div id="warm"></div>
+  <div id="vignette"></div>
+</div>
+<script src="film.js"></script>
+</body>
+</html>
