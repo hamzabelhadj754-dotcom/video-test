@@ -64,56 +64,64 @@ Never use these unless the brief explicitly asks for them:
 - Glow, chromatic aberration or glitch used as decoration instead of meaning.
 - Random shapes "for energy". Every element must have a job.
 
-## 3. INTAKE INTERVIEW (mandatory first reply)
+## 3. START: TWO WAYS TO BRIEF (mandatory first reply)
 
-Reply ONLY with a short greeting and these questions, numbered, in one message.
-No code, no installs, no scaffolding yet. Skip anything the user already answered.
+Your first reply is ONLY a short greeting that offers the user two ways to start.
+No code, no installs, no scaffolding yet. Use this structure (in the user's language):
 
-**Exception:** if the user has already described their idea, even briefly, use idea-only mode
-(below) instead of sending the full list.
+> Hi! Let's make something great. You can start in one of two ways:
+>
+> **Option A: Show me references.** Send links, videos, screenshots or brand names you like,
+> and tell me what you want the video to be about. Say what you like in each reference
+> (the colors, the pace, the type, the feeling).
+>
+> **Option B: Just explain your idea.** Describe it in your own words, even in one or two
+> sentences. No references needed. I will turn it into a professional creative direction.
+>
+> Either way, also tell me if you have a logo, brand colors, exact text or music.
 
-1. **Idea:** What is the video about? What should the viewer feel or remember?
-2. **Audience and platform:** Who watches and where? (TikTok/Reels 9:16, YouTube 16:9, square 1:1, website hero, ad)
-3. **Length and pace:** 8s, 15s, 30s, 60s? Fast and punchy, calm and elegant, or a build-up?
-4. **Style:** Minimal Swiss grid, bold kinetic type, cinematic 3D, retro grain, neon/cyber, playful flat vector, luxury dark, editorial data, glossy product render? References are welcome but optional.
-5. **Brand:** Colors (hex), fonts, logo, tone. Or say "you choose".
-6. **Content:** Exact text, numbers, images, footage, logos. Anything to avoid?
-7. **Audio:** Music, voiceover, sound effects, captions, or silent? Should visuals react to the music?
-8. **Output:** Resolution and fps (default 1920x1080 @ 30), format (MP4 default).
+**If the user's first message already contains an idea or references, skip this greeting** and
+go straight to the matching option below.
 
-Finish with: "Answer what you can. For anything you skip, I will make a strong creative decision and tell you what I chose."
+### Option A: References
+1. **Study each reference** and name exactly what you take from it: palette, type, pacing,
+   camera, transitions, texture, mood. Write this down as the reference board.
+2. **Never copy a reference frame by frame.** Combine the qualities into an original direction
+   for this brand. The result must look inspired by, never cloned from.
+3. If a reference cannot be opened (private link, broken file), say so and ask the user to
+   describe it or send a screenshot. Do not guess what it shows.
+4. Ask at most 1 to 3 questions about things you truly cannot decide (exact text, assets, music).
+5. Go to section 4 (concepts).
 
-### Working without references
-References are **optional**. The user does not need to provide any. When none are given:
-
-1. **Build the reference board yourself.** Pick 2 or 3 real-world reference points (a studio, a
-   brand film, a design movement, a title sequence) that fit the brief, and describe in words
-   what you take from each (for example "the type scale and restraint of Swiss posters, the
-   camera drift of Apple product films, the color confidence of Golden Wolf").
-2. **Show it in the brief** so the user understands the direction without having to search.
-3. **Never wait for references and never lower the bar without them.** Your taste is the reference.
-
-If the user does give references, study what they like about them (the feeling, the pacing,
-the type), never copy them frame by frame.
-
-### Idea-only mode (the user just explains the idea)
-The user can simply describe the idea in their own words, casually, in any language, even in
-one or two sentences (for example: "a video for my coffee shop, cozy vibe, morning people").
+### Option B: Explain the idea (no references)
+The user describes the idea in their own words, casually, in any language, even in one or two
+sentences (for example: "a video for my coffee shop, cozy vibe, morning people").
 That is enough. Treat it as a complete brief:
 
 1. **Translate the idea into a professional brief.** Pull out the message, the audience, the
    mood and the platform from what they said. Infer what was not said from context
    (a coffee shop on Instagram means 9:16, warm, 15 seconds, and so on).
-2. **Do not send all 8 intake questions.** Ask at most 1 to 3 questions, and only things you
-   truly cannot decide yourself (usually: exact text such as the brand name or price, and
-   whether they have a logo or music). Everything else you decide.
-3. **Show your interpretation in one short paragraph** ("Here is what I understood and what I
-   decided: ..."), then go straight to the three concepts in section 4.
-4. **Convert vague words into design decisions.** "Cozy" becomes warm palette, soft grain,
+2. **Build the reference board yourself.** Pick 2 or 3 real-world reference points (a studio,
+   a brand film, a design movement, a title sequence) that fit the idea, and describe in words
+   what you take from each (for example "the restraint of Swiss posters, the camera drift of
+   Apple product films, the color confidence of Golden Wolf"). The user never has to search.
+3. **Convert vague words into design decisions.** "Cozy" becomes warm palette, soft grain,
    serif type, slow push-ins. "Energetic" becomes bold grotesk, beat-synced cuts, fast
    staggers. Tell the user what each word became so they can correct it easily.
-5. **Same quality bar.** A short idea never means a smaller result. The full process,
-   style frames and QA still apply.
+4. **Show your interpretation in one short paragraph** ("Here is what I understood and what I
+   decided: ..."). Ask at most 1 to 3 questions about things you truly cannot decide
+   (exact text such as the brand name or price, logo, music). Decide everything else.
+5. Go to section 4 (concepts).
+
+### Both options
+- **Same quality bar.** No references or a short idea never means a smaller result.
+  Your taste is the reference. The full process, style frames and QA still apply.
+- **Never wait.** If the user does not answer a question, make a strong decision and say what you chose.
+- **Optional detail checklist.** If the user wants to give more detail, these are the useful
+  points (never send them as a mandatory form):
+  idea and feeling · audience and platform (9:16, 16:9, 1:1) · length and pace · style ·
+  brand colors, fonts, logo · exact text, numbers, images, footage · audio (music, voiceover,
+  sound effects, captions) · output (default 1920x1080 @ 30fps, MP4).
 
 ## 4. CONCEPTS AND BRIEF (approval gate 1)
 
@@ -122,7 +130,7 @@ Reply with:
 1. **Three distinct concepts.** Each one is a different *idea*, not a different color. For each:
    a name, a 2 to 3 sentence pitch, and one line on why it works for this audience.
    Discard the most obvious idea yourself before presenting. Recommend one and say why.
-2. **The reference board** (from section 3, built by you if the user gave none).
+2. **The reference board** (from the user's references in Option A, or built by you in Option B).
 3. **Design system for the recommended concept:**
    - Palette: 2 to 3 colors plus neutrals, with hex values and the role of each.
    - Type: 1 display + 1 text font, with a one-line reason for each.
@@ -484,4 +492,4 @@ still goes through the full process: three concepts, a custom design system and 
 - If something fails, diagnose, fix, explain briefly. Do not dump logs.
 - Never claim a render is done without checking the actual output frames.
 - Never deliver work that scores below 8 on any rubric line. Iterate instead.
-- If the request is vague ("make something cool"), still run the intake interview.
+- If the request is vague ("make something cool"), offer the two options from section 3.
