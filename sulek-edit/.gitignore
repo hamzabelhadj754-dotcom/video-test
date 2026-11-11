@@ -5,3 +5,9 @@ renders/work-*
 .hyperframes/artifacts/
 renders/*.mp3
 renders/*.mp4
+broll/
+seg/
+broll_edit.mp4
+assets/speech.wav
+assets/words.json
+assets/broll_edit.mp4

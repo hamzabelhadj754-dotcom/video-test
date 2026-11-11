@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+<style>
+  @font-face { font-family: "Inter"; src: url("assets/Inter-Variable.woff2") format("woff2"); font-weight: 100 900; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; background: #000; }
+  #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #000; font-family: Inter, sans-serif; color: #fff; }
+  .full { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+  .cap { position: absolute; left: 60px; right: 60px; text-align: center; white-space: nowrap; }
+  .lead { top: 820px; font: 700 54px/1 Inter; letter-spacing: -.02em; text-shadow: 0 4px 20px rgba(0,0,0,.6); }
+  .main { top: 880px; font: 800 150px/1 Inter; letter-spacing: -.045em; text-shadow: 0 8px 40px rgba(0,0,0,.55); }
+  .w { position: absolute; left: 0; right: 0; }
+  .acc { color: #7FE3D3; }
+  #grain { position: absolute; left: -60px; top: -60px; width: 1200px; height: 2040px; opacity: .13; mix-blend-mode: overlay; pointer-events: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='2' seed='8' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="21.6" data-width="1080" data-height="1920" data-fps="30">
+  <div class="full" id="cam"><video id="film" class="clip full" src="assets/broll_edit.mp4" data-start="0" data-duration="21.6" data-track-index="0" muted playsinline style="object-fit:cover"></video></div>
+  <div class="full" style="background: radial-gradient(ellipse 85% 70% at 50% 48%, transparent 45%, rgba(0,0,0,.75) 100%), linear-gradient(180deg, rgba(0,0,0,.25), transparent 30%, transparent 70%, rgba(0,0,0,.35))"></div>
+  <div id="caps"></div>
+  <div id="grain"></div>
+  <div class="full" id="flash" style="background:#fff; pointer-events:none"></div>
+  <audio id="vo" class="clip" src="assets/speech.wav" data-start="0" data-duration="21.6" data-track-index="1" data-volume="1"></audio>
+</div>
+<script>
+fetch("assets/words.json").then((r) => r.json()).then((d) => document.fonts.ready.then(() => {
+  const FR = 1 / 30, W = (Array.isArray(d) ? d : d.words).map((w) => ({ t: w.start, e: w.end, s: w.text.replace(/[.,]/g, "").toLowerCase() }));
+  let seed = 3; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+  const SMALL = new Set(["i'd", "the", "that", "you", "in", "is", "it", "it's", "but", "if", "and", "then", "of", "from", "to", "too", "than", "not", "just", "kind", "only", "get", "don't", "want", "do", "those"]);
+  const ACC = new Set(["far", "reward", "easy", "easier", "results", "slacking", "really"]);
+  const CUTS = [0, 1.3, 2.6, 4.0, 5.2, 6.5, 7.75, 9.9, 10.8, 12.2, 14.0, 15.9, 17.25, 19.35];
+  // group: small words collect on the lead line, the next big word lands under them
+  const caps = document.getElementById("caps"), tl = gsap.timeline({ paused: true });
+  let lead = [], k = 0;
+  const show = (els, a, b) => { els.forEach((el) => tl.set(el, { autoAlpha: 0 }, 0)); tl.set(els, { autoAlpha: 1 }, a); tl.set(els, { autoAlpha: 0 }, b); };
+  for (let i = 0; i < W.length; i++) {
+    const w = W[i], nextBig = W.slice(i + 1).find((x) => !SMALL.has(x.s));
+    const small = SMALL.has(w.s) && nextBig && nextBig.t - w.t < 1.4;
+    if (small) { lead.push(w); continue; }
+    const end = i + 1 < W.length ? Math.min(W[i + 1].t, w.e + 0.9) : 21.4;
+    const a = (lead.length ? lead[0].t : w.t) - FR, bigAt = w.t - FR;
+    if (lead.length) { const ld = document.createElement("div"); ld.className = "cap lead"; ld.textContent = lead.map((x) => x.s).join(" "); caps.appendChild(ld); show([ld], a, end);
+      tl.fromTo(ld, { y: 14, filter: "blur(6px)" }, { y: 0, filter: "blur(0px)", duration: 0.15, ease: "power3.out", immediateRender: false }, a); }
+    const mn = document.createElement("div"); mn.className = "cap main" + (ACC.has(w.s) ? " acc" : ""); mn.textContent = w.s; mn.style.fontSize = (ACC.has(w.s) ? 190 : w.s.length > 8 ? 130 : 150) + "px"; caps.appendChild(mn);
+    show([mn], bigAt, end);
+    if (ACC.has(w.s)) {
+      tl.fromTo(mn, { scale: 1.35, filter: "blur(10px)" }, { scale: 1, filter: "blur(0px)", duration: 0.22, ease: "expo.out", immediateRender: false }, bigAt);
+      tl.fromTo("#cam", { x: 0, y: 0 }, { keyframes: [{ x: 12, y: -6, duration: FR }, { x: -9, y: 5, duration: FR }, { x: 4, y: -2, duration: FR }, { x: 0, y: 0, duration: FR }], ease: "none", immediateRender: false }, bigAt);
+    } else tl.fromTo(mn, { scale: 1.12, y: 10 }, { scale: 1, y: 0, duration: 0.16, ease: "power3.out", immediateRender: false }, bigAt);
+    lead = []; k++;
+  }
+  // camera: every shot lands pushed-in and drifts out, a slow creep on the last shot
+  CUTS.forEach((t, i) => { const b = CUTS[i + 1] || 21.6, s = 1.08 + (i % 3) * 0.02;
+    tl.fromTo("#film", { scale: s, xPercent: (i % 2 ? -1 : 1) * 1.2 }, { scale: 1.0, xPercent: 0, duration: b - t, ease: "power2.out", immediateRender: i === 0 }, t); });
+  // white flash frames on the bigger beats
+  [1.3, 4.0, 10.8, 14.0, 19.35].forEach((t) => tl.fromTo("#flash", { autoAlpha: 0 }, { keyframes: [{ autoAlpha: 0.35, duration: FR }, { autoAlpha: 0, duration: 0.15 }], immediateRender: false }, t));
+  gsap.set("#flash", { autoAlpha: 0 });
+  tl.fromTo("#grain", { x: 0, y: 0 }, { keyframes: Array.from({ length: 324 }, () => ({ x: -Math.round(rnd() * 60), y: -Math.round(rnd() * 60), duration: 2 * FR, ease: "steps(1)" })) }, 0);
+  tl.set({}, {}, 21.6);
+  window.__timelines = window.__timelines || {}; window.__timelines["main"] = tl;
+}));
+</script>
+</body>
+</html>
