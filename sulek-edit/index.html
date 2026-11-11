@@ -41,6 +41,7 @@ fetch("assets/caps.json").then((r) => r.json()).then((caps) => document.fonts.re
     const a = c.at - FR;
     const mn = document.createElement("div"); mn.className = "main" + (c.acc ? " acc" : ""); mn.textContent = c.main;
     const fit = Math.min(c.acc ? 360 : 300, Math.floor(960 / Math.max(1, c.main.length * 0.5))); mn.style.fontSize = fit + "px"; back.appendChild(mn);
+    const high = c.at >= 14.0 && c.at < 15.9; if (high) { front.appendChild(mn); mn.style.top = "1180px"; mn.style.textShadow = "0 10px 40px rgba(0,0,0,.6)"; }
     gsap.set(mn, { autoAlpha: 0 }); tl.set(mn, { autoAlpha: 1 }, a); tl.set(mn, { autoAlpha: 0 }, c.end);
     // three entrances, rotated so it never feels repetitive: rise from behind the shoulders, punch, or a quick squash-stretch
     const v = c.acc ? 1 : i % 3;
@@ -48,7 +49,7 @@ fetch("assets/caps.json").then((r) => r.json()).then((caps) => document.fonts.re
     else if (v === 1) tl.fromTo(mn, { scale: 1.3, filter: "blur(8px)" }, { scale: 1, filter: "blur(0px)", duration: 0.2, ease: "expo.out", immediateRender: false }, a);
     else tl.fromTo(mn, { scaleX: 1.35, scaleY: 0.75 }, { scaleX: 1, scaleY: 1, duration: 0.22, ease: "back.out(2.5)", immediateRender: false }, a);
     if (c.acc) tl.fromTo("#shot", { x: 0, y: 0 }, { keyframes: [{ x: 10, y: -6, duration: FR }, { x: -8, y: 5, duration: FR }, { x: 3, y: -2, duration: FR }, { x: 0, y: 0, duration: FR }], ease: "none", immediateRender: false }, a);
-    if (c.lead) { const ld = document.createElement("div"); ld.className = "lead"; ld.textContent = c.lead; front.appendChild(ld);
+    if (c.lead) { const ld = document.createElement("div"); ld.className = "lead"; ld.textContent = c.lead; front.appendChild(ld); if (high) ld.style.top = "1115px";
       const la = c.leadAt - FR; gsap.set(ld, { autoAlpha: 0 }); tl.set(ld, { autoAlpha: 1 }, la); tl.set(ld, { autoAlpha: 0 }, c.end);
       tl.fromTo(ld, { y: 12 }, { y: 0, duration: 0.14, ease: "power3.out", immediateRender: false }, la); }
   });
