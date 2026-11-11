@@ -1,2 +1,6 @@
 .hyperframes/artifacts/
 node_modules/
+renders/
+assets/audio/mix.wav
+assets/audio/music.wav
+assets/audio/sfx.wav

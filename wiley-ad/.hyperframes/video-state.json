@@ -1,7 +1,7 @@
 {
   "version": 1,
   "historyId": "7c976475-dcaa-42db-b0a3-ab3b86d7779a",
-  "currentRevision": "f3837248-dad1-41a0-afaf-2da0a5b31f7b",
+  "currentRevision": "91da8661-1382-4e45-933f-070c79026e5e",
   "pendingChanges": false,
   "files": {
     "AGENTS.md": {
@@ -81,8 +81,8 @@
       "content": "/root/.cache/hyperframes/history/7c976475-dcaa-42db-b0a3-ab3b86d7779a/blobs/92/92bf2a5f5a803593a9189a9ec5119603611bb5540e2920d6c11a9686ba1b30af"
     },
     "design-stills/05-feature-inbox.png": {
-      "hash": "960d6e86cbc9f8796f90b91bd7d80c56e9d8014dcab5978fd797895542dd8237",
-      "content": "/root/.cache/hyperframes/history/7c976475-dcaa-42db-b0a3-ab3b86d7779a/blobs/96/960d6e86cbc9f8796f90b91bd7d80c56e9d8014dcab5978fd797895542dd8237"
+      "hash": "e1f343e39f2fbe8254a82a5acafcdce2cd9edd71277845332ce70f73e5d5e1a2",
+      "content": "/root/.cache/hyperframes/history/7c976475-dcaa-42db-b0a3-ab3b86d7779a/blobs/e1/e1f343e39f2fbe8254a82a5acafcdce2cd9edd71277845332ce70f73e5d5e1a2"
     },
     "design-stills/06-feature-done.png": {
       "hash": "5f9e3c8a01213db02d008802dba3a4144a138fe94af5bd66259d87e8b63faf4a",
@@ -218,6 +218,21 @@
         "design-stills/08-end-card.png": {
           "before": null,
           "after": "/root/.cache/hyperframes/history/7c976475-dcaa-42db-b0a3-ab3b86d7779a/blobs/31/31187b1296012bab7d87f121d7d148415ae65ad0a761b963c33c13220b8bdafe"
+        }
+      }
+    },
+    "91da8661-1382-4e45-933f-070c79026e5e": {
+      "actor": {
+        "kind": "outside",
+        "name": "Outside"
+      },
+      "label": "Changed outside the app",
+      "startedAt": 1794418727675,
+      "endedAt": 1794418727676,
+      "files": {
+        "design-stills/05-feature-inbox.png": {
+          "before": "/root/.cache/hyperframes/history/7c976475-dcaa-42db-b0a3-ab3b86d7779a/blobs/96/960d6e86cbc9f8796f90b91bd7d80c56e9d8014dcab5978fd797895542dd8237",
+          "after": "/root/.cache/hyperframes/history/7c976475-dcaa-42db-b0a3-ab3b86d7779a/blobs/e1/e1f343e39f2fbe8254a82a5acafcdce2cd9edd71277845332ce70f73e5d5e1a2"
         }
       }
     }
