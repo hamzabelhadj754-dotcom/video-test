@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+<style>
+  @font-face { font-family: "Bebas"; src: url("assets/fonts/BebasNeue-Regular.woff2") format("woff2"); }
+  @font-face { font-family: "Inter"; src: url("assets/fonts/Inter-Variable.woff2") format("woff2"); font-weight: 100 900; }
+  @font-face { font-family: "Script"; src: url("assets/fonts/MrsSaintDelafield-Regular.woff2") format("woff2"); }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; background: #000; }
+  #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #000; font-family: Inter, sans-serif; color: #fff; }
+  .full { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+  .abs { position: absolute; }
+  .bebas { font-family: "Bebas"; text-transform: uppercase; letter-spacing: .01em; }
+  .mono { font: 600 24px/1 Inter; letter-spacing: .16em; text-transform: uppercase; }
+  .w { display: inline-block; overflow: hidden; vertical-align: bottom; padding: .06em .04em .1em; margin: -.06em -.04em -.1em; }
+  .wi { display: inline-block; }
+  #grain { position: absolute; left: -60px; top: -60px; width: 1200px; height: 2040px; opacity: .12; mix-blend-mode: overlay; pointer-events: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' seed='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="5" data-width="1080" data-height="1920" data-fps="30">
+  <div class="full" id="cam"><div class="full" id="pk">
+    <video id="clip" class="clip full" src="assets/press.mp4" data-start="0" data-duration="5" data-track-index="0" muted playsinline style="object-fit:cover"></video>
+    <div class="full" id="tint" style="background:#E3243B; mix-blend-mode:multiply; opacity:0"></div>
+    <div class="full" style="background: linear-gradient(180deg, rgba(0,0,0,.55) 0%, rgba(0,0,0,0) 20%, rgba(0,0,0,0) 55%, rgba(0,0,0,.9) 82%)"></div>
+    <!-- bar tracker: brackets that ride the bar + the path it draws on the right -->
+    <svg class="full" viewBox="0 0 1080 1920" style="overflow:visible">
+      <polyline id="path" fill="none" stroke="#E3243B" stroke-width="4" stroke-linejoin="round" stroke-linecap="round" points="" style="filter: drop-shadow(0 0 8px rgba(227,36,59,.8))"/>
+      <g id="trk">
+        <path d="M70 -36 H40 V36 H70" fill="none" stroke="#E3243B" stroke-width="5"/><path d="M1010 -36 H1040 V36 H1010" fill="none" stroke="#E3243B" stroke-width="5"/>
+        <circle id="dot" cx="980" cy="0" r="9" fill="#E3243B" style="filter: drop-shadow(0 0 10px #E3243B)"/>
+        <text x="96" y="-50" font-family="Inter" font-weight="700" font-size="22" letter-spacing="3" fill="#fff">BAR</text>
+      </g>
+      <!-- range overlay revealed on the freeze -->
+      <g id="top-line" opacity="0"><line x1="40" y1="615" x2="1040" y2="615" stroke="#fff" stroke-width="3" stroke-dasharray="14 10"/><text x="140" y="598" font-family="Inter" font-weight="700" font-size="24" letter-spacing="3" fill="#fff">YOUR TOP</text></g>
+      <g id="full-line" opacity="0"><line x1="40" y1="300" x2="1040" y2="300" stroke="#E3243B" stroke-width="4" stroke-dasharray="14 10"/><text x="140" y="283" font-family="Inter" font-weight="700" font-size="24" letter-spacing="3" fill="#E3243B">FULL RANGE</text></g>
+      <g id="gap" opacity="0"><path id="gapbr" d="M900 312 H930 V603 H900" fill="none" stroke="#E3243B" stroke-width="5" pathLength="1" stroke-dasharray="1 1.2" stroke-dashoffset="1.1"/><rect x="752" y="430" width="160" height="52" rx="6" fill="#E3243B"/><text x="832" y="466" text-anchor="middle" font-family="Inter" font-weight="800" font-size="26" letter-spacing="2" fill="#fff">MISSING</text></g>
+    </svg>
+  </div></div>
+  <!-- type -->
+  <div class="abs mono" id="chip" style="left:120px; top:250px; padding:12px 18px; background:#E3243B">Mistake #01</div>
+  <div class="abs bebas" style="left:120px; right:120px; top:1290px; font-size:250px; line-height:.86; white-space:nowrap"><span class="w"><span class="wi" id="w1">Half</span></span> <span class="w"><span class="wi" id="w2" style="color:#E3243B; text-shadow:0 0 30px rgba(227,36,59,.6)">reps</span></span></div>
+  <div class="abs" id="fix" style="left:120px; top:1525px; font:600 52px/1 Inter; letter-spacing:-.02em">= half the gains. <span style="color:#E3243B">Lock it out.</span></div>
+  <div class="abs mono" id="handle" style="right:120px; top:262px; color:rgba(255,255,255,.85)">@gainsdom</div>
+  <div class="full" id="flash" style="background:#fff; pointer-events:none"></div>
+  <div id="grain"></div>
+  <audio id="sfx" class="clip" src="assets/audio/sfx.wav" data-start="0" data-duration="5" data-track-index="1" data-volume="1"></audio>
+</div>
+<script>
+fetch("assets/bar_track.json").then((r) => r.text()).then((txt) => document.fonts.ready.then(() => {
+  const TR = JSON.parse(txt), FR = 1 / 30, $ = (s) => document.querySelector(s);
+  let seed = 3; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+  const tl = gsap.timeline({ paused: true });
+  gsap.set(["#flash", "#chip", "#fix", "#handle"], { autoAlpha: 0 }); gsap.set(".wi", { autoAlpha: 0 });
+  tl.fromTo("#grain", { x: 0, y: 0 }, { keyframes: Array.from({ length: 75 }, () => ({ x: -Math.round(rnd() * 60), y: -Math.round(rnd() * 60), duration: 2 * FR, ease: "steps(1)" })) }, 0);
+  // camera: push in through the rep, a hard punch on the freeze
+  tl.fromTo("#cam", { scale: 1.12 }, { scale: 1.0, duration: 0.9, ease: "expo.out" }, 0);
+  tl.to("#cam", { scale: 1.05, duration: 1.6, ease: "sine.inOut" }, 0.9);
+  tl.fromTo("#pk", { scale: 1 }, { scale: 1.1, duration: 0.5, ease: "expo.out", transformOrigin: "50% 40%" }, 2.5);
+  tl.to("#pk", { scale: 1.14, duration: 2.0, ease: "sine.inOut" }, 3.0);
+  // tracker rides the bar (measured per frame) and draws its path
+  const path = $("#path"), trk = $("#trk"), pr = { f: 0 };
+  const upd = () => { const f = Math.min(TR.length - 1, Math.round(pr.f)), y = TR[f]; trk.setAttribute("transform", `translate(0 ${y})`);
+    const pts = []; for (let i = 0; i <= f; i += 2) pts.push(`${980 - (f - i) * 1.6} ${TR[i]}`); path.setAttribute("points", pts.join(" ")); };
+  tl.fromTo(pr, { f: 0 }, { f: TR.length - 1, duration: (TR.length - 1) * FR, ease: "none", onUpdate: upd }, 0);
+  tl.fromTo("#trk", { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.25, ease: "power2.out" }, 0.15);
+  // freeze: flash, red multiply tint pulse, desaturate is in the grade
+  tl.fromTo("#flash", { autoAlpha: 0 }, { keyframes: [{ autoAlpha: 0.85, duration: FR }, { autoAlpha: 0, duration: 0.25, ease: "power2.out" }] }, 2.5);
+  tl.fromTo("#tint", { opacity: 0 }, { keyframes: [{ opacity: 0.45, duration: 0.12 }, { opacity: 0.18, duration: 0.6, ease: "power2.out" }] }, 2.5);
+  tl.fromTo("#top-line", { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "power2.out" }, 1.75);
+  tl.fromTo("#full-line", { opacity: 0, x: -60 }, { opacity: 1, x: 0, duration: 0.5, ease: "expo.out" }, 2.75);
+  tl.set("#gap", { opacity: 1 }, 3.05);
+  tl.fromTo("#gapbr", { strokeDashoffset: 1.1 }, { strokeDashoffset: 0, duration: 0.45, ease: "power2.inOut" }, 3.05);
+  tl.fromTo("#gap rect, #gap text", { scale: 0.6, opacity: 0, transformOrigin: "832px 456px" }, { scale: 1, opacity: 1, duration: 0.45, ease: "back.out(2.2)" }, 3.35);
+  // type
+  tl.fromTo("#chip", { autoAlpha: 0, x: -40, clipPath: "inset(0% 100% 0% 0%)" }, { autoAlpha: 1, x: 0, clipPath: "inset(0% 0% 0% 0%)", duration: 0.5, ease: "expo.out" }, 0.1);
+  tl.fromTo("#w1", { yPercent: 105, autoAlpha: 0 }, { yPercent: 0, autoAlpha: 1, duration: 0.55, ease: "expo.out" }, 0.3);
+  tl.fromTo("#w2", { yPercent: 105, autoAlpha: 0, scale: 1.2 }, { yPercent: 0, autoAlpha: 1, scale: 1, duration: 0.6, ease: "expo.out" }, 0.55);
+  tl.fromTo("#fix", { autoAlpha: 0, y: 20, filter: "blur(8px)" }, { autoAlpha: 1, y: 0, filter: "blur(0px)", duration: 0.6, ease: "expo.out" }, 3.6);
+  tl.fromTo("#handle", { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.5, ease: "power2.out" }, 0.4);
+  tl.set({}, {}, 5);
+  window.__timelines = window.__timelines || {}; window.__timelines["main"] = tl;
+}));
+</script>
+</body>
+</html>

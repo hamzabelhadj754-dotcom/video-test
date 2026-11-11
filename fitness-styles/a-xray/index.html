@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+<style>
+  @font-face { font-family: "Bebas"; src: url("assets/fonts/BebasNeue-Regular.woff2") format("woff2"); }
+  @font-face { font-family: "Inter"; src: url("assets/fonts/Inter-Variable.woff2") format("woff2"); font-weight: 100 900; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; background: #030304; }
+  #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: radial-gradient(ellipse 80% 55% at 50% 60%, #1a0609 0%, #050506 60%, #020203 100%); font-family: Inter, sans-serif; color: #fff; }
+  .full { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+  .abs { position: absolute; }
+  .bebas { font-family: "Bebas"; text-transform: uppercase; letter-spacing: .01em; }
+  .mono { font: 600 22px/1.25 Inter; letter-spacing: .18em; text-transform: uppercase; }
+  .grid { position: absolute; left: -80px; top: -80px; width: 1240px; height: 2080px; background-image: linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px); background-size: 40px 40px; -webkit-mask: radial-gradient(ellipse 70% 60% at 50% 60%, #000 30%, transparent 75%); mask: radial-gradient(ellipse 70% 60% at 50% 60%, #000 30%, transparent 75%); }
+  .ret { position: absolute; width: 220px; height: 220px; margin: -110px 0 0 -110px; }
+  #grain { position: absolute; left: -60px; top: -60px; width: 1200px; height: 2040px; opacity: .08; mix-blend-mode: screen; pointer-events: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' seed='5' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); }
+  .scan-lines { position: absolute; inset: 0; background: repeating-linear-gradient(180deg, rgba(255,255,255,.035) 0 2px, transparent 2px 5px); pointer-events: none; }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="5" data-width="1080" data-height="1920" data-fps="30">
+  <div class="full" id="cam">
+    <div class="grid" id="grid"></div>
+    <!-- body: halftone base, red x-ray revealed above the scanner -->
+    <div class="abs" id="body" style="left:40px; top:860px; width:1000px; height:836px">
+      <img class="abs" id="ht" src="assets/flex_halftone.png" alt="" style="left:0; top:0; width:1000px" />
+      <img class="abs" id="xr" src="assets/flex_xray.png" alt="" style="left:0; top:0; width:1000px; filter: drop-shadow(0 0 30px rgba(227,36,59,.45))" />
+    </div>
+    <!-- scanner -->
+    <div class="abs" id="scan" style="left:-40px; top:0; width:1160px; height:6px; background:#FF5468; box-shadow: 0 0 18px #E3243B, 0 0 60px rgba(227,36,59,.8)">
+      <div class="abs" style="left:0; right:0; top:-160px; height:160px; background: linear-gradient(180deg, transparent, rgba(227,36,59,.22))"></div>
+    </div>
+    <!-- HUD rings behind the athlete's head -->
+    <svg class="abs" id="hud" width="900" height="900" viewBox="-450 -450 900 900" style="left:90px; top:620px; overflow:visible">
+      <g id="ringA"><circle r="390" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="1.5" stroke-dasharray="2 10"/><path d="M -390 0 A 390 390 0 0 1 0 -390" fill="none" stroke="#E3243B" stroke-width="3"/></g>
+      <g id="ringB"><circle r="330" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="1"/><path d="M 233 233 A 330 330 0 0 1 -233 233" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="2" stroke-dasharray="30 8"/></g>
+    </svg>
+    <!-- reticles locked on both biceps -->
+    <div class="ret" id="retL" style="left:235px; top:1130px"><svg width="220" height="220" viewBox="-110 -110 220 220" style="overflow:visible"><g class="spin"><circle r="84" fill="none" stroke="#E3243B" stroke-width="3" stroke-dasharray="40 14"/></g><circle r="56" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="1.5"/><path d="M-100 0 H-66 M66 0 H100 M0 -100 V-66 M0 66 V100" stroke="#fff" stroke-width="2"/><circle r="5" fill="#E3243B"/></svg>
+      <div class="abs mono" style="left:-20px; top:120px; width:200px; color:#fff">BICEPS · L<br><span style="color:#E3243B">ACTIVE</span></div></div>
+    <div class="ret" id="retR" style="left:850px; top:1130px"><svg width="220" height="220" viewBox="-110 -110 220 220" style="overflow:visible"><g class="spin"><circle r="84" fill="none" stroke="#E3243B" stroke-width="3" stroke-dasharray="40 14"/></g><circle r="56" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="1.5"/><path d="M-100 0 H-66 M66 0 H100 M0 -100 V-66 M0 66 V100" stroke="#fff" stroke-width="2"/><circle r="5" fill="#E3243B"/></svg>
+      <div class="abs mono" style="left:-40px; top:120px; width:200px; color:#fff">BICEPS · R<br><span style="color:#E3243B">ACTIVE</span></div></div>
+  </div>
+  <!-- HUD read-outs (screen space) -->
+  <div class="abs mono" id="ro1" style="left:120px; top:250px; color:rgba(255,255,255,.75)">GAINSDOM / LAB<br><span style="color:#fff">SCAN <span id="pct">000</span>%</span></div>
+  <div class="abs mono" id="ro2" style="right:120px; top:250px; text-align:right; color:rgba(255,255,255,.75)">T+<span id="tc">00:00</span><br><span style="color:#E3243B">● REC</span></div>
+  <div class="abs bebas" style="left:120px; right:120px; top:390px; text-align:center; line-height:.88">
+    <div id="t1" style="font-size:150px; position:relative">Your body<span class="abs gl" style="left:0; right:0; top:0; color:#00E5FF; mix-blend-mode:screen; opacity:0">Your body</span><span class="abs gl" style="left:0; right:0; top:0; color:#E3243B; mix-blend-mode:screen; opacity:0">Your body</span></div>
+    <div id="t2" style="font-size:172px; color:#E3243B; text-shadow:0 0 30px rgba(227,36,59,.6)">keeps score.</div>
+  </div>
+  <!-- tension meter -->
+  <div class="abs" id="meter" style="left:120px; top:1640px; width:840px">
+    <div class="mono" style="display:flex; justify-content:space-between; color:rgba(255,255,255,.8)"><span>Fibre tension</span><span id="lvl" style="color:#E3243B">High</span></div>
+    <div style="margin-top:14px; height:10px; background:rgba(255,255,255,.12)"><div id="bar" style="height:100%; width:100%; background:linear-gradient(90deg,#8E1424,#FF5468); box-shadow:0 0 18px rgba(227,36,59,.8); transform-origin:0 50%"></div></div>
+  </div>
+  <div class="full scan-lines"></div>
+  <div class="full" style="background: radial-gradient(ellipse 90% 75% at 50% 50%, transparent 55%, rgba(0,0,0,.6) 100%); pointer-events:none"></div>
+  <div id="grain"></div>
+  <div class="full" id="flash" style="background:#E3243B; mix-blend-mode:screen; pointer-events:none"></div>
+  <audio id="sfx" class="clip" src="assets/audio/sfx.wav" data-start="0" data-duration="5" data-track-index="1" data-volume="1"></audio>
+</div>
+<script>
+document.fonts.ready.then(() => {
+  const FR = 1 / 30, $ = (s) => document.querySelector(s), $$ = (s) => Array.from(document.querySelectorAll(s));
+  let seed = 9; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+  const tl = gsap.timeline({ paused: true });
+  gsap.set(["#flash", "#ro1", "#ro2", "#t2", "#meter", "#retL", "#retR"], { autoAlpha: 0 }); gsap.set("#bar", { scaleX: 0 });
+  tl.fromTo("#grain", { x: 0, y: 0 }, { keyframes: Array.from({ length: 75 }, () => ({ x: -Math.round(rnd() * 60), y: -Math.round(rnd() * 60), duration: 2 * FR, ease: "steps(1)" })) }, 0);
+  // camera: slow push with a drift, a punch when the scan completes
+  tl.fromTo("#cam", { scale: 1.08, y: 40 }, { scale: 1.0, y: 0, duration: 1.4, ease: "expo.out" }, 0);
+  tl.to("#cam", { scale: 1.06, y: -30, duration: 2.6, ease: "sine.inOut" }, 1.4);
+  tl.fromTo("#cam", { x: 0 }, { keyframes: [{ x: 10, duration: FR }, { x: -8, duration: FR }, { x: 0, duration: 2 * FR }], immediateRender: false }, 2.45);
+  tl.to("#cam", { scale: 1.12, duration: 1.0, ease: "power2.inOut" }, 4.0);
+  tl.fromTo("#grid", { y: 0 }, { y: -60, duration: 5, ease: "none" }, 0);
+  // body flickers on like a monitor
+  tl.fromTo("#ht", { opacity: 0 }, { keyframes: [0.6, 0.1, 0.8, 0.3, 1].map((o) => ({ opacity: o, duration: 2 * FR, ease: "steps(1)" })) }, 0.05);
+  // scanner sweeps down; the red x-ray is revealed above it
+  const Y0 = 860, Y1 = 1700;
+  gsap.set("#xr", { clipPath: "inset(0% 0% 100% 0%)" });
+  tl.fromTo("#scan", { y: Y0, autoAlpha: 1 }, { y: Y1, duration: 1.8, ease: "power1.inOut" }, 0.55);
+  tl.fromTo("#xr", { clipPath: "inset(0% 0% 100% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 1.8, ease: "power1.inOut" }, 0.55);
+  tl.to("#scan", { autoAlpha: 0, duration: 0.2 }, 2.35);
+  tl.fromTo("#ht", { opacity: 1 }, { opacity: 0.35, duration: 1.8, ease: "power1.inOut", immediateRender: false }, 0.55);
+  // read-outs
+  const pct = $("#pct"), tc = $("#tc"), pr = { p: 0, t: 0 };
+  tl.fromTo(pr, { p: 0 }, { p: 100, duration: 1.8, ease: "power1.inOut", onUpdate: () => { pct.textContent = String(Math.round(pr.p)).padStart(3, "0"); } }, 0.55);
+  tl.fromTo(pr, { t: 0 }, { t: 5, duration: 5, ease: "none", onUpdate: () => { const f = Math.floor(pr.t * 30); tc.textContent = `${String(Math.floor(pr.t)).padStart(2, "0")}:${String(f % 30).padStart(2, "0")}`; } }, 0);
+  tl.fromTo(["#ro1", "#ro2"], { autoAlpha: 0, y: -10 }, { autoAlpha: 1, y: 0, duration: 0.4, ease: "expo.out", stagger: 0.08 }, 0.2);
+  // HUD rings
+  tl.fromTo("#ringA", { rotation: -60, opacity: 0, svgOrigin: "0 0" }, { rotation: 200, opacity: 1, svgOrigin: "0 0", duration: 5, ease: "power1.out" }, 0.2);
+  tl.fromTo("#ringB", { rotation: 30, opacity: 0, svgOrigin: "0 0" }, { rotation: -140, opacity: 1, svgOrigin: "0 0", duration: 5, ease: "power1.out" }, 0.3);
+  // title: glitch in (RGB split flickers), then the red line lands
+  tl.fromTo("#t1", { autoAlpha: 0 }, { keyframes: [1, 0, 1, 0.4, 1].map((o) => ({ autoAlpha: o, duration: FR, ease: "steps(1)" })) }, 0.3);
+  $$(".gl").forEach((g, k) => tl.fromTo(g, { opacity: 0.9, x: k ? 14 : -14 }, { opacity: 0, x: 0, duration: 0.35, ease: "power2.out" }, 0.3));
+  tl.fromTo("#t2", { autoAlpha: 0, scale: 1.25, filter: "blur(14px)" }, { autoAlpha: 1, scale: 1, filter: "blur(0px)", duration: 0.7, ease: "expo.out" }, 0.75);
+  // scan complete: red flash, reticles lock on
+  tl.fromTo("#flash", { opacity: 0 }, { keyframes: [{ opacity: 0.35, duration: 0.06 }, { opacity: 0, duration: 0.5, ease: "power2.out" }] }, 2.4);
+  [["#retL", 2.5], ["#retR", 2.68]].forEach(([r, t]) => {
+    tl.fromTo(r, { autoAlpha: 0, scale: 1.8 }, { autoAlpha: 1, scale: 1, duration: 0.5, ease: "expo.out" }, t);
+    tl.fromTo(r + " .spin", { rotation: 0, svgOrigin: "0 0" }, { rotation: 180, svgOrigin: "0 0", duration: 5 - t, ease: "power1.out" }, t);
+  });
+  // tension meter fills
+  tl.fromTo("#meter", { autoAlpha: 0, y: 20 }, { autoAlpha: 1, y: 0, duration: 0.5, ease: "expo.out" }, 3.0);
+  tl.fromTo("#bar", { scaleX: 0 }, { scaleX: 0.86, duration: 1.0, ease: "power3.out" }, 3.15);
+  tl.set({}, {}, 5);
+  window.__timelines = window.__timelines || {}; window.__timelines["main"] = tl;
+});
+</script>
+</body>
+</html>

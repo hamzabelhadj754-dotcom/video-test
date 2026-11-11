@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+<style>
+  @font-face { font-family: "Bebas"; src: url("assets/fonts/BebasNeue-Regular.woff2") format("woff2"); }
+  @font-face { font-family: "Inter"; src: url("assets/fonts/Inter-Variable.woff2") format("woff2"); font-weight: 100 900; }
+  @font-face { font-family: "Script"; src: url("assets/fonts/MrsSaintDelafield-Regular.woff2") format("woff2"); }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; background: #EFE8DA; }
+  #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #EFE8DA; font-family: Inter, sans-serif; }
+  .full { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+  .abs { position: absolute; }
+  .bebas { font-family: "Bebas"; text-transform: uppercase; }
+  .paper { position: absolute; inset: -40px; opacity: .55; mix-blend-mode: multiply; pointer-events: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='400'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.55' numOctaves='4' seed='12' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .55  0 0 0 0 .5  0 0 0 0 .42  0 0 0 .22 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); }
+  .chip { display: inline-block; font: 400 172px/1 "Bebas"; padding: 10px 14px 0; margin: 0 3px; box-shadow: 0 8px 14px rgba(60,40,20,.25); }
+  .tape { position: absolute; width: 190px; height: 58px; background: rgba(236,226,196,.82); box-shadow: 0 2px 6px rgba(60,40,20,.18); }
+  .shadowed { filter: drop-shadow(0 18px 22px rgba(60,40,20,.28)); }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="5" data-width="1080" data-height="1920" data-fps="30">
+  <div class="full" id="cam">
+    <div class="paper"></div>
+    <!-- black torn strip: STOP DOING -->
+    <div class="abs" id="strip1" style="left:70px; top:290px; width:940px; height:210px; transform: rotate(-3deg)"><div class="b full" style="width:100%; height:100%">
+      <svg class="abs shadowed" width="940" height="210" viewBox="0 0 940 210" style="left:0; top:0; overflow:visible"><path id="torn1" fill="#141214"/></svg>
+      <div class="abs bebas" style="left:0; right:0; top:28px; text-align:center; font-size:162px; line-height:1; color:#F4EFE4; letter-spacing:.02em">Stop doing</div>
+    </div></div>
+    <!-- 100, circled -->
+    <div class="abs" id="hundred" style="left:0; right:0; top:540px; text-align:center"><div class="b" style="display:inline-block; position:relative">
+      <span class="bebas" style="font-size:300px; line-height:.9; color:#E3243B">100</span>
+      <svg class="abs" width="520" height="330" viewBox="0 0 520 330" style="left:-90px; top:-30px; overflow:visible"><path id="circ" d="M60 170 C 40 60, 200 18, 300 26 C 420 34, 500 110, 470 200 C 440 290, 260 318, 150 296 C 60 278, 20 210, 70 140 C 110 90, 230 60, 330 70" fill="none" stroke="#E3243B" stroke-width="11" stroke-linecap="round" pathLength="1" stroke-dasharray="1 1.2" stroke-dashoffset="1.1" opacity=".92"/></svg>
+    </div></div>
+    <!-- CRUNCHES ransom note -->
+    <div class="abs" id="ransom" style="left:0; right:0; top:860px; text-align:center; white-space:nowrap"></div>
+    <svg class="abs" width="1080" height="400" viewBox="0 0 1080 400" style="left:0; top:820px; overflow:visible"><path id="xout" d="M110 90 C 380 170, 700 230, 980 300 M120 300 C 420 230, 700 150, 970 80" fill="none" stroke="#E3243B" stroke-width="16" stroke-linecap="round" pathLength="1" stroke-dasharray="1 1.2" stroke-dashoffset="1.1" opacity=".95"/></svg>
+    <!-- halftone sticker + tape -->
+    <div class="abs" id="sticker" style="left:150px; top:1120px; width:780px; transform: rotate(3deg)"><div class="b" style="position:relative">
+      <img src="assets/sticker.png" alt="" class="shadowed" style="width:780px; display:block" />
+      <div class="tape" id="tape1" style="left:-40px; top:40px; transform: rotate(-32deg)"></div>
+      <div class="tape" id="tape2" style="right:-30px; top:30px; transform: rotate(28deg)"></div>
+    </div></div>
+    <!-- handwritten aside + arrow -->
+    <div class="abs" id="aside" style="left:600px; top:1075px; transform: rotate(-8deg)"><div class="b"><span style="font: 400 84px/1 Script; color:#E3243B">load them instead</span></div></div>
+    <svg class="abs" width="300" height="220" viewBox="0 0 300 220" style="left:700px; top:1150px; overflow:visible"><path id="arrow" d="M200 10 C 230 80, 200 140, 110 180 M110 180 L 150 150 M110 180 L 160 196" fill="none" stroke="#E3243B" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" pathLength="1" stroke-dasharray="1 1.2" stroke-dashoffset="1.1"/></svg>
+    <!-- bottom torn strip -->
+    <div class="abs" id="strip2" style="left:110px; top:1430px; width:860px; height:130px; transform: rotate(2deg)"><div class="b" style="width:100%; height:100%">
+      <svg class="abs shadowed" width="860" height="130" viewBox="0 0 860 130" style="left:0; top:0; overflow:visible"><path id="torn2" fill="#E3243B"/></svg>
+      <div class="abs" style="left:0; right:0; top:36px; text-align:center; font: 800 52px/1 Inter; letter-spacing:-.02em; color:#fff">Abs grow with load.</div>
+    </div></div>
+    <!-- stamp -->
+    <div class="abs" id="stamp" style="left:40px; top:1010px; width:210px; height:210px; transform: rotate(-14deg)"><div class="b" style="width:100%; height:100%">
+      <svg width="210" height="210" viewBox="-105 -105 210 210"><circle r="96" fill="none" stroke="#E3243B" stroke-width="5"/><circle r="80" fill="none" stroke="#E3243B" stroke-width="2"/><defs><path id="arc" d="M -66 0 A 66 66 0 1 1 66 0 A 66 66 0 1 1 -66 0"/></defs><text font-family="Inter" font-weight="800" font-size="22" letter-spacing="5" fill="#E3243B"><textPath href="#arc">GAINSDOM · LIFT HEAVY ·</textPath></text><text y="12" text-anchor="middle" font-family="Bebas" font-size="44" fill="#E3243B">GAINS</text></svg>
+    </div></div>
+  </div>
+  <div class="full" style="background: radial-gradient(ellipse 90% 75% at 50% 50%, transparent 55%, rgba(90,70,40,.28) 100%); pointer-events:none"></div>
+  <audio id="sfx" class="clip" src="assets/audio/sfx.wav" data-start="0" data-duration="5" data-track-index="1" data-volume="1"></audio>
+</div>
+<script>
+document.fonts.ready.then(() => {
+  const FR = 1 / 30, $ = (s) => document.querySelector(s), $$ = (s) => Array.from(document.querySelectorAll(s));
+  let seed = 21; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+  // torn-paper shapes (seeded jagged edges)
+  const torn = (w, h, j) => { let d = `M0 ${j * rnd()}`; for (let x = 0; x <= w; x += 14 + rnd() * 16) d += ` L${x.toFixed(1)} ${(rnd() * j).toFixed(1)}`;
+    d += ` L${w} ${h - rnd() * j}`; for (let x = w; x >= 0; x -= 14 + rnd() * 16) d += ` L${x.toFixed(1)} ${(h - rnd() * j).toFixed(1)}`; return d + " Z"; };
+  $("#torn1").setAttribute("d", torn(940, 210, 16)); $("#torn2").setAttribute("d", torn(860, 130, 12));
+  // ransom-note letters: each cut from a different scrap
+  const SK = [["#141214", "#F4EFE4"], ["#E3243B", "#fff"], ["#F8F6F0", "#141214"], ["#C9BFA8", "#141214"]];
+  $("#ransom").innerHTML = "CRUNCHES".split("").map((c, i) => { const [bg, fg] = SK[(i * 3 + 1) % 4]; return `<span class="chip" style="background:${bg}; color:${fg}; transform: rotate(${(rnd() * 12 - 6).toFixed(1)}deg) translateY(${(rnd() * 24 - 12).toFixed(0)}px)">${c}</span>`; }).join("");
+  const tl = gsap.timeline({ paused: true });
+  const ST = (n) => `steps(${n})`;
+  // stop-motion "boil": every 2 frames each piece jitters a hair (12-15 fps animation feel)
+  $$(".b").forEach((b) => tl.fromTo(b, { x: 0, y: 0, rotation: 0 }, { keyframes: Array.from({ length: 75 }, () => ({ x: (rnd() - .5) * 4, y: (rnd() - .5) * 4, rotation: (rnd() - .5) * 1.2, duration: 2 * FR, ease: "steps(1)" })) }, 0));
+  gsap.set(["#strip1", "#hundred", "#sticker", "#aside", "#strip2", "#stamp", ".tape"], { autoAlpha: 0 }); gsap.set(".chip", { autoAlpha: 0 });
+  // camera: choppy stepped push like a rostrum camera
+  tl.fromTo("#cam", { scale: 1.0, y: 0 }, { scale: 1.07, y: -50, duration: 5, ease: ST(20) }, 0);
+  // 1 · black strip slaps in from the left
+  tl.fromTo("#strip1", { autoAlpha: 1, x: -1200 }, { autoAlpha: 1, x: 0, duration: 0.3, ease: ST(4), immediateRender: false }, 0.1);
+  // 2 · 100 stamps in, letters of CRUNCHES pop one per 2 frames
+  tl.fromTo("#hundred", { autoAlpha: 1, scale: 1.5 }, { autoAlpha: 1, scale: 1, duration: 0.2, ease: ST(3), immediateRender: false }, 0.55);
+  $$(".chip").forEach((c, i) => tl.fromTo(c, { autoAlpha: 0, scale: 1.4 }, { autoAlpha: 1, scale: 1, duration: 0.13, ease: ST(2) }, 0.85 + i * 0.07));
+  // 3 · red marker: circle the 100, then cross CRUNCHES out
+  tl.fromTo("#circ", { strokeDashoffset: 1.1 }, { strokeDashoffset: 0, duration: 0.4, ease: ST(8) }, 1.55);
+  tl.fromTo("#xout", { strokeDashoffset: 1.1 }, { strokeDashoffset: 0, duration: 0.4, ease: ST(8) }, 2.0);
+  tl.fromTo("#ransom", { x: 0 }, { keyframes: [6, -6, 4, 0].map((x) => ({ x, duration: FR })), ease: "none", immediateRender: false }, 2.05);
+  // 4 · sticker drops on, taped down
+  tl.fromTo("#sticker", { autoAlpha: 1, y: 900, rotation: 12 }, { autoAlpha: 1, y: 0, rotation: 3, duration: 0.33, ease: ST(4), immediateRender: false }, 2.4);
+  tl.fromTo("#tape1", { autoAlpha: 1, scale: 1.6 }, { autoAlpha: 1, scale: 1, duration: 0.13, ease: ST(2), immediateRender: false }, 2.8);
+  tl.fromTo("#tape2", { autoAlpha: 1, scale: 1.6 }, { autoAlpha: 1, scale: 1, duration: 0.13, ease: ST(2), immediateRender: false }, 2.93);
+  // 5 · handwritten aside + arrow
+  tl.fromTo("#aside", { autoAlpha: 1, clipPath: "inset(0% 100% 0% 0%)" }, { autoAlpha: 1, clipPath: "inset(0% 0% 0% 0%)", duration: 0.5, ease: ST(8), immediateRender: false }, 3.1);
+  tl.fromTo("#arrow", { strokeDashoffset: 1.1 }, { strokeDashoffset: 0, duration: 0.3, ease: ST(6) }, 3.5);
+  // 6 · red strip slides in from the right
+  tl.fromTo("#strip2", { autoAlpha: 1, x: 1200 }, { autoAlpha: 1, x: 0, duration: 0.3, ease: ST(4), immediateRender: false }, 3.75);
+  // 7 · stamp thump
+  tl.fromTo("#stamp", { autoAlpha: 1, scale: 2.2 }, { autoAlpha: 1, scale: 1, duration: 0.2, ease: ST(3), immediateRender: false }, 4.25);
+  tl.fromTo("#cam", { x: 0 }, { keyframes: [8, -6, 3, 0].map((x) => ({ x, duration: FR })), ease: "none", immediateRender: false }, 4.45);
+  tl.set({}, {}, 5);
+  window.__timelines = window.__timelines || {}; window.__timelines["main"] = tl;
+});
+</script>
+</body>
+</html>

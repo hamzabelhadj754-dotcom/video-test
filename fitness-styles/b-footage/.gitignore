@@ -1,0 +1,5 @@
+renders/*.log
+renders/work-*
+.hyperframes/artifacts/
+assets/sfx_src/
+assets/src_52091.mp4
