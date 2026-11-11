@@ -1,0 +1,141 @@
+<template>
+  <style>
+    @font-face {
+      font-family: "Sora";
+      src: url("assets/fonts/sora.woff2") format("woff2");
+      font-weight: 300 800;
+    }
+    #root {
+      position: absolute;
+      inset: 0;
+      font-family: "Sora", sans-serif;
+    }
+    #logo-bloom {
+      position: absolute;
+      left: 560px;
+      top: 140px;
+      width: 800px;
+      height: 800px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(90, 160, 255, 0.55) 0%, rgba(47, 107, 255, 0.18) 35%, rgba(47, 107, 255, 0) 68%);
+    }
+    #logo-lockup {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 380px;
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 40px;
+    }
+    #logo-mark {
+      width: 168px;
+      height: 168px;
+      flex: none;
+    }
+    #logo-word {
+      position: relative;
+      color: #f5f7fa;
+      font-weight: 700;
+      font-size: 196px;
+      line-height: 1;
+      letter-spacing: -0.04em;
+      white-space: nowrap;
+    }
+    #logo-word .l {
+      display: inline-block;
+    }
+    #logo-sheen {
+      position: absolute;
+      left: 0;
+      top: 0;
+      color: transparent;
+      background: linear-gradient(100deg, rgba(160, 215, 255, 0) 42%, rgba(190, 228, 255, 0.95) 50%, rgba(160, 215, 255, 0) 58%);
+      background-size: 300% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+    }
+    #logo-tag {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 640px;
+      text-align: center;
+      font-family: "Inter", sans-serif;
+      font-size: 46px;
+      font-weight: 500;
+      color: #a9b3c6;
+      letter-spacing: -0.01em;
+    }
+    #logo-tag .t {
+      display: inline-block;
+      margin: 0 0.12em;
+    }
+    #logo-tag .hl {
+      color: #5ac8fa;
+    }
+    #logo-flash {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 50%, rgba(200, 230, 255, 0.9), rgba(47, 107, 255, 0.35) 40%, rgba(5, 6, 10, 0) 75%);
+      opacity: 0;
+    }
+  </style>
+  <div id="root" data-composition-id="logo" data-width="1920" data-height="1080">
+    <div id="logo-bloom" class="clip" data-start="0" data-duration="4.3" data-layout-ignore></div>
+    <div id="logo-zoom" class="clip" data-start="0" data-duration="4.3" style="position: absolute; inset: 0" data-layout-allow-overflow>
+      <div id="logo-lockup">
+        <svg id="logo-mark" viewBox="0 0 168 168">
+          <defs>
+            <linearGradient id="logo-tile" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#13214d" />
+              <stop offset="1" stop-color="#070b18" />
+            </linearGradient>
+            <linearGradient id="logo-stroke" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#5ac8fa" />
+              <stop offset="1" stop-color="#2f6bff" />
+            </linearGradient>
+          </defs>
+          <rect id="logo-tile-rect" x="4" y="4" width="160" height="160" rx="44" fill="url(#logo-tile)" stroke="rgba(120,170,255,0.35)" stroke-width="2" />
+          <path id="logo-w" d="M36 62 L60 112 L84 74 L108 112 L132 62" fill="none" stroke="url(#logo-stroke)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" pathLength="1" stroke-dasharray="1" />
+        </svg>
+        <div id="logo-word">
+          <span class="l">W</span><span class="l">i</span><span class="l">l</span><span class="l">e</span><span class="l">y</span>
+          <span id="logo-sheen" aria-hidden="true" data-layout-allow-occlusion>Wiley</span>
+        </div>
+      </div>
+      <div id="logo-tag"><span class="t">Your</span><span class="t hl">AI agent.</span></div>
+    </div>
+    <div id="logo-flash" class="clip" data-start="0" data-duration="4.3" data-layout-ignore></div>
+  </div>
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      // the point of light from the hook blooms
+      tl.fromTo("#logo-bloom", { opacity: 0, scale: 0.05 }, { opacity: 1, scale: 1, duration: 1.0, ease: "expo.out" }, 0.15);
+      tl.to("#logo-bloom", { opacity: 0.45, duration: 1.6, ease: "power2.inOut" }, 1.3);
+      // mark: tile pops, then the W waveform draws
+      tl.fromTo("#logo-mark", { scale: 0.2, opacity: 0, rotation: -12 }, { scale: 1, opacity: 1, rotation: 0, duration: 0.8, ease: "back.out(1.6)" }, 0.25);
+      tl.fromTo("#logo-w", { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.7, ease: "power3.inOut" }, 0.45);
+      // wordmark: letters resolve and tracking tightens
+      // tracking settles: each glyph starts spread out and slides into place
+      document.querySelectorAll("#logo-word .l").forEach((l, i) => {
+        tl.fromTo(l, { x: (i + 1) * 34 }, { x: 0, duration: 1.3, ease: "expo.out" }, 0.6);
+        tl.fromTo(l, { opacity: 0, filter: "blur(12px)", y: 30 }, { opacity: 1, filter: "blur(0px)", y: 0, duration: 0.5, ease: "expo.out" }, 0.62 + i * 0.07);
+      });
+      tl.fromTo("#logo-sheen", { backgroundPosition: "100% 0%" }, { backgroundPosition: "0% 0%", duration: 1.0, ease: "power2.inOut" }, 1.75);
+      document.querySelectorAll("#logo-tag .t").forEach((w, i) => {
+        tl.fromTo(w, { opacity: 0, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.3, ease: "power4.out" }, 1.45 + i * 0.12);
+      });
+      // exit: dive into the W mark
+      tl.fromTo("#logo-zoom", { scale: 1, filter: "blur(0px)", opacity: 1, transformOrigin: "672px 486px" }, { scale: 7, filter: "blur(18px)", duration: 0.65, ease: "power3.in" }, 3.1);
+      tl.to("#logo-zoom", { opacity: 0, duration: 0.25, ease: "power2.in" }, 3.5);
+      tl.to("#logo-bloom", { scale: 2.4, opacity: 0, duration: 0.6, ease: "power3.in" }, 3.15);
+      tl.fromTo("#logo-flash", { opacity: 0 }, { opacity: 0.85, duration: 0.16, ease: "power2.in" }, 3.6);
+      tl.to("#logo-flash", { opacity: 0, duration: 0.5, ease: "power2.out" }, 3.76);
+      window.__timelines["logo"] = tl;
+    })();
+  </script>
+</template>

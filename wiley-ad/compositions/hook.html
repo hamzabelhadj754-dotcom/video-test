@@ -1,0 +1,87 @@
+<template>
+  <style>
+    @font-face {
+      font-family: "Sora";
+      src: url("assets/fonts/sora.woff2") format("woff2");
+      font-weight: 300 800;
+    }
+    #root {
+      position: absolute;
+      inset: 0;
+      font-family: "Sora", sans-serif;
+    }
+    #hook-title {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 360px;
+      text-align: center;
+      color: #f5f7fa;
+      font-weight: 650;
+      font-size: 104px;
+      line-height: 1.12;
+      letter-spacing: -0.035em;
+    }
+    #hook-title .w {
+      display: inline-block;
+      margin: 0 0.12em;
+    }
+    #hook-title .hl {
+      background: linear-gradient(90deg, #5ac8fa, #2f6bff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      padding-right: 0.06em;
+    }
+    #hook-streak {
+      position: absolute;
+      left: 160px;
+      width: 1600px;
+      top: 680px;
+      height: 3px;
+      border-radius: 3px;
+      background: linear-gradient(90deg, rgba(47, 107, 255, 0), #2f6bff 30%, #b9e6ff 50%, #2f6bff 70%, rgba(47, 107, 255, 0));
+      box-shadow: 0 0 24px 4px rgba(47, 107, 255, 0.7), 0 0 80px 10px rgba(47, 107, 255, 0.35);
+      transform-origin: 50% 50%;
+    }
+    #hook-dot {
+      position: absolute;
+      left: 945px;
+      top: 666px;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #ffffff 0%, #9fd8ff 35%, rgba(47, 107, 255, 0) 70%);
+      box-shadow: 0 0 40px 14px rgba(47, 107, 255, 0.8);
+    }
+  </style>
+  <div id="root" data-composition-id="hook" data-width="1920" data-height="1080">
+    <h1 id="hook-title" class="clip" data-start="0" data-duration="3.2">
+      <span class="w">What</span><span class="w">if</span><span class="w">your</span><span class="w">work</span><br /><span class="w">did</span><span class="w hl">itself?</span>
+    </h1>
+    <div id="hook-streak" class="clip" data-start="0" data-duration="3.2" data-layout-ignore></div>
+    <div id="hook-dot" class="clip" data-start="0" data-duration="3.2" data-layout-ignore></div>
+  </div>
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      const words = document.querySelectorAll("#hook-title .w");
+      // the streak draws in from the left like a thought starting
+      tl.fromTo("#hook-streak", { scaleX: 0, opacity: 0, transformOrigin: "0% 50%" }, { scaleX: 1, opacity: 1, duration: 1.1, ease: "expo.out" }, 0.1);
+      // words resolve out of blur, one by one
+      words.forEach((w, i) => {
+        tl.fromTo(w, { opacity: 0, filter: "blur(10px)", y: 0 }, { opacity: 1, filter: "blur(0px)", duration: 0.32, ease: "power4.out" }, 0.35 + i * 0.13 + (i >= 4 ? 0.2 : 0));
+      });
+      // "itself?" gets a tiny scale punch on landing
+      tl.fromTo(words[5], { scale: 0.94 }, { scale: 1, duration: 0.6, ease: "expo.out" }, 1.22);
+      // exit: words blur away, streak collapses to a single point of light
+      words.forEach((w, i) => {
+        tl.to(w, { opacity: 0, filter: "blur(10px)", duration: 0.2, ease: "power2.in" }, 2.45 + i * 0.035);
+      });
+      tl.to("#hook-streak", { scaleX: 0, transformOrigin: "50% 50%", duration: 0.4, ease: "power3.in" }, 2.45);
+      tl.fromTo("#hook-dot", { opacity: 0, scale: 0.2, y: 0 }, { opacity: 1, scale: 1, duration: 0.2, ease: "power2.out" }, 2.75);
+      tl.to("#hook-dot", { y: -126, duration: 0.3, ease: "power3.inOut" }, 2.85);
+      window.__timelines["hook"] = tl;
+    })();
+  </script>
+</template>

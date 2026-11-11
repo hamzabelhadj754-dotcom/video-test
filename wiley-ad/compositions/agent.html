@@ -1,0 +1,142 @@
+<template>
+  <style>
+    @font-face {
+      font-family: "Sora";
+      src: url("assets/fonts/sora.woff2") format("woff2");
+      font-weight: 300 800;
+    }
+    #root {
+      position: absolute;
+      inset: 0;
+      font-family: "Inter", sans-serif;
+    }
+    .ag-card {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      padding: 24px 30px 24px 24px;
+      border-radius: 30px;
+      background: linear-gradient(160deg, rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.04));
+      border: 1.5px solid rgba(255, 255, 255, 0.16);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 30px 70px rgba(0, 0, 0, 0.55), 0 0 60px rgba(47, 107, 255, 0.18);
+      backdrop-filter: blur(26px);
+      -webkit-backdrop-filter: blur(26px);
+      color: #f5f7fa;
+    }
+    .ag-icon {
+      width: 72px;
+      height: 72px;
+      border-radius: 22px;
+      flex: none;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(145deg, #4d86ff, #2f6bff);
+      box-shadow: 0 8px 24px rgba(47, 107, 255, 0.5);
+    }
+    .ag-icon svg {
+      width: 38px;
+      height: 38px;
+    }
+    .ag-title {
+      font-size: 34px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      white-space: nowrap;
+    }
+    .ag-sub {
+      margin-top: 6px;
+      font-size: 28px;
+      color: #9aa5b8;
+      white-space: nowrap;
+    }
+    #ag-c1 {
+      left: 250px;
+      top: 300px;
+    }
+    #ag-c2 {
+      left: 1210px;
+      top: 590px;
+    }
+    #ag-c3 {
+      left: 1250px;
+      top: 250px;
+      padding: 18px 28px;
+      border-radius: 999px;
+      gap: 14px;
+    }
+    #ag-c3 .ag-title {
+      font-size: 30px;
+    }
+    #ag-caption {
+      position: absolute;
+      left: 150px;
+      top: 846px;
+      font-family: "Sora", sans-serif;
+      font-weight: 600;
+      font-size: 56px;
+      letter-spacing: -0.03em;
+      color: #f5f7fa;
+      line-height: 1.15;
+    }
+    #ag-caption .w {
+      display: inline-block;
+      margin-right: 0.24em;
+    }
+    #ag-caption .dim {
+      color: #8a94a6;
+    }
+  </style>
+  <div id="root" data-composition-id="agent" data-width="1920" data-height="1080">
+    <div id="ag-c1" class="ag-card clip" data-start="0" data-duration="6.2">
+      <div class="ag-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="3" /><path d="M3 10h18M8 3v4M16 3v4" /></svg>
+      </div>
+      <div>
+        <div class="ag-title">Meeting moved to 3 PM</div>
+        <div class="ag-sub">Wiley · just now</div>
+      </div>
+    </div>
+    <div id="ag-c2" class="ag-card clip" data-start="0" data-duration="6.2">
+      <div class="ag-icon" style="background: linear-gradient(145deg, #7fd6ff, #3aa6e8)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3" /><path d="M4 7l8 6 8-6" /></svg>
+      </div>
+      <div>
+        <div class="ag-title">Replied to Sarah</div>
+        <div class="ag-sub">Contract review · sent</div>
+      </div>
+    </div>
+    <div id="ag-c3" class="ag-card clip" data-start="0" data-duration="6.2">
+      <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="#5ac8fa" stroke-width="2" stroke-linejoin="round"><path d="M12 2l2 8 8 2-8 2-2 8-2-8-8-2 8-2z" /></svg>
+      <div class="ag-title">4 tasks handled</div>
+    </div>
+    <div id="ag-caption" class="clip" data-start="0" data-duration="6.2">
+      <span class="w">Just</span><span class="w">ask.</span><br /><span class="w dim">Wiley</span><span class="w dim">handles</span><span class="w dim">the</span><span class="w dim">rest.</span>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      // caption: word blur-in
+      document.querySelectorAll("#ag-caption .w").forEach((w, i) => {
+        tl.fromTo(w, { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.3, ease: "power4.out" }, 0.9 + i * 0.09 + (i >= 2 ? 0.25 : 0));
+      });
+      tl.to("#ag-caption", { opacity: 0, filter: "blur(8px)", duration: 0.25, ease: "power2.in" }, 5.3);
+
+      // cards arrive from depth as Wiley completes things on the phone
+      const enter = (sel, t, fromX) =>
+        tl.fromTo(sel, { opacity: 0, x: fromX, y: 30, scale: 0.86, filter: "blur(10px)" }, { opacity: 1, x: 0, y: 0, scale: 1, filter: "blur(0px)", duration: 0.9, ease: "expo.out" }, t);
+      enter("#ag-c1", 2.95, -80);
+      enter("#ag-c2", 3.55, 80);
+      enter("#ag-c3", 4.35, 60);
+      // slow parallax drift while they hold (one move each, both-ways ease)
+      tl.to("#ag-c1", { y: -26, duration: 2.4, ease: "sine.inOut" }, 3.85);
+      tl.to("#ag-c2", { y: 22, duration: 1.8, ease: "sine.inOut" }, 4.45);
+      // exit together with the phone's move right
+      tl.to("#ag-c1", { opacity: 0, x: -140, filter: "blur(12px)", duration: 0.4, ease: "power3.in" }, 5.45);
+      tl.to("#ag-c2", { opacity: 0, x: 220, filter: "blur(12px)", duration: 0.4, ease: "power3.in" }, 5.5);
+      tl.to("#ag-c3", { opacity: 0, x: 220, filter: "blur(12px)", duration: 0.4, ease: "power3.in" }, 5.45);
+      window.__timelines["agent"] = tl;
+    })();
+  </script>
+</template>

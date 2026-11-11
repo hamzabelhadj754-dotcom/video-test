@@ -1,0 +1,115 @@
+<template>
+  <style>
+    @font-face {
+      font-family: "Sora";
+      src: url("assets/fonts/sora.woff2") format("woff2");
+      font-weight: 300 800;
+    }
+    #root {
+      position: absolute;
+      inset: 0;
+      font-family: "Inter", sans-serif;
+      color: #f5f7fa;
+    }
+    .mt-chip {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 18px 30px 18px 18px;
+      border-radius: 999px;
+      background: linear-gradient(160deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.04));
+      border: 1.5px solid rgba(255, 255, 255, 0.16);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), 0 24px 60px rgba(0, 0, 0, 0.5), 0 0 50px rgba(47, 107, 255, 0.16);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+      font-size: 30px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .mt-chip b {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(145deg, #4d86ff, #2f6bff);
+      flex: none;
+    }
+    .mt-chip b svg {
+      width: 26px;
+      height: 26px;
+    }
+    #mt-1 { left: 240px; top: 200px; }
+    #mt-2 { left: 150px; top: 450px; }
+    #mt-3 { left: 330px; top: 690px; }
+    #mt-4 { left: 1300px; top: 220px; }
+    #mt-5 { left: 1400px; top: 470px; }
+    #mt-6 { left: 1250px; top: 700px; }
+    #mt-text {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 800px;
+      height: 130px;
+      text-align: center;
+      font-family: "Sora", sans-serif;
+      font-weight: 700;
+      font-size: 96px;
+      letter-spacing: -0.045em;
+      line-height: 1;
+    }
+    .mt-line {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+    }
+    .mt-line .w {
+      display: inline-block;
+      margin: 0 0.12em;
+    }
+    .hl {
+      background: linear-gradient(90deg, #5ac8fa, #2f6bff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      padding-right: 0.05em;
+    }
+  </style>
+  <div id="root" data-composition-id="montage" data-width="1920" data-height="1080">
+    <div id="mt-1" class="mt-chip clip" data-start="0" data-duration="5.2"><b><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg></b>Report drafted</div>
+    <div id="mt-2" class="mt-chip clip" data-start="0" data-duration="5.2"><b><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg></b>Invoices sent</div>
+    <div id="mt-3" class="mt-chip clip" data-start="0" data-duration="5.2"><b><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg></b>Call booked · 2:30</div>
+    <div id="mt-4" class="mt-chip clip" data-start="0" data-duration="5.2"><b><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg></b>Notes summarized</div>
+    <div id="mt-5" class="mt-chip clip" data-start="0" data-duration="5.2"><b><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg></b>Trip planned</div>
+    <div id="mt-6" class="mt-chip clip" data-start="0" data-duration="5.2"><b><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg></b>Follow-ups sent</div>
+    <div id="mt-text" class="clip" data-start="0" data-duration="5.2" data-layout-allow-overlap>
+      <div id="mt-l1" class="mt-line"><span class="w">Less</span><span class="w">busywork.</span></div>
+      <div id="mt-l2" class="mt-line"><span class="w">More</span><span class="w hl">you.</span></div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      const chips = ["#mt-1", "#mt-4", "#mt-2", "#mt-5", "#mt-3", "#mt-6"];
+      // chips arrive fast from depth, a montage rhythm
+      chips.forEach((c, i) => {
+        const left = ["#mt-1", "#mt-2", "#mt-3"].includes(c);
+        tl.fromTo(c, { opacity: 0, scale: 0.6, x: left ? 120 : -120, filter: "blur(14px)" }, { opacity: 1, scale: 1, x: 0, filter: "blur(0px)", duration: 0.7, ease: "expo.out" }, 0.55 + i * 0.22);
+        tl.to(c, { y: i % 2 ? 18 : -18, duration: 2.6, ease: "sine.inOut" }, 1.3 + i * 0.22);
+        // whip: fly outward with blur as the phone spins
+        tl.to(c, { opacity: 0, x: left ? -500 : 500, filter: "blur(16px)", duration: 0.45, ease: "power3.in" }, 4.2 + (i % 3) * 0.03);
+      });
+      // text: line 1 then line 2 on the same stage
+      const l1 = document.querySelectorAll("#mt-l1 .w");
+      const l2 = document.querySelectorAll("#mt-l2 .w");
+      l1.forEach((w, i) => tl.fromTo(w, { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.3, ease: "power4.out" }, 0.8 + i * 0.1));
+      tl.to("#mt-l1", { opacity: 0, filter: "blur(10px)", duration: 0.2, ease: "power2.in" }, 2.35);
+      l2.forEach((w, i) => tl.fromTo(w, { opacity: 0, y: 60, filter: "blur(6px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.6, ease: "expo.out" }, 2.55 + i * 0.14));
+      tl.fromTo(l2[1], { scale: 0.9 }, { scale: 1, duration: 0.8, ease: "back.out(1.6)" }, 2.69);
+      tl.to("#mt-l2", { opacity: 0, filter: "blur(10px)", duration: 0.22, ease: "power2.in" }, 4.15);
+      window.__timelines["montage"] = tl;
+    })();
+  </script>
+</template>

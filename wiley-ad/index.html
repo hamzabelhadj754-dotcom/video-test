@@ -1,0 +1,533 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.184.0/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.184.0/examples/jsm/"
+        }
+      }
+    </script>
+    <style>
+      @font-face {
+        font-family: "Sora";
+        src: url("assets/fonts/sora.woff2") format("woff2");
+        font-weight: 300 800;
+        font-style: normal;
+      }
+      :root {
+        --ground: #05060a;
+        --navy: #0b1430;
+        --blue: #2f6bff;
+        --cyan: #5ac8fa;
+        --ink: #f5f7fa;
+        --slate: #8a94a6;
+        --font-display: "Sora", sans-serif;
+        --font-text: "Inter", sans-serif;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: var(--ground);
+      }
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        font-family: var(--font-text);
+      }
+      .layer {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+      #bg {
+        background: radial-gradient(120% 90% at 50% 120%, #0a1230 0%, #05060a 55%);
+        z-index: 0;
+      }
+      .blob {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(90px);
+      }
+      #blob-a {
+        width: 1100px;
+        height: 1100px;
+        left: -260px;
+        top: -420px;
+        background: radial-gradient(circle, rgba(47, 107, 255, 0.55), rgba(47, 107, 255, 0) 65%);
+      }
+      #blob-b {
+        width: 1000px;
+        height: 1000px;
+        left: 1150px;
+        top: 380px;
+        background: radial-gradient(circle, rgba(90, 200, 250, 0.32), rgba(90, 200, 250, 0) 65%);
+      }
+      #blob-c {
+        width: 900px;
+        height: 700px;
+        left: 520px;
+        top: 620px;
+        background: radial-gradient(circle, rgba(30, 50, 160, 0.5), rgba(30, 50, 160, 0) 65%);
+      }
+      #floor {
+        position: absolute;
+        left: -10%;
+        width: 120%;
+        top: 640px;
+        height: 700px;
+        background-image: linear-gradient(rgba(90, 160, 255, 0.16) 2px, transparent 2px),
+          linear-gradient(90deg, rgba(90, 160, 255, 0.16) 2px, transparent 2px);
+        background-size: 96px 96px;
+        transform-origin: 50% 0%;
+        -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 30%, black 55%, transparent 100%);
+        mask-image: linear-gradient(to bottom, transparent 0%, black 30%, black 55%, transparent 100%);
+      }
+      #floor-wrap {
+        perspective: 900px;
+        perspective-origin: 50% 0%;
+      }
+      #stage {
+        z-index: 2;
+      }
+      #stage canvas {
+        width: 1920px;
+        height: 1080px;
+        display: block;
+      }
+      #vignette {
+        z-index: 20;
+        background: radial-gradient(ellipse 75% 70% at 50% 50%, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, 0.6) 100%);
+      }
+      #grain {
+        z-index: 21;
+        background-image: url("assets/grain.png");
+        background-size: 512px 512px;
+        opacity: 0.07;
+        mix-blend-mode: overlay;
+      }
+      #fade {
+        z-index: 30;
+        opacity: 0;
+        background: #000;
+      }
+      .scene-host {
+        z-index: 10;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="30"
+      data-width="1920"
+      data-height="1080"
+    >
+      <!-- Background world -->
+      <div id="bg" class="layer clip" data-start="0" data-duration="30" data-track-index="0" data-layout-ignore>
+        <div id="bg-inner" class="layer">
+          <div id="blob-a" class="blob"></div>
+          <div id="blob-b" class="blob"></div>
+          <div id="blob-c" class="blob"></div>
+          <div id="floor-wrap" class="layer"><div id="floor"></div></div>
+        </div>
+      </div>
+
+      <!-- 3D phone stage (three.js) -->
+      <div id="stage" class="layer clip" data-start="0" data-duration="30" data-track-index="1" data-layout-ignore></div>
+
+      <!-- Scenes -->
+      <div
+        id="hook"
+        class="scene-host"
+        data-composition-id="hook"
+        data-composition-src="compositions/hook.html"
+        data-start="0"
+        data-duration="3.2"
+        data-track-index="2"
+        data-track-kind="graphics"
+        data-width="1920"
+        data-height="1080"
+      ></div>
+      <div
+        id="logo"
+        class="scene-host"
+        data-composition-id="logo"
+        data-composition-src="compositions/logo.html"
+        data-start="2.9"
+        data-duration="4.3"
+        data-track-index="3"
+        data-track-kind="graphics"
+        data-width="1920"
+        data-height="1080"
+      ></div>
+      <div
+        id="agent"
+        class="scene-host"
+        data-composition-id="agent"
+        data-composition-src="compositions/agent.html"
+        data-start="7"
+        data-duration="6.2"
+        data-track-index="4"
+        data-track-kind="graphics"
+        data-width="1920"
+        data-height="1080"
+      ></div>
+      <div
+        id="features"
+        class="scene-host"
+        data-composition-id="features"
+        data-composition-src="compositions/features.html"
+        data-start="13"
+        data-duration="7.1"
+        data-track-index="5"
+        data-track-kind="graphics"
+        data-width="1920"
+        data-height="1080"
+      ></div>
+      <div
+        id="montage"
+        class="scene-host"
+        data-composition-id="montage"
+        data-composition-src="compositions/montage.html"
+        data-start="20"
+        data-duration="5.2"
+        data-track-index="6"
+        data-track-kind="graphics"
+        data-width="1920"
+        data-height="1080"
+      ></div>
+      <div
+        id="endcard"
+        class="scene-host"
+        data-composition-id="endcard"
+        data-composition-src="compositions/endcard.html"
+        data-start="24.9"
+        data-duration="5.1"
+        data-track-index="7"
+        data-track-kind="graphics"
+        data-width="1920"
+        data-height="1080"
+      ></div>
+
+      <!-- Finishing -->
+      <div id="vignette" class="layer clip" data-start="0" data-duration="30" data-track-index="8" data-layout-ignore></div>
+      <div id="grain" class="layer clip" data-start="0" data-duration="30" data-track-index="9" data-layout-ignore></div>
+      <div id="fade" class="layer clip" data-start="0" data-duration="30" data-track-index="10" data-layout-ignore></div>
+    </div>
+
+    <script type="module">
+      import * as THREE from "three";
+      import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
+      import { W as UIW, H as UIH, drawUI } from "./assets/phone-ui.js";
+
+      window.__timelines = window.__timelines || {};
+      window.__hf = window.__hf || {};
+      window.__hf.buildReady = window.__hf.buildReady || {};
+
+      // ---------- keyframe tracks (pure functions of t) ----------
+      const E = {
+        lin: (x) => x,
+        expoOut: (x) => (x >= 1 ? 1 : 1 - Math.pow(2, -10 * x)),
+        io: (x) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2),
+        sine: (x) => -(Math.cos(Math.PI * x) - 1) / 2,
+        expoIO: (x) =>
+          x <= 0 ? 0 : x >= 1 ? 1 : x < 0.5 ? Math.pow(2, 20 * x - 10) / 2 : (2 - Math.pow(2, -20 * x + 10)) / 2,
+      };
+      // track: [[time, value, easeIntoThisKey], ...]
+      function track(keys, t) {
+        if (t <= keys[0][0]) return keys[0][1];
+        for (let i = 1; i < keys.length; i++) {
+          const [t1, v1, e] = keys[i];
+          const [t0, v0] = keys[i - 1];
+          if (t <= t1) {
+            const x = (t - t0) / (t1 - t0);
+            return v0 + (v1 - v0) * (E[e || "io"] || E.io)(x);
+          }
+        }
+        return keys[keys.length - 1][1];
+      }
+      const TAU = Math.PI * 2;
+      const K = {
+        py: [[6.72, -4.4], [8.0, 0, "expoOut"], [19.8, 0], [20.6, 0.32], [24.25, 0.32], [25.15, 0]],
+        px: [[12.55, 0], [13.25, 1.12], [19.8, 1.12], [20.6, 0], [24.25, 0], [25.15, -1.38]],
+        ry: [
+          [6.72, -1.3], [8.0, -0.32, "expoOut"], [12.55, 0.16, "sine"], [13.25, -0.44],
+          [15.25, -0.38, "sine"], [15.7, -0.52], [17.65, -0.46, "sine"], [18.1, -0.3],
+          [19.8, -0.26, "sine"], [20.6, 0], [24.25, 0.24, "sine"], [25.15, 0.46 + TAU, "expoIO"], [29.6, 0.3 + TAU, "sine"],
+        ],
+        rx: [[6.72, 0.4], [8.0, 0.06, "expoOut"], [19.8, 0.04], [20.6, 0.1], [24.25, 0.12], [25.15, 0.03]],
+        rz: [[6.72, 0.12], [8.0, 0, "expoOut"], [13.25, -0.03], [19.8, -0.03], [20.6, 0]],
+        camZ: [[0, 7.4], [7.9, 7.0, "expoOut"], [12.55, 6.55, "sine"], [13.25, 6.35], [19.8, 6.0, "sine"], [20.6, 9.0], [24.25, 8.5, "sine"], [25.15, 7.3], [30, 6.95, "sine"]],
+        camY: [[0, 0.05], [20.6, 0.05], [21.0, 0.2], [24.25, 0.2], [25.15, 0.05]],
+        glow: [[6.6, 0], [7.8, 1, "expoOut"], [29.4, 1], [30, 0]],
+      };
+
+      // ---------- three.js setup ----------
+      const host = document.getElementById("stage");
+      const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
+      renderer.setPixelRatio(1);
+      renderer.setSize(1920, 1080, false);
+      renderer.setClearColor(0x000000, 0);
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.05;
+      host.appendChild(renderer.domElement);
+
+      const scene = new THREE.Scene();
+      const pmrem = new THREE.PMREMGenerator(renderer);
+      scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+      scene.environmentIntensity = 0.55;
+
+      const camera = new THREE.PerspectiveCamera(30, 1920 / 1080, 0.1, 100);
+
+      // lights: warm key, cool rims
+      const key = new THREE.DirectionalLight(0xfff1e0, 1.6);
+      key.position.set(2.5, 3, 5);
+      scene.add(key);
+      const rimL = new THREE.DirectionalLight(0x3d7bff, 4.0);
+      rimL.position.set(-4, 1.5, -3);
+      scene.add(rimL);
+      const rimR = new THREE.DirectionalLight(0x5ac8fa, 3.0);
+      rimR.position.set(4, -1, -2.5);
+      scene.add(rimR);
+      scene.add(new THREE.AmbientLight(0x223355, 0.6));
+
+      function roundRectShape(w, h, r) {
+        const s = new THREE.Shape();
+        const x = -w / 2, y = -h / 2;
+        s.moveTo(x + r, y);
+        s.lineTo(x + w - r, y);
+        s.quadraticCurveTo(x + w, y, x + w, y + r);
+        s.lineTo(x + w, y + h - r);
+        s.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+        s.lineTo(x + r, y + h);
+        s.quadraticCurveTo(x, y + h, x, y + h - r);
+        s.lineTo(x, y + r);
+        s.quadraticCurveTo(x, y, x + r, y);
+        return s;
+      }
+      function planarUV(geo, w, h) {
+        const pos = geo.attributes.position;
+        const uv = new Float32Array(pos.count * 2);
+        for (let i = 0; i < pos.count; i++) {
+          uv[i * 2] = pos.getX(i) / w + 0.5;
+          uv[i * 2 + 1] = pos.getY(i) / h + 0.5;
+        }
+        geo.setAttribute("uv", new THREE.BufferAttribute(uv, 2));
+        return geo;
+      }
+
+      const PW = 1.0, PH = 2.06, PR = 0.155, DEPTH = 0.06, BEV = 0.022;
+      const phone = new THREE.Group();
+      const pivot = new THREE.Group();
+      pivot.add(phone);
+      scene.add(pivot);
+
+      // titanium frame
+      const bodyGeo = new THREE.ExtrudeGeometry(roundRectShape(PW - BEV * 2, PH - BEV * 2, PR - BEV), {
+        depth: DEPTH, bevelEnabled: true, bevelThickness: BEV, bevelSize: BEV, bevelSegments: 8, curveSegments: 32,
+      });
+      bodyGeo.translate(0, 0, -DEPTH / 2);
+      const titanium = new THREE.MeshPhysicalMaterial({
+        color: 0x3a3f4a, metalness: 1.0, roughness: 0.42, clearcoat: 0.4, clearcoatRoughness: 0.25,
+      });
+      phone.add(new THREE.Mesh(bodyGeo, titanium));
+      const FRONT = DEPTH / 2 + BEV;
+
+      // front black glass
+      const bezel = new THREE.Mesh(
+        new THREE.ShapeGeometry(roundRectShape(PW - 0.018, PH - 0.018, PR - 0.01), 32),
+        new THREE.MeshPhysicalMaterial({ color: 0x020203, roughness: 0.08, metalness: 0, clearcoat: 1 })
+      );
+      bezel.position.z = FRONT + 0.0008;
+      phone.add(bezel);
+
+      // screen with live UI
+      const uiCanvas = document.createElement("canvas");
+      uiCanvas.width = UIW;
+      uiCanvas.height = UIH;
+      const uiCtx = uiCanvas.getContext("2d");
+      const uiTex = new THREE.CanvasTexture(uiCanvas);
+      uiTex.colorSpace = THREE.SRGBColorSpace;
+      uiTex.anisotropy = 8;
+      const SW = 0.93, SH = 1.99;
+      const screen = new THREE.Mesh(
+        planarUV(new THREE.ShapeGeometry(roundRectShape(SW, SH, 0.125), 32), SW, SH),
+        new THREE.MeshBasicMaterial({ map: uiTex, toneMapped: false })
+      );
+      screen.position.z = FRONT + 0.0016;
+      phone.add(screen);
+
+      // glass reflection sweep
+      const refCanvas = document.createElement("canvas");
+      refCanvas.width = 512;
+      refCanvas.height = 1024;
+      {
+        // periodic diagonal light bands (seamless when the texture wraps horizontally)
+        const c = refCanvas.getContext("2d");
+        const img = c.createImageData(512, 1024);
+        const band = (u, center, width) => Math.exp(-Math.pow((u - center) / width, 2));
+        for (let y = 0; y < 1024; y++) {
+          for (let x = 0; x < 512; x++) {
+            let u = (x / 512 + (y / 1024) * 0.45) % 1;
+            const a = 0.11 * band(u, 0.42, 0.07) + 0.05 * band(u, 0.55, 0.04);
+            const i = (y * 512 + x) * 4;
+            img.data[i] = img.data[i + 1] = img.data[i + 2] = 255;
+            img.data[i + 3] = Math.round(a * 255);
+          }
+        }
+        c.putImageData(img, 0, 0);
+      }
+      const refTex = new THREE.CanvasTexture(refCanvas);
+      refTex.wrapS = THREE.RepeatWrapping;
+      const reflection = new THREE.Mesh(
+        planarUV(new THREE.ShapeGeometry(roundRectShape(PW - 0.02, PH - 0.02, PR - 0.012), 32), PW, PH),
+        new THREE.MeshBasicMaterial({ map: refTex, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false })
+      );
+      reflection.position.z = FRONT + 0.0026;
+      phone.add(reflection);
+
+      // back glass + camera plateau
+      const backGlass = new THREE.Mesh(
+        new THREE.ShapeGeometry(roundRectShape(PW - 0.02, PH - 0.02, PR - 0.012), 32),
+        new THREE.MeshPhysicalMaterial({ color: 0x141a2a, roughness: 0.35, metalness: 0.2, clearcoat: 0.6 })
+      );
+      backGlass.position.z = -FRONT - 0.0008;
+      backGlass.rotation.y = Math.PI;
+      phone.add(backGlass);
+      const plateauGeo = new THREE.ExtrudeGeometry(roundRectShape(0.44, 0.44, 0.1), {
+        depth: 0.012, bevelEnabled: true, bevelThickness: 0.008, bevelSize: 0.008, bevelSegments: 4, curveSegments: 16,
+      });
+      const plateau = new THREE.Mesh(plateauGeo, new THREE.MeshPhysicalMaterial({ color: 0x1b2232, roughness: 0.3, metalness: 0.5, clearcoat: 0.8 }));
+      plateau.rotation.y = Math.PI;
+      plateau.position.set(PW / 2 - 0.27, PH / 2 - 0.27, -FRONT - 0.002);
+      phone.add(plateau);
+      const lensMat = new THREE.MeshPhysicalMaterial({ color: 0x05070c, roughness: 0.05, metalness: 0.3, clearcoat: 1 });
+      const ringMat = new THREE.MeshPhysicalMaterial({ color: 0x4a5060, roughness: 0.3, metalness: 1 });
+      [[-0.09, 0.09], [-0.09, -0.09], [0.09, 0]].forEach(([dx, dy]) => {
+        const ring = new THREE.Mesh(new THREE.CylinderGeometry(0.075, 0.075, 0.03, 40), ringMat);
+        ring.rotation.x = Math.PI / 2;
+        ring.position.set(PW / 2 - 0.27 - dx, PH / 2 - 0.27 + dy, -FRONT - 0.03);
+        phone.add(ring);
+        const lens = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.055, 0.032, 40), lensMat);
+        lens.rotation.x = Math.PI / 2;
+        lens.position.set(PW / 2 - 0.27 - dx, PH / 2 - 0.27 + dy, -FRONT - 0.032);
+        phone.add(lens);
+      });
+
+      // side buttons
+      const btnMat = titanium;
+      const addBtn = (x, y, h) => {
+        const b = new THREE.Mesh(new THREE.BoxGeometry(0.014, h, 0.04), btnMat);
+        b.position.set(x, y, 0);
+        phone.add(b);
+      };
+      addBtn(PW / 2 + 0.006, 0.38, 0.26);
+      addBtn(-PW / 2 - 0.006, 0.55, 0.11);
+      addBtn(-PW / 2 - 0.006, 0.36, 0.17);
+      addBtn(-PW / 2 - 0.006, 0.14, 0.17);
+
+      // soft blue glow behind phone (sprite)
+      const glowCanvas = document.createElement("canvas");
+      glowCanvas.width = glowCanvas.height = 256;
+      {
+        const c = glowCanvas.getContext("2d");
+        const g = c.createRadialGradient(128, 128, 0, 128, 128, 128);
+        g.addColorStop(0, "rgba(60,120,255,0.9)");
+        g.addColorStop(0.35, "rgba(47,107,255,0.35)");
+        g.addColorStop(1, "rgba(47,107,255,0)");
+        c.fillStyle = g;
+        c.fillRect(0, 0, 256, 256);
+      }
+      const glow = new THREE.Sprite(
+        new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(glowCanvas), transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false })
+      );
+      glow.scale.set(4.2, 4.6, 1);
+      scene.add(glow);
+
+      // floor contact glow
+      const floorGlow = new THREE.Sprite(glow.material.clone());
+      floorGlow.scale.set(2.6, 0.5, 1);
+      scene.add(floorGlow);
+
+      // ---------- render(t) ----------
+      let lastUI = -1;
+      function render(t) {
+        const visible = t >= 6.72;
+        pivot.visible = visible;
+        const float = Math.sin(t * 1.25) * 0.035;
+        pivot.position.set(track(K.px, t), track(K.py, t) + float, 0);
+        pivot.rotation.set(track(K.rx, t), track(K.ry, t), track(K.rz, t));
+        camera.position.set(0, track(K.camY, t), track(K.camZ, t));
+        camera.lookAt(0, track(K.camY, t) * 0.6, 0);
+
+        const g = track(K.glow, t);
+        glow.material.opacity = 0.55 * g;
+        glow.position.set(pivot.position.x, pivot.position.y, -0.9);
+        floorGlow.material.opacity = 0.35 * g;
+        floorGlow.position.set(pivot.position.x, pivot.position.y - 1.25, -0.3);
+
+        // reflection sweeps with rotation
+        refTex.offset.x = -pivot.rotation.y * 0.35 + t * 0.012;
+
+        if (visible && t !== lastUI) {
+          uiCtx.setTransform(1, 0, 0, 1, 0, 0);
+          uiCtx.globalAlpha = 1;
+          drawUI(uiCtx, t);
+          uiTex.needsUpdate = true;
+          lastUI = t;
+        }
+        renderer.render(scene, camera);
+      }
+      window.addEventListener("hf-seek", (e) => render(e.detail.time));
+
+      // ---------- root timeline ----------
+      const build = (async () => {
+        await Promise.all([
+          document.fonts.load('700 40px "Sora"'),
+          document.fonts.load('400 30px "Inter"'),
+          document.fonts.load('600 30px "Inter"'),
+        ]).catch(() => {});
+        if (renderer.compileAsync) await renderer.compileAsync(scene, camera);
+
+        const tl = gsap.timeline({ paused: true });
+        const clock = { t: 0 };
+        tl.fromTo(clock, { t: 0 }, { t: 30, duration: 30, ease: "none", onUpdate: () => render(clock.t) }, 0);
+
+        // background drift (slow, both-ways eases)
+        tl.fromTo("#blob-a", { x: 0, y: 0 }, { x: 260, y: 140, duration: 30, ease: "sine.inOut" }, 0);
+        tl.fromTo("#blob-b", { x: 0, y: 0 }, { x: -340, y: -160, duration: 30, ease: "sine.inOut" }, 0);
+        tl.fromTo("#blob-c", { x: 0, y: 0, scale: 0.8 }, { x: 180, y: -60, scale: 1.2, duration: 30, ease: "sine.inOut" }, 0);
+        // background holds dark through the hook, opens when the brand arrives
+        tl.fromTo("#bg-inner", { opacity: 0.15 }, { opacity: 1, duration: 1.6, ease: "power2.inOut" }, 3.0);
+        tl.fromTo("#floor", { rotationX: 72, y: 0, backgroundPositionY: "0px" }, { rotationX: 72, y: 0, backgroundPositionY: "960px", duration: 30, ease: "none" }, 0);
+        tl.fromTo("#floor-wrap", { opacity: 0 }, { opacity: 1, duration: 1.2, ease: "power2.inOut" }, 6.6);
+        // grain flicker, stepped and deterministic
+        tl.fromTo("#grain", { backgroundPosition: "0px 0px" }, { backgroundPosition: "5120px 3584px", duration: 30, ease: "steps(360)" }, 0);
+        // final fade to black
+        tl.fromTo("#fade", { opacity: 0 }, { opacity: 1, duration: 0.6, ease: "power2.in" }, 29.4);
+
+        window.__timelines["main"] = tl;
+        render(0);
+      })();
+      window.__hf.buildReady["stage"] = build;
+    </script>
+  </body>
+</html>

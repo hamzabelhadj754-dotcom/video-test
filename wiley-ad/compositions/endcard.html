@@ -1,0 +1,126 @@
+<template>
+  <style>
+    @font-face {
+      font-family: "Sora";
+      src: url("assets/fonts/sora.woff2") format("woff2");
+      font-weight: 300 800;
+    }
+    #root {
+      position: absolute;
+      inset: 0;
+      font-family: "Inter", sans-serif;
+      color: #f5f7fa;
+    }
+    #ec-col {
+      position: absolute;
+      left: 1010px;
+      top: 300px;
+      width: 760px;
+    }
+    #ec-lockup {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+    }
+    #ec-mark {
+      width: 128px;
+      height: 128px;
+      flex: none;
+    }
+    #ec-word {
+      font-family: "Sora", sans-serif;
+      font-weight: 700;
+      font-size: 150px;
+      line-height: 1;
+      letter-spacing: -0.045em;
+    }
+    #ec-word .l {
+      display: inline-block;
+    }
+    #ec-tag {
+      margin-top: 40px;
+      font-family: "Sora", sans-serif;
+      font-weight: 600;
+      font-size: 54px;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+    }
+    #ec-tag .w {
+      display: inline-block;
+      margin-right: 0.22em;
+    }
+    #ec-tag .dim {
+      color: #8a94a6;
+    }
+    #ec-cta {
+      margin-top: 54px;
+      display: flex;
+      align-items: center;
+      gap: 34px;
+    }
+    #ec-btn {
+      position: relative;
+      overflow: hidden;
+      padding: 26px 50px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #4d86ff, #2f6bff 60%, #2456e0);
+      box-shadow: 0 16px 50px rgba(47, 107, 255, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+      font-size: 36px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    #ec-btn-sheen {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(100deg, rgba(255, 255, 255, 0) 35%, rgba(255, 255, 255, 0.45) 50%, rgba(255, 255, 255, 0) 65%);
+    }
+    #ec-url {
+      font-size: 36px;
+      font-weight: 600;
+      color: #c8d1e0;
+      letter-spacing: -0.01em;
+    }
+  </style>
+  <div id="root" data-composition-id="endcard" data-width="1920" data-height="1080">
+    <div id="ec-col" class="clip" data-start="0" data-duration="5.1">
+      <div id="ec-lockup">
+        <svg id="ec-mark" viewBox="0 0 168 168">
+          <defs>
+            <linearGradient id="ec-tile" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#13214d" />
+              <stop offset="1" stop-color="#070b18" />
+            </linearGradient>
+            <linearGradient id="ec-stroke" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#5ac8fa" />
+              <stop offset="1" stop-color="#2f6bff" />
+            </linearGradient>
+          </defs>
+          <rect x="4" y="4" width="160" height="160" rx="44" fill="url(#ec-tile)" stroke="rgba(120,170,255,0.35)" stroke-width="2" />
+          <path id="ec-w" d="M36 62 L60 112 L84 74 L108 112 L132 62" fill="none" stroke="url(#ec-stroke)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" pathLength="1" stroke-dasharray="1" />
+        </svg>
+        <div id="ec-word"><span class="l">W</span><span class="l">i</span><span class="l">l</span><span class="l">e</span><span class="l">y</span></div>
+      </div>
+      <div id="ec-tag"><span class="w">Work</span><span class="w">that</span><span class="w">does</span><br /><span class="w dim">itself.</span></div>
+      <div id="ec-cta">
+        <div id="ec-btn">Try it free<div id="ec-btn-sheen"></div></div>
+        <div id="ec-url">wiley.ai</div>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo("#ec-mark", { opacity: 0, scale: 0.3, rotation: -14 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.8, ease: "back.out(1.6)" }, 0.45);
+      tl.fromTo("#ec-w", { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.65, ease: "power3.inOut" }, 0.6);
+      document.querySelectorAll("#ec-word .l").forEach((l, i) => {
+        tl.fromTo(l, { opacity: 0, x: -40, filter: "blur(10px)" }, { opacity: 1, x: 0, filter: "blur(0px)", duration: 0.55, ease: "expo.out" }, 0.75 + i * 0.06);
+      });
+      document.querySelectorAll("#ec-tag .w").forEach((w, i) => {
+        tl.fromTo(w, { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.3, ease: "power4.out" }, 1.35 + i * 0.09);
+      });
+      tl.fromTo("#ec-cta", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.7, ease: "expo.out" }, 1.9);
+      tl.fromTo("#ec-btn-sheen", { x: -420 }, { x: 420, duration: 0.9, ease: "power2.inOut" }, 2.6);
+      window.__timelines["endcard"] = tl;
+    })();
+  </script>
+</template>
