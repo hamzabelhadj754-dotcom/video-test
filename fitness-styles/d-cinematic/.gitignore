@@ -1,0 +1,7 @@
+renders/*.log
+renders/work-*
+.hyperframes/artifacts/
+assets/sfx_src/
+assets/src/
+assets/audio/bed.wav
+assets/audio/mix.wav
