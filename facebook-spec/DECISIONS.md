@@ -19,3 +19,8 @@ collapsing into a Facebook-blue field: "Your weird has a group." End: logo + "Fi
 
 ## Versions
 - Style frames v01: frames/styleframe_01-03.png
+- User (round 2): "more visuals, not only text, like a phone texting your friends, be more creative".
+  -> Each world now has 3 depth layers: big type (back), tilted phone with an ORIGINAL stylised
+     chat UI (mid, not Facebook's real UI), floating bubble lifted out of the screen (front).
+  -> Rule: "you" is always Facebook blue. Friends are warm neutrals / world colours.
+- Style frames v02: frames/sf2_01-03.png (styleframes_v2.html)

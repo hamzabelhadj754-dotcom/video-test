@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Style frames v2</title>
+<style>
+@font-face{font-family:"Bricolage";src:url(assets/fonts/bricolage.woff2) format("woff2");font-weight:200 800;font-stretch:75% 100%;font-display:block}
+@font-face{font-family:"ISans";src:url(assets/fonts/instrument-sans.woff2) format("woff2");font-weight:400 700;font-stretch:75% 100%;font-display:block}
+@font-face{font-family:"ISerif";src:url(assets/fonts/instrument-serif.woff2) format("woff2");font-display:block}
+@font-face{font-family:"ISerif";src:url(assets/fonts/instrument-serif-italic.woff2) format("woff2");font-style:italic;font-display:block}
+:root{
+  --fb:#0866FF;--ink:#0B0C10;--bone:#F4F1EA;--flour:#EDE5D6;--crust:#8A5A2B;--night:#0C1020;--lamp:#FFC46B;
+  --W:1080px;--H:1350px;--m:84px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:var(--W);height:var(--H);overflow:hidden;background:var(--ink)}
+.frame{position:absolute;inset:0;overflow:hidden;display:none}
+.frame.on{display:block}
+.label{position:absolute;left:var(--m);top:96px;font-family:"ISans";font-weight:500;font-size:34px;letter-spacing:-0.01em;z-index:6}
+.meta{position:absolute;bottom:92px;font-family:"ISans";font-weight:500;font-size:22px;letter-spacing:.08em;text-transform:uppercase;z-index:6}
+.disp{font-family:"Bricolage";font-weight:800;font-stretch:75%;font-variation-settings:"opsz" 96;letter-spacing:-0.012em;line-height:.84}
+.grain{position:absolute;inset:0;pointer-events:none;mix-blend-mode:overlay;opacity:.2;z-index:20}
+.vignette{position:absolute;inset:0;pointer-events:none;z-index:19;background:radial-gradient(120% 90% at 50% 45%,transparent 55%,rgba(0,0,0,.3) 100%)}
+
+/* ---------- PHONE (original stylised device + chat UI) ---------- */
+.phone{position:absolute;width:520px;height:1060px;border-radius:84px;background:#111318;padding:18px;
+  box-shadow:inset 0 0 0 2px rgba(255,255,255,.08),0 2px 0 1px rgba(255,255,255,.04)}
+.phone::after{content:"";position:absolute;inset:0;border-radius:84px;pointer-events:none;
+  background:linear-gradient(115deg,rgba(255,255,255,.18) 0%,rgba(255,255,255,0) 28%,rgba(255,255,255,0) 70%,rgba(255,255,255,.06) 100%)}
+.screen{position:relative;width:100%;height:100%;border-radius:68px;overflow:hidden;background:#FBF9F4}
+.island{position:absolute;top:22px;left:50%;width:132px;height:38px;margin-left:-66px;border-radius:20px;background:#0A0B0E;z-index:3}
+.shadow{position:absolute;border-radius:50%;filter:blur(40px)}
+.chathead{position:absolute;left:0;right:0;top:0;height:200px;padding:96px 34px 0;display:flex;align-items:center;gap:16px;border-bottom:1px solid rgba(11,12,16,.08)}
+.stack{display:flex}
+.av{width:52px;height:52px;border-radius:50%;border:3px solid #FBF9F4;margin-left:-14px;display:grid;place-items:center;
+  font-family:"ISans";font-weight:600;font-size:21px;color:#fff}
+.stack .av:first-child{margin-left:0}
+.gname{font-family:"ISans";font-weight:600;font-size:28px;color:var(--ink);letter-spacing:-0.01em;line-height:1.1}
+.gsub{font-family:"ISans";font-weight:500;font-size:19px;color:rgba(11,12,16,.5);margin-top:4px}
+.thread{position:absolute;left:28px;right:28px;bottom:120px;display:flex;flex-direction:column;gap:12px}
+.msg{display:flex;align-items:flex-end;gap:12px}
+.msg.me{justify-content:flex-end}
+.msg .av{margin:0;width:44px;height:44px;font-size:18px;border:none;flex:none}
+.b{max-width:340px;padding:18px 24px;border-radius:30px;font-family:"ISans";font-weight:500;font-size:28px;line-height:1.22;letter-spacing:-0.01em}
+.them .b{background:#ECE7DD;color:var(--ink);border-bottom-left-radius:10px}
+.me .b{background:var(--fb);color:#fff;border-bottom-right-radius:10px}
+.who{font-family:"ISans";font-weight:600;font-size:18px;color:rgba(11,12,16,.45);margin:0 0 -4px 58px}
+.react{align-self:flex-end;margin-top:-22px;margin-right:18px;background:#fff;border-radius:20px;padding:6px 12px;font-family:"ISans";font-weight:600;font-size:18px;color:var(--ink);
+  box-shadow:0 4px 14px rgba(0,0,0,.12);display:flex;align-items:center;gap:6px}
+.dot{width:16px;height:16px;border-radius:50%;background:#FF4D6A;display:inline-block}
+.typing{display:flex;gap:7px;padding:22px 26px;background:#ECE7DD;border-radius:30px;border-bottom-left-radius:10px;width:max-content}
+.typing i{width:11px;height:11px;border-radius:50%;background:rgba(11,12,16,.35)}
+.composer{position:absolute;left:28px;right:28px;bottom:34px;height:64px;border-radius:32px;background:#F0ECE4;
+  font-family:"ISans";font-size:22px;color:rgba(11,12,16,.35);display:flex;align-items:center;padding:0 26px}
+
+/* floating foreground bubble */
+.float{position:absolute;z-index:8;padding:30px 40px;border-radius:44px;font-family:"ISans";font-weight:600;font-size:46px;letter-spacing:-0.015em;line-height:1.1;
+  box-shadow:0 40px 80px -20px rgba(0,0,0,.35),0 8px 20px rgba(0,0,0,.12)}
+
+/* ---------- F1 SOURDOUGH ---------- */
+#f1{background:var(--flour)}
+#f1 .warm{position:absolute;inset:0;background:radial-gradient(80% 60% at 75% 30%,#F8F1E3 0%,transparent 70%),radial-gradient(70% 50% at 0% 100%,#DDCEB4 0%,transparent 70%)}
+#f1 .label{color:rgba(11,12,16,.62)}
+#f1 .big{position:absolute;left:66px;top:236px;font-size:262px;color:var(--ink);z-index:2}
+#f1 .big span{display:block}
+#f1 .phone{left:560px;top:330px;z-index:5;transform:perspective(2400px) rotateY(-18deg) rotateX(6deg) rotateZ(5deg) scale(.86);transform-origin:50% 0}
+#f1 .shadow{left:520px;top:1240px;width:560px;height:110px;background:rgba(80,50,20,.35);z-index:4}
+#f1 .float.a{left:84px;top:880px;background:var(--fb);color:#fff;border-bottom-right-radius:12px;transform:rotate(-4deg)}
+#f1 .float.b{left:150px;top:760px;background:#fff;color:var(--ink);font-size:30px;padding:20px 28px;border-radius:30px;border-bottom-left-radius:10px;transform:rotate(3deg);filter:blur(1.2px);opacity:.92}
+#f1 .meta{left:var(--m);color:rgba(11,12,16,.5)}
+#f1 .idx{left:auto;right:var(--m)}
+
+/* ---------- F2 3AM CHESS ---------- */
+#f2{background:var(--night)}
+#f2 .floor{position:absolute;left:50%;top:760px;width:2400px;height:2400px;margin-left:-1200px;transform:perspective(900px) rotateX(68deg);transform-origin:50% 0;
+  background:conic-gradient(#161C36 25%,#0D1226 0 50%,#161C36 0 75%,#0D1226 0) 0 0/180px 180px;-webkit-mask-image:linear-gradient(to bottom,transparent,#000 8%,#000 55%,transparent 100%)}
+#f2 .label{color:rgba(244,241,234,.6)}
+#f2 .big{position:absolute;left:66px;top:170px;font-size:250px;color:var(--bone);z-index:2}
+#f2 .big .am{color:var(--lamp)}
+#f2 .phone{left:430px;top:420px;z-index:5;transform:perspective(2400px) rotateY(16deg) rotateX(10deg) rotateZ(-6deg);background:#08090C}
+#f2 .screen{background:radial-gradient(120% 70% at 50% 0%,#24305E,#0B0F22 70%)}
+#f2 .lock{position:absolute;left:0;right:0;top:120px;text-align:center;color:#F4F1EA}
+#f2 .lock .t{font-family:"Bricolage";font-weight:600;font-stretch:90%;font-size:150px;letter-spacing:-0.02em;line-height:1}
+#f2 .lock .d{font-family:"ISans";font-weight:500;font-size:24px;opacity:.7;margin-top:8px}
+#f2 .notes{position:absolute;left:24px;right:24px;top:400px;display:flex;flex-direction:column;gap:12px}
+.note{background:rgba(244,241,234,.13);border-radius:30px;padding:20px 22px;display:flex;gap:16px;align-items:flex-start;backdrop-filter:blur(8px);color:#F4F1EA}
+.note .av{margin:0;border:none;width:52px;height:52px;flex:none}
+.note .h{font-family:"ISans";font-weight:600;font-size:22px;display:flex;justify-content:space-between;width:100%}
+.note .h span{opacity:.5;font-weight:500}
+.note .m{font-family:"ISans";font-weight:500;font-size:26px;line-height:1.25;margin-top:2px;opacity:.92}
+.note .col{flex:1}
+#f2 .lit{position:absolute;left:1260px;top:180px;width:180px;height:180px;background:var(--lamp);opacity:.85;box-shadow:0 0 160px 60px rgba(255,196,107,.28)}
+#f2 .shadow{left:420px;top:1290px;width:560px;height:80px;background:rgba(0,0,0,.6);z-index:4}
+#f2 .float.a{left:84px;top:1010px;background:var(--fb);color:#fff;transform:rotate(-3deg);border-bottom-right-radius:12px}
+#f2 .meta{left:var(--m);color:rgba(244,241,234,.45)}
+#f2 .idx{left:auto;right:var(--m)}
+
+/* ---------- F3 END ---------- */
+#f3{background:var(--fb)}
+#f3 .light{position:absolute;inset:0;background:radial-gradient(90% 70% at 20% 10%,rgba(255,255,255,.16),transparent 60%),radial-gradient(80% 60% at 100% 100%,rgba(0,20,90,.35),transparent 70%)}
+#f3 .cloud .float{position:absolute;box-shadow:0 30px 60px -20px rgba(0,20,80,.45)}
+#f3 .word{position:absolute;left:78px;top:640px;font-size:190px;line-height:.88;letter-spacing:-0.01em;color:#FBFAF7;z-index:9}
+#f3 .word em{font-family:"ISerif";font-style:italic;font-weight:400;letter-spacing:-0.02em;font-size:212px}
+#f3 .logo{position:absolute;left:var(--m);bottom:96px;width:84px;height:84px;z-index:9}
+#f3 .cta{position:absolute;left:190px;bottom:118px;font-family:"ISans";font-weight:600;font-size:34px;color:#FBFAF7;z-index:9}
+#f3 .spec{position:absolute;right:var(--m);bottom:104px;font-family:"ISans";font-weight:500;font-size:18px;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.55);text-align:right;line-height:1.5;z-index:9}
+</style>
+</head>
+<body>
+
+<!-- ============ F1 SOURDOUGH ============ -->
+<section class="frame" id="f1">
+  <div class="warm"></div>
+  <canvas id="dust" width="1080" height="1350" style="position:absolute;inset:0;z-index:1"></canvas>
+  <div class="label">There’s a group for</div>
+  <div class="big disp"><span>SOUR</span><span>DOUGH.</span></div>
+  <div class="shadow"></div>
+  <div class="phone"><div class="screen">
+    <div class="island"></div>
+    <div class="chathead">
+      <div class="stack"><div class="av" style="background:#C77D3A">M</div><div class="av" style="background:#6E8B5A">T</div><div class="av" style="background:#B85C5C">A</div></div>
+      <div><div class="gname">Starter Club</div><div class="gsub">Maya, Theo, Ana + you</div></div>
+    </div>
+    <div class="thread">
+      <div class="who">Maya</div>
+      <div class="msg them"><div class="av" style="background:#C77D3A">M</div><div class="b">ok weird question</div></div>
+      <div class="msg them"><div class="av" style="visibility:hidden"></div><div class="b">does anyone else name their starter</div></div>
+      <div class="msg me"><div class="b" style="background:transparent;color:transparent;box-shadow:inset 0 0 0 2px rgba(8,102,255,.25)">Doughlores. She’s 4.</div></div>
+      <div class="who">Theo</div>
+      <div class="msg them"><div class="av" style="background:#6E8B5A">T</div><div class="b">mine’s Bread Pitt</div></div>
+      <div class="msg them"><div class="av" style="background:#B85C5C">A</div><div class="typing"><i></i><i></i><i></i></div></div>
+    </div>
+    <div class="composer">Message</div>
+  </div></div>
+  <div class="float a">Doughlores. She’s 4.</div>
+  <div class="meta">Day 4 · still rising</div>
+  <div class="vignette"></div>
+</section>
+
+<!-- ============ F2 3AM CHESS ============ -->
+<section class="frame" id="f2">
+  <div class="floor"><div class="lit"></div></div>
+  <div class="label">There’s a group for</div>
+  <div class="big disp"><span class="am">3AM</span> CHESS.</div>
+  <div class="shadow"></div>
+  <div class="phone"><div class="screen">
+    <div class="island"></div>
+    <div class="lock"><div class="t">3:07</div><div class="d">Thursday</div></div>
+    <div class="notes">
+      <div class="note"><div class="av" style="background:#5A6FD6">S</div><div class="col"><div class="h">Night Owl Chess <span>now</span></div><div class="m">Sam: you awake? e4</div></div></div>
+      <div class="note"><div class="av" style="background:#D69A3A">J</div><div class="col"><div class="h">Night Owl Chess <span>now</span></div><div class="m">Jun: always. Nf3</div></div></div>
+      <div class="note" style="opacity:.55"><div class="av" style="background:#8A5AB8">P</div><div class="col"><div class="h">Night Owl Chess <span>2m</span></div><div class="m">Priya: rematch at 4?</div></div></div>
+    </div>
+  </div></div>
+  <div class="float a">e5. obviously.</div>
+  <div class="meta">Your move</div>
+  <div class="vignette"></div>
+</section>
+
+<!-- ============ F3 END ============ -->
+<section class="frame" id="f3">
+  <div class="light"></div>
+  <div class="cloud">
+    <div class="float" style="left:560px;top:110px;background:#FBF9F4;color:var(--fb);font-size:34px;padding:22px 30px;transform:rotate(4deg)">Doughlores. She’s 4.</div>
+    <div class="float" style="left:90px;top:200px;background:var(--lamp);color:var(--ink);font-size:28px;padding:18px 26px;transform:rotate(-5deg);filter:blur(2px);opacity:.85">you awake? e4</div>
+    <div class="float" style="left:640px;top:330px;background:#C9E4D6;color:var(--ink);font-size:24px;padding:16px 22px;transform:rotate(-3deg) scale(.9);filter:blur(3px);opacity:.7">found a ’63 in a barn</div>
+    <div class="float" style="left:150px;top:410px;background:#FBF9F4;color:var(--ink);font-size:30px;padding:20px 28px;transform:rotate(2deg)">was that a kestrel??</div>
+    <div class="float" style="left:520px;top:500px;background:#F2C9D8;color:var(--ink);font-size:26px;padding:16px 24px;transform:rotate(6deg);filter:blur(1.5px);opacity:.85">mic’s still on</div>
+  </div>
+  <div class="word disp">Your <em>weird</em><br>has a group.</div>
+  <img class="logo" src="assets/fb_logo_white.png" alt="">
+  <div class="cta">Find yours.</div>
+  <div class="spec">Spec ad · not affiliated<br>with Meta Platforms, Inc.</div>
+  <div class="vignette" style="opacity:.6"></div>
+</section>
+
+<canvas class="grain" id="grain" width="1080" height="1350"></canvas>
+<script>
+function rng(s){return()=>{s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function grain(seed){const c=document.getElementById('grain'),x=c.getContext('2d'),r=rng(seed),img=x.createImageData(c.width,c.height);
+  for(let i=0;i<img.data.length;i+=4){const v=r()*255;img.data[i]=img.data[i+1]=img.data[i+2]=v;img.data[i+3]=255}x.putImageData(img,0,0)}
+function dust(seed){const c=document.getElementById('dust'),x=c.getContext('2d'),r=rng(seed);
+  for(let i=0;i<900;i++){x.fillStyle=`rgba(255,255,255,${.25+r()*.5})`;x.beginPath();x.arc(r()*1080,r()*1350,r()*2.2+.3,0,7);x.fill()}
+  for(let i=0;i<260;i++){x.fillStyle=`rgba(138,90,43,${.08+r()*.18})`;x.beginPath();x.arc(r()*1080,r()*1350,r()*1.4+.3,0,7);x.fill()}}
+const f=new URLSearchParams(location.search).get('f')||'1';
+document.getElementById('f'+f).classList.add('on');grain(7+ +f);dust(3);
+document.fonts.ready.then(()=>{document.body.dataset.ready=1});
+</script>
+</body>
+</html>
