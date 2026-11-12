@@ -50,3 +50,20 @@ colour drain moved off the 3D layers (filters flatten preserve-3d); ripple hidde
 
 ## Versions
 - v01: out/stripe_one_second_v01_4x5.mp4 (28MB, H.264 CRF18 cap 14M, AAC 256k). DELIVERED.
+- User: "add more visual elements like 3D phone or whatever you like, you have the freedom".
+
+## v02: real 3D layer (three.js 0.160, WebGL via SwiftShader in headless Chromium)
+comp2.html + stage3d.js (ES module, served over http://127.0.0.1:8765 because modules can't load
+from file://; render with `URL=http://127.0.0.1:8765/comp2.html node render2.js 120 render/g120 --range a b`).
+Every 3D transform is a pure function of t -> deterministic frames. Screens are 2D canvas textures
+drawn with the film's fonts and redrawn per frame.
+- Open: 3D phone (rounded-box body, clearcoat metal, glass sheen) with an original checkout + speckled
+  mug artwork; tap ripple drawn on the screen and frozen mid-way; camera dives into the Pay button.
+- 01 Card: glossy 3D debit card (blurple, chip, contactless, 4242), the line passes BEHIND it.
+- 02 Fraud: 3D gyroscope (3 metal rings on different axes, tick ring, core), cyan arc closes = passed.
+- 03 Currency: USD/GBP/JPY/INR coins flip face-on as strands reach them, € coin spins in.
+- 04 Notified: the merchant's phone, lock screen notification "New payment €38.00", vibration.
+- Snap back: camera rockets out of the customer's screen to the phone, button -> "Paid".
+- Layer order per scene: background -> SVG line -> WebGL canvas -> type, so objects occlude the light.
+- Sound re-timed to the 3D beats + coin ticks + phone vibration (-14.1 LUFS).
+- v02: out/stripe_one_second_v02_4x5.mp4. DELIVERED.

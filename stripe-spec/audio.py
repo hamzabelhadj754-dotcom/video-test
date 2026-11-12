@@ -113,15 +113,20 @@ place(sfx, sweep(.6, 200, 2500, .12, 'up'), 1.8)            # navy floods out of
 place(sfx, sweep(.35, 600, 5000, .2, 'up'), 2.2)            # dive into the second
 place(sfx, sweep(.45, 5000, 400, .16, 'down'), 2.52)
 # step chimes: one rising note per step (F A C E) = F maj7 built across the second
-for t0, m in [(3.3, 77), (5.3, 81), (7.78, 84), (9.33, 88)]:
+for t0, m in [(3.45, 77), (5.97, 81), (7.78, 84), (9.32, 88)]:
     place(sfx, chime(m, .13), t0, 1, .15)
 for t0 in (4.5, 6.5, 8.5):                                  # camera continuation pans
     place(sfx, sweep(.32, 800, 6000, .18, 'up'), t0, 1, -.4)
     place(sfx, sweep(.45, 6000, 700, .15, 'down'), t0 + .32, 1, .4)
-place(sfx, sweep(.9, 1500, 3500, .05, 'up'), 5.0)           # scan line
+place(sfx, sweep(1.0, 900, 2600, .05, 'up'), 5.0)           # gyroscope spin-up
 for i in range(4):                                          # currency strands shimmer
     place(sfx, sine_tone(84 + [0, 3, 7, 10][i], .5, .05, 6), 7.32 + i * .04, 1, [-.6, -.2, .2, .6][i])
-place(sfx, ping(.2), 9.33, 1, .2)                           # business notified
+place(sfx, ping(.2), 9.32, 1, .2)                           # business notified
+bz = np.sin(2 * np.pi * 165 * ta(.32)) * ((ta(.32) < .13) | ((ta(.32) > .18) & (ta(.32) < .3)))
+place(sfx, filt(bz, 'lowpass', 500) * .16, 9.3, 1, .25)       # phone vibration
+for i in range(4):                                          # coins flipping to face us
+    place(sfx, sine_tone(96 + i * 2, .12, .05, 30, ((1, 1), (2.7, .4))), 7.3 + i * .04, 1, [-.5, -.15, .15, .5][i])
+place(sfx, sweep(.5, 700, 3000, .08, 'up'), 7.75, 1, .3)      # euro coin spins in
 # snap back: reverse swell into the hit, then "Paid"
 place(sfx, sweep(.55, 300, 9000, .32, 'up'), 9.95)
 place(sfx, hit(.85, 110, 40), 10.5)
