@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Quiet</title>
+<style>
+@font-face{font-family:"Anybody";src:url(assets/fonts/anybody.woff2) format("woff2");font-weight:100 900;font-stretch:50% 150%;font-display:block}
+@font-face{font-family:"Hanken";src:url(assets/fonts/hanken.woff2) format("woff2");font-weight:300 700;font-display:block}
+*{margin:0;padding:0}
+html,body{width:1080px;height:1350px;overflow:hidden;background:#0A0A0A}
+canvas{position:absolute;left:0;top:0}
+</style>
+</head>
+<body>
+<canvas id="c" width="1080" height="1350"></canvas>
+<script>
+const W=1080,H=1350,ctx=c.getContext('2d');
+const BG='#0A0A0A',WHITE='#F5F5F7',RED='#FF3B30',YEL='#FFD60A',BLU='#0A84FF',GRY='#8E8E93';
+const clamp=(v,a=0,b=1)=>Math.min(b,Math.max(a,v)),prog=(t,a,b)=>clamp((t-a)/(b-a));
+const eOut=p=>1-Math.pow(1-p,4),eIn=p=>p*p*p,eInOut=p=>p<.5?8*p**4:1-Math.pow(-2*p+2,4)/2,lerp=(a,b,p)=>a+(b-a)*p;
+function hash(n){n=Math.sin(n*127.1+311.7)*43758.5453;return n-Math.floor(n)}
+function noise(x){const i=Math.floor(x),f=x-i,u=f*f*(3-2*f);return lerp(hash(i),hash(i+1),u)*2-1}
+const STRETCH={50:'ultra-condensed',62:'extra-condensed',75:'condensed',87:'semi-condensed',100:'normal',112:'semi-expanded',125:'expanded',150:'ultra-expanded'};
+function setFont(g,size,wght,wdth,fam='Anybody'){g.font=`${wght} ${size}px ${fam}`;g.fontStretch=STRETCH[wdth]||'normal'}
+function mixHex(a,b,p){const pa=[1,3,5].map(i=>parseInt(a.slice(i,i+2),16)),pb=[1,3,5].map(i=>parseInt(b.slice(i,i+2),16));return `rgb(${pa.map((v,i)=>Math.round(lerp(v,pb[i],p))).join(',')})`}
+
+// ---------- the noise: [text, x, y(baseline), size, wdth, wght, rot°, color, t0, energy] ----------
+const WORDS=[
+ ['HONK',60,330,270,150,900,-4,YEL,.05,1],
+ ['BEEP BEEP',110,1180,150,125,800,3,WHITE,.32,.8],
+ ['WEEE-OOOO',30,640,215,62,900,-2,RED,.55,1.2],
+ ['BRRRRRRRT',20,920,175,150,900,5,WHITE,.8,1.6],
+ ['CALL ME BACK',390,480,92,75,700,0,BLU,1.0,.5],
+ ['NEXT STOP',600,1300,110,62,600,-3,GRY,1.18,.4],
+ ['CLACK CLACK',470,770,120,125,800,8,YEL,1.35,.9],
+ ['HONK',640,230,165,50,900,10,WHITE,1.5,1],
+ ['did you see—',80,430,72,100,400,0,GRY,1.62,.3],
+ ['HEY!',800,660,190,150,900,-12,RED,1.78,1.1],
+ ['BZZZT',290,1050,145,150,900,-6,BLU,1.92,1.3],
+ ['MIND THE GAP',80,1270,80,62,700,0,YEL,2.05,.4],
+ ['HOOOONK',180,170,145,150,900,2,RED,2.18,1],
+ ['…ha ha ha…',640,390,64,87,500,0,GRY,2.3,.3],
+ ['WOOF',820,1060,150,125,900,9,WHITE,2.42,.9],
+ ['BEEP',40,780,125,50,900,-8,YEL,2.54,.9],
+ ['RRRRRRRR',420,890,120,150,900,0,BLU,2.64,1.5],
+ ['*ding*',880,320,80,100,600,0,WHITE,2.74,.4],
+ ['WEEE',470,610,230,150,900,0,RED,2.84,1.2],
+ ['—no, YOU listen—',130,550,66,75,500,0,GRY,2.94,.3],
+ ['KRRSHHH',40,1010,135,150,900,-5,WHITE,3.04,1.4],
+ ['TAP TAP TAP',560,1150,92,75,800,4,YEL,3.14,.7],
+ ['HONK HONK',230,1240,120,150,900,-2,RED,3.24,1],
+ ['BWAAAMP',120,720,180,150,900,3,WHITE,3.36,1.2],
+ ['CHATTER',600,530,110,62,700,-7,GRY,3.46,.5],
+ ['HONK',110,860,420,150,900,-3,WHITE,3.58,1.4],
+];
+const PRESS=4.0;
+
+// ---------- particles: every word rasterised once into dust ----------
+const parts=[];let quietTargets=[];
+function drawWord(g,w){const [txt,x,y,size,wdth,wght,rot,col]=w;g.save();g.translate(x,y);g.rotate(rot*Math.PI/180);setFont(g,size,wght,wdth);g.fillStyle=col;g.fillText(txt,0,0);g.restore()}
+function build(){
+  const off=document.createElement('canvas');off.width=W;off.height=H;const g=off.getContext('2d');
+  WORDS.forEach((w,wi)=>{
+    g.clearRect(0,0,W,H);drawWord(g,w);const d=g.getImageData(0,0,W,H).data;const st=w[3]>200?5:w[3]>120?4:3;
+    for(let y=0;y<H;y+=st)for(let x=0;x<W;x+=st){if(d[(y*W+x)*4+3]>140){const r=hash(parts.length*1.7+wi);parts.push({x,y,wi,st,col:w[7],r,a:lerp(-2.0,-.6,hash(parts.length*3.1)),sp:lerp(120,520,hash(parts.length*5.3)),q:-1})}}
+  });
+  // targets for "Quiet."
+  g.clearRect(0,0,W,H);setFont(g,190,250,100);g.textAlign='center';g.fillStyle='#fff';g.fillText('Quiet.',W/2,H/2+60);
+  const d=g.getImageData(0,0,W,H).data;
+  for(let y=0;y<H;y+=3)for(let x=0;x<W;x+=3)if(d[(y*W+x)*4+3]>140)quietTargets.push([x,y]);
+  // assign targets to random particles
+  const idx=parts.map((_,i)=>i).sort((a,b)=>hash(a*9.1)-hash(b*9.1));
+  quietTargets.forEach((tg,k)=>{const p=parts[idx[k%idx.length]];if(p.q<0)p.q=k});
+}
+
+// ---------- frame ----------
+function draw(t){
+  ctx.setTransform(1,0,0,1,0,0);ctx.fillStyle=BG;ctx.fillRect(0,0,W,H);
+  const live=t<4.4;
+  // siren wash: the room flashes red
+  if(t<PRESS){const s=(Math.sin(t*14)>.55&&t>.55)?.07:0;if(s){ctx.fillStyle=`rgba(255,59,48,${s})`;ctx.fillRect(0,0,W,H)}}
+  if(live){
+    const shake=lerp(2,9,prog(t,0,PRESS))*(t<PRESS?1:0);const wordsOn=true;
+    ctx.translate(noise(t*31)*shake,noise(t*29+50)*shake);
+    WORDS.forEach((w,wi)=>{
+      const [txt,x,y,size,wdth,wght,rot,col,t0,en]=w;if(t<t0)return;
+      const a=prog(t,t0,t0+.09),slam=1+(1-eOut(a))*.55;
+      const j=(t<PRESS?1:0)*en*4;const drainW=prog(t,PRESS,PRESS+.35);
+      let alpha=1;if(col===RED&&t<PRESS)alpha=.55+.45*(Math.sin(t*14+wi)>0?1:0);
+      ctx.save();ctx.globalAlpha=alpha*Math.min(1,a*3);
+      ctx.translate(x+noise(t*40+wi*7)*j,y+noise(t*37+wi*13)*j);ctx.rotate((rot+(t<PRESS?noise(t*20+wi)*en*.6:0))*Math.PI/180);ctx.scale(slam,slam);
+      setFont(ctx,size,wght,wdth);ctx.fillStyle=drainW>0?mixHex(col,'#6E6E73',drainW):col;ctx.fillText(txt,0,0);ctx.restore();
+    });
+    ctx.setTransform(1,0,0,1,0,0);
+  }
+  // the press: one soft circle
+  if(t>=PRESS-.12&&t<PRESS+1.0){
+    const p=prog(t,PRESS-.12,PRESS+1.0),g=ctx.createRadialGradient(W/2,H/2,0,W/2,H/2,40+p*260);
+    g.addColorStop(0,`rgba(245,245,247,${.9*(1-p)})`);g.addColorStop(.25,`rgba(245,245,247,${.35*(1-p)})`);g.addColorStop(1,'rgba(245,245,247,0)');
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(W/2,H/2,40+p*260,0,7);ctx.fill();
+    ctx.strokeStyle=`rgba(245,245,247,${.7*(1-eOut(p))})`;ctx.lineWidth=2;ctx.beginPath();ctx.arc(W/2,H/2,30+eOut(p)*420,0,7);ctx.stroke();
+  }
+  // the dust: a left-to-right wave breaks the frozen words apart; part of the dust gathers into "Quiet."
+  if(t>=4.4&&t<7.9){
+    const gather=eInOut(prog(t,5.3,7.0));
+    for(let i=0;i<parts.length;i++){
+      const p=parts[i];
+      const ts=4.4+(p.x/W)*.85+p.r*.35, k=Math.max(0,t-ts), go=1-Math.exp(-k*1.6);
+      const drift=go*p.sp*(.4+k*.6);
+      let x=p.x+Math.cos(p.a)*drift*.6+drift*.5+noise(t*.9+p.r*40)*14*go;
+      let y=p.y+Math.sin(p.a)*drift+noise(t*.8+p.r*90)*14*go;
+      let al=k<=0?1:Math.max(0,1-k/1.25);let col='#6E6E73';
+      if(p.q>=0){const tg=quietTargets[p.q];x=lerp(x,tg[0],gather);y=lerp(y,tg[1],gather);al=Math.max(al,gather)*(1-prog(t,7.2,7.8));if(gather>0)col=mixHex('#6E6E73',WHITE,gather)}
+      if(al<=.01)continue;
+      ctx.globalAlpha=al;ctx.fillStyle=col;
+      const sz=k<=0?p.st:(p.q>=0?lerp(2,2.6,gather):2);ctx.fillRect(x,y,sz,sz);
+    }
+    ctx.globalAlpha=1;
+  }
+  // "Quiet." crisp, breathing
+  if(t>=7.2&&t<10.0){
+    const a=prog(t,7.2,7.8)*(1-prog(t,9.4,10.0)),br=1+Math.sin((t-7.2)*1.6)*.006;
+    ctx.save();ctx.globalAlpha=a;ctx.translate(W/2,H/2+60-eIn(prog(t,9.4,10.0))*30);ctx.scale(br,br);
+    setFont(ctx,190,250,100);ctx.textAlign='center';ctx.fillStyle=WHITE;ctx.fillText('Quiet.',0,0);ctx.restore();
+  }
+  // end card
+  if(t>=10.1){
+    const line=(txt,y,size,wght,col,t0,fam='Anybody',wdth=100,track=0)=>{
+      const p=eOut(prog(t,t0,t0+.9));if(p<=0)return;
+      ctx.save();ctx.beginPath();ctx.rect(0,y-size*1.05,W,size*1.35);ctx.clip();
+      ctx.globalAlpha=Math.min(1,p*1.4);setFont(ctx,size,wght,wdth,fam);ctx.letterSpacing=track+'px';ctx.textAlign='center';ctx.fillStyle=col;
+      ctx.fillText(txt,W/2,y+(1-p)*size*1.1);ctx.restore();};
+    line('Turn the world',560,112,300,WHITE,10.1);
+    line('down.',690,112,300,WHITE,10.25);
+    line('AirPods Pro',900,46,600,WHITE,11.4,'Hanken');
+    line('Active Noise Cancellation',952,26,400,GRY,11.65,'Hanken');
+    line('Spec ad · not affiliated with Apple Inc.',1270,16,400,'#5A5A5E',12.2,'Hanken',100,1);
+  }
+  // film grain
+  ctx.globalAlpha=.045;ctx.drawImage(grain,(hash(Math.floor(t*24))*120)|0,(hash(Math.floor(t*24)+.5)*120)|0,W,H,0,0,W,H);ctx.globalAlpha=1;
+}
+const grain=document.createElement('canvas');grain.width=W+120;grain.height=H+120;
+(function(){const g=grain.getContext('2d'),d=g.createImageData(grain.width,grain.height);let s=7;const r=()=>(s=(s*16807)%2147483647)/2147483647;
+ for(let i=0;i<d.data.length;i+=4){const v=r()*255;d.data[i]=d.data[i+1]=d.data[i+2]=v;d.data[i+3]=255}g.putImageData(d,0,0)})();
+window.seek=t=>draw(t);
+document.fonts.load('900 100px Anybody').then(()=>document.fonts.load('600 40px Hanken')).then(()=>document.fonts.ready).then(()=>{build();draw(0);document.body.dataset.ready=1;window.DUR=15});
+</script>
+</body>
+</html>
