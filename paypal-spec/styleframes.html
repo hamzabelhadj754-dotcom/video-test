@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>PayPal style frames</title>
+<style>
+@font-face{font-family:"Plus Jakarta Sans";src:url(assets/fonts/jakarta.woff2) format("woff2");font-weight:200 800;font-display:block}
+@font-face{font-family:"JetBrains Mono";src:url(assets/fonts/jbmono.woff2) format("woff2");font-weight:100 800;font-display:block}
+@font-face{font-family:"Caveat";src:url(assets/fonts/caveat.woff2) format("woff2");font-weight:400 700;font-display:block}
+:root{--deep:#002991;--blue:#008CFF;--sky:#60CDFF;--ink:#111;--bg:#FAFAF7;--m:80px}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:1350px;overflow:hidden;background:var(--bg)}
+#bg{position:absolute;inset:0;background:radial-gradient(70% 55% at 55% 50%,#FFFFFF 0%,#F6F4EF 70%,#EFECE5 100%)}
+canvas#gl{position:absolute;left:0;top:0;width:1080px;height:1350px}
+.disp{font-family:"Plus Jakarta Sans";font-weight:800;letter-spacing:-0.045em;line-height:.95;color:var(--ink)}
+.mono{font-family:"JetBrains Mono";font-weight:500;font-size:20px;letter-spacing:.06em;text-transform:uppercase}
+.ov{position:absolute;inset:0;pointer-events:none}
+.chip{position:absolute;display:flex;align-items:center;gap:14px;padding:18px 28px 18px 18px;border-radius:999px;background:var(--deep);color:#fff;
+  font-family:"Plus Jakarta Sans";font-weight:700;font-size:32px;letter-spacing:-0.01em;box-shadow:0 20px 40px -14px rgba(0,41,145,.55)}
+.chip i{width:44px;height:44px;border-radius:50%;background:var(--blue);display:grid;place-items:center}
+.grain{position:absolute;inset:0;pointer-events:none;mix-blend-mode:multiply;opacity:.06}
+</style>
+</head>
+<body>
+<div id="bg"></div>
+<canvas id="gl" width="1080" height="1350"></canvas>
+<div class="ov" id="o1" style="display:none">
+  <div class="disp" style="position:absolute;left:var(--m);top:96px;font-size:112px">Who owes<br>who?</div>
+</div>
+<div class="ov" id="o2" style="display:none">
+  <svg width="1080" height="1350" style="position:absolute;inset:0"><path d="M120 260 C 320 120, 560 300, 640 520" fill="none" stroke="#002991" stroke-opacity=".28" stroke-width="3" stroke-dasharray="2 14" stroke-linecap="round"/></svg>
+  <div class="chip" style="left:330px;top:150px"><i><svg width="24" height="24" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></i>Sent to Maya · $24</div>
+  <div class="mono" style="position:absolute;left:var(--m);bottom:84px;color:#8A877F">01 / 04 settled</div>
+</div>
+<div class="ov" id="o3" style="display:none">
+  <div class="disp" style="position:absolute;left:var(--m);top:96px;font-size:128px">Money<br>stuff.</div>
+  <img src="assets/paypal_wordmark_black.png" style="position:absolute;left:var(--m);bottom:84px;width:230px">
+  <div class="mono" style="position:absolute;right:var(--m);bottom:90px;font-size:15px;line-height:1.6;color:#8A877F;text-align:right">Spec ad · not affiliated<br>with PayPal, Inc.</div>
+</div>
+<canvas class="grain" id="grain" width="1080" height="1350"></canvas>
+
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
+<script type="module">
+import * as THREE from 'three';
+import { makeStage, makeNote, makeFlipNote, makeReceipt, makeTicket, makeCoin, makePlane, makeSendPhone, sx, sy } from './world.js';
+await document.fonts.ready;
+await Promise.all(['700 100px Caveat','700 40px "JetBrains Mono"','400 30px "JetBrains Mono"','800 80px "Plus Jakarta Sans"','600 40px "Plus Jakarta Sans"'].map(f=>document.fonts.load(f)));
+(function(){const c=grain,x=c.getContext('2d');let s=3;const r=()=>(s=(s*16807)%2147483647)/2147483647;const img=x.createImageData(1080,1350);
+ for(let i=0;i<img.data.length;i+=4){const v=200+r()*55;img.data[i]=img.data[i+1]=img.data[i+2]=v;img.data[i+3]=255}x.putImageData(img,0,0)})();
+
+const f=new URLSearchParams(location.search).get('f')||'1';
+document.getElementById('o'+f).style.display='block';
+const st=makeStage(document.getElementById('gl'));
+const place=(o,x,y,z,rx=0,ry=0,rz=0,s=1)=>{o.position.set(sx(x),sy(y),z);o.rotation.set(rx,ry,rz);o.scale.multiplyScalar(s);st.scene.add(o);return o};
+
+if(f==='1'){
+  place(makeSendPhone({}),620,800,0,-.1,-.28,.05,1.12);
+  place(makeNote([{text:'Pizza'},{text:'$24 — Maya',size:96}],1),255,560,.55,.25,.35,-.2,1);
+  place(makeNote([{text:'you owe',size:100},{text:'me one :)',size:100}],3,.5),905,330,-.25,-.2,-.3,.16,1);
+  place(makeReceipt('CITY TAXI',[['FARE','15.50'],['TIP','3.00']],'$18.50',2),930,930,.25,.15,-.45,.22,1);
+  place(makeTicket(4),330,1170,.6,-.35,.3,-.14,1);
+  place(makeCoin(),830,1215,.7,.6,-.5,.2,1);
+  place(makeCoin(.09,6),165,830,.3,-.4,.9,0,1);
+  place(makeCoin(.08,7),730,1290,.2,1.2,.2,0,1);
+}
+if(f==='2'){
+  const ph=makeSendPhone({sent:1}); place(ph,560,800,0,-.06,-.12,.02,1.12);
+  const pl=makePlane(.62); place(pl,760,520,.9,0,0,0,1); pl.lookAt(sx(150),sy(640),.75); pl.rotateZ(-.45);
+  place(makeReceipt('CITY TAXI',[['FARE','15.50'],['TIP','3.00']],'$18.50',2),960,1020,-.3,.15,-.5,.28,.9);
+  place(makeTicket(4),190,1150,-.2,-.3,.4,-.18,.9);
+  place(makeCoin(),880,1230,.4,.6,-.5,.2,1);
+}
+if(f==='3'){
+  const n=makeFlipNote([{text:'you owe',size:100},{text:'me one :)',size:100}],[{text:'Settled.',size:170}],9,1.05);
+  place(n,600,820,.2,.08,Math.PI+.18,-.07,1);
+}
+st.r.render(st.scene,st.cam);
+document.body.dataset.ready=1;
+</script>
+</body>
+</html>
