@@ -25,3 +25,25 @@ The frame empties; the last note flips: "Settled." End: "Money stuff. Settled." 
 
 ## Versions
 - Style frames v01: frames/sf_01-03.png
+- User approved the look ("render it and make it better if you want to"); later asked for a faster render
+  without hurting quality.
+
+## Film (20s, 4:5 1080x1350, 30fps)
+comp.html (DOM type + GSAP) + film.js (three.js choreography, pure functions of t), served on :8766.
+| t (s) | beat |
+|---|---|
+| 0-3 | the mess drifts in from depth; "Who owes who?" |
+| 3-5.9 | Pizza note lifts, folds, becomes a paper plane, flies into Maya's avatar; "Sent to Maya · $24" |
+| 6-7.9 | screen -> Leo; taxi receipt rolls into a tube, shoots in; "Sent to Leo · $18.50" |
+| 8-10.4 | screen -> Ava; ticket tears at the perforation, stub tumbles away; "$45, your half" |
+| 10.5-12.4 | screen -> Sam; three coins arc in and clink; "Sent to Sam · $6.50"; 04/04 settled |
+| 12.4-15 | phone exits; "you owe me one :)" drifts to centre, grows, flips to "Settled." (hit) |
+| 15-20 | "Money stuff." + Settled note, wordmark, spec label |
+Sound: audio.py (C major groove, paper foley, rising "sent" chimes), -14.4 LUFS, true peak -1.6 dBFS
+(limiter after loudnorm; before it the true peak was -0.6).
+
+## Render speed-ups (no visual change)
+- Phone screen texture only redrawn/uploaded when its state changes (was ~8MB upload per frame).
+- render_fast.js renders all 4 sub-frames only inside fast-motion windows; elsewhere one per output frame,
+  and fill.py copies it to the 3 identical neighbours. 1132 renders instead of 1841 for the remainder.
+- v01: out/paypal_settled_v01_4x5.mp4 (10.8MB). DELIVERED.
