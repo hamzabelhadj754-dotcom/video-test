@@ -76,7 +76,6 @@ svg.full{position:absolute;left:0;top:0;width:1080px;height:1350px;overflow:visi
 <section class="scene" id="s1" style="visibility:visible"><div class="cam">
   <div id="s1bg" style="position:absolute;inset:0;background:var(--paper)"></div>
   <div id="s1glow" style="position:absolute;inset:0;background:radial-gradient(60% 45% at 50% 50%,#FFFFFF,transparent 70%)"></div>
-  <div class="mono tl step" id="s1step">00 — TAP</div>
   <div class="mono tr" id="clock1" style="color:var(--navy)">t = 0.000 s</div>
   <canvas class="gl" id="gl1" width="1080" height="1350" style="position:absolute;left:0;top:0;width:1080px;height:1350px"></canvas>
   <div class="mono" id="slow" style="position:absolute;left:0;right:0;top:1218px;text-align:center;font-size:26px;color:var(--navy)">Let’s slow that down.</div>
@@ -84,7 +83,7 @@ svg.full{position:absolute;left:0;top:0;width:1080px;height:1350px;overflow:visi
 </div></section>
 
 <!-- shared HUD for "inside the second" -->
-<div id="hud" style="position:absolute;inset:0;z-index:40;visibility:hidden;pointer-events:none">
+<div id="hud" style="display:none">
   <div class="mono tl step"><span class="hs" style="position:absolute;white-space:nowrap">01 / 04</span><span class="hs" style="position:absolute;white-space:nowrap">02 / 04</span><span class="hs" style="position:absolute;white-space:nowrap">03 / 04</span><span class="hs" style="position:absolute;white-space:nowrap">04 / 04</span></div>
   <div class="mono tr inside">inside the second</div>
   <div style="position:absolute;left:var(--m);right:var(--m);top:132px;height:2px;background:rgba(229,237,245,.12)"><div id="prog" style="height:100%;width:100%;background:var(--blurple);transform-origin:0 50%;transform:scaleX(0)"></div></div>
@@ -142,7 +141,6 @@ svg.full{position:absolute;left:0;top:0;width:1080px;height:1350px;overflow:visi
 <section class="scene" id="s6"><div class="cam" id="s6cam" style="filter:url(#zb)">
   <div style="position:absolute;inset:0;background:var(--paper)"></div>
   <div style="position:absolute;inset:0;background:radial-gradient(60% 45% at 50% 50%,#FFFFFF,transparent 70%)"></div>
-  <div class="mono tl step">00 — TAP</div>
   <div class="mono tr" style="color:var(--navy)">t = 1.000 s</div>
   <canvas class="gl" id="gl6" width="1080" height="1350" style="position:absolute;left:0;top:0;width:1080px;height:1350px"></canvas>
 </div></section>
@@ -224,7 +222,7 @@ function build(){
 /* ---------- S1 0 – 2.52 (3D phone lives in stage3d.js) ---------- */
 show('s1',0);
 tl.fromTo('#slow',{autoAlpha:0,y:16},{autoAlpha:1,y:0,duration:.5,ease:'eOut'},1.42);
-tl.to(['#s1step','#clock1','#slow'],{autoAlpha:0,duration:.25},1.85);
+tl.to(['#clock1','#slow'],{autoAlpha:0,duration:.25},1.85);
 tl.to('#dive',{opacity:1,duration:.14,ease:'power2.in'},2.3);
 tl.to('#dive',{backgroundColor:'#061B31',duration:.1},2.44);
 show('s2',2.52);hide('s1',2.52);show('hud',2.52);

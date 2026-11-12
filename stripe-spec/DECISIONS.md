@@ -67,3 +67,7 @@ drawn with the film's fonts and redrawn per frame.
 - Layer order per scene: background -> SVG line -> WebGL canvas -> type, so objects occlude the light.
 - Sound re-timed to the 3D beats + coin ticks + phone vibration (-14.1 LUFS).
 - v02: out/stripe_one_second_v02_4x5.mp4. DELIVERED.
+- User: remove the top line that shows the scenes and progress.
+  -> v03: removed the HUD (01/04 counter, "inside the second", progress bar) and the "00 — TAP" labels.
+     Kept the t = 0.000 s / t = 1.000 s clock (it carries the concept).
+- v03: out/stripe_one_second_v03_4x5.mp4. DELIVERED.
