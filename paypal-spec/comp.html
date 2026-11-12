@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Settled</title>
+<style>
+@font-face{font-family:"Plus Jakarta Sans";src:url(assets/fonts/jakarta.woff2) format("woff2");font-weight:200 800;font-display:block}
+@font-face{font-family:"JetBrains Mono";src:url(assets/fonts/jbmono.woff2) format("woff2");font-weight:100 800;font-display:block}
+@font-face{font-family:"Caveat";src:url(assets/fonts/caveat.woff2) format("woff2");font-weight:400 700;font-display:block}
+:root{--deep:#002991;--blue:#008CFF;--ink:#111;--m:80px}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:1350px;overflow:hidden;background:#FAFAF7}
+#bg{position:absolute;inset:0;background:radial-gradient(70% 55% at 55% 50%,#FFFFFF 0%,#F6F4EF 70%,#EFECE5 100%)}
+#gl{position:absolute;left:0;top:0;width:1080px;height:1350px}
+.disp{font-family:"Plus Jakarta Sans";font-weight:800;letter-spacing:-0.045em;line-height:.95;color:var(--ink)}
+.line{display:block;overflow:hidden;padding-bottom:.1em;margin-bottom:-.1em}
+.w{display:inline-block}
+.mono{font-family:"JetBrains Mono";font-weight:500;font-size:20px;letter-spacing:.06em;text-transform:uppercase;color:#8A877F}
+.chips{position:absolute;left:0;right:0;top:140px;display:grid;justify-items:center}
+.chip{grid-area:1/1;display:flex;align-items:center;gap:14px;padding:18px 30px 18px 18px;border-radius:999px;background:var(--deep);color:#fff;visibility:hidden;
+  font-family:"Plus Jakarta Sans";font-weight:700;font-size:32px;letter-spacing:-0.01em;box-shadow:0 20px 40px -14px rgba(0,41,145,.55);white-space:nowrap}
+.chip i{width:44px;height:44px;border-radius:50%;background:var(--blue);display:grid;place-items:center}
+.cnt{position:absolute;left:var(--m);bottom:84px}
+.cnt span{position:absolute;white-space:nowrap;visibility:hidden}
+.grain{position:absolute;inset:0;pointer-events:none;mix-blend-mode:multiply;opacity:.06}
+</style>
+</head>
+<body>
+<div id="bg"></div>
+<canvas id="gl" width="1080" height="1350"></canvas>
+
+<div class="disp" id="who" style="position:absolute;left:var(--m);top:96px;font-size:112px"><span class="line"><span class="w">Who owes</span></span><span class="line"><span class="w">who?</span></span></div>
+
+<div class="chips">
+  <div class="chip"><i><svg width="24" height="24" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></i>Sent to Maya · $24</div>
+  <div class="chip"><i><svg width="24" height="24" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></i>Sent to Leo · $18.50</div>
+  <div class="chip"><i><svg width="24" height="24" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></i>Sent to Ava · $45, your half</div>
+  <div class="chip"><i><svg width="24" height="24" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></i>Sent to Sam · $6.50</div>
+</div>
+<div class="mono cnt"><span>01 / 04 settled</span><span>02 / 04 settled</span><span>03 / 04 settled</span><span>04 / 04 settled</span></div>
+
+<div class="disp" id="money" style="position:absolute;left:var(--m);top:96px;font-size:128px"><span class="line"><span class="w">Money</span></span><span class="line"><span class="w">stuff.</span></span></div>
+<img id="logo" src="assets/paypal_wordmark_black.png" style="position:absolute;left:var(--m);bottom:84px;width:230px;visibility:hidden">
+<div class="mono" id="spec" style="position:absolute;right:var(--m);bottom:90px;font-size:15px;line-height:1.6;text-align:right;visibility:hidden">Spec ad · not affiliated<br>with PayPal, Inc.</div>
+<canvas class="grain" id="grain" width="1200" height="1470" style="left:-60px;top:-60px"></canvas>
+
+<script src="node_modules/gsap/dist/gsap.min.js"></script>
+<script>
+gsap.registerPlugin();
+const eOut='expo.out';
+(function(){const c=grain,x=c.getContext('2d');let s=3;const r=()=>(s=(s*16807)%2147483647)/2147483647;const img=x.createImageData(c.width,c.height);
+ for(let i=0;i<img.data.length;i+=4){const v=200+r()*55;img.data[i]=img.data[i+1]=img.data[i+2]=v;img.data[i+3]=255}x.putImageData(img,0,0)})();
+const tl=gsap.timeline({paused:true});
+function build(){
+  // opening line
+  tl.fromTo('#who .w',{yPercent:110},{yPercent:0,duration:.8,ease:eOut,stagger:.12},.25);
+  tl.to('#who .w',{yPercent:-110,duration:.45,ease:'power3.in',stagger:.06},2.55);
+  // "Sent" tags: pop in on each settle, leave before the next
+  const chips=document.querySelectorAll('.chip'), ins=[4.95,7.4,9.4,11.6], outs=[5.9,7.9,10.4,12.45];
+  chips.forEach((c,i)=>{
+    tl.fromTo(c,{autoAlpha:0,scale:.6,y:14},{autoAlpha:1,scale:1,y:0,duration:.45,ease:'back.out(2.2)'},ins[i]);
+    tl.to(c,{autoAlpha:0,y:-18,scale:.94,duration:.28,ease:'power2.in'},outs[i]);
+  });
+  const cs=document.querySelectorAll('.cnt span');
+  ins.forEach((t,i)=>{tl.set(cs,{autoAlpha:0},t);tl.set(cs[i],{autoAlpha:1},t)});
+  tl.set(cs,{autoAlpha:0},12.45);
+  // end card
+  tl.fromTo('#money .w',{yPercent:110},{yPercent:0,duration:.85,ease:eOut,stagger:.12},15.05);
+  tl.fromTo('#logo',{autoAlpha:0,y:14},{autoAlpha:1,y:0,duration:.7,ease:eOut},16.4);
+  tl.fromTo('#spec',{autoAlpha:0},{autoAlpha:1,duration:.6},16.65);
+  tl.set({},{},20);
+}
+window.seek=t=>{tl.seek(t,false);window.render3d(t);let s=Math.floor(t*24)+7;const r=()=>(s=(s*16807)%2147483647)/2147483647;grain.style.transform=`translate(${(r()*60)|0}px,${(r()*60)|0}px)`;};
+</script>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
+<script type="module">
+import {init,render3d} from './film.js';
+await document.fonts.ready;
+await Promise.all(['700 100px Caveat','700 40px "JetBrains Mono"','400 30px "JetBrains Mono"','800 80px "Plus Jakarta Sans"','600 40px "Plus Jakarta Sans"'].map(f=>document.fonts.load(f)));
+init(document.getElementById('gl'));window.render3d=render3d;build();seek(0);
+document.body.dataset.ready=1;window.DUR=tl.duration();
+</script>
+</body>
+</html>
