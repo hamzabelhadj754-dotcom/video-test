@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>One Second</title>
+<style>
+@font-face{font-family:"Geist";src:url(assets/fonts/geist.woff2) format("woff2");font-weight:100 900;font-display:block}
+@font-face{font-family:"GeistMono";src:url(assets/fonts/geist-mono.woff2) format("woff2");font-weight:400 600;font-display:block}
+:root{--navy:#0A2540;--deep:#061B31;--blurple:#635BFF;--cyan:#00D4FF;--paper:#F6F9FC;--line:#E5EDF5;--slate:#8C9EB1;--pink:#FF5996;--m:80px}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:1350px;overflow:hidden;background:var(--deep)}
+#stage{position:absolute;inset:0;overflow:hidden}
+.scene{position:absolute;inset:0;overflow:hidden;visibility:hidden}
+.cam{position:absolute;inset:0;transform-origin:50% 50%}
+.mono{font-family:"GeistMono";font-weight:500;font-size:22px;letter-spacing:.04em}
+.disp{font-family:"Geist";font-weight:500;letter-spacing:-0.035em;line-height:.98}
+.tl{position:absolute;left:var(--m);top:84px}
+.tr{position:absolute;right:var(--m);top:84px;text-align:right}
+.grain{position:absolute;left:-120px;top:-120px;pointer-events:none;mix-blend-mode:overlay;opacity:.12;z-index:60}
+svg.full{position:absolute;left:0;top:0;width:1080px;height:1350px;overflow:visible}
+.line{display:block;overflow:hidden;padding-bottom:.08em;margin-bottom:-.08em}
+.w{display:inline-block}
+
+/* checkout card (original merchant UI) */
+.card{position:absolute;width:640px;border-radius:28px;background:#fff;padding:44px;left:220px;top:250px;transform-origin:50% 0;
+  box-shadow:0 50px 100px -20px rgba(50,50,93,.25),0 30px 60px -30px rgba(0,0,0,.3)}
+.prod{display:flex;gap:24px;align-items:center;padding-bottom:30px;border-bottom:1px solid var(--line)}
+.thumb{width:96px;height:96px;border-radius:18px;background:radial-gradient(circle at 35% 30%,#F3E9DC,#D9C6AE 60%,#B89F84);position:relative;overflow:hidden;flex:none}
+.thumb::after{content:"";position:absolute;left:24px;top:22px;width:46px;height:54px;border-radius:8px 8px 14px 14px;background:#F7F2EA;box-shadow:inset -6px 0 0 rgba(0,0,0,.06)}
+.pname{font-family:"Geist";font-weight:600;font-size:30px;color:var(--navy);letter-spacing:-0.02em}
+.pmer{font-family:"Geist";font-weight:500;font-size:22px;color:var(--slate);margin-top:4px}
+.price{margin-left:auto;font-family:"Geist";font-weight:600;font-size:30px;color:var(--navy)}
+.fld{margin-top:26px}
+.fl{font-family:"Geist";font-weight:500;font-size:19px;color:#425466;margin-bottom:10px}
+.inp{height:68px;border:1.5px solid var(--line);border-radius:14px;display:flex;align-items:center;padding:0 22px;font-family:"GeistMono";font-size:24px;color:var(--navy);gap:16px;background:#fff}
+.row{display:flex;gap:16px}.row>div{flex:1}
+.brand{margin-left:auto;width:52px;height:34px;border-radius:6px;background:linear-gradient(135deg,#1A1F71,#2B3AA8)}
+.pay{margin-top:34px;height:84px;border-radius:16px;background:var(--blurple);color:#fff;display:grid;place-items:center;font-family:"Geist";font-weight:600;font-size:30px;letter-spacing:-0.01em;position:relative;
+  box-shadow:0 0 0 6px rgba(99,91,255,.18),0 16px 40px -10px rgba(99,91,255,.7)}
+.pay .lbl,.pay .done{grid-area:1/1;display:flex;align-items:center;gap:14px}
+.pay .done{opacity:0}
+
+/* station text */
+.head{position:absolute;left:var(--m);bottom:170px;font-size:112px;color:#F6F9FC;z-index:5}
+.status{position:absolute;left:var(--m);bottom:104px;color:var(--cyan);z-index:5}
+.step{color:var(--slate)}
+.inside{color:#E5EDF5;opacity:.85}
+
+/* S5 dashboard */
+.panel{position:absolute;border-radius:26px;background:#0F2E4F;border:1px solid rgba(229,237,245,.08);box-shadow:0 40px 80px -30px rgba(0,0,0,.6)}
+.note{position:absolute;width:560px;border-radius:24px;background:#fff;padding:28px 30px;display:flex;gap:22px;align-items:center;
+  box-shadow:0 40px 80px -20px rgba(0,0,0,.55),0 0 0 1px rgba(99,91,255,.2)}
+.note .ic{width:64px;height:64px;border-radius:16px;background:radial-gradient(circle at 35% 30%,#F3E9DC,#D9C6AE 60%,#B89F84);flex:none}
+.note .t1{font-family:"Geist";font-weight:600;font-size:26px;color:var(--navy);letter-spacing:-0.01em;display:flex;justify-content:space-between}
+.note .t2{font-family:"Geist";font-weight:500;font-size:21px;color:#425466;margin-top:4px}
+.note .amt{font-family:"Geist";font-weight:600;font-size:26px;color:var(--navy)}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <filter color-interpolation-filters="sRGB" id="glow" x="-20%" y="-20%" width="140%" height="140%" filterUnits="userSpaceOnUse"><feGaussianBlur stdDeviation="10" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <radialGradient id="core"><stop offset="0" stop-color="#fff"/><stop offset=".3" stop-color="#C9C6FF"/><stop offset="1" stop-color="#635BFF" stop-opacity="0"/></radialGradient>
+    <filter color-interpolation-filters="sRGB" id="vb1" x="-10%" y="-40%" width="120%" height="180%"><feGaussianBlur id="vb1s" stdDeviation="0 0"/></filter>
+    <filter color-interpolation-filters="sRGB" id="vb2" x="-10%" y="-40%" width="120%" height="180%"><feGaussianBlur id="vb2s" stdDeviation="0 0"/></filter>
+    <filter color-interpolation-filters="sRGB" id="hb2" x="-40%" y="-10%" width="180%" height="120%"><feGaussianBlur id="hb2s" stdDeviation="0 0"/></filter>
+    <filter color-interpolation-filters="sRGB" id="hb3" x="-40%" y="-10%" width="180%" height="120%"><feGaussianBlur id="hb3s" stdDeviation="0 0"/></filter>
+    <filter color-interpolation-filters="sRGB" id="hb4" x="-40%" y="-10%" width="180%" height="120%"><feGaussianBlur id="hb4s" stdDeviation="0 0"/></filter>
+    <filter color-interpolation-filters="sRGB" id="hb5" x="-40%" y="-10%" width="180%" height="120%"><feGaussianBlur id="hb5s" stdDeviation="0 0"/></filter>
+    <filter color-interpolation-filters="sRGB" id="zb" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur id="zbs" stdDeviation="0"/></filter>
+  </defs>
+</svg>
+<div id="stage">
+
+<!-- ================= S1 THE TAP ================= -->
+<section class="scene" id="s1" style="visibility:visible"><div class="cam" style="filter:url(#vb1)">
+  <div id="s1bg" style="position:absolute;inset:0;background:var(--paper)"></div>
+  <div id="s1flood" style="position:absolute;inset:0;background:#061B31;clip-path:circle(0px at 770px 866px)"></div>
+  <div id="s1glow" style="position:absolute;inset:0;background:radial-gradient(60% 45% at 50% 55%,#FFFFFF,transparent 70%)"></div>
+  <div class="mono tl step" id="s1step">00 — TAP</div>
+  <div class="mono tr" id="clock1" style="color:var(--navy)">t = 0.000 s</div>
+  <div id="cardWrap" style="position:absolute;inset:0;perspective:1600px;perspective-origin:50% 40%">
+    <div class="card" id="card" style="transform-style:preserve-3d">
+      <div class="prod lay"><div class="thumb"></div><div><div class="pname">Speckled mug</div><div class="pmer">Kiln &amp; Co.</div></div><div class="price">€38.00</div></div>
+      <div class="fld lay"><div class="fl">Card</div><div class="inp">•••• •••• •••• 4242<div class="brand"></div></div></div>
+      <div class="row fld lay"><div><div class="fl">Expiry</div><div class="inp">12 / 29</div></div><div><div class="fl">CVC</div><div class="inp">•••</div></div></div>
+      <div class="pay lay" id="pay"><div class="lbl">Pay €38.00</div></div>
+    </div>
+  </div>
+  <svg class="full" id="s1svg" viewBox="0 0 1080 1350">
+    <circle id="rip1" cx="770" cy="866" r="58" fill="none" stroke="#635BFF" stroke-width="2"/>
+    <circle id="rip2" cx="770" cy="866" r="96" fill="none" stroke="#635BFF" stroke-width="1.5"/>
+    <rect id="drop" x="766" y="972" width="8" height="420" fill="#635BFF" filter="url(#glow)"/>
+    <rect id="dropc" x="769" y="972" width="2" height="420" fill="#fff"/>
+    <g id="cursor"><path d="M0 0 l0 54 l13 -12 l10 24 l9 -4 l-10 -23 l18 -1 z" fill="#0A2540" stroke="#fff" stroke-width="2.5" stroke-linejoin="round"/></g>
+  </svg>
+  <div class="mono" id="slow" style="position:absolute;left:0;right:0;top:1150px;text-align:center;font-size:26px;color:var(--navy)">Let’s slow that down.</div>
+</div></section>
+
+<!-- shared HUD for "inside the second" -->
+<div id="hud" style="position:absolute;inset:0;z-index:40;visibility:hidden;pointer-events:none">
+  <div class="mono tl step"><span class="hs" style="position:absolute;white-space:nowrap">01 / 04</span><span class="hs" style="position:absolute;white-space:nowrap">02 / 04</span><span class="hs" style="position:absolute;white-space:nowrap">03 / 04</span><span class="hs" style="position:absolute;white-space:nowrap">04 / 04</span></div>
+  <div class="mono tr inside">inside the second</div>
+  <div style="position:absolute;left:var(--m);right:var(--m);top:132px;height:2px;background:rgba(229,237,245,.12)"><div id="prog" style="height:100%;width:100%;background:var(--blurple);transform-origin:0 50%;transform:scaleX(0)"></div></div>
+</div>
+
+<!-- ================= S2 CARD AUTHORIZED ================= -->
+<section class="scene" id="s2"><div class="cam" style="filter:url(#hb2)"><div class="cam2" style="position:absolute;inset:0;filter:url(#vb2)">
+  <div style="position:absolute;inset:0;background:radial-gradient(70% 55% at 50% 45%,#0E2D52 0%,#0C2A4D 18%,#0A2646 34%,#08213E 50%,#071D36 64%,var(--deep) 78%)"></div>
+  <div class="dots" style="position:absolute;inset:-100px;background:radial-gradient(rgba(140,158,177,.16) 1.5px,transparent 1.6px) 0 0/48px 48px"></div>
+  <div style="position:absolute;inset:0;perspective:1400px">
+    <div id="wcard" style="position:absolute;left:250px;top:430px;width:580px;height:366px;transform:rotateX(52deg) rotateZ(-18deg);transform-style:preserve-3d">
+      <svg width="580" height="366" viewBox="0 0 580 366" style="overflow:visible">
+        <rect id="wc" x="2" y="2" width="576" height="362" rx="30" fill="rgba(99,91,255,.06)" stroke="#E5EDF5" stroke-opacity=".7" stroke-width="2.5"/>
+        <rect id="chip" x="50" y="120" width="74" height="56" rx="10" fill="none" stroke="#00D4FF" stroke-width="2.5"/>
+        <text x="50" y="290" fill="#E5EDF5" font-family="GeistMono" font-size="34" letter-spacing="4" id="pan">•••• •••• •••• 4242</text>
+      </svg>
+    </div>
+  </div>
+  <svg class="full"><path class="ln" id="p2" d="M330 -40 C 330 200, 380 470, 560 560 C 740 650, 900 640, 1130 640" fill="none"/></svg>
+  <svg class="full"><g id="chk2" transform="translate(560 560)"><circle r="40" fill="#00D4FF" opacity=".16"/><path d="M-16 1 l11 11 l22 -24" fill="none" stroke="#00D4FF" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></g></svg>
+  <div class="disp head"><span class="line"><span class="w">Card</span></span><span class="line"><span class="w">authorized.</span></span></div>
+  <div class="mono status" id="st2">● approved</div>
+</div></div></section>
+
+<!-- ================= S3 FRAUD CHECKED ================= -->
+<section class="scene" id="s3"><div class="cam" style="filter:url(#hb3)">
+  <div style="position:absolute;inset:0;background:radial-gradient(70% 55% at 52% 48%,#0E2D52 0%,#0C2A4D 18%,#0A2646 34%,#08213E 50%,#071D36 64%,var(--deep) 78%)"></div>
+  <div class="dots" style="position:absolute;inset:-100px;background:radial-gradient(rgba(140,158,177,.14) 1.5px,transparent 1.6px) 0 0/48px 48px"></div>
+  <svg class="full" viewBox="0 0 1080 1350">
+    <defs><linearGradient id="scan" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#00D4FF" stop-opacity=".22"/><stop offset="1" stop-color="#00D4FF" stop-opacity="0"/></linearGradient>
+      <clipPath id="ringclip"><circle cx="560" cy="620" r="240"/></clipPath></defs>
+    <g id="rings" transform="translate(560 620)">
+      <circle r="300" fill="none" stroke="#E5EDF5" stroke-opacity=".10" stroke-width="1.5"/>
+      <g id="dash"><circle r="240" fill="none" stroke="#E5EDF5" stroke-opacity=".25" stroke-width="1.5" stroke-dasharray="2 10"/></g>
+      <circle r="180" fill="none" stroke="#00D4FF" stroke-opacity=".35" stroke-width="2"/>
+      <circle r="120" fill="none" stroke="#E5EDF5" stroke-opacity=".16" stroke-width="1"/>
+      <g id="ticks" stroke="#E5EDF5" stroke-opacity=".45" stroke-width="2"><path d="M0 -300 v26 M0 300 v-26 M-300 0 h26 M300 0 h-26"/><path d="M212 -212 l-16 16 M-212 212 l16 -16 M212 212 l-16 -16 M-212 -212 l16 16" stroke-opacity=".5"/></g>
+    </g>
+    <g clip-path="url(#ringclip)"><g id="scanG"><rect x="300" y="540" width="520" height="80" fill="url(#scan)"/><rect x="300" y="540" width="520" height="2" fill="#00D4FF" opacity=".6"/></g></g>
+    <path id="arc" d="M560 440 A180 180 0 1 1 404.1 710" transform="" fill="none" stroke="#00D4FF" stroke-width="5" stroke-linecap="round" filter="url(#glow)"/>
+  </svg>
+  <svg class="full"><path class="ln" id="p3" d="M-50 640 C 200 640, 360 640, 560 620 C 760 600, 900 520, 1130 520" fill="none"/></svg>
+  <div class="disp head"><span class="line"><span class="w">Fraud</span></span><span class="line"><span class="w">checked.</span></span></div>
+  <div class="mono status" id="st3">● passed</div>
+</div></section>
+
+<!-- ================= S4 CURRENCY CONVERTED ================= -->
+<section class="scene" id="s4"><div class="cam" style="filter:url(#hb4)">
+  <div style="position:absolute;inset:0;background:radial-gradient(70% 55% at 50% 45%,#0E2D52 0%,#0C2A4D 18%,#0A2646 34%,#08213E 50%,#071D36 64%,var(--deep) 78%)"></div>
+  <div class="dots" style="position:absolute;inset:-100px;background:radial-gradient(rgba(140,158,177,.14) 1.5px,transparent 1.6px) 0 0/48px 48px"></div>
+  <svg class="full">
+    <path class="ln" id="p4a" d="M-50 520 C 120 520, 200 560, 300 600" fill="none"/>
+    <path class="ln br" id="p4b1" d="M300 600 C 400 640, 430 430, 560 430 C 690 430, 720 600, 820 600" fill="none"/>
+    <path class="ln br" id="p4b2" d="M300 600 C 400 610, 450 540, 560 540 C 670 540, 720 600, 820 600" fill="none"/>
+    <path class="ln br" id="p4b3" d="M300 600 C 400 590, 450 660, 560 660 C 670 660, 720 600, 820 600" fill="none"/>
+    <path class="ln br" id="p4b4" d="M300 600 C 400 560, 430 770, 560 770 C 690 770, 720 600, 820 600" fill="none"/>
+    <path class="ln" id="p4c" d="M820 600 C 920 600, 1000 560, 1130 560" fill="none"/>
+    <g font-family="GeistMono" font-size="30" font-weight="600" text-anchor="middle">
+      <g class="node" transform="translate(560 430)"><circle r="34" fill="#061B31" stroke="#635BFF" stroke-width="2"/><text y="10" fill="#F6F9FC">$</text></g>
+      <g class="node" transform="translate(560 540)"><circle r="34" fill="#061B31" stroke="#635BFF" stroke-width="2"/><text y="10" fill="#F6F9FC">£</text></g>
+      <g class="node" transform="translate(560 660)"><circle r="34" fill="#061B31" stroke="#635BFF" stroke-width="2"/><text y="10" fill="#F6F9FC">¥</text></g>
+      <g class="node" transform="translate(560 770)"><circle r="34" fill="#061B31" stroke="#635BFF" stroke-width="2"/><text y="10" fill="#F6F9FC">₹</text></g>
+      <g id="eur" transform="translate(820 600)"><circle r="44" fill="#635BFF"/><text y="11" fill="#fff" font-size="34">€</text></g>
+    </g>
+  </svg>
+  <div class="disp head"><span class="line"><span class="w">Currency</span></span><span class="line"><span class="w">converted.</span></span></div>
+  <div class="mono status" id="st4">● settled in EUR</div>
+</div></section>
+
+<!-- ================= S5 BUSINESS NOTIFIED ================= -->
+<section class="scene" id="s5"><div class="cam" style="filter:url(#hb5)">
+  <div style="position:absolute;inset:0;background:radial-gradient(70% 55% at 55% 45%,#0E2D52 0%,#0C2A4D 18%,#0A2646 34%,#08213E 50%,#071D36 64%,var(--deep) 78%)"></div>
+  <div class="dots" style="position:absolute;inset:-100px;background:radial-gradient(rgba(140,158,177,.14) 1.5px,transparent 1.6px) 0 0/48px 48px"></div>
+  <div class="panel" id="panel" style="left:330px;top:520px;width:700px;height:520px;padding:40px">
+    <div class="mono" style="color:var(--slate);font-size:20px">KILN &amp; CO. — PAYMENTS</div>
+    <svg width="620" height="300" viewBox="0 0 620 300" style="margin-top:40px">
+      <g fill="#E5EDF5" fill-opacity=".14"><rect x="0" y="180" width="54" height="120" rx="6"/><rect x="80" y="140" width="54" height="160" rx="6"/><rect x="160" y="200" width="54" height="100" rx="6"/><rect x="240" y="120" width="54" height="180" rx="6"/><rect x="320" y="160" width="54" height="140" rx="6"/><rect x="400" y="90" width="54" height="210" rx="6"/></g>
+      <rect id="bar" x="480" y="60" width="54" height="240" rx="6" fill="#635BFF" style="transform-origin:507px 300px"/>
+    </svg>
+  </div>
+  <svg class="full"><path class="ln" id="p5" d="M-50 560 C 120 560, 200 990, 300 990" fill="none"/></svg>
+  <div class="note" id="note" style="left:300px;top:930px">
+    <div class="ic"></div>
+    <div style="flex:1"><div class="t1"><span>New payment</span><span class="amt">€38.00</span></div><div class="t2">Speckled mug · just now</div></div>
+  </div>
+  <div class="disp head" style="bottom:auto;top:200px;font-size:112px"><span class="line"><span class="w">Business</span></span><span class="line"><span class="w">notified.</span></span></div>
+  <div class="mono status" id="st5" style="bottom:auto;top:440px">● delivered</div>
+</div></section>
+
+<!-- ================= S6 SNAP BACK ================= -->
+<section class="scene" id="s6"><div class="cam" id="s6cam" style="filter:url(#zb)">
+  <div style="position:absolute;inset:0;background:var(--paper)"></div>
+  <div style="position:absolute;inset:0;background:radial-gradient(60% 45% at 50% 55%,#FFFFFF,transparent 70%)"></div>
+  <div class="mono tl step">00 — TAP</div>
+  <div class="mono tr" style="color:var(--navy)">t = 1.000 s</div>
+  <div class="card" id="card6" style="transform:scale(1.22)"></div>
+</div></section>
+
+<!-- ================= S7 END ================= -->
+<section class="scene" id="s7"><div class="cam">
+  <div style="position:absolute;inset:0;background:var(--navy)"></div>
+  <div id="bloom" style="position:absolute;left:-260px;right:-260px;top:720px;height:1000px;filter:blur(90px)">
+    <div style="position:absolute;inset:0;transform:skewY(-10deg)">
+      <div class="blob" style="left:0;top:160px;width:760px;height:440px;background:#635BFF"></div>
+      <div class="blob" style="left:480px;top:60px;width:680px;height:400px;background:#00D4FF;opacity:.85"></div>
+      <div class="blob" style="left:940px;top:180px;width:640px;height:440px;background:#FF5996;opacity:.9"></div>
+      <div class="blob" style="left:340px;top:360px;width:840px;height:420px;background:#7A73FF"></div>
+    </div>
+  </div>
+  <div style="position:absolute;inset:0;background:linear-gradient(to bottom,var(--navy) 42%,rgba(10,37,64,0) 74%)"></div>
+  <div class="mono tr inside">t = 1.000 s</div>
+  <div class="disp" style="position:absolute;left:var(--m);top:250px;font-size:118px;color:#F6F9FC"><span class="line"><span class="w e1">A lot happens</span></span><span class="line"><span class="w e1">in one second.</span></span></div>
+  <div class="disp" style="position:absolute;left:var(--m);top:520px;font-size:118px;color:#8C9EB1"><span class="line"><span class="w e2">You’ll never</span></span><span class="line"><span class="w e2">notice.</span></span></div>
+  <img id="logo" src="assets/stripe_wordmark_white.svg" style="position:absolute;left:var(--m);bottom:96px;width:150px">
+  <div class="mono" id="spec" style="position:absolute;right:var(--m);bottom:104px;font-size:16px;line-height:1.6;color:rgba(255,255,255,.7);text-align:right">SPEC AD · NOT AFFILIATED<br>WITH STRIPE, INC.</div>
+</div></section>
+
+<canvas class="grain" id="grain" width="1320" height="1590"></canvas>
+<canvas id="dither" width="1320" height="1590" style="position:absolute;left:-120px;top:-120px;pointer-events:none;z-index:61"></canvas>
+</div>
+<style>.blob{position:absolute;border-radius:50%}</style>
+
+<script src="node_modules/gsap/dist/gsap.min.js"></script>
+<script src="node_modules/gsap/dist/CustomEase.min.js"></script>
+<script>
+gsap.registerPlugin(CustomEase);
+CustomEase.create("eOut","M0,0 C0.16,1 0.3,1 1,1");
+CustomEase.create("eIn","M0,0 C0.64,0 0.78,0 1,1");
+CustomEase.create("cam","M0,0 C0.65,0 0.35,1 1,1");
+CustomEase.create("glide","M0,0 C0.45,0 0.2,1 1,1");
+
+function rng(s){return()=>{s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+(function(){const c=grain,x=c.getContext('2d'),r=rng(11),img=x.createImageData(c.width,c.height);
+  for(let i=0;i<img.data.length;i+=4){const v=r()*255;img.data[i]=img.data[i+1]=img.data[i+2]=v;img.data[i+3]=255}x.putImageData(img,0,0)})();
+(function(){const c=dither,x=c.getContext('2d'),r=rng(29),img=x.createImageData(c.width,c.height);
+  for(let i=0;i<img.data.length;i+=4){const v=r()-.5;const w=v>0?255:0;img.data[i]=img.data[i+1]=img.data[i+2]=w;img.data[i+3]=Math.abs(v)*2*16}x.putImageData(img,0,0)})();
+
+// the line of light: every .ln path gets a glow copy, a white core and a travelling head
+const NS='http://www.w3.org/2000/svg';
+const lines={};
+document.querySelectorAll('path.ln').forEach(p=>{
+  const svg=p.ownerSVGElement, d=p.getAttribute('d');
+  const g=document.createElementNS(NS,'path');g.setAttribute('d',d);g.setAttribute('fill','none');
+  g.setAttribute('stroke','#635BFF');g.setAttribute('stroke-width','7');g.setAttribute('stroke-linecap','round');g.setAttribute('filter','url(#glow)');
+  const c=document.createElementNS(NS,'path');c.setAttribute('d',d);c.setAttribute('fill','none');
+  c.setAttribute('stroke','#fff');c.setAttribute('stroke-opacity','.85');c.setAttribute('stroke-width','1.6');c.setAttribute('stroke-linecap','round');
+  const h=document.createElementNS(NS,'g');
+  h.innerHTML='<circle r="46" fill="url(#core)"/><circle r="6" fill="#fff"/>';
+  svg.insertBefore(g,p);svg.insertBefore(c,p);svg.appendChild(h);p.remove();
+  const len=c.getTotalLength();[g,c].forEach(e=>{e.style.strokeDasharray=len;e.style.strokeDashoffset=len});
+  lines[p.id]={g,c,h,len,v:{p:0}};h.style.opacity=0;
+});
+function drawLine(tl,id,t,dur,ease='cam',keepHead=false){
+  const L=lines[id];
+  tl.fromTo(L.v,{p:0},{p:1,duration:dur,ease,onUpdate(){
+      const p=L.v.p,off=L.len*(1-p);L.g.style.strokeDashoffset=off;L.c.style.strokeDashoffset=off;
+      const pt=L.c.getPointAtLength(L.len*p);L.h.setAttribute('transform',`translate(${pt.x} ${pt.y})`);
+      L.h.style.opacity=(p>0.001&&(p<0.999||keepHead))?1:0;}},t);
+}
+
+// clone checkout into snap-back scene, swap the button for "Paid"
+card6.innerHTML=card.innerHTML;
+card6.querySelector('.pay').id='pay6';
+pay6.insertAdjacentHTML('beforeend','<div class="done"><svg width="30" height="30" viewBox="0 0 30 30"><path d="M6 15.5 l6 6 l12 -13" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Paid</div>');
+
+const tl=gsap.timeline({paused:true});
+const show=(id,t)=>tl.set('#'+id,{visibility:'visible'},t);
+const hide=(id,t)=>tl.set('#'+id,{visibility:'hidden'},t);
+const words=(sel,t,st=.08)=>tl.fromTo(sel,{yPercent:110},{yPercent:0,duration:.75,ease:'eOut',stagger:st},t);
+const pan=(fromCam,fromBlur,toCam,toBlur,t)=>{ // horizontal camera continuation with motion blur
+  tl.to(fromCam,{x:-1150,duration:.32,ease:'eIn'},t);
+  tl.to(fromBlur,{attr:{stdDeviation:'80 0'},duration:.32,ease:'eIn'},t);
+  tl.fromTo(toCam,{x:1150},{x:0,duration:.5,ease:'eOut'},t+.32);
+  tl.fromTo(toBlur,{attr:{stdDeviation:'80 0'}},{attr:{stdDeviation:'0 0'},duration:.45,ease:'eOut'},t+.32);
+};
+
+function build(){
+/* ---------- S1 0 – 2.5 ---------- */
+show('s1',0);
+tl.fromTo('#card',{y:70,scale:1.22},{y:0,scale:1.22,duration:.8,ease:'eOut'},0);
+tl.fromTo('#card .lay',{y:24,autoAlpha:.35},{y:0,autoAlpha:1,duration:.6,ease:'eOut',stagger:.06},0);
+tl.fromTo('#s1 .cam',{scale:1.0},{scale:1.025,duration:1.25,ease:'none'},0);
+// cursor glides on an arc to the right end of Pay
+tl.fromTo('#cursor',{x:1010,y:1260},{x:776,duration:.85,ease:'glide'},.3);
+tl.fromTo('#cursor',{y:1260},{y:858,duration:.85,ease:'eOut'},.3);
+tl.fromTo('#pay',{filter:'brightness(1)'},{filter:'brightness(1.12)',duration:.2},.95);
+tl.to('#pay',{keyframes:[{scale:.965,duration:.07,ease:'power2.out'},{scale:1,duration:.25,ease:'eOut'}]},1.2);
+tl.to('#cursor',{keyframes:[{scale:.86,duration:.07},{scale:1,duration:.2}],transformOrigin:'0 0'},1.2);
+// ripple starts... and freezes mid-expansion
+tl.set(['#rip1','#rip2'],{opacity:0},0);tl.fromTo('#rip1',{attr:{r:20},opacity:.9},{attr:{r:58},opacity:.55,duration:.12,ease:'power2.out',immediateRender:false},1.2);
+tl.fromTo('#rip2',{attr:{r:20},opacity:.6},{attr:{r:96},opacity:.22,duration:.12,ease:'power2.out',immediateRender:false},1.2);
+// FREEZE 1.32: colour drains, the world holds its breath
+tl.to('#pay',{backgroundColor:'#8F8BB8',boxShadow:'0 0 0 6px rgba(99,91,255,.06),0 16px 40px -10px rgba(99,91,255,.15)',duration:.18},1.32);
+tl.fromTo('#slow',{autoAlpha:0,y:16},{autoAlpha:1,y:0,duration:.5,ease:'eOut'},1.42);
+// exploded view + paper -> navy
+tl.to('#card',{rotationX:56,rotationZ:-6,y:-40,duration:.85,ease:'cam'},1.75);
+tl.to('#card .lay',{z:(i)=>i*120,duration:.85,ease:'cam',stagger:.03},1.75);
+tl.fromTo('#s1flood',{clipPath:'circle(0px at 770px 866px)'},{clipPath:'circle(1700px at 770px 866px)',duration:.6,ease:'eIn'},1.8);
+tl.to('#s1glow',{autoAlpha:0,duration:.4},1.9);
+tl.to(['#s1step','#clock1','#slow'],{autoAlpha:0,duration:.25},1.9);
+tl.to(['#rip1','#rip2','#cursor'],{autoAlpha:0,duration:.2},1.95);
+tl.fromTo(['#drop','#dropc'],{attr:{height:0}},{attr:{height:420},duration:.35,ease:'eIn'},1.95);
+// dive down into the second
+tl.to('#s1 .cam',{y:-900,duration:.32,ease:'eIn'},2.2);
+tl.to('#vb1s',{attr:{stdDeviation:'0 60'},duration:.32,ease:'eIn'},2.2);
+show('s2',2.52);hide('s1',2.52);show('hud',2.52);
+
+/* ---------- inside the second: progress (illustrative only, no numbers) ---------- */
+tl.fromTo('#prog',{scaleX:0},{scaleX:1,duration:8.0,ease:'none'},2.52);
+const hs=document.querySelectorAll('.hs');tl.set(hs,{autoAlpha:0},0);
+[2.52,4.82,6.82,8.82].forEach((t,i)=>{tl.set(hs,{autoAlpha:0},t);tl.set(hs[i],{autoAlpha:1},t)});
+
+/* ---------- S2 CARD AUTHORIZED 2.52 – 4.5 ---------- */
+tl.fromTo('#s2 .cam2',{y:900},{y:0,duration:.55,ease:'eOut'},2.52);
+tl.fromTo('#vb2s',{attr:{stdDeviation:'0 60'}},{attr:{stdDeviation:'0 0'},duration:.45,ease:'eOut'},2.52);
+tl.fromTo('#wcard',{rotationZ:-26,rotationX:58},{rotationZ:-12,rotationX:48,duration:2.3,ease:'sine.out'},2.52);
+tl.fromTo('#wc',{attr:{'stroke-dasharray':'1900 1900','stroke-dashoffset':1900}},{attr:{'stroke-dashoffset':0},duration:.8,ease:'cam'},2.65);
+tl.fromTo('#chip',{opacity:0},{opacity:1,duration:.3},3.1);
+tl.fromTo('#pan',{opacity:0},{opacity:1,duration:.4},3.15);
+drawLine(tl,'p2',2.6,1.3);
+tl.fromTo('#chk2',{scale:0,opacity:0,transformOrigin:'0 0'},{scale:1,opacity:1,duration:.4,ease:'back.out(2)'},3.3);
+words('#s2 .head .w',2.95);
+tl.fromTo('#st2',{autoAlpha:0},{autoAlpha:1,duration:.3},3.4);
+tl.fromTo('#s2 .dots',{y:0},{y:-60,duration:2,ease:'none'},2.52);
+show('s3',4.82);
+pan('#s2 .cam','#hb2s','#s3 .cam','#hb3s',4.5);
+hide('s2',4.84);
+
+/* ---------- S3 FRAUD CHECKED 4.82 – 6.5 ---------- */
+drawLine(tl,'p3',4.82,1.25);
+tl.fromTo('#dash',{rotation:0},{rotation:90,duration:1.8,ease:'none',svgOrigin:'0 0'},4.82);
+tl.fromTo('#ticks',{rotation:-8},{rotation:8,duration:1.8,ease:'sine.inOut',svgOrigin:'0 0'},4.82);
+tl.fromTo('#scanG',{y:-200},{y:200,duration:.9,ease:'sine.inOut'},5.0);
+tl.fromTo('#arc',{attr:{'stroke-dasharray':'900 900','stroke-dashoffset':900}},{attr:{'stroke-dashoffset':0},duration:.75,ease:'cam'},5.25);
+words('#s3 .head .w',5.05);
+tl.fromTo('#st3',{autoAlpha:0},{autoAlpha:1,duration:.3},5.85);
+tl.fromTo('#s3 .dots',{y:0},{y:-60,duration:2,ease:'none'},4.82);
+show('s4',6.82);
+pan('#s3 .cam','#hb3s','#s4 .cam','#hb4s',6.5);
+hide('s3',6.84);
+
+/* ---------- S4 CURRENCY CONVERTED 6.82 – 8.5 ---------- */
+drawLine(tl,'p4a',6.82,.4,'power1.in');
+['p4b1','p4b2','p4b3','p4b4'].forEach((id,i)=>drawLine(tl,id,7.2+i*.03,.6,'none'));
+tl.fromTo('#s4 .node',{scale:0,transformOrigin:'50% 50%'},{scale:1,duration:.35,ease:'back.out(2)',stagger:.04},7.32);
+tl.fromTo('#eur',{scale:0,transformOrigin:'50% 50%'},{scale:1,duration:.4,ease:'back.out(2)'},7.78);
+drawLine(tl,'p4c',7.8,.45,'power1.out');
+words('#s4 .head .w',7.0);
+tl.fromTo('#st4',{autoAlpha:0},{autoAlpha:1,duration:.3},7.95);
+tl.fromTo('#s4 .dots',{y:0},{y:-60,duration:2,ease:'none'},6.82);
+show('s5',8.82);
+pan('#s4 .cam','#hb4s','#s5 .cam','#hb5s',8.5);
+hide('s4',8.84);
+
+/* ---------- S5 BUSINESS NOTIFIED 8.82 – 10.5 ---------- */
+drawLine(tl,'p5',8.82,.55,'power1.in');
+tl.fromTo('#panel',{y:40,autoAlpha:.0},{y:0,autoAlpha:1,duration:.7,ease:'eOut'},8.85);
+tl.fromTo('#note',{scale:.6,autoAlpha:0,transformOrigin:'0% 50%'},{scale:1,autoAlpha:1,duration:.45,ease:'back.out(1.6)'},9.33);
+tl.fromTo('#bar',{scaleY:0},{scaleY:1,duration:.6,ease:'eOut'},9.45);
+words('#s5 .head .w',9.0);
+tl.fromTo('#st5',{autoAlpha:0},{autoAlpha:1,duration:.3},9.7);
+tl.fromTo('#s5 .dots',{y:0},{y:-60,duration:1.7,ease:'none'},8.82);
+tl.fromTo('#s5 .cam',{scale:1},{scale:1.04,duration:1.6,ease:'none'},8.9);
+
+/* ---------- S6 SNAP BACK 10.5 – 11.5 ---------- */
+show('s6',10.5);hide('s5',10.5);hide('hud',10.5);
+tl.fromTo('#s6cam',{scale:3.2},{scale:1,duration:.38,ease:'eOut'},10.5);
+tl.fromTo('#zbs',{attr:{stdDeviation:18}},{attr:{stdDeviation:0},duration:.34,ease:'eOut'},10.5);
+tl.to('#pay6 .lbl',{autoAlpha:0,y:-14,duration:.18},10.78);
+tl.fromTo('#pay6 .done',{autoAlpha:0,y:14},{autoAlpha:1,y:0,duration:.3,ease:'eOut'},10.84);
+tl.to('#pay6',{keyframes:[{scale:1.03,duration:.08},{scale:1,duration:.25,ease:'eOut'}]},10.84);
+
+/* ---------- S7 END 11.5 – 15 ---------- */
+show('s7',11.5);hide('s6',11.5);
+tl.fromTo('#s7 .cam',{scale:1.03},{scale:1,duration:3.5,ease:'sine.out'},11.5);
+words('.e1',11.55,.1);
+words('.e2',12.35,.1);
+tl.fromTo('#bloom',{y:420,opacity:0},{y:0,opacity:1,duration:1.6,ease:'cam'},11.7);
+document.querySelectorAll('.blob').forEach((b,i)=>tl.fromTo(b,{x:0},{x:[90,-120,110,-80][i],duration:3.4,ease:'sine.inOut'},11.6));
+tl.fromTo('#logo',{autoAlpha:0,y:16},{autoAlpha:1,y:0,duration:.6,ease:'eOut'},13.0);
+tl.fromTo('#spec',{autoAlpha:0},{autoAlpha:1,duration:.6},13.2);
+tl.set({},{},15);
+}
+window.seek=t=>{tl.seek(t,false);const r=rng(Math.floor(t*24)+1);grain.style.transform=`translate(${(r()*120)|0}px,${(r()*120)|0}px)`;dither.style.transform=`translate(${(r()*120)|0}px,${(r()*120)|0}px)`;};
+document.fonts.ready.then(()=>{build();seek(0);document.body.dataset.ready=1;window.DUR=tl.duration()});
+</script>
+</body>
+</html>

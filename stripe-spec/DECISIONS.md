@@ -27,3 +27,26 @@ light travels through what happens inside it, then time snaps back: "Paid."
 
 ## Versions
 - Style frames v01: frames/sf_01-03.png
+- User approved the look and asked to "make it even better" and render the final directly.
+
+## Film (15s, 4:5 1080x1350, 30fps)
+Engine: comp.html (HTML + SVG + GSAP 3.12.5), Playwright frame seeking, 120fps -> 4-subframe blend -> 30fps.
+Sound: audio.py, fully synthesized; two-pass loudnorm to -14 LUFS.
+
+| t (s) | scene | transition out |
+|---|---|---|
+| 0-1.32 | checkout, cursor glides, tap; ripple FREEZES mid-expansion, Pay button drains | freeze (tape-stop, silence) |
+| 1.4-2.5 | "Let's slow that down." checkout explodes into 3D layers; navy floods from the tap point | dive down (vertical blur) |
+| 2.5-4.5 | 01/04 Card authorized: wireframe card, line traces in, check | camera continuation pan |
+| 4.8-6.5 | 02/04 Fraud checked: instrument rings, scan line, arc sweep | camera continuation pan |
+| 6.8-8.5 | 03/04 Currency converted: line splits into $ £ ¥ ₹, merges into € | camera continuation pan |
+| 8.8-10.5 | 04/04 Business notified: Kiln & Co. dashboard + notification | snap-back zoom (radial blur) |
+| 10.5-11.5 | checkout again, t = 1.000 s, button -> "Paid" | hard cut on hit |
+| 11.5-15 | "A lot happens in one second. You'll never notice." gradient blooms once, wordmark, spec label | hold |
+
+Fixes during build: radial-gradient banding came from SVG filters in linearRGB ->
+color-interpolation-filters="sRGB" + a balanced dither layer; frame 0 made visible (thumbnail);
+colour drain moved off the 3D layers (filters flatten preserve-3d); ripple hidden until the tap.
+
+## Versions
+- v01: out/stripe_one_second_v01_4x5.mp4 (28MB, H.264 CRF18 cap 14M, AAC 256k). DELIVERED.
