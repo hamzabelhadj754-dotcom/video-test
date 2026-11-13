@@ -1,9 +1,6 @@
 import { AbsoluteFill, useCurrentFrame } from "remotion";
 
-export const Grain: React.FC<{ opacity?: number; vignette?: number }> = ({
-  opacity = 0.09,
-  vignette = 0.28,
-}) => {
+export const Grain: React.FC<{ opacity?: number; vignette?: number }> = ({ opacity = 0.1, vignette = 0.28 }) => {
   const frame = useCurrentFrame();
   return (
     <AbsoluteFill style={{ pointerEvents: "none" }}>
@@ -14,12 +11,7 @@ export const Grain: React.FC<{ opacity?: number; vignette?: number }> = ({
       />
       <svg width="100%" height="100%" style={{ opacity, mixBlendMode: "overlay" }}>
         <filter id="grain">
-          <feTurbulence
-            type="fractalNoise"
-            baseFrequency="0.9"
-            numOctaves="2"
-            seed={frame % 97}
-          />
+          <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed={(frame * 7) % 97} />
           <feColorMatrix type="saturate" values="0" />
         </filter>
         <rect width="100%" height="100%" filter="url(#grain)" />

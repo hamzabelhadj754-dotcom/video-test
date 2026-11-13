@@ -1,19 +1,23 @@
-export const Cursor: React.FC<{ x: number; y: number; scale?: number }> = ({
+export const Cursor: React.FC<{ x: number | string; y: number | string; scale?: number; opacity?: number; size?: number }> = ({
   x,
   y,
   scale = 1,
+  opacity = 1,
+  size = 1,
 }) => (
   <svg
-    width={54}
-    height={66}
+    width={54 * size}
+    height={66 * size}
     viewBox="0 0 27 33"
     style={{
       position: "absolute",
       left: x,
       top: y,
+      opacity,
       transform: `scale(${scale})`,
-      transformOrigin: "4px 3px",
+      transformOrigin: "12% 8%",
       filter: "drop-shadow(0 6px 10px rgba(0,0,0,0.28))",
+      zIndex: 5,
     }}
   >
     <path

@@ -22,3 +22,10 @@ No invented Lovable features, numbers or claims. End card carries "Spec ad. Not 
 
 ## Log
 - v00: style frames (note, build, end card) rendered to `out/styleframes` for look approval.
+- v01: first full animation with synthesized sound design (`tools/sound.py`). Internal review only.
+- v02: stronger prompt shot, raised end-card glow. Delivered: `renders/someday_v02.mp4`.
+
+## Timeline (frames, 30fps)
+0 note · 60–114 cursor selects the line · 118–150 line lifts into the prompt · 166–212 typing · 230 send ·
+240 build (music in, 120bpm) · 300 day shot · 345 slots shot · 390 wide, 412 book, 416 card ·
+450 back to the note · 462 strike · 492 "Today." · 522–540 glow floods · 540–660 end card.
