@@ -30,3 +30,10 @@ Gotcha: transparent phone glass wrote depth and hid pieces -> depthWrite:false +
 - Ending: everything folds into ONE empty prompt box in a gradient halo; the placeholder
   "Let's build something Lovable" fades in word by word = the call to action. Small centred logo. No corner layout.
 - Style frames v2: frames/v2_sf_01-05.png
+
+## Film v01 (20s, 1080x1350, 30fps) — DELIVERED: out/lovable_words_v01_4x5.mp4
+- Rendered at 120fps (4-subframe blend) in 134s (DOM + one shader = fast).
+- Montage slides: expo.out moved ~160px per subframe -> stacked ghosts. Fixed with power3.out/power2.in
+  curves plus a 30px blur during the move; re-rendered only those windows.
+- Sound: audio.py, 100 BPM grid from 0.4s so montage cuts land on beats; per-character typing, seven
+  rising pops as letters become days, swell as the cake grows, airy resolved ending. -14.6 LUFS, -2.4 dB peak.

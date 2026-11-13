@@ -181,8 +181,8 @@ tl.fromTo(['#page','#card'],{scale:1},{scale:1.015,duration:2.2,ease:'sine.inOut
 // scroll down the page
 tl.to('#scroller',{y:-640,duration:1.2,ease:IO},8.75);
 // camera continues: page leaves, panels arrive
-tl.to(['#page','#card'],{x:-1180,filter:'blur(10px)',duration:.4,ease:'power3.in'},10.25);
-document.querySelectorAll('.panel').forEach((p,i,all)=>{tl.fromTo(p,{x:1180,rotation:3},{x:0,rotation:0,duration:.6,ease:E},10.6+i*1.2);if(i<all.length-1)tl.to(p,{x:-1180,rotation:-3,duration:.45,ease:'power3.in'},10.6+(i+1)*1.2-.05);});
+tl.to(['#page','#card'],{x:-1180,filter:'blur(30px)',duration:.5,ease:'power2.in'},10.15);
+document.querySelectorAll('.panel').forEach((p,i,all)=>{const t0=10.6+i*1.2;tl.fromTo(p,{x:1180,rotation:3},{x:0,rotation:0,duration:.72,ease:'power3.out'},t0);tl.fromTo(p,{filter:'blur(30px)'},{filter:'blur(0px)',duration:.42,ease:'power2.out'},t0);if(i<all.length-1){tl.to(p,{x:-1180,rotation:-3,duration:.5,ease:'power2.in'},t0+1.1);tl.to(p,{filter:'blur(30px)',duration:.5,ease:'power2.in'},t0+1.1);}});
 tl.set('#mp',{visibility:'visible'},10.6);
 // everything folds back into one empty prompt
 tl.to('.panel',{scale:.62,opacity:0,y:-60,duration:.55,ease:'power3.in'},14.2);
