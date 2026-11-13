@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Got an idea?</title>
+<style>
+@font-face{font-family:"Hanken";src:url(assets/fonts/hanken.woff2) format("woff2");font-weight:300 700;font-display:block}
+@font-face{font-family:"Fraunces";src:url(assets/fonts/fraunces.woff2) format("woff2");font-weight:300 800;font-display:block}
+@font-face{font-family:"Anybody";src:url(assets/fonts/anybody.woff2) format("woff2");font-weight:100 900;font-stretch:50% 150%;font-display:block}
+@font-face{font-family:"JetBrains Mono";src:url(assets/fonts/jbmono.woff2) format("woff2");font-weight:100 800;font-display:block}
+:root{--ink:#1B1B1B;--creme:#F7F4ED;--m:80px}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:1350px;overflow:hidden;background:#1B1B1B}
+#gl{position:absolute;left:0;top:0;width:1080px;height:1350px}
+.head{position:absolute;left:var(--m);font-family:Hanken;font-weight:600;letter-spacing:-0.045em;line-height:.9;color:#FFFFFF}
+.line{display:block;overflow:hidden;padding-bottom:.12em;margin-bottom:-.12em}
+.w{display:inline-block}
+/* prompt box, in the spirit of Lovable's own */
+#prompt{position:absolute;left:100px;top:470px;width:880px;padding:34px 34px 26px;border-radius:40px;background:#FCFBF8;transform-origin:50% 0;
+  box-shadow:0 40px 90px -30px rgba(0,0,0,.6),0 0 0 1px rgba(27,27,27,.06);visibility:hidden}
+.ptxt{font-family:Hanken;font-weight:500;font-size:40px;letter-spacing:-0.015em;line-height:1.25;color:#1B1B1B;min-height:100px}
+#ph{color:#9A968E}
+#caret{display:inline-block;width:3px;height:44px;background:#1B1B1B;vertical-align:-8px;margin-left:2px}
+.prow{display:flex;justify-content:space-between;align-items:center;margin-top:22px}
+.pl,.pr{display:flex;align-items:center;gap:14px}
+.ib{width:60px;height:60px;border-radius:50%;border:2px solid #E6E2D8;display:grid;place-items:center}
+.chip{height:60px;padding:0 22px;border-radius:30px;border:2px solid #E6E2D8;display:flex;align-items:center;gap:10px;font-family:Hanken;font-weight:600;font-size:26px;color:#1B1B1B}
+#send{width:68px;height:68px;border-radius:50%;background:#1B1B1B;display:grid;place-items:center}
+/* montage prompt pill */
+.mp{position:absolute;left:50%;top:84px;transform:translateX(-50%);max-width:940px;white-space:nowrap;padding:22px 26px 22px 34px;border-radius:999px;background:#FCFBF8;display:flex;align-items:center;gap:22px;
+  font-family:Hanken;font-weight:500;font-size:34px;letter-spacing:-0.01em;color:#1B1B1B;box-shadow:0 30px 70px -26px rgba(0,0,0,.55);visibility:hidden}
+.mp i{width:52px;height:52px;border-radius:50%;background:#1B1B1B;display:grid;place-items:center;flex:none}
+.mcar{display:inline-block;width:3px;height:36px;background:#1B1B1B;vertical-align:-6px;margin-left:2px}
+#logo{position:absolute;left:var(--m);bottom:88px;width:300px;visibility:hidden}
+#spec{position:absolute;right:var(--m);bottom:98px;font-family:Hanken;font-weight:500;font-size:17px;line-height:1.5;color:rgba(255,255,255,.55);text-align:right;visibility:hidden}
+</style>
+</head>
+<body>
+<canvas id="gl" width="1080" height="1350"></canvas>
+
+<div class="head" id="h1" style="top:140px;font-size:168px"><span class="line"><span class="w">Got an</span></span><span class="line"><span class="w">idea?</span></span></div>
+
+<div id="prompt">
+  <div class="ptxt"><span id="typed"></span><span id="caret"></span><span id="ph">Let’s build something Lovable</span></div>
+  <div class="prow" id="prow">
+    <div class="pl">
+      <div class="ib"><svg width="26" height="26" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke="#1B1B1B" stroke-width="2.2" stroke-linecap="round"/></svg></div>
+      <div class="chip"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1B1B1B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5l-8.6 8.6a5 5 0 0 1-7.1-7.1l8.6-8.6a3.4 3.4 0 0 1 4.8 4.8l-8.7 8.6a1.7 1.7 0 0 1-2.4-2.4l8-7.9"/></svg>Attach</div>
+      <div class="chip"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1B1B1B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Themes</div>
+    </div>
+    <div class="pr">
+      <svg width="34" height="34" viewBox="0 0 24 24" stroke="#1B1B1B" stroke-width="2.2" stroke-linecap="round"><path d="M4 10v4M8 7v10M12 4v16M16 8v8M20 10v4"/></svg>
+      <div id="send"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5.5 11.5L12 5l6.5 6.5"/></svg></div>
+    </div>
+  </div>
+</div>
+
+<div class="mp" id="mp0"><span><span class="mt"></span><span class="mcar"></span></span><i><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5.5 11.5L12 5l6.5 6.5"/></svg></i></div>
+<div class="mp" id="mp1"><span><span class="mt"></span><span class="mcar"></span></span><i><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5.5 11.5L12 5l6.5 6.5"/></svg></i></div>
+<div class="mp" id="mp2"><span><span class="mt"></span><span class="mcar"></span></span><i><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5.5 11.5L12 5l6.5 6.5"/></svg></i></div>
+
+<div class="head" id="h2" style="top:120px;font-size:150px"><span class="line"><span class="w">Build something</span></span><span class="line"><span class="w">Lovable.</span></span></div>
+<img id="logo" src="assets/logos/full-white.png">
+<div id="spec">Spec ad · not affiliated with Lovable.<br>Apps shown are fictional examples.</div>
+
+<script src="node_modules/gsap/dist/gsap.min.js"></script>
+<script>
+const clamp=(v,a=0,b=1)=>Math.min(b,Math.max(a,v)),prog=(t,a,b)=>clamp((t-a)/(b-a));
+const tl=gsap.timeline({paused:true});
+const P1='A booking app for my grandma’s bakery';
+const MP=[['A league table for our Sunday football',10.0],['Remind me to water my plants',11.75],['A merch store for my band',13.5]];
+function build(){
+  tl.fromTo('#h1 .w',{yPercent:112},{yPercent:0,duration:.85,ease:'expo.out',stagger:.13},.25);
+  tl.to('#h1 .w',{yPercent:-112,duration:.42,ease:'power3.in',stagger:.05},2.15);
+  tl.fromTo('#prompt',{autoAlpha:0,y:260,scale:.94},{autoAlpha:1,y:0,scale:1,duration:.75,ease:'back.out(1.5)'},2.32);
+  tl.to('#send',{keyframes:[{scale:.82,duration:.08},{scale:1,duration:.3,ease:'back.out(3)'}]},4.95);
+  tl.to('#prow',{autoAlpha:0,height:0,marginTop:0,duration:.3,ease:'power2.in'},5.05);
+  tl.to('#prompt',{y:-392,scale:.64,duration:.6,ease:'expo.inOut'},5.05);
+  tl.to('#prompt',{autoAlpha:0,y:-430,duration:.25,ease:'power2.in'},9.75);
+  MP.forEach(([,t0],i)=>{tl.fromTo('#mp'+i,{autoAlpha:0,y:-30},{autoAlpha:1,y:0,duration:.3,ease:'back.out(2)'},t0);tl.set('#mp'+i,{autoAlpha:0},i<2?MP[i+1][1]:15.25)});
+  tl.fromTo('#h2 .w',{yPercent:112},{yPercent:0,duration:.9,ease:'expo.out',stagger:.14},15.45);
+  tl.fromTo('#logo',{autoAlpha:0,y:16},{autoAlpha:1,y:0,duration:.7,ease:'expo.out'},16.6);
+  tl.fromTo('#spec',{autoAlpha:0},{autoAlpha:1,duration:.6},16.9);
+  tl.set({},{},20);
+}
+function typing(t){
+  // main prompt
+  const n=Math.floor(prog(t,2.95,4.85)*P1.length+.0001);
+  typed.textContent=P1.slice(0,n); ph.style.display=n>0?'none':'inline';
+  caret.style.opacity=(t<5.05&&((t*2.2)%1<.55||(t>2.95&&t<4.85)))?1:0;
+  // montage prompts
+  MP.forEach(([s,t0],i)=>{const el=document.querySelector('#mp'+i);const k=Math.floor(prog(t,t0+.05,t0+.6)*s.length+.0001);
+    el.querySelector('.mt').textContent=s.slice(0,k);el.querySelector('.mcar').style.opacity=(t<t0+.6||((t*2.2)%1<.55&&t<t0+.9))?1:0;});
+}
+window.seek=t=>{tl.seek(t,false);typing(t);window.render3d(t);};
+</script>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
+<script type="module">
+import {init,render3d} from './world.js';
+await document.fonts.ready;
+await Promise.all(['600 40px Hanken','500 40px Hanken','700 40px Hanken','600 90px Fraunces','900 100px Anybody','500 22px "JetBrains Mono"'].map(f=>document.fonts.load(f)));
+init(document.getElementById('gl'));window.render3d=render3d;build();seek(0);
+document.body.dataset.ready=1;window.DUR=20;
+</script>
+</body>
+</html>
