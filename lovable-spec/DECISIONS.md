@@ -20,3 +20,13 @@ Gotcha: transparent phone glass wrote depth and hid pieces -> depthWrite:false +
 
 ## Versions
 - Style frames v01: frames/sf_01-04.png (4.4s prompt, 9.4s assembled app, 12.6s montage, 17.5s end card)
+
+## v2 direction (user: too many phones; end cards all the same formula)
+"Words become the app" (comp2.html + grad.js). No devices anywhere. Creme background, living gradient.
+- The typed idea fills the frame: "a booking app for my grandma's bakery".
+- grandma's -> handwritten "Rosa" -> app logo; booking (7 letters) -> Mon..Sun chips; app -> "Book a table";
+  bakery -> filled with cake -> grows into the hero image (last, as the climax). Canvas becomes a page card.
+- Scroll the page (Today's bakes, opening hours). Montage = full-width page cards (no phone chrome), prompt pill typed.
+- Ending: everything folds into ONE empty prompt box in a gradient halo; the placeholder
+  "Let's build something Lovable" fades in word by word = the call to action. Small centred logo. No corner layout.
+- Style frames v2: frames/v2_sf_01-05.png
