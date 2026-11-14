@@ -40,3 +40,4 @@ No invented Lovable features, numbers or claims. End card carries "Spec ad. Not 
   - Real motion blur: rendered at 4 sub-frames per frame (`SomedayMB`, 120fps) and blended to 30fps.
   - Per-letter blur-in typing, light sweep across the app window, reworked sound cues for the new moves.
   - Element positions for the match cuts come from `tools/probe.py` into `src/measure.ts`.
+- v04 (delivered `renders/someday_v04.mp4`): send rebuilt as one camera pull-back into the editor.

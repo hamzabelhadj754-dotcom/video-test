@@ -20,3 +20,11 @@
 - Round 1 fixes: dark stain on the page before the lift (field now grows from the line's own shape),
   prompt text and box separating for 2 frames, stepped edges on the growing check (feathered), heart logo popping off.
 - Not verified by ear; mix checked with meters only.
+
+## v04
+- Feedback: the send transition was not smooth.
+- Fix: send is now one camera pull-back. Prompt box and editor move as one rigid world (shared transform
+  from `pullback()` in `src/measure.ts`); the box takes the chat bubble's shape and hands over to it mid-move.
+- Round 1 issues fixed: app window popping in at the first frame (now fades in), brightness jump when the
+  editor shading took over (now eased over 1.2s), doubled text at peak speed (longer move + speed blur).
+- Technical: -13.8 LUFS, true peak -4.8 dBFS, no warnings, no hard cuts.
