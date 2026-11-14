@@ -59,10 +59,10 @@ cmpH = [384 + k * (452 - 384) / 7 for k in range(8)]
 
 t_all = np.arange(N) / SR
 # ---- 01 hook ----
-add(sub(1.6, 70, 34, 2.0), fr(3), 0.9, 0, 0.2)                 # ignition
-add(whoosh(1.3, 300, 5200, 0.85), fr(3), 0.45, 0.2, 0.5)        # the wave races out
-add(sub(0.6, 120, 50, 6), fr(22), 0.7, 0, 0.1)                   # "build muscle." lands
-add(click(1800, 0.05, 1.0, 90), fr(22), 0.35, 0, 0.2)
+add(sub(1.6, 70, 34, 2.0), fr(0), 0.9, 0, 0.2)                 # ignition
+add(whoosh(1.2, 300, 5200, 0.8), fr(0), 0.45, 0.2, 0.5)        # the wave races out
+add(sub(0.6, 120, 50, 6), fr(14), 0.7, 0, 0.1)                   # "build muscle." lands
+add(click(1800, 0.05, 1.0, 90), fr(14), 0.35, 0, 0.2)
 add(crackle(1.6, 260), fr(30), 0.18, 0.3, 0.3)
 drone = pad([33, 40], 3.2, 500) * np.hanning(int(3.2 * SR))
 add(drone, 0, 0.6, 0, 0.3)

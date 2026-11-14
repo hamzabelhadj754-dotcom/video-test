@@ -12,4 +12,4 @@ export const W = 1080;
 export const H = 1920;
 export const FPS = 30;
 // TikTok / Reels UI-safe area
-export const SAFE = { left: 96, right: 1080 - 150, top: 250, bottom: 1920 - 400 };
+export const SAFE = { left: 96, right: 900, top: 250, bottom: 1420 };

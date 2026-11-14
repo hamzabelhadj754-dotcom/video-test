@@ -54,7 +54,7 @@ const pctOn = (f: number, b = 0) => {
 };
 
 const Meter: React.FC<{ f: number; pct: number; o: number; left?: number; width?: number; label?: string }> = ({ f, pct, o, left = SAFE.left, width = SAFE.right - SAFE.left, label = "Fibers recruited" }) => (
-  <div style={{ position: "absolute", left, top: 1530, width, opacity: o, transform: `translateY(${(1 - o) * 16}px)` }}>
+  <div style={{ position: "absolute", left, top: 1310, width, opacity: o, transform: `translateY(${(1 - o) * 16}px)` }}>
     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
       <Mono size={21}>{label}</Mono>
       <div style={{ ...vf(700, 80), fontSize: 60, letterSpacing: "-0.03em", color: C.white, fontVariantNumeric: "tabular-nums" }}>
@@ -160,7 +160,7 @@ export const Film: React.FC<{ sub?: number }> = ({ sub = 1 }) => {
   const cm = cmpCounts(f);
   const lPos = f >= T.compare && f < T.rule ? project(shot, [-1.02, 0.1, 0], W, H) : { x: 0, y: 0 };
   const hPos = f >= T.compare && f < T.rule ? project(shot, [1.02, 0.1, 0], W, H) : { x: 0, y: 0 };
-  const cmpO = tw(f, T.compare + 10, T.compare + 24, 0, 1) * tw(f, T.merge, T.merge + 12, 1, 0);
+  const cmpO = tw(f, T.compare + 4, T.compare + 16, 0, 1) * tw(f, T.merge, T.merge + 12, 1, 0);
 
   const failFlash = f >= T.rep25 ? Math.exp(-(f - T.rep25) / 7) : 0;
 
@@ -168,17 +168,17 @@ export const Film: React.FC<{ sub?: number }> = ({ sub = 1 }) => {
     <AbsoluteFill style={{ background: C.bg }}>
       <MuscleScene width={W} height={H} f={f} bundles={bundles} shot={shot} />
       <AbsoluteFill style={{ background: `linear-gradient(180deg, rgba(10,10,10,${topShade}) 0%, rgba(10,10,10,0.55) 24%, rgba(10,10,10,0) 37%)` }} />
-      <AbsoluteFill style={{ background: "linear-gradient(0deg, rgba(10,10,10,0.94) 0%, rgba(10,10,10,0.7) 16%, rgba(10,10,10,0) 34%)" }} />
+      <AbsoluteFill style={{ background: "linear-gradient(0deg, rgba(10,10,10,0.96) 0%, rgba(10,10,10,0.82) 30%, rgba(10,10,10,0) 48%)" }} />
 
       {/* ---------- 01 hook ---------- */}
       {f < T.light ? (
         <div style={{ position: "absolute", left: SAFE.left, top: SAFE.top + 40, color: C.white }}>
-          <Words f={f} text="Light weights" at={8} out={T.hookOut - 4} wght={[160, 250]} wdth={78} style={{ fontSize: 132, lineHeight: 0.92, letterSpacing: "-0.035em" }} />
-          <div style={{ transform: `scale(${1 + 0.06 * (1 - tw(f, 22, 36, 0, 1, OUT))})`, transformOrigin: "0% 50%" }}>
-            <Words f={f} text="build muscle." at={22} out={T.hookOut - 1} stagger={4} wght={[200, 860]} wdth={88} style={{ fontSize: 132, lineHeight: 0.92, letterSpacing: "-0.04em" }} />
+          <Words f={f} text="Light weights" at={1} out={T.hookOut - 4} wght={[160, 250]} wdth={78} style={{ fontSize: 132, lineHeight: 0.92, letterSpacing: "-0.035em" }} />
+          <div style={{ transform: `scale(${1 + 0.06 * (1 - tw(f, 14, 28, 0, 1, OUT))})`, transformOrigin: "0% 50%" }}>
+            <Words f={f} text="build muscle." at={14} out={T.hookOut - 1} stagger={4} wght={[200, 860]} wdth={88} style={{ fontSize: 132, lineHeight: 0.92, letterSpacing: "-0.04em" }} />
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 18, marginTop: 48, opacity: tw(f, 40, 50, 0, 1) * tw(f, T.hookOut, T.hookOut + 8, 1, 0) }}>
-            <Rule p={tw(f, 40, 56, 0, 1, OUT)} />
+          <div style={{ display: "flex", alignItems: "center", gap: 18, marginTop: 48, opacity: tw(f, 32, 42, 0, 1) * tw(f, T.hookOut, T.hookOut + 8, 1, 0) }}>
+            <Rule p={tw(f, 32, 48, 0, 1, OUT)} />
             <Mono color={C.white}>One condition</Mono>
           </div>
         </div>
@@ -240,12 +240,12 @@ export const Film: React.FC<{ sub?: number }> = ({ sub = 1 }) => {
       ) : null}
       {f >= 140 && f < T.compare ? (
         <>
-          <RepCounter f={f} reps={LIGHT_REPS} total={25} x={SAFE.left} y={1330} o={tw(f, 144, 156, 0, 1) * tw(f, T.dive, T.dive + 8, 1, 0)} />
+          <RepCounter f={f} reps={LIGHT_REPS} total={25} x={SAFE.left} y={1110} o={tw(f, 144, 156, 0, 1) * tw(f, T.dive, T.dive + 8, 1, 0)} />
           <Meter f={f} pct={pctOn(f)} o={tw(f, 148, 162, 0, 1) * tw(f, T.dive, T.dive + 8, 1, 0)} />
           {f >= 176 && f < 250 ? <Callout f={f} at={178} out={238} px={small.x} py={small.y} text="Small fibers first" sub="Low-threshold units" /> : null}
           {f >= 276 && f < 345 ? <Callout f={f} at={278} out={332} px={big.x} py={big.y} text="Big fibers join late" sub="High-threshold units" /> : null}
           {f >= T.rep25 && f < T.dive + 8 ? (
-            <div style={{ position: "absolute", left: SAFE.left + 330, top: 1400, opacity: tw(f, T.rep25, T.rep25 + 4, 0, 1) * tw(f, T.dive, T.dive + 8, 1, 0), display: "flex", gap: 14, alignItems: "center" }}>
+            <div style={{ position: "absolute", left: SAFE.left + 330, top: 1180, opacity: tw(f, T.rep25, T.rep25 + 4, 0, 1) * tw(f, T.dive, T.dive + 8, 1, 0), display: "flex", gap: 14, alignItems: "center" }}>
               <div style={{ width: 10, height: 10, borderRadius: 5, background: C.ember, boxShadow: `0 0 14px ${C.ember}` }} />
               <Mono color={C.white}>0 reps in reserve</Mono>
             </div>
@@ -260,8 +260,8 @@ export const Film: React.FC<{ sub?: number }> = ({ sub = 1 }) => {
           <div style={{ position: "absolute", left: SAFE.left, top: SAFE.top + 40, color: C.white }}>
             {f < 432 ? (
               <>
-                <Words f={f} text="Heavy fires early." at={T.compare + 10} out={426} wght={[300, 780]} style={{ fontSize: 92, lineHeight: 0.96, letterSpacing: "-0.035em" }} />
-                <Words f={f} text="Light fires late." at={T.compare + 18} out={427} wght={[260, 260]} style={{ fontSize: 92, lineHeight: 0.96, letterSpacing: "-0.035em", color: C.w60 }} />
+                <Words f={f} text="Heavy fires early." at={T.compare + 2} out={426} wght={[300, 780]} style={{ fontSize: 92, lineHeight: 0.96, letterSpacing: "-0.035em" }} />
+                <Words f={f} text="Light fires late." at={T.compare + 8} out={427} wght={[260, 260]} style={{ fontSize: 92, lineHeight: 0.96, letterSpacing: "-0.035em", color: C.w60 }} />
               </>
             ) : (
               <Words f={f} text="Same finish." at={434} out={T.rule + 4} wght={[200, 860]} stagger={5} style={{ fontSize: 132, lineHeight: 0.96, letterSpacing: "-0.04em" }} />
@@ -269,11 +269,11 @@ export const Film: React.FC<{ sub?: number }> = ({ sub = 1 }) => {
           </div>
           {f < T.merge + 14 ? (
             <AbsoluteFill style={{ opacity: cmpO }}>
-              <div style={{ position: "absolute", left: lPos.x - 170, top: 1330, width: 340, textAlign: "center" }}>
+              <div style={{ position: "absolute", left: lPos.x - 170, top: 1130, width: 340, textAlign: "center" }}>
                 <div style={{ ...vf(220, 72), fontSize: 64, letterSpacing: "-0.03em", color: C.white }}>Light</div>
                 <Mono size={20} style={{ marginTop: 4 }}>30% · rep {String(cm.light).padStart(2, "0")}/25</Mono>
               </div>
-              <div style={{ position: "absolute", left: hPos.x - 170, top: 1330, width: 340, textAlign: "center" }}>
+              <div style={{ position: "absolute", left: hPos.x - 170, top: 1130, width: 340, textAlign: "center" }}>
                 <div style={{ ...vf(900, 118), fontSize: 64, letterSpacing: "-0.03em", color: C.white }}>Heavy</div>
                 <Mono size={20} style={{ marginTop: 4 }}>80% · rep {String(cm.heavy).padStart(2, "0")}/8</Mono>
               </div>
@@ -293,7 +293,7 @@ export const Film: React.FC<{ sub?: number }> = ({ sub = 1 }) => {
               <Words f={f} text="before failure." at={T.rule + 14} out={T.end - 5} wght={[260, 260]} style={{ fontSize: 112, lineHeight: 0.94, letterSpacing: "-0.04em", color: C.w60 }} />
               <div style={{ display: "flex", alignItems: "center", gap: 16, marginTop: 40, opacity: tw(f, T.rule + 26, T.rule + 38, 0, 1) * tw(f, T.end - 6, T.end + 2, 1, 0) }}>
                 <Rule p={tw(f, T.rule + 26, T.rule + 42, 0, 1, OUT)} w={40} color={C.w35} />
-                <Mono size={21}>Max strength? Heavy still wins.</Mono>
+                <Mono size={27} color={C.w60}>Max strength? Heavy still wins.</Mono>
               </div>
             </>
           ) : (
@@ -305,7 +305,7 @@ export const Film: React.FC<{ sub?: number }> = ({ sub = 1 }) => {
         </div>
       ) : null}
       {f >= T.end ? (
-        <div style={{ position: "absolute", left: SAFE.left, top: 1440, display: "flex", alignItems: "center", gap: 18, opacity: tw(f, T.end + 18, T.end + 30, 0, 1) }}>
+        <div style={{ position: "absolute", left: SAFE.left, top: 1300, display: "flex", alignItems: "center", gap: 18, opacity: tw(f, T.end + 18, T.end + 30, 0, 1) }}>
           <div style={{ width: 54, height: 54, borderRadius: 27, border: `2px solid ${C.w35}` }} />
           <div>
             <div style={{ ...vf(700, 90), fontSize: 38, letterSpacing: "-0.02em", color: C.white }}>@yourbrand</div>

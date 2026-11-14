@@ -74,7 +74,7 @@ export const cmpCounts = (f: number) => ({ light: repsDone(f, cmpLight), heavy: 
 export const bundlesAt = (f: number): BundleState[] => {
   if (f < T.hookOut + 6) {
     // hook: one fiber ignites, a wave races out, the face goes white-hot
-    return [{ activation: 0, heat: tw(f, 12, 44, 0, 1, INOUT), wave: tw(f, 3, 40, 0, 1.75, [0.5, 0, 0.3, 1]), pulse: 0 }];
+    return [{ activation: 0, heat: tw(f, 8, 40, 0.1, 1, INOUT), wave: tw(f, 0, 36, 0.32, 1.75, [0.45, 0, 0.3, 1]), pulse: 0 }];
   }
   if (f < T.light) {
     // power down from the edge inward while the camera keeps moving
