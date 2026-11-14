@@ -16,8 +16,14 @@ const CheckField: React.FC<{ cx: number; cy: number; d: number; squash: number }
   const gw = lerp(d, 1920, g);
   const gh = lerp(d * squash, 1080, g);
   const glyph = tw(d, 160, 420, 1, 0);
+  const feather = Math.max(1, d * 0.06);
   return (
-    <AbsoluteFill style={{ clipPath: `ellipse(${d / 2}px ${(d / 2) * squash}px at ${cx}px ${cy}px)` }}>
+    <AbsoluteFill
+      style={{
+        WebkitMaskImage: `radial-gradient(ellipse ${d / 2 + feather}px ${(d / 2) * squash + feather}px at ${cx}px ${cy}px, #000 ${(100 * (d / 2)) / (d / 2 + feather)}%, rgba(0,0,0,0) 100%)`,
+        maskImage: `radial-gradient(ellipse ${d / 2 + feather}px ${(d / 2) * squash + feather}px at ${cx}px ${cy}px, #000 ${(100 * (d / 2)) / (d / 2 + feather)}%, rgba(0,0,0,0) 100%)`,
+      }}
+    >
       <div style={{ position: "absolute", left: lerp(cx - d / 2, 0, g), top: lerp(cy - (d * squash) / 2, 0, g), width: gw, height: gh, background: GRADIENT }} />
       <div
         style={{
@@ -47,11 +53,13 @@ export const Film: React.FC<{ sub?: number }> = ({ sub = 1 }) => {
 
   // 1. copy: a dark field opens from the selected line while it lifts into the prompt
   const push = f < LAND ? tw(f, LIFT, LAND, 1, 1.3, [0.5, 0, 0.1, 1]) : tw(f, LAND, 240, 1.3, 1.4, [0, 0, 1, 1]);
-  const open = tw(f, LIFT - 1, LIFT + 16, 0, 2300, [0.5, 0, 0.3, 1]);
+  const open = tw(f, LIFT, LIFT + 18, 0, 2300, [0.5, 0, 0.3, 1]);
   const dim = tw(f, LIFT - 4, LIFT + 8, 0, 0.5, EASE.inOut);
   const ocx = lerp(LINE_AT_LIFT.x, 960, tw(f, LIFT, LAND, 0, 1, EASE.inOut));
   const ocy = lerp(LINE_AT_LIFT.y, 600, tw(f, LIFT, LAND, 0, 1, EASE.inOut));
-  const mask = `radial-gradient(circle at ${ocx}px ${ocy}px, #000 ${open}px, rgba(0,0,0,0) ${open + 420}px)`;
+  const erx = 470 + open;
+  const ery = 60 + open;
+  const mask = `radial-gradient(ellipse ${erx}px ${ery}px at ${ocx}px ${ocy}px, #000 ${Math.min(80, 30 + open / 8)}%, rgba(0,0,0,0) 100%)`;
 
   // 2. send: the prompt travels into the chat panel while the app rises
   const k = tw(f, 236, 256, 0, 1, [0.55, 0, 0.15, 1]);
@@ -79,7 +87,7 @@ export const Film: React.FC<{ sub?: number }> = ({ sub = 1 }) => {
     <AbsoluteFill style={{ background: C.ink }}>
       {f < LAND + 2 ? <Note f={f} mode="intro" /> : null}
       {f >= LIFT - 4 && f < LAND + 2 ? <AbsoluteFill style={{ background: C.ink, opacity: dim }} /> : null}
-      {f >= LIFT - 2 && f < 238 ? (
+      {f >= LIFT && f < 236 ? (
         <AbsoluteFill style={{ WebkitMaskImage: mask, maskImage: mask }}>
           <AbsoluteFill style={{ background: C.ink }} />
           <AbsoluteFill style={{ transform: `scale(${push})` }}>
@@ -88,7 +96,7 @@ export const Film: React.FC<{ sub?: number }> = ({ sub = 1 }) => {
         </AbsoluteFill>
       ) : null}
       {f >= 236 && f < 450 ? <Build f={f} /> : null}
-      {f >= 238 && f < 256 ? (
+      {f >= 236 && f < 256 ? (
         <AbsoluteFill style={flyStyle}>
           <Prompt f={f} glow={false} logo={false} />
         </AbsoluteFill>

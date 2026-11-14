@@ -59,7 +59,7 @@ export const Prompt: React.FC<{ f: number; glow?: boolean; logo?: boolean }> = (
           left: 960 - 34,
           top: 300,
           width: 68,
-          opacity: tw(f, 156, 172, 0, 1),
+          opacity: tw(f, 156, 172, 0, 1) * tw(f, SEND + 1, SEND + 6, 1, 0),
           transform: `translateY(${tw(f, 156, 178, 24, 0)}px) scale(${1 + ignite * 0.12})`,
         }}
       /> : null}
