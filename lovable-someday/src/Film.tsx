@@ -62,7 +62,10 @@ export const Film: React.FC<{ sub?: number }> = ({ sub = 1 }) => {
   const mask = `radial-gradient(ellipse ${erx}px ${ery}px at ${ocx}px ${ocy}px, #000 ${Math.min(80, 30 + open / 8)}%, rgba(0,0,0,0) 100%)`;
 
   // 2. send: the camera pulls back from the prompt and it becomes the chat message in the editor
-  const e = tw(f, 240, 274, 0, 1, [0.62, 0, 0.18, 1]);
+  const PB: [number, number, number, number] = [0.5, 0, 0.2, 1];
+  const e = tw(f, 240, 284, 0, 1, PB);
+  const pbSpeed = Math.abs(tw(f + 0.5, 240, 284, 0, 1, PB) - tw(f - 0.5, 240, 284, 0, 1, PB));
+  const pbBlur = Math.min(5, Math.max(0, pbSpeed * 90 - 0.6));
   const pb = pullback(e);
   const boxOpacity = tw(e, 0.38, 0.72, 1, 0);
 
@@ -90,14 +93,14 @@ export const Film: React.FC<{ sub?: number }> = ({ sub = 1 }) => {
           </AbsoluteFill>
         </AbsoluteFill>
       ) : null}
-      {f >= 240 && f < 450 ? <Build f={f} world={f < 274 ? pb.world : undefined} /> : null}
+      {f >= 240 && f < 450 ? <Build f={f} world={f < 284 ? pb.world : undefined} worldBlur={f < 284 ? pbBlur : 0} /> : null}
       {f >= LIFT && f < 240 ? (
         <AbsoluteFill style={{ transform: `scale(${push})` }}>
           <Note f={f} mode="intro" layer="ghost" />
         </AbsoluteFill>
       ) : null}
       {f >= 240 && boxOpacity > 0 ? (
-        <AbsoluteFill style={{ transform: pb.box, transformOrigin: "0 0", opacity: boxOpacity }}>
+        <AbsoluteFill style={{ transform: pb.box, transformOrigin: "0 0", opacity: boxOpacity, filter: pbBlur > 0.3 ? `blur(${pbBlur}px)` : undefined }}>
           <AbsoluteFill style={{ transform: `scale(${push})` }}>
             <Prompt f={f} glow={false} logo={false} />
             <Note f={f} mode="intro" layer="ghost" />

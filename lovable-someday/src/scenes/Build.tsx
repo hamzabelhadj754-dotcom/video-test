@@ -80,7 +80,7 @@ const Step: React.FC<{ f: number; at: number; done: number; label: string }> = (
   );
 };
 
-export const Build: React.FC<{ f: number; world?: string }> = ({ f, world }) => {
+export const Build: React.FC<{ f: number; world?: string; worldBlur?: number }> = ({ f, world, worldBlur = 0 }) => {
   const cam = camAt(f, CAM);
   const blur = camBlur(f, CAM) * 0.6;
   const winIn = tw(f, 240, 280, 0, 1, [0.3, 0.6, 0.25, 1]);
@@ -122,10 +122,10 @@ export const Build: React.FC<{ f: number; world?: string }> = ({ f, world }) => 
         style={{
           background:
             "radial-gradient(ellipse 60% 60% at 62% 54%, rgba(27,27,27,0) 30%, rgba(27,27,27,0.35) 72%, rgba(27,27,27,0.9) 100%)",
-          opacity: 1 - glowPulse * 0.35,
+          opacity: (1 - glowPulse * 0.35) * tw(f, 238, 276, 0, 1, EASE.inOut),
         }}
       />
-      <AbsoluteFill style={{ transform: world, transformOrigin: "0 0" }}>
+      <AbsoluteFill style={{ transform: world, transformOrigin: "0 0", filter: worldBlur > 0.3 ? `blur(${worldBlur}px)` : undefined }}>
       <AbsoluteFill style={{ perspective: 2000, perspectiveOrigin: "55% 48%", filter: blur > 0.2 ? `blur(${blur}px)` : undefined }}>
         <div style={{ position: "absolute", inset: 0, transformStyle: "preserve-3d", transform: camCss(cam), fontFamily: SANS }}>
           {/* chat plane */}
