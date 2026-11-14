@@ -30,3 +30,4 @@ On-screen claim simplified on purpose: "last reps: nearly all of them" (size pri
 - v00: style frames (hook, meter, compare).
 
 - v01: 3D style frames (hook, light set early, light set at failure). Palette: black, warm white #F4F1EC, ember #FF3D14, hot #FFD9B0.
+- v02 (delivered `renders/same-muscle_v02.mp4`): full film, review quality (no sub-frame motion blur).
