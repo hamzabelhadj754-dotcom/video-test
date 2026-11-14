@@ -1,14 +1,14 @@
-import { Still } from "remotion";
-import { H, W } from "./theme";
+import { Composition } from "remotion";
+import { FPS, H, W } from "./theme";
 import "./fonts";
-import { FrameFail, FrameHook, FrameLight } from "./scenes/Frames";
-import { Test3D } from "./scenes/Test3D";
+import { Film } from "./Film";
+import { DUR } from "./timeline";
+
+const FilmMB: React.FC = () => <Film sub={4} />;
 
 export const RemotionRoot: React.FC = () => (
   <>
-    <Still id="frame-hook" component={FrameHook} width={W} height={H} />
-    <Still id="frame-light" component={FrameLight} width={W} height={H} />
-    <Still id="frame-fail" component={FrameFail} width={W} height={H} />
-    <Still id="test-3d" component={Test3D} width={W} height={H} />
+    <Composition id="Reel" component={Film} width={W} height={H} fps={FPS} durationInFrames={DUR} />
+    <Composition id="ReelMB" component={FilmMB} width={W} height={H} fps={FPS * 4} durationInFrames={DUR * 4} />
   </>
 );
