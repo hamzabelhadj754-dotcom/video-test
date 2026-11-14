@@ -93,8 +93,9 @@ add(click(140, 1800, 0.06), fr(92), 0.42, 0.1, wet=0.15)                 # mouse
 add(band(rng.standard_normal(int(0.6 * SR)), 900, 2600) * np.hanning(int(0.6 * SR)) * 0.07, fr(94), 1, 0.1)  # drag
 add(click(200, 3200, 0.04), fr(114), 0.32, 0.25, wet=0.15)               # mouse up
 add(whoosh(1.15, 220, 2600, 0.8), fr(117), 0.55, 0, wet=0.35)            # the line lifts
-add(sub(0.7, 70, 46), fr(150), 0.35, 0, wet=0.1)                         # lands in the prompt
-add(click(110, 900, 0.09, 1.0), fr(150), 0.2, 0, wet=0.3)
+add(sub(0.7, 70, 46), fr(152), 0.35, 0, wet=0.1)                         # lands in the prompt
+add(click(110, 900, 0.09, 1.0), fr(152), 0.2, 0, wet=0.3)
+add(whoosh(0.9, 200, 1400, 0.5), fr(150), 0.22, 0, wet=0.5)                # the highlight grows into the box
 
 # ---------- 2. prompt world (150 to 240) ----------
 drone = pad([38, 45], 3.4, 380) * np.hanning(int(3.4 * SR)) * 0.5
@@ -104,6 +105,7 @@ for f, ch in typed_frames():
     add(click(120 if sp else 190 + rng.uniform(-25, 25), 1500 if sp else 2700 + rng.uniform(-500, 500), 0.045, 0.9 if sp else 0.5),
         fr(f), (0.42 if sp else 0.34) * rng.uniform(0.8, 1.1), rng.uniform(-0.25, 0.25), wet=0.12)
 add(whoosh(1.0, 300, 5200, 0.97), fr(210), 0.42, 0, wet=0.4)             # riser into send
+add(whoosh(0.8, 2600, 420, 0.35), fr(236), 0.38, -0.5, wet=0.4)           # prompt flies into the chat panel
 add(click(150, 2400, 0.05), fr(230), 0.3, 0.35, wet=0.2)                 # send click
 
 # ---------- 3. the build: music at 120bpm (240 to 450) ----------
@@ -143,6 +145,7 @@ for i, m in enumerate((90, 93, 98)):                                      # "You
 add(whoosh(0.75, 260, 7000, 0.96), fr(430), 0.62, 0, wet=0.5)             # scale-through into the card
 
 # ---------- 4. today (450 to 540) ----------
+add(whoosh(0.7, 5200, 300, 0.12), fr(450), 0.4, 0, wet=0.6)              # pulling back out of the check
 add(hp(rng.standard_normal(int(0.9 * SR)), 3500) * np.exp(-tt(0.9) * 5) * 0.1, fr(450), 1, 0, wet=0.9)  # air after the cut
 n = int(fr(24) * SR); stroke = band(rng.standard_normal(n), 1400, 5200) * np.hanning(n) ** 0.6
 stroke *= 0.75 + 0.25 * np.sin(2 * np.pi * 9 * tt(fr(24)))
@@ -150,7 +153,8 @@ add(stroke, fr(461), 0.16, -0.15, wet=0.2)                               # the m
 add(whoosh(0.7, 350, 1800, 0.55), fr(492), 0.2, 0, wet=0.4)               # the word swap
 for i, m in enumerate([50, 57, 62, 66, 69]):                              # "Today": the chord resolves
     add(keys(m, 4.5, 0.95), fr(505) + i * 0.035, 0.26, pan=-0.3 + 0.15 * i, wet=0.9)
-add(bell(93, 1.2), fr(510), 0.06, 0.3, wet=0.9)                           # the tick
+add(bell(93, 1.2), fr(470), 0.09, -0.3, wet=0.9)                          # the tick lands
+add(sub(0.5, 85, 50), fr(470), 0.3, -0.2, wet=0.2)
 add(whoosh(0.72, 180, 4200, 0.97), fr(519), 0.6, 0, wet=0.5)              # the glow floods
 
 # ---------- 5. end card (540 to 660) ----------

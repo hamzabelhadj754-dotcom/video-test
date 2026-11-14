@@ -4,6 +4,7 @@ import { SANS, SERIF } from "../fonts";
 import { Cursor } from "../ui/Cursor";
 import { Glow } from "../ui/Glow";
 import { CamKey, camAt, camBlur, camCss, lerp, pathAt, press, tw } from "../anim";
+import { PG, PROBE } from "../probe";
 
 const DAYS = [["Mon", 9], ["Tue", 10], ["Wed", 11], ["Thu", 12], ["Fri", 13], ["Sat", 14], ["Sun", 15]] as const;
 const SLOTS = ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "13:00", "13:30"];
@@ -24,8 +25,7 @@ const CAM: CamKey[] = [
   { f: 349, cam: { rx: 5, ry: -8, rz: 1, s: 2.0, x: 120, y: -150 }, e: SNAP },
   { f: 387, cam: { rx: 4.5, ry: -7, rz: 1, s: 2.08, x: 128, y: -160 } },
   { f: 396, cam: { rx: 7, ry: -13, rz: 1.5, s: 1.0, x: -30, y: 0 }, e: SNAP },
-  { f: 437, cam: { rx: 6, ry: -9, rz: 1.2, s: 1.05, x: -50, y: -10 } },
-  { f: 450, cam: { rx: 1, ry: -2, rz: 0, s: 6, x: -4300, y: -1700 }, e: [0.7, 0, 1, 0.55] },
+  { f: 436, cam: { rx: 6, ry: -9, rz: 1.2, s: 1.05, x: -50, y: -10 } },
 ];
 
 const Skel: React.FC<{ f: number; r?: number; o?: number }> = ({ f, r = 16, o = 1 }) => (
@@ -82,8 +82,9 @@ const Step: React.FC<{ f: number; at: number; done: number; label: string }> = (
 
 export const Build: React.FC<{ f: number }> = ({ f }) => {
   const cam = camAt(f, CAM);
-  const blur = camBlur(f, CAM);
-  const winIn = tw(f, 240, 258, 0, 1);
+  const blur = camBlur(f, CAM) * 0.6;
+  const winIn = tw(f, 236, 266, 0, 1, [0.2, 0.75, 0.2, 1]);
+  const sheen = (a: number, d: number) => tw(f, a, a + d, 130, -30, [0.45, 0, 0.25, 1]);
 
   const dayX = tw(f, T.day, T.day + 12, 1, 5, [0.6, 0, 0.1, 1]); // pill slides Tue -> Sat
   const dayLabel = tw(f, T.day + 4, T.day + 14, 0, 1, EASE.inOut);
@@ -108,7 +109,15 @@ export const Build: React.FC<{ f: number }> = ({ f }) => {
 
   return (
     <AbsoluteFill style={{ background: C.ink, overflow: "hidden" }}>
-      <Glow x={1160} y={560} w={1700 * (1 + glowPulse * 0.12)} h={1150 * (1 + glowPulse * 0.12)} blur={110} from={150 + (f - 240) * 0.45} opacity={1} />
+      <Glow
+        x={lerp(960, 1160, tw(f, 236, 270, 0, 1, EASE.inOut))}
+        y={560}
+        w={lerp(2700, 1700, tw(f, 236, 270, 0, 1, EASE.inOut)) * (1 + glowPulse * 0.12)}
+        h={lerp(1500, 1150, tw(f, 236, 270, 0, 1, EASE.inOut)) * (1 + glowPulse * 0.12)}
+        blur={110}
+        from={149 + (f - 238) * 0.45}
+        opacity={1}
+      />
       <AbsoluteFill
         style={{
           background:
@@ -130,7 +139,8 @@ export const Build: React.FC<{ f: number }> = ({ f }) => {
                 lineHeight: 1.32,
                 letterSpacing: "-0.01em",
                 marginBottom: 30,
-                opacity: tw(f, 240, 252, 0, 1),
+                opacity: PROBE === "bubble" ? 1 : tw(f, 249, 256, 0, 1),
+                ...(PROBE === "bubble" ? { background: PG } : {}),
               }}
             >
               A booking app for Mum&rsquo;s salon.
@@ -153,8 +163,9 @@ export const Build: React.FC<{ f: number }> = ({ f }) => {
               borderRadius: 30,
               background: C.creme,
               color: C.ink,
-              opacity: tw(f, 240, 246, 0, 1),
-              transform: `translateY(${(1 - winIn) * 70}px) scale(${lerp(0.9, 1, winIn)})`,
+              opacity: tw(f, 236, 243, 0, 1),
+              transform: `translateY(${(1 - winIn) * 520}px) rotateX(${(1 - winIn) * 34}deg) scale(${lerp(0.82, 1, winIn)})`,
+              transformOrigin: "50% 100%",
               boxShadow: "0 0 0 1.5px rgba(255,255,255,0.5), 0 70px 140px rgba(0,0,0,0.55), 0 0 120px rgba(253,41,128,0.25)",
               overflow: "hidden",
             }}
@@ -326,6 +337,18 @@ export const Build: React.FC<{ f: number }> = ({ f }) => {
                 </div>
               </div>
             </div>
+            <div
+              style={{
+                position: "absolute",
+                inset: 0,
+                pointerEvents: "none",
+                mixBlendMode: "soft-light",
+                backgroundImage: "linear-gradient(112deg, rgba(255,255,255,0) 40%, rgba(255,255,255,0.95) 50%, rgba(255,255,255,0) 60%)",
+                backgroundSize: "250% 100%",
+                backgroundPosition: `${f < 300 ? sheen(250, 30) : sheen(400, 26)}% 0`,
+                zIndex: 4,
+              }}
+            />
             <Cursor x={cur.x} y={cur.y} size={0.8} scale={press(f, [T.day, T.slot, T.book])} opacity={tw(f, 300, 306, 0, 1) * tw(f, 436, 444, 1, 0)} />
           </div>
 
@@ -347,7 +370,7 @@ export const Build: React.FC<{ f: number }> = ({ f }) => {
             }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-              <div style={{ width: 40, height: 40, borderRadius: 20, background: GRADIENT, color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, transform: `scale(${tw(f, T.card + 6, T.card + 20, 0, 1, [0.2, 1.6, 0.35, 1])})` }}>
+              <div style={{ width: 40, height: 40, borderRadius: 20, background: PROBE === "card" ? PG : GRADIENT, color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, transform: `scale(${tw(f, T.card + 6, T.card + 20, 0, 1, [0.2, 1.6, 0.35, 1])})` }}>
                 ✓
               </div>
               <div style={{ fontSize: 30, fontWeight: 600, letterSpacing: "-0.02em" }}>You&rsquo;re booked</div>

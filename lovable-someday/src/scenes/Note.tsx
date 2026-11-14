@@ -3,6 +3,7 @@ import { C, EASE, GRADIENT } from "../theme";
 import { SANS, SERIF } from "../fonts";
 import { Cursor } from "../ui/Cursor";
 import { CamKey, camAt, camBlur, camCss, lerp, tw } from "../anim";
+import { PG, PROBE } from "../probe";
 
 const IDEAS = [
   { text: "Recipe box for Grandpa's handwriting", date: "Nov 2019" },
@@ -23,13 +24,17 @@ const PAGE_OUT: CamKey[] = [
   { f: 150, cam: { rx: 44, ry: -22, rz: 9, s: 0.86, x: 0, y: 170 }, e: [0.5, 0, 0.9, 0.5] },
 ];
 // The lifted line flattens and lands exactly on line one of the prompt box.
+export const LAND = 152;
 const GHOST: CamKey[] = [
   ...INTRO,
-  { f: 150, cam: { rx: 0, ry: 0, rz: 0, s: 0.724, x: -40, y: -271.5 }, e: [0.6, 0, 0.1, 1] },
+  { f: 127, cam: { rx: 20, ry: -13, rz: 4.4, s: 1.25, x: 34, y: -18 }, e: [0.25, 0, 0.25, 1] },
+  { f: LAND, cam: { rx: 0, ry: 0, rz: 0, s: 0.724, x: -40, y: -271.5 }, e: [0.45, 0, 0.12, 1] },
 ];
+export const CHECK_LAND = 470;
 const TODAY: CamKey[] = [
   { f: 450, cam: { rx: 21, ry: -9, rz: 3, s: 1.3, x: 110, y: 96 } },
-  { f: 540, cam: { rx: 17, ry: -13, rz: 4.2, s: 1.42, x: 96, y: 60 } },
+  { f: CHECK_LAND, cam: { rx: 21, ry: -9, rz: 3, s: 1.3, x: 110, y: 96 } },
+  { f: 540, cam: { rx: 17, ry: -13, rz: 4.2, s: 1.42, x: 96, y: 60 }, e: [0.35, 0, 0.6, 1] },
 ];
 
 export const Note: React.FC<{ f: number; mode: "intro" | "today"; layer?: "page" | "ghost" }> = ({
@@ -57,10 +62,12 @@ export const Note: React.FC<{ f: number; mode: "intro" | "today"; layer?: "page"
   const strike = tw(f, 462, 484, 0, 1, EASE.inOut);
   const swap = tw(f, 492, 516, 0, 1, [0.7, 0, 0.1, 1]);
   const meta = tw(f, 512, 524, 0, 1, EASE.inOut);
-  const check = tw(f, 506, 518, 0, 1);
+  const check = 1;
+  const bounce = Math.sin(tw(f, CHECK_LAND, CHECK_LAND + 12, 0, 1) * Math.PI) * 0.22;
   const sweep = tw(f, 508, 536, 0, 1, EASE.inOut);
 
-  const ghostInk = tw(f, LIFT + 4, 146, 0, 1, EASE.inOut);
+  const ghostInk = tw(f, LIFT + 6, LAND - 2, 0, 1, EASE.inOut);
+  const lift = ghost ? tw(f, LIFT - 2, LIFT + 10, 0, 1) * tw(f, LAND - 8, LAND, 1, 0) : 0;
   const ghostColor = `rgb(${lerp(27, 247, ghostInk)},${lerp(27, 244, ghostInk)},${lerp(27, 237, ghostInk)})`;
   const hide = ghost ? { visibility: "hidden" as const } : {};
 
@@ -216,8 +223,8 @@ export const Note: React.FC<{ f: number; mode: "intro" | "today"; layer?: "page"
                           position: "absolute",
                           inset: -3,
                           borderRadius: 20,
-                          background: GRADIENT,
-                          transform: `scale(${lerp(0.2, 1, check)})`,
+                          background: PROBE === "check" ? PG : GRADIENT,
+                          transform: `scale(${lerp(0.2, 1, check) + bounce})`,
                           opacity: check,
                           color: "#fff",
                           fontSize: 24,
@@ -240,6 +247,7 @@ export const Note: React.FC<{ f: number; mode: "intro" | "today"; layer?: "page"
                       fontWeight: 500,
                       visibility: hero ? (ghost ? "visible" : f >= LIFT && !today ? "hidden" : "visible") : ghost ? "hidden" : "visible",
                       color: ghost ? ghostColor : C.ink,
+                      textShadow: lift > 0 ? `0 ${16 * lift}px ${34 * lift}px rgba(40,30,10,${0.22 * lift})` : undefined,
                     }}
                   >
                     {hero && !today ? (
@@ -250,8 +258,8 @@ export const Note: React.FC<{ f: number; mode: "intro" | "today"; layer?: "page"
                           right: -14,
                           top: -8,
                           bottom: -10,
-                          background: C.violet,
-                          opacity: 0.62 * (ghost ? tw(f, LIFT, LIFT + 14, 1, 0) : 1),
+                          background: PROBE === "hl" ? PG : C.violet,
+                          opacity: PROBE === "hl" ? 1 : ghost ? (f < LAND ? 0.62 : 0) : 0.62,
                           borderRadius: 10,
                           clipPath: `inset(0 ${(1 - selected) * 100}% 0 0)`,
                         }}

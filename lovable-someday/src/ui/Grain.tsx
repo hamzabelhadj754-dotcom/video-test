@@ -1,7 +1,8 @@
 import { AbsoluteFill, useCurrentFrame } from "remotion";
 
-export const Grain: React.FC<{ opacity?: number; vignette?: number }> = ({ opacity = 0.1, vignette = 0.28 }) => {
-  const frame = useCurrentFrame();
+export const Grain: React.FC<{ opacity?: number; vignette?: number; seed?: number }> = ({ opacity = 0.1, vignette = 0.28, seed }) => {
+  const cf = useCurrentFrame();
+  const frame = seed ?? cf;
   return (
     <AbsoluteFill style={{ pointerEvents: "none" }}>
       <AbsoluteFill
