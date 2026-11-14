@@ -1,0 +1,5 @@
+# build output contains the original mod's assets (All Rights Reserved) - never commit it
+dist/
+.check/
+*.jar
+__pycache__/
