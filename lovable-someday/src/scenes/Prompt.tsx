@@ -5,7 +5,8 @@ import { Cursor } from "../ui/Cursor";
 import { Glow } from "../ui/Glow";
 import { TYPED, TYPE_START, charFrame, lerp, pathAt, press, tw, typedCount } from "../anim";
 import { LAND } from "./Note";
-import { HL_RECT } from "../measure";
+import { BOX_TARGET, HL_RECT } from "../measure";
+import { EASE } from "../theme";
 
 export const SEND = 230;
 const BOX = { x: 460, y: 420, w: 1000, h: 250, r: 40 };
@@ -13,19 +14,21 @@ const BOX = { x: 460, y: 420, w: 1000, h: 250, r: 40 };
 export const Prompt: React.FC<{ f: number; glow?: boolean; logo?: boolean }> = ({ f, glow = true, logo = true }) => {
   // the selection highlight grows into the prompt box
   const m = tw(f, LAND, LAND + 18, 0, 1, [0.5, 0, 0.1, 1]);
-  const bx = lerp(HL_RECT.x, BOX.x, m);
-  const by = lerp(HL_RECT.y, BOX.y, m);
-  const bw = lerp(HL_RECT.w, BOX.w, m);
-  const bh = lerp(HL_RECT.h, BOX.h, m);
-  const br = lerp(HL_RECT.r, BOX.r, m);
-  const inner = tw(f, LAND + 8, LAND + 20, 0, 1);
+  // after send, the box takes the shape of the chat bubble it is about to become
+  const m2 = tw(f, 238, 258, 0, 1, EASE.inOut);
+  const bx = lerp(lerp(HL_RECT.x, BOX.x, m), BOX_TARGET.x, m2);
+  const by = lerp(lerp(HL_RECT.y, BOX.y, m), BOX_TARGET.y, m2);
+  const bw = lerp(lerp(HL_RECT.w, BOX.w, m), BOX_TARGET.w, m2);
+  const bh = lerp(lerp(HL_RECT.h, BOX.h, m), BOX_TARGET.h, m2);
+  const br = lerp(lerp(HL_RECT.r, BOX.r, m), BOX_TARGET.r, m2);
+  const inner = tw(f, LAND + 8, LAND + 20, 0, 1) * tw(f, SEND + 6, SEND + 14, 1, 0);
 
   const n = typedCount(f);
   const typing = f >= TYPE_START - 2 && f <= charFrame(TYPED.length - 1) + 4;
   const caretOn = typing || Math.floor(f / 14) % 2 === 0;
   const active = tw(f, TYPE_START, TYPE_START + 10, 0, 1);
   const ignite = tw(f, SEND, 240, 0, 1, [0.6, 0, 0.9, 0.5]);
-  const think = tw(f, SEND, SEND + 5, 0, 1);
+  const think = tw(f, SEND, SEND + 5, 0, 1) * tw(f, 244, 254, 1, 0);
   let pulse = 0;
   for (let i = 0; i < TYPED.length; i++) {
     const cf = charFrame(i);
@@ -69,11 +72,11 @@ export const Prompt: React.FC<{ f: number; glow?: boolean; logo?: boolean }> = (
           <div
             style={{
               position: "absolute",
-              left: BOX.x - 3,
-              top: BOX.y - 3,
-              width: BOX.w + 6,
-              height: BOX.h + 6,
-              borderRadius: BOX.r + 3,
+              left: bx - 3,
+              top: by - 3,
+              width: bw + 6,
+              height: bh + 6,
+              borderRadius: br + 3,
               opacity: think,
               background: `conic-gradient(from ${f * 14}deg, ${GRADIENT_STOPS.replace(/(\d+)%/g, (_, p) => `${(Number(p) * 3.6).toFixed(0)}deg`)}, #4F88FF 360deg)`,
               filter: "blur(1px)",

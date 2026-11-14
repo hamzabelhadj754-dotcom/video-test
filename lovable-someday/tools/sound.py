@@ -105,7 +105,7 @@ for f, ch in typed_frames():
     add(click(120 if sp else 190 + rng.uniform(-25, 25), 1500 if sp else 2700 + rng.uniform(-500, 500), 0.045, 0.9 if sp else 0.5),
         fr(f), (0.42 if sp else 0.34) * rng.uniform(0.8, 1.1), rng.uniform(-0.25, 0.25), wet=0.12)
 add(whoosh(1.0, 300, 5200, 0.97), fr(210), 0.42, 0, wet=0.4)             # riser into send
-add(whoosh(0.8, 2600, 420, 0.35), fr(236), 0.38, -0.5, wet=0.4)           # prompt flies into the chat panel
+add(whoosh(1.15, 1800, 380, 0.4), fr(240), 0.34, -0.3, wet=0.5)           # camera pulls back into the editor
 add(click(150, 2400, 0.05), fr(230), 0.3, 0.35, wet=0.2)                 # send click
 
 # ---------- 3. the build: music at 120bpm (240 to 450) ----------

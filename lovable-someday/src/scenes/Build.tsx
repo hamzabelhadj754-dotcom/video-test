@@ -80,10 +80,10 @@ const Step: React.FC<{ f: number; at: number; done: number; label: string }> = (
   );
 };
 
-export const Build: React.FC<{ f: number }> = ({ f }) => {
+export const Build: React.FC<{ f: number; world?: string }> = ({ f, world }) => {
   const cam = camAt(f, CAM);
   const blur = camBlur(f, CAM) * 0.6;
-  const winIn = tw(f, 236, 266, 0, 1, [0.2, 0.75, 0.2, 1]);
+  const winIn = tw(f, 240, 280, 0, 1, [0.3, 0.6, 0.25, 1]);
   const sheen = (a: number, d: number) => tw(f, a, a + d, 130, -30, [0.45, 0, 0.25, 1]);
 
   const dayX = tw(f, T.day, T.day + 12, 1, 5, [0.6, 0, 0.1, 1]); // pill slides Tue -> Sat
@@ -110,10 +110,10 @@ export const Build: React.FC<{ f: number }> = ({ f }) => {
   return (
     <AbsoluteFill style={{ background: C.ink, overflow: "hidden" }}>
       <Glow
-        x={lerp(960, 1160, tw(f, 236, 270, 0, 1, EASE.inOut))}
+        x={lerp(960, 1160, tw(f, 240, 274, 0, 1, EASE.inOut))}
         y={560}
-        w={lerp(2700, 1700, tw(f, 236, 270, 0, 1, EASE.inOut)) * (1 + glowPulse * 0.12)}
-        h={lerp(1500, 1150, tw(f, 236, 270, 0, 1, EASE.inOut)) * (1 + glowPulse * 0.12)}
+        w={lerp(2700, 1700, tw(f, 240, 274, 0, 1, EASE.inOut)) * (1 + glowPulse * 0.12)}
+        h={lerp(1500, 1150, tw(f, 240, 274, 0, 1, EASE.inOut)) * (1 + glowPulse * 0.12)}
         blur={110}
         from={149 + (f - 238) * 0.45}
         opacity={1}
@@ -125,6 +125,7 @@ export const Build: React.FC<{ f: number }> = ({ f }) => {
           opacity: 1 - glowPulse * 0.35,
         }}
       />
+      <AbsoluteFill style={{ transform: world, transformOrigin: "0 0" }}>
       <AbsoluteFill style={{ perspective: 2000, perspectiveOrigin: "55% 48%", filter: blur > 0.2 ? `blur(${blur}px)` : undefined }}>
         <div style={{ position: "absolute", inset: 0, transformStyle: "preserve-3d", transform: camCss(cam), fontFamily: SANS }}>
           {/* chat plane */}
@@ -139,7 +140,7 @@ export const Build: React.FC<{ f: number }> = ({ f }) => {
                 lineHeight: 1.32,
                 letterSpacing: "-0.01em",
                 marginBottom: 30,
-                opacity: PROBE === "bubble" ? 1 : tw(f, 249, 256, 0, 1),
+                opacity: 1,
                 ...(PROBE === "bubble" ? { background: PG } : {}),
               }}
             >
@@ -163,8 +164,8 @@ export const Build: React.FC<{ f: number }> = ({ f }) => {
               borderRadius: 30,
               background: C.creme,
               color: C.ink,
-              opacity: tw(f, 236, 243, 0, 1),
-              transform: `translateY(${(1 - winIn) * 520}px) rotateX(${(1 - winIn) * 34}deg) scale(${lerp(0.82, 1, winIn)})`,
+              opacity: tw(f, 241, 254, 0, 1, EASE.inOut),
+              transform: `translateY(${(1 - winIn) * 150}px) rotateX(${(1 - winIn) * 9}deg) scale(${lerp(0.95, 1, winIn)})`,
               transformOrigin: "50% 100%",
               boxShadow: "0 0 0 1.5px rgba(255,255,255,0.5), 0 70px 140px rgba(0,0,0,0.55), 0 0 120px rgba(253,41,128,0.25)",
               overflow: "hidden",
@@ -378,6 +379,7 @@ export const Build: React.FC<{ f: number }> = ({ f }) => {
             <div style={{ fontSize: 23, color: C.ink60, marginTop: 16, lineHeight: 1.4 }}>Sat 14 · 10:30 · Colour with Amal</div>
           </div>
         </div>
+      </AbsoluteFill>
       </AbsoluteFill>
     </AbsoluteFill>
   );

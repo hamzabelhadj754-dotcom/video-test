@@ -8,7 +8,7 @@ import { Build } from "./scenes/Build";
 import { EndCard } from "./scenes/EndCard";
 import { Glow } from "./ui/Glow";
 import { Grain } from "./ui/Grain";
-import { BUBBLE, CARD_ICON, HL_RECT, LINE_AT_LIFT, NOTE_CHECK } from "./measure";
+import { CARD_ICON, LINE_AT_LIFT, NOTE_CHECK, pullback } from "./measure";
 
 // The gradient check grows to fill the frame, then lands as the tick on the note.
 const CheckField: React.FC<{ cx: number; cy: number; d: number; squash: number }> = ({ cx, cy, d, squash }) => {
@@ -61,15 +61,10 @@ export const Film: React.FC<{ sub?: number }> = ({ sub = 1 }) => {
   const ery = 60 + open;
   const mask = `radial-gradient(ellipse ${erx}px ${ery}px at ${ocx}px ${ocy}px, #000 ${Math.min(80, 30 + open / 8)}%, rgba(0,0,0,0) 100%)`;
 
-  // 2. send: the prompt travels into the chat panel while the app rises
-  const k = tw(f, 236, 256, 0, 1, [0.55, 0, 0.15, 1]);
-  const kb = BUBBLE.h / 127;
-  const sFin = (29 * kb) / 42;
-  const sNow = lerp(push, sFin, k);
-  const tx = (BUBBLE.x + 31 * kb - (960 + (HL_RECT.x + 10 - 960) * sFin)) * k;
-  const ty = (BUBBLE.y + 26 * kb - (540 + (HL_RECT.y + 4 - 540) * sFin)) * k;
-  const fly = `translate(${tx}px, ${ty}px) scale(${sNow})`;
-  const flyStyle = { transform: fly, filter: k > 0.02 ? `blur(${k * 1.6}px)` : undefined, opacity: tw(f, 249, 256, 1, 0) };
+  // 2. send: the camera pulls back from the prompt and it becomes the chat message in the editor
+  const e = tw(f, 240, 274, 0, 1, [0.62, 0, 0.18, 1]);
+  const pb = pullback(e);
+  const boxOpacity = tw(e, 0.38, 0.72, 1, 0);
 
   // 3. match cut: into the "booked" check, out of the tick on the note
   const dA = tw(f, 437, 450, CARD_ICON.w, 3600, [0.75, 0, 0.9, 0.35]);
@@ -87,7 +82,7 @@ export const Film: React.FC<{ sub?: number }> = ({ sub = 1 }) => {
     <AbsoluteFill style={{ background: C.ink }}>
       {f < LAND + 2 ? <Note f={f} mode="intro" /> : null}
       {f >= LIFT - 4 && f < LAND + 2 ? <AbsoluteFill style={{ background: C.ink, opacity: dim }} /> : null}
-      {f >= LIFT && f < 236 ? (
+      {f >= LIFT && f < 240 ? (
         <AbsoluteFill style={{ WebkitMaskImage: mask, maskImage: mask }}>
           <AbsoluteFill style={{ background: C.ink }} />
           <AbsoluteFill style={{ transform: `scale(${push})` }}>
@@ -95,15 +90,18 @@ export const Film: React.FC<{ sub?: number }> = ({ sub = 1 }) => {
           </AbsoluteFill>
         </AbsoluteFill>
       ) : null}
-      {f >= 236 && f < 450 ? <Build f={f} /> : null}
-      {f >= 236 && f < 256 ? (
-        <AbsoluteFill style={flyStyle}>
-          <Prompt f={f} glow={false} logo={false} />
+      {f >= 240 && f < 450 ? <Build f={f} world={f < 274 ? pb.world : undefined} /> : null}
+      {f >= LIFT && f < 240 ? (
+        <AbsoluteFill style={{ transform: `scale(${push})` }}>
+          <Note f={f} mode="intro" layer="ghost" />
         </AbsoluteFill>
       ) : null}
-      {f >= LIFT && f < 256 ? (
-        <AbsoluteFill style={f >= 236 ? flyStyle : { transform: `scale(${push})` }}>
-          <Note f={f} mode="intro" layer="ghost" />
+      {f >= 240 && boxOpacity > 0 ? (
+        <AbsoluteFill style={{ transform: pb.box, transformOrigin: "0 0", opacity: boxOpacity }}>
+          <AbsoluteFill style={{ transform: `scale(${push})` }}>
+            <Prompt f={f} glow={false} logo={false} />
+            <Note f={f} mode="intro" layer="ghost" />
+          </AbsoluteFill>
         </AbsoluteFill>
       ) : null}
       {f >= 437 && f < 450 ? <CheckField cx={CARD_ICON.x + CARD_ICON.w / 2} cy={CARD_ICON.y + CARD_ICON.h / 2} d={dA} squash={CARD_ICON.h / CARD_ICON.w} /> : null}
