@@ -13,3 +13,10 @@
 - Cuts land on the 120bpm grid at 8.0s, 10.0s, 11.5s, 13.0s and 15.0s.
 - Not verified by ear: the mix was checked with meters and a spectrogram only.
 - Known limits: snap-zoom motion blur is a velocity-driven gaussian blur, not true per-object blur.
+
+## v03
+- Technical: 1920x1080, 30fps, 22.00s, h264 yuv420p bt709, -13.7 LUFS, true peak -4.4 dBFS, no warnings,
+  no black or frozen frames, no hard cuts (the film is one continuous move).
+- Round 1 fixes: dark stain on the page before the lift (field now grows from the line's own shape),
+  prompt text and box separating for 2 frames, stepped edges on the growing check (feathered), heart logo popping off.
+- Not verified by ear; mix checked with meters only.
