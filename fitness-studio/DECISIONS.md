@@ -15,3 +15,4 @@ Goal: that visual language in the fitness niche. User choices: soft light grey b
 
 ## Log
 - v01: full 20s film with synthesized sound.
+- Brand: gainsdom (wordmark only on end card; no logo file yet).

@@ -317,11 +317,8 @@ export const Film: React.FC<{ sub?: number }> = ({ sub = 1 }) => {
         {/* G. end */}
         {f >= 552 ? (
           <div style={{ position: "absolute", left: 0, right: 0, top: 1110, display: "flex", justifyContent: "center", alignItems: "center", gap: 22 }}>
-            <div style={{ width: 72, height: 72, borderRadius: 20, background: C.ink, opacity: tw(f, 556, 566, 0, 1), transform: `scale(${tw(f, 556, 572, 0.6, 1, SPRING)})`, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff" }}>
-              <svg width="40" height="40" viewBox="0 0 24 24"><path d="M13 2L5 13.5h5.5L9.5 22 18 10.5h-5.5L13 2z" fill="currentColor" /></svg>
-            </div>
             <div style={{ display: "flex", alignItems: "baseline", gap: 14 }}>
-              <Line f={f} text="@yourbrand" at={562} size={64} wght={650} align="left" />
+              <Line f={f} text="gainsdom" at={560} size={84} wght={700} align="left" />
             </div>
           </div>
         ) : null}
