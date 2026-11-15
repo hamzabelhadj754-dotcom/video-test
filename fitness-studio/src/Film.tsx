@@ -33,8 +33,8 @@ const objectsAt = (f: number): Obj[] => {
   const bob = (k: number) => Math.sin(f / 17 + k) * 0.05;
   if (f < 112) {
     // hook: both swing in; then the light one is pushed to centre and leaves
-    const inL = tw(f, 0, 26, 0, 1, SPRING);
-    const inH = tw(f, 4, 30, 0, 1, SPRING);
+    const inL = tw(f, -8, 22, 0, 1, SPRING);
+    const inH = tw(f, -5, 25, 0, 1, SPRING);
     const toCentre = tw(f, 70, 92, 0, 1, INOUT);
     const leave = tw(f, 92, 110, 0, 1, [0.6, 0, 0.9, 0.5]);
     out.push({
@@ -70,23 +70,23 @@ const objectsAt = (f: number): Obj[] => {
     const ex = tw(f, 448, 468, 0, 1, INOUT);
     out.push({
       kind: "light",
-      pos: [-0.6 - ex * 1.6, lerp(-2.8, 0.05, inn) + bob(0.5), 0],
+      pos: [-0.7 - ex * 1.6, lerp(-2.8, 0.1, inn) + bob(0.5), 0],
       rot: [0.32, 0.6 + f * 0.005, 0.25],
-      scale: 1.0,
+      scale: 0.86,
       shadowY: -1.1,
       opacity: 1 - ex,
     });
     out.push({
       kind: "heavy",
-      pos: [0.62 + ex * 1.6, lerp(-3.0, 0.05, tw(f, 356, 380, 0, 1, SPRING)) + bob(2), 0],
+      pos: [0.72 + ex * 1.6, lerp(-3.0, -0.05, tw(f, 356, 380, 0, 1, SPRING)) + bob(2), 0],
       rot: [0.28, -0.6 - f * 0.004, -0.2],
-      scale: 0.72,
+      scale: 0.62,
       shadowY: -1.1,
       opacity: 1 - ex,
     });
   } else if (f >= 548) {
     const inn = tw(f, 548, 572, 0, 1, SPRING);
-    out.push({ kind: "light", pos: [0, lerp(2.8, 1.25, inn) + bob(0), 0], rot: [0.3, 0.4 + f * 0.006, 0.2], scale: 0.62, opacity: 1 });
+    out.push({ kind: "light", pos: [0, lerp(2.8, 0.55, inn) + bob(0), 0], rot: [0.3, 0.4 + f * 0.012, 0.2], scale: 0.8, opacity: 1, shadowY: -0.45 });
   }
   return out;
 };
@@ -100,7 +100,7 @@ export const Film: React.FC<{ sub?: number }> = ({ sub = 1 }) => {
   // dark beat: the room dims around a single thought
   const dark = tw(f, 298, 314, 0, 1, INOUT) * tw(f, 342, 358, 1, 0, INOUT);
   // global camera drift and pushes
-  const push = 1 + tw(f, 0, 90, 0, 0.04, INOUT) + tw(f, 150, 300, 0, 0.03, [0, 0, 1, 1]) + tw(f, 352, 466, 0, 0.03, [0, 0, 1, 1]);
+  const push = 1 + tw(f, 0, 90, 0, 0.04, INOUT) + tw(f, 150, 300, 0, 0.03, [0, 0, 1, 1]) + tw(f, 352, 466, 0, 0.03, [0, 0, 1, 1]) + tw(f, 470, 600, 0, 0.06, [0.3, 0, 0.7, 1]);
   const camBlur = tw(f, 294, 304, 0, 10, [0.6, 0, 1, 0.5]) * tw(f, 306, 312, 1, 0) + tw(f, 340, 350, 0, 10, IN2) * tw(f, 352, 362, 1, 0);
   const slide = tw(f, 136, 150, 0, -900, [0.7, 0, 0.9, 0.4]); // text beat leaves to the left
   const slideBlur = Math.min(16, Math.abs(tw(f, 136, 150, 0, 1, [0.7, 0, 0.9, 0.4]) - tw(f - 1, 136, 150, 0, 1, [0.7, 0, 0.9, 0.4])) * 220);
@@ -114,7 +114,7 @@ export const Film: React.FC<{ sub?: number }> = ({ sub = 1 }) => {
   // light set
   const n = repsDone(f);
   const lastRep = n ? REPS[n - 1] : 0;
-  const roll = tw(f, lastRep, lastRep + 3, 0, 1, OUT);
+  const roll = n >= 23 ? tw(f, lastRep, lastRep + 4, 0, 1, OUT) : 1;
   const zone = n <= 15 ? 0 : n <= 22 ? 1 : 2;
   const cards = [
     { at: 182, title: "Reps 1–15", sub: "Feels easy", bg: C.mint, ink: C.mintInk, icon: "check" as const },
@@ -123,8 +123,8 @@ export const Film: React.FC<{ sub?: number }> = ({ sub = 1 }) => {
   ];
 
   // compare chips
-  const Lp = projectStudio([-0.6, 0.05, 0], W, H);
-  const Hp = projectStudio([0.62, 0.05, 0], W, H);
+  const Lp = projectStudio([-0.7, 0.1, 0], W, H);
+  const Hp = projectStudio([0.72, -0.05, 0], W, H);
   const merge = tw(f, 410, 432, 0, 1, [0.6, 0, 0.2, 1]);
   const chip = (at: number, from: { x: number; y: number }, dx: number, dy: number) => {
     const p = tw(f, at, at + 16, 0, 1, SPRING);
@@ -148,7 +148,7 @@ export const Film: React.FC<{ sub?: number }> = ({ sub = 1 }) => {
         {/* A. hook */}
         {f < 112 ? (
           <div style={{ position: "absolute", left: 0, right: 0, top: 360 }}>
-            <Line f={f} text="Light or heavy?" at={4} out={33} size={100} wght={620} />
+            <Line f={f} text="Light or heavy?" at={-8} out={33} size={100} wght={620} />
             <div style={{ position: "absolute", left: 0, right: 0, top: 0 }}>
               <Line f={f} text="Same *muscle*" at={37} out={76} size={112} wght={660} />
               <Line f={f} text="growth." at={42} out={77} size={112} wght={660} />
@@ -316,7 +316,7 @@ export const Film: React.FC<{ sub?: number }> = ({ sub = 1 }) => {
 
         {/* G. end */}
         {f >= 552 ? (
-          <div style={{ position: "absolute", left: 0, right: 0, top: 1060, display: "flex", justifyContent: "center", alignItems: "center", gap: 22 }}>
+          <div style={{ position: "absolute", left: 0, right: 0, top: 1110, display: "flex", justifyContent: "center", alignItems: "center", gap: 22 }}>
             <div style={{ width: 72, height: 72, borderRadius: 20, background: C.ink, opacity: tw(f, 556, 566, 0, 1), transform: `scale(${tw(f, 556, 572, 0.6, 1, SPRING)})`, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff" }}>
               <svg width="40" height="40" viewBox="0 0 24 24"><path d="M13 2L5 13.5h5.5L9.5 22 18 10.5h-5.5L13 2z" fill="currentColor" /></svg>
             </div>
@@ -326,7 +326,7 @@ export const Film: React.FC<{ sub?: number }> = ({ sub = 1 }) => {
           </div>
         ) : null}
         {f >= 552 ? (
-          <div style={{ position: "absolute", left: 0, right: 0, top: 1160 }}>
+          <div style={{ position: "absolute", left: 0, right: 0, top: 1210 }}>
             <Line f={f} text="Train smarter." at={574} size={44} wght={450} color={C.ink60} stagger={5} />
           </div>
         ) : null}
