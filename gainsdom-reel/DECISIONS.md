@@ -15,3 +15,13 @@
 
 ## Deliverables
 - gainsdom_v03.mp4: no audio (for the client's song). gainsdom_v03_sfx.wav: sound-effects stem.
+
+## Upgrade (user: "doesn't look like a big brand video")
+- No Higgsfield (user's choice). Code-only route.
+- Hero: hex dumbbell (black satin rubber, chrome collars, knurled steel handle) with the GD monogram printed on the
+  head faces; studio softbox-strip environment for streak highlights; layered compositing:
+  background canvas (floor, contact shadow, 3D type) with CSS lens blur, sharp hero canvas, bloom pass (blurred
+  bright copy, screen blend), vignette and grain. @react-three/postprocessing renders black in this headless setup.
+- Brand texture must be loaded before canvases mount (useBrandReady) or Remotion captures a stale frame.
+- Music: client's track (Radiohead "Kid A", copyrighted): ~117.5 BPM. Hits at 1.31/1.71/2.07/2.57, run 6.35-9.62,
+  12.14/12.64, 14.16/14.66, 16.43/17.19, 19.21. Deliver silent master; client adds the track in-app.
