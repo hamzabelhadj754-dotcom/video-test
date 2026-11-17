@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="tokens.css">
+<style>
+  .frame { position: absolute; inset: 0; display: none; }
+  .frame.on { display: block; }
+
+  /* ---------- F1 logo ---------- */
+  .wordmark { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -58%); font-size: 330px; font-weight: 750; font-variation-settings: "opsz" 96, "wdth" 92; white-space: nowrap; }
+  .wordmark .dot { color: transparent; }
+  .tagline { position: absolute; left: 50%; top: 50%; transform: translate(-50%, 205px); display: flex; gap: 28px; align-items: center; }
+  .tagline span { font-size: 26px; letter-spacing: .22em; text-transform: uppercase; color: var(--paper); font-weight: 500; opacity: .85; }
+  .tagline i { width: 8px; height: 8px; border-radius: 50%; background: var(--signal); display: block; }
+
+  /* ---------- F2 funciones ---------- */
+  .h2 { position: absolute; left: 120px; top: 150px; font-size: 104px; }
+  .h2 em { font-style: normal; color: var(--mute); font-weight: 400; }
+  .rows { position: absolute; left: 120px; right: 120px; top: 370px; }
+  .row { position: relative; display: grid; grid-template-columns: 90px 640px 1fr; align-items: center; height: 148px; border-top: 1.5px solid var(--line); }
+  .row:last-child { border-bottom: 1.5px solid var(--line); }
+  .row .n { font-size: 24px; font-weight: 600; color: var(--signal); letter-spacing: .04em; }
+  .row .f { font-family: var(--display); font-size: 56px; font-weight: 650; letter-spacing: -0.022em; font-variation-settings: "opsz" 48; white-space: nowrap; }
+  .row .a { display: flex; gap: 12px; flex-wrap: wrap; }
+  .row .a span { font-size: 24px; color: var(--paper); padding: 12px 22px; border: 1.5px solid #34363b; border-radius: 999px; white-space: nowrap; background: rgba(255,255,255,.015); }
+  .row.hot { background: linear-gradient(90deg, rgba(255,90,31,.10), rgba(255,90,31,0) 60%); }
+  .row.hot .a span { border-color: rgba(255,90,31,.55); }
+  .row.hot::before { content: ""; position: absolute; left: -120px; width: 104px; top: 50%; height: 3px; background: var(--signal); }
+
+  /* ---------- F3 SMART ---------- */
+  .smart-title { position: absolute; left: 120px; top: 150px; font-size: 104px; }
+  .smart-title em { font-style: normal; color: var(--signal); }
+  .acr { position: absolute; left: 120px; bottom: 96px; display: flex; gap: 40px; }
+  .acr div { font-size: 22px; color: var(--mute); letter-spacing: .02em; }
+  .acr b { font-family: var(--display); color: var(--paper); font-size: 30px; margin-right: 8px; font-weight: 700; }
+  .pt { position: absolute; }
+  .pt .big { font-family: var(--display); font-weight: 700; font-size: 132px; letter-spacing: -0.04em; line-height: .9; font-variation-settings: "opsz" 96; }
+  .pt .cap { margin-top: 18px; font-size: 27px; line-height: 1.32; color: var(--paper); opacity: .88; width: 400px; }
+  .pt .when { margin-top: 14px; font-size: 21px; letter-spacing: .14em; text-transform: uppercase; color: var(--signal); font-weight: 600; }
+
+  /* ---------- F4 organigrama ---------- */
+  .org-title { position: absolute; left: 120px; top: 150px; font-size: 92px; }
+  .org-chip { position: absolute; right: 120px; top: 170px; font-size: 22px; letter-spacing: .14em; text-transform: uppercase; padding: 14px 24px; border: 1.5px solid var(--signal); color: var(--signal); border-radius: 999px; font-weight: 600; }
+  .node { position: absolute; transform: translate(-50%, -50%); padding: 22px 34px; border: 1.5px solid #3a3c41; border-radius: 18px; background: var(--ink-2); text-align: center; white-space: nowrap; }
+  .node b { display: block; font-family: var(--display); font-weight: 650; font-size: 38px; letter-spacing: -0.02em; }
+  .node small { display: block; margin-top: 6px; font-size: 19px; color: var(--mute); letter-spacing: .1em; text-transform: uppercase; }
+  .node.top { background: var(--paper); color: var(--ink); border-color: var(--paper); }
+  .node.top b { font-size: 44px; }
+  .node.top small { color: #5a5953; }
+  .node.leaf b { font-size: 30px; font-family: var(--text); font-weight: 500; letter-spacing: 0; }
+</style>
+</head>
+<body>
+<div class="stage">
+
+  <!-- city grid depth layer (shared) -->
+  <svg class="citygrid" viewBox="0 0 2688 1512" preserveAspectRatio="none" id="grid"></svg>
+
+  <!-- ================= F1 ================= -->
+  <section class="frame" id="f1">
+    <svg style="position:absolute;inset:0" width="1920" height="1080">
+      <path d="M -40 820 C 240 820, 380 672, 620 672 L 1300 672 C 1352 672, 1371 650, 1371 600" fill="none" stroke="#FF5A1F" stroke-width="6" stroke-linecap="round"/>
+      <circle cx="1371" cy="598" r="29" fill="#FF5A1F"/>
+    </svg>
+    <div class="wordmark display">TRAZO<span class="dot">.</span></div>
+    <div class="tagline"><span>Movilidad eléctrica</span><i></i><span>Valencia</span></div>
+  </section>
+
+  <!-- ================= F2 ================= -->
+  <section class="frame" id="f2">
+    <div class="chapter label"><b>02</b><i></i>Funciones del departamento de ventas</div>
+    <div class="h2 display">Cuatro funciones. <em>Una venta.</em></div>
+    <div class="rows">
+      <div class="row hot"><div class="n num">01</div><div class="f">Captación</div><div class="a"><span>Pruebas gratis en campus</span><span>Instagram + TikTok</span><span>Acuerdos con flotas</span></div></div>
+      <div class="row"><div class="n num">02</div><div class="f">Fidelización</div><div class="a"><span>Plan TRAZO Care</span><span>Revisión gratis a los 6 meses</span><span>App con puntos</span></div></div>
+      <div class="row"><div class="n num">03</div><div class="f">Análisis de mercado</div><div class="a"><span>Encuestas post-venta</span><span>Competencia</span><span>Ventas por zona</span></div></div>
+      <div class="row"><div class="n num">04</div><div class="f">Gestión administrativa</div><div class="a"><span>Pedidos y facturas</span><span>Financiación</span><span>Garantías</span></div></div>
+    </div>
+  </section>
+
+  <!-- ================= F3 ================= -->
+  <section class="frame" id="f3">
+    <div class="chapter label"><b>03</b><i></i>Dirección de ventas · objetivos</div>
+    <div class="smart-title display">Tres objetivos <em>SMART</em></div>
+    <svg style="position:absolute;inset:0" width="1920" height="1080">
+      <defs><linearGradient id="fillg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FF5A1F" stop-opacity=".16"/><stop offset="1" stop-color="#FF5A1F" stop-opacity="0"/></linearGradient></defs>
+      <path d="M -20 985 C 38 968, 160 916, 330 880 C 500 844, 782 847, 1000 770 C 1218 693, 1483 494, 1640 420 C 1797 346, 1890 341, 1940 325 L 1940 1080 L -20 1080 Z" fill="url(#fillg)"/>
+      <path d="M -20 985 C 38 968, 160 916, 330 880 C 500 844, 782 847, 1000 770 C 1218 693, 1483 494, 1640 420 C 1797 346, 1890 341, 1940 325" fill="none" stroke="#FF5A1F" stroke-width="5" stroke-linecap="round"/>
+      <g fill="#0C0D0F" stroke="#FF5A1F" stroke-width="5"><circle cx="330" cy="880" r="13"/><circle cx="1000" cy="770" r="13"/><circle cx="1640" cy="420" r="13"/></g>
+      <g stroke="#3a3c41" stroke-width="1.5" stroke-dasharray="4 8"><line x1="330" y1="866" x2="330" y2="680"/><line x1="1000" y1="756" x2="1000" y2="610"/></g>
+    </svg>
+    <div class="pt" style="left:300px; top:420px"><div class="big num">+20 %</div><div class="cap">de ventas online</div><div class="when">antes del 31/12/2027</div></div>
+    <div class="pt" style="left:970px; top:330px"><div class="big num">15</div><div class="cap" style="width:330px">nuevos clientes empresa en Valencia</div><div class="when">antes del 30/06/2027</div></div>
+    <div class="pt" style="left:1380px; top:500px; text-align:right; width:420px"><div class="big num signal">4,6<span style="color:var(--mute);font-weight:400">/5</span></div><div class="cap" style="margin-left:auto">satisfacción en encuestas post-venta</div><div class="when">durante 2027</div></div>
+    <div class="acr"><div><b>S</b>Específico</div><div><b>M</b>Medible</div><div><b>A</b>Alcanzable</div><div><b>R</b>Relevante</div><div><b>T</b>Temporal</div></div>
+  </section>
+
+  <!-- ================= F4 ================= -->
+  <section class="frame" id="f4">
+    <div class="chapter label"><b>05</b><i></i>Estructura organizativa</div>
+    <div class="org-title display">Organigrama</div>
+    <div class="org-chip">Estructura mixta · cliente + canal</div>
+    <svg style="position:absolute;inset:0" width="1920" height="1080" fill="none" stroke="#FF5A1F" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M 960 450 V 540 M 420 540 H 1500 M 420 540 V 640 M 960 540 V 640 M 1500 540 V 640"/>
+      <path d="M 420 715 V 790 M 270 790 H 570 M 270 790 V 850 M 570 790 V 850 M 960 715 V 850" opacity=".7"/>
+    </svg>
+    <div class="node top" style="left:960px; top:400px"><b>Dirección Comercial</b><small>1 director/a</small></div>
+    <div class="node" style="left:420px; top:678px"><b>Ventas Particulares</b><small>Jefe/a de ventas</small></div>
+    <div class="node" style="left:960px; top:678px"><b>Ventas Empresas</b><small>Jefe/a de ventas</small></div>
+    <div class="node" style="left:1500px; top:678px"><b>Administración y Análisis</b><small>2 personas</small></div>
+    <div class="node leaf" style="left:270px; top:900px"><b>Tienda Ruzafa</b><small>3 vendedores</small></div>
+    <div class="node leaf" style="left:570px; top:900px"><b>Venta online</b><small>2 vendedores</small></div>
+    <div class="node leaf" style="left:960px; top:900px"><b>Cuentas clave · flotas</b><small>2 comerciales</small></div>
+  </section>
+
+  <div class="vignette"></div>
+  <div class="grain"></div>
+</div>
+<script>
+  // city grid: Valencia-like orthogonal blocks + one diagonal avenue, in subtle lines
+  const g = document.getElementById('grid'); let s = '';
+  for (let x = 0; x <= 2688; x += 112) s += `<line x1="${x}" y1="0" x2="${x}" y2="1512" stroke="#1b1d21" stroke-width="${x % 448 === 0 ? 2 : 1}"/>`;
+  for (let y = 0; y <= 1512; y += 112) s += `<line x1="0" y1="${y}" x2="2688" y2="${y}" stroke="#1b1d21" stroke-width="${y % 448 === 0 ? 2 : 1}"/>`;
+  s += `<line x1="0" y1="1400" x2="2688" y2="200" stroke="#202227" stroke-width="3"/>`;
+  g.innerHTML = s;
+  g.style.transform = 'perspective(1600px) rotateX(48deg) rotateZ(-8deg) translateY(120px)';
+  const f = new URLSearchParams(location.search).get('f') || 'f1';
+  document.getElementById(f).classList.add('on');
+  document.fonts.ready.then(() => document.body.dataset.ready = '1');
+</script>
+</body>
+</html>
