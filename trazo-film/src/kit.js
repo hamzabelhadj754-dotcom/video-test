@@ -49,5 +49,30 @@
 
   const cursor = (c = '#0C0D0F') => `<svg width="46" height="46" viewBox="0 0 46 46"><path d="M4 3 L42 18 L25 24 L19 42 Z" fill="${c}" stroke="${c}" stroke-width="2" stroke-linejoin="round"/></svg>`;
 
-  window.KIT = { rng, bike, dust, barcode, cursor };
+  // One icon family: 24-unit grid, 1.8 stroke, round caps (Apple SF-symbol feel, drawn from scratch)
+  const ICONS = {
+    campus: '<path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c0 2.2 12 2.2 12 0v-5"/><path d="M22 9v5"/>',
+    social: '<rect x="6" y="2" width="12" height="20" rx="3"/><path d="M12 15.5s-3-2-3-4a1.5 1.5 0 0 1 3-.8 1.5 1.5 0 0 1 3 .8c0 2-3 4-3 4z"/>',
+    handshake: '<path d="M10 13.5a4.5 4.5 0 0 0 6.4 0l3.2-3.2a4.5 4.5 0 0 0-6.4-6.4l-1 1"/><path d="M14 10.5a4.5 4.5 0 0 0-6.4 0l-3.2 3.2a4.5 4.5 0 0 0 6.4 6.4l1-1"/>',
+    wrench: '<path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.4-.6-.6-2.4z"/>',
+    calendar: '<rect x="3" y="5" width="18" height="16" rx="2.5"/><path d="M3 10h18M8 3v4M16 3v4"/><path d="M8 14.5h3"/>',
+    app: '<rect x="6" y="2" width="12" height="20" rx="3"/><path d="M9.5 6h5"/><circle cx="12" cy="17.5" r=".9"/>',
+    survey: '<rect x="5" y="4" width="14" height="17" rx="2.5"/><path d="M9 4V3h6v1"/><path d="M9 13l2 2 4-4"/>',
+    chart: '<path d="M4 20V11M10 20V5M16 20v-6M3 20h18"/>',
+    pin: '<path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/>',
+    receipt: '<path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/>',
+    card: '<rect x="3" y="6" width="18" height="12" rx="2.5"/><path d="M3 10h18M7 15h4"/>',
+    shield: '<path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/>',
+    people: '<circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.4"/><path d="M16.5 14c2.8.2 4.5 2.3 4.5 5"/>',
+    box: '<path d="M3 7.5l9-4.5 9 4.5v9L12 21l-9-4.5z"/><path d="M3 7.5l9 4.5 9-4.5M12 12v9"/>',
+    customer: '<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/>',
+    kpi: '<path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/>',
+    oneone: '<circle cx="8" cy="9" r="3"/><circle cx="16" cy="9" r="3"/><path d="M2.5 20c0-3 2.5-5.5 5.5-5.5S13.5 17 13.5 20M10.5 20c0-3 2.5-5.5 5.5-5.5s5.5 2.5 5.5 5.5"/>',
+    medal: '<circle cx="12" cy="15" r="5"/><path d="M8.5 3l3.5 7 3.5-7"/><path d="M12 13v4"/>',
+    check: '<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+  };
+  const icon = (name, color = '#FF5A1F', size = 26, sw = 1.8) =>
+    `<svg class="ico" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round">${ICONS[name] || ''}</svg>`;
+
+  window.KIT = { rng, bike, dust, barcode, cursor, icon };
 })();
