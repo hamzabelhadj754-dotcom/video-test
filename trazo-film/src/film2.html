@@ -600,8 +600,9 @@
   const H0 = 3.4; // hero start
   const proj = p => { const w = p.clone().applyMatrix4(bike.matrixWorld).project(cam); return [(w.x + 1) / 2 * 1920, (1 - w.y) / 2 * 1080]; };
   function pose3d(t) {
-    const hero = t >= H0 - .1 && t < 9.97, end = t >= 91.6;
+    const hero = t >= H0 - .1 && t < 9.97, end = t >= 91.95;
     canvas.style.visibility = hero || end ? 'visible' : 'hidden';
+    canvas.style.opacity = end ? E.out(clamp((t - 91.95) / .7)) : 1;
     if (!hero && !end) return;
     if (hero) {
       const k = seg(t, H0 + .7, H0 + 2.6), travel = (1 - k) * 15;
@@ -844,6 +845,7 @@
 
   // ---- S11 · Organigrama (84.32 – 92.5): crane over the tree
   show('#s11', 84.3, 92.0);
+  tl.set('#s11', { visibility: 'hidden' }, 91.95);
   tl.fromTo('#s11cam', { z: -900, opacity: 0, filter: 'blur(14px)' }, { z: 0, opacity: 1, filter: 'blur(0px)', duration: 1.0 }, 84.3);
   rise('#s11 .head .m > *', V(79.32) - .3, .9);
   tl.fromTo('#s11 .chip2', { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: .7 }, V(80.1));
@@ -859,7 +861,7 @@
   tl.fromTo('#legend > div', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: .6, stagger: .12 }, V(85.5));
   tl.fromTo('#tree', { rotationX: 38, y: -60, z: -300 }, { rotationX: 14, y: 0, z: 0, duration: 4.5, ease: 'tz-cam' }, 84.3)
     .to('#tree', { rotationX: 8, rotationZ: -1.5, z: 60, duration: 3.5, ease: 'none' }, 88.8);
-  tl.to('#s11cam', { z: -1200, opacity: 0, filter: 'blur(14px)', duration: .7, ease: 'tz-in' }, 91.5);
+  tl.to('#s11cam', { z: -1200, opacity: 0, filter: 'blur(14px)', duration: .65, ease: 'tz-in' }, 91.3);
 
   // ---- S12 · End card (92.0 – 99)
   show('#s12', 91.9);

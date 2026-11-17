@@ -9,3 +9,7 @@ out/*_silent.mp4
 out/render_*.log
 audio/vo_placed.wav
 audio/bed.wav
+out/review_full/
+out/chk*.png
+out/stripsA.png
+out/*_silent.mp4
