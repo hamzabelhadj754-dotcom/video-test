@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="tokens.css">
+<script src="kit.js"></script>
+<style>
+  .frame { position: absolute; inset: 0; display: none; overflow: hidden; }
+  .frame.on { display: block; }
+  .side { position: absolute; top: 540px; width: 760px; right: auto; display: flex; justify-content: space-between; gap: 0; padding: 0; writing-mode: horizontal-tb; transform-origin: 50% 50%; }
+  .side.l { left: 52px; right: auto; transform-origin: 50% 50%; transform: translate(-50%, -50%) rotate(-90deg); }
+  .side.r { left: 1868px; right: auto; transform-origin: 50% 50%; transform: translate(-50%, -50%) rotate(90deg); }
+
+  /* ===== A · light editorial poster ===== */
+  #a { background: radial-gradient(90% 80% at 62% 50%, #F6F3EC 0%, #E9E5DC 100%); color: var(--ink); }
+  #a .paper-grid { position: absolute; left: 980px; top: 210px; width: 760px; height: 560px; opacity: .55;
+    background-image: linear-gradient(#cfcac0 1px, transparent 1px), linear-gradient(90deg, #cfcac0 1px, transparent 1px); background-size: 40px 40px;
+    -webkit-mask: radial-gradient(closest-side, #000 55%, transparent); }
+  #a .bikewrap { position: absolute; left: 1040px; top: 300px; }
+  #a .kicker { position: absolute; left: 150px; top: 250px; font-size: 54px; color: #5b5a55; }
+  #a .title { position: absolute; left: 140px; top: 300px; font-size: 300px; font-weight: 760; font-variation-settings: "opsz" 96, "wdth" 90; color: var(--ink); }
+  #a .title .dot { color: var(--signal); }
+  #a .sub { position: absolute; left: 150px; top: 610px; font-size: 64px; line-height: 1; color: var(--ink); }
+  #a .tag { position: absolute; left: 150px; top: 712px; color: var(--ink); font-size: 22px; letter-spacing: .2em; text-transform: uppercase; font-weight: 600; }
+  #a .meta { position: absolute; right: 130px; top: 96px; text-align: right; font-size: 18px; letter-spacing: .14em; color: #4a4944; }
+  #a .meta div { margin-bottom: 8px; }
+  #a .para { position: absolute; left: 150px; top: 862px; width: 640px; font-size: 22px; line-height: 1.45; color: #3c3b37; }
+  #a .cur { position: absolute; left: 1500px; top: 640px; transform: rotate(-4deg); }
+  #a .cur span { position: absolute; left: 44px; top: 40px; white-space: nowrap; background: var(--ink); color: var(--paper); font-size: 18px; letter-spacing: .1em; text-transform: uppercase; padding: 8px 14px; border-radius: 8px; font-weight: 600; }
+  #a .fgwheel { position: absolute; left: -380px; top: 760px; filter: blur(14px); opacity: .9; }
+  #a .arc { position: absolute; inset: 0; }
+
+  /* ===== dark scenes shared ===== */
+  .dark { background: radial-gradient(100% 90% at 60% 45%, #15171b 0%, var(--ink) 75%); }
+  .glow { position: absolute; border-radius: 50%; filter: blur(70px); }
+  .kick { font-size: 64px; color: var(--paper); opacity: .9; }
+  .big { font-family: var(--display); font-weight: 760; font-variation-settings: "opsz" 96, "wdth" 88; letter-spacing: -0.035em; line-height: .9; }
+  .steps { position: absolute; left: 150px; bottom: 96px; display: flex; gap: 10px; align-items: center; }
+  .steps i { width: 64px; height: 4px; border-radius: 2px; background: #2c2e33; display: block; }
+  .steps i.on { background: var(--signal); }
+  .steps span { margin-left: 18px; font-size: 18px; letter-spacing: .16em; color: var(--mute); text-transform: uppercase; }
+  .acts { list-style: none; }
+  .acts li { display: grid; grid-template-columns: 56px 1fr; align-items: baseline; font-size: 32px; line-height: 1.25; padding: 18px 0; border-top: 1.5px solid #26282c; color: var(--paper); }
+  .acts li b { font-size: 18px; color: var(--signal); font-weight: 600; letter-spacing: .08em; }
+  .acts li em { font-style: normal; color: var(--mute); font-size: 22px; display: block; margin-top: 4px; }
+
+  /* ===== B · captación: 3D social card ===== */
+  #b .scene3d { position: absolute; left: 1060px; top: 120px; width: 640px; height: 860px; perspective: 1700px; }
+  #b .card { position: absolute; inset: 0; transform: rotateY(-22deg) rotateX(9deg) rotateZ(2deg); transform-style: preserve-3d; }
+  #b .face { position: absolute; inset: 0; background: #F4F1EA; border-radius: 34px; padding: 26px; color: var(--ink);
+    box-shadow: 1px 1px 0 #d8d3c8, 2px 2px 0 #d2cdc1, 3px 3px 0 #ccc7bb, 4px 4px 0 #c6c1b5, 5px 5px 0 #c0bbaf, 6px 6px 0 #bab5a9, 7px 7px 0 #b4afa3, 8px 8px 0 #aea99d, 9px 9px 0 #a8a397, 10px 10px 0 #a29d91, 40px 70px 90px rgba(0,0,0,.55); }
+  #b .face::after { content: ""; position: absolute; inset: 0; border-radius: 34px; background: linear-gradient(115deg, rgba(255,255,255,.55) 0%, rgba(255,255,255,0) 32%); pointer-events: none; }
+  #b .head { display: flex; align-items: center; gap: 14px; font-size: 22px; font-weight: 600; }
+  #b .av { width: 46px; height: 46px; border-radius: 50%; background: var(--ink); display: grid; place-items: center; }
+  #b .av i { width: 12px; height: 12px; border-radius: 50%; background: var(--signal); display: block; }
+  #b .head small { color: #2f6fd6; font-weight: 600; margin-left: 4px; }
+  #b .post { margin-top: 20px; height: 560px; border-radius: 20px; background: radial-gradient(80% 70% at 50% 35%, #FF7A45, #FF5A1F 55%, #D9400E); position: relative; overflow: hidden; }
+  #b .post .pbike { position: absolute; left: 70px; top: 250px; }
+  #b .post .ph { position: absolute; left: 34px; top: 36px; color: #fff4ec; }
+  #b .post .ph .serif { font-size: 46px; line-height: 1; }
+  #b .post .ph .big { font-size: 78px; color: #fff; }
+  #b .post .pill { position: absolute; right: 26px; top: 40px; background: #0C0D0F; color: #F2EFE8; font-size: 16px; letter-spacing: .14em; padding: 10px 14px; border-radius: 10px; font-weight: 600; transform: rotate(6deg); }
+  #b .bar { display: flex; gap: 22px; margin-top: 22px; align-items: center; }
+  #b .bar svg { width: 34px; height: 34px; }
+  #b .likes { margin-top: 14px; font-size: 22px; font-weight: 600; }
+  #b .capt { margin-top: 6px; font-size: 21px; color: #3a3935; }
+  #b .capt b { color: #2f6fd6; font-weight: 500; }
+  #b .left { position: absolute; left: 150px; top: 210px; width: 760px; }
+  #b .label { margin-bottom: 30px; }
+  #b .word { display: inline-block; margin-top: 14px; color: var(--paper); }
+  #b .word .big { font-size: 150px; }
+  #b .acts { margin-top: 56px; width: 700px; }
+  #b .note { position: absolute; left: 1110px; top: 1010px; width: 540px; font-size: 18px; color: var(--mute); letter-spacing: .04em; }
+  #b .cur { position: absolute; left: 1560px; top: 760px; }
+
+  /* ===== C · fidelización: glass + reviews ===== */
+  #c .left { position: absolute; left: 150px; top: 210px; width: 760px; }
+  #c .word .big { font-size: 150px; }
+  #c .acts { margin-top: 56px; width: 700px; }
+  #c .glass { position: absolute; left: 1010px; top: 190px; width: 760px; height: 700px; border-radius: 40px; background: linear-gradient(160deg, rgba(255,255,255,.10), rgba(255,255,255,.03));
+    border: 1.5px solid rgba(255,255,255,.14); backdrop-filter: blur(24px); box-shadow: inset 0 1px 0 rgba(255,255,255,.18), 0 60px 120px rgba(0,0,0,.5); padding: 52px; }
+  #c .glass h4 { font-family: var(--serif); font-style: italic; font-weight: 400; font-size: 44px; color: var(--paper); text-align: center; margin-bottom: 34px; }
+  #c .rev { background: #F4F1EA; color: var(--ink); border-radius: 22px; padding: 20px 24px; display: grid; grid-template-columns: 54px 1fr; gap: 16px; margin-bottom: 18px; box-shadow: 0 20px 40px rgba(0,0,0,.35); }
+  #c .rev .av { width: 54px; height: 54px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: 20px; color: #fff; }
+  #c .rev b { font-size: 21px; } #c .rev small { color: #77756e; font-size: 16px; margin-left: 8px; }
+  #c .rev p { font-size: 21px; line-height: 1.35; margin-top: 4px; color: #2a2a28; }
+  #c .rev p span { color: var(--signal); font-weight: 600; }
+  #c .rev.back { transform: scale(.94) translateY(6px); opacity: .55; filter: blur(1.5px); }
+  #c .loy { position: absolute; left: 1380px; top: 780px; width: 470px; height: 270px; border-radius: 26px; background: linear-gradient(135deg, #FF6A2F, #E2440F); color: #fff; padding: 30px 34px; transform: rotate(-7deg); box-shadow: 0 40px 80px rgba(0,0,0,.55); }
+  #c .loy .big { font-size: 46px; } #c .loy .serif { font-size: 30px; opacity: .9; }
+  #c .loy .pts { position: absolute; right: 34px; bottom: 26px; font-family: var(--display); font-weight: 700; font-size: 64px; letter-spacing: -0.03em; }
+  #c .loy .chip { position: absolute; left: 34px; bottom: 34px; width: 64px; height: 46px; border-radius: 10px; background: linear-gradient(135deg, #ffd9b8, #ffb07a); }
+
+  /* ===== D · organigrama 3D ===== */
+  #d .head { position: absolute; left: 150px; top: 150px; }
+  #d .head .big { font-size: 120px; }
+  #d .chip2 { position: absolute; right: 150px; top: 196px; color: var(--signal); font-size: 22px; letter-spacing: .14em; text-transform: uppercase; font-weight: 600; }
+  #d .plane { position: absolute; left: 0; top: 318px; width: 1920px; height: 700px; perspective: 2200px; }
+  #d .tree { position: absolute; inset: 0; transform: rotateX(16deg) rotateZ(-2deg); transform-origin: 50% 0; }
+  #d .node { position: absolute; transform: translate(-50%, -50%); padding: 20px 30px 20px 20px; border: 1.5px solid #34363b; border-radius: 20px; background: linear-gradient(180deg, #1b1d21, #141619); display: flex; gap: 16px; align-items: center; white-space: nowrap; box-shadow: 0 30px 50px rgba(0,0,0,.45); }
+  #d .node .av { width: 56px; height: 56px; border-radius: 50%; border: 1.5px solid #46484d; display: grid; place-items: center; font-weight: 600; font-size: 19px; color: var(--paper); }
+  #d .node b { display: block; font-family: var(--display); font-weight: 650; font-size: 34px; letter-spacing: -0.02em; color: var(--paper); }
+  #d .node small { display: block; margin-top: 4px; font-size: 16px; color: var(--mute); letter-spacing: .12em; text-transform: uppercase; }
+  #d .node.top { background: var(--paper); border-color: var(--paper); }
+  #d .node.top b { color: var(--ink); font-size: 40px; } #d .node.top small { color: #5a5953; }
+  #d .node.top .av { background: var(--signal); border: 0; color: #fff; }
+  #d .node.leaf b { font-family: var(--text); font-weight: 500; font-size: 26px; letter-spacing: 0; }
+  #d .node.leaf .av { width: 44px; height: 44px; font-size: 15px; }
+  #d .legend { position: absolute; left: 150px; bottom: 34px; display: flex; gap: 46px; font-size: 22px; color: var(--paper); }
+  #d .legend b { font-family: var(--serif); font-style: italic; font-weight: 400; font-size: 30px; color: var(--signal); margin-right: 10px; }
+</style>
+</head>
+<body>
+<div class="stage">
+
+<!-- ======================= A ======================= -->
+<section class="frame" id="a">
+  <svg class="arc" width="1920" height="1080"><path d="M -100 120 C 500 260, 900 40, 2000 -60" stroke="#0C0D0F" stroke-width="1.5" fill="none" opacity=".35"/><path d="M 900 1180 C 1200 900, 1700 1000, 2050 760" stroke="#0C0D0F" stroke-width="1.5" fill="none" opacity=".25"/></svg>
+  <div class="paper-grid"></div>
+  <svg class="bikewrap" width="820" height="560" viewBox="-190 -360 900 540" id="abike"></svg>
+  <div class="kicker serif">presentamos</div>
+  <div class="title display">TRAZO<span class="dot">.</span></div>
+  <div class="sub serif">movilidad eléctrica para Valencia</div>
+  <div class="tag"><span class="dashed">Empresa comercial</span></div>
+  <div class="meta"><div id="bc"></div><div>17 · NOV · 2026</div><div>Nº 0001 — RA3</div></div>
+  <div class="para brackets">Compramos a fabricantes y vendemos bicis y patinetes eléctricos a quien se mueve por la ciudad: estudiantes, trabajadores y empresas de reparto.</div>
+  <div class="cur" id="acur"><span>Batería extraíble · 80 km</span></div>
+  <svg class="fgwheel" width="700" height="700" viewBox="-350 -350 700 700"><g fill="none" stroke="#0C0D0F" opacity=".5"><circle r="300" stroke-width="34"/><circle r="250" stroke-width="6"/><circle r="60" stroke-width="14"/></g></svg>
+  <div class="side l" style="color:#6b6a64"><span>Práctica final · Tema 2</span><span>Departamento de ventas</span><span>2026</span></div>
+  <div class="side r" style="color:#6b6a64"><span>Valencia · ES</span><span>@trazo.vlc</span><span>Movilidad eléctrica</span></div>
+</section>
+
+<!-- ======================= B ======================= -->
+<section class="frame dark" id="b">
+  <div class="glow" style="left:1080px; top:180px; width:620px; height:620px; background:#FF5A1F; opacity:.28"></div>
+  <div class="glow" style="left:-200px; top:760px; width:600px; height:600px; background:#2a2d33; opacity:.9"></div>
+  <div class="left">
+    <div class="label chapter" style="position:static"><b>02</b><i></i>Funciones · 1 de 4</div>
+    <div class="kick serif">Primero, conseguir clientes:</div>
+    <div class="word"><span class="dashed" style="border-color:#FF5A1F; padding: 4px 30px 14px"><span class="big">Captación</span></span></div>
+    <ul class="acts">
+      <li><b>01</b><div>Pruebas gratis en los campus<em>UPV, UV y Florida Universitària</em></div></li>
+      <li><b>02</b><div>Campañas en Instagram y TikTok<em>Vídeos cortos con rutas reales por Valencia</em></div></li>
+      <li><b>03</b><div>Acuerdos con empresas de reparto<em>Flotas de 5 a 50 bicicletas</em></div></li>
+    </ul>
+  </div>
+  <div class="scene3d"><div class="card"><div class="face">
+    <div class="head"><div class="av"><i></i></div>trazo.vlc <small>· Seguir</small><span style="margin-left:auto; letter-spacing:3px">···</span></div>
+    <div class="post">
+      <div class="ph"><div class="serif">este jueves,</div><div class="big">Pruébala<br>gratis.</div></div>
+      <div class="pill">CAMPUS UPV</div>
+      <svg class="pbike" width="500" height="300" viewBox="-170 -350 900 540" id="bbike"></svg>
+    </div>
+    <div class="bar">
+      <svg viewBox="0 0 24 24"><path d="M12 21s-8-5.2-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 5.8-8 11-8 11z" fill="#FF3B4E"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="#0C0D0F" stroke-width="2"><path d="M21 12a8 8 0 1 1-3.3-6.5L21 4l-1 4.3A8 8 0 0 1 21 12z"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="#0C0D0F" stroke-width="2" stroke-linejoin="round"><path d="M22 3L2 10l8 3 3 8z"/></svg>
+      <svg viewBox="0 0 24 24" fill="#0C0D0F" style="margin-left:auto"><path d="M6 3h12v18l-6-4-6 4z"/></svg>
+    </div>
+    <div class="likes">2.418 Me gusta</div>
+    <div class="capt">Ven a probarla al campus 🡒 <b>#TrazoVLC #MuéveteEléctrico</b></div>
+  </div></div></div>
+  <div class="cur" id="bcur"></div>
+  <div class="steps"><i class="on"></i><i></i><i></i><i></i><span>Captación</span></div>
+  <div class="side r"><span>Trazo · Dpto. de ventas</span><span>Funciones</span><span>02</span></div>
+</section>
+
+<!-- ======================= C ======================= -->
+<section class="frame dark" id="c">
+  <div class="glow" style="left:1100px; top:120px; width:700px; height:700px; background:#FF5A1F; opacity:.16"></div>
+  <div class="left">
+    <div class="label chapter" style="position:static; margin-bottom:30px"><b>02</b><i></i>Funciones · 2 de 4</div>
+    <div class="kick serif">Después, que vuelvan:</div>
+    <div class="word" style="margin-top:14px"><span class="dashed" style="border-color:#FF5A1F; padding: 4px 30px 14px"><span class="big">Fidelización</span></span></div>
+    <ul class="acts">
+      <li><b>01</b><div>Plan de mantenimiento TRAZO Care<em>Puesta a punto y seguro antirrobo</em></div></li>
+      <li><b>02</b><div>Revisión gratis a los 6 meses<em>Cita directa desde la app</em></div></li>
+      <li><b>03</b><div>App con puntos por kilómetro<em>Canjeables en accesorios</em></div></li>
+    </ul>
+  </div>
+  <div class="glass">
+    <h4>¿Y qué dicen nuestros clientes?</h4>
+    <div class="rev back"><div class="av" style="background:#3d6bd1">MR</div><div><b>Marcos R.</b><small>Repartidor</small><p>La flota no ha parado ni un día.</p></div></div>
+    <div class="rev"><div class="av" style="background:#FF5A1F">LG</div><div><b>Laura G.</b><small>Estudiante, 21</small><p>La revisión de los 6 meses fue <span>gratis y en 20 minutos</span>. Repetiré.</p></div></div>
+    <div class="rev"><div class="av" style="background:#2c9a6b">JM</div><div><b>Javier M.</b><small>Trabaja en el centro</small><p>Con los puntos de la app me llevé <span>el casco gratis</span>.</p></div></div>
+  </div>
+  <div class="loy"><div class="big">TRAZO Care</div><div class="serif">cliente desde 2026</div><div class="chip"></div><div class="pts num">1.250 pts</div></div>
+  <div class="steps"><i class="on"></i><i class="on"></i><i></i><i></i><span>Fidelización</span></div>
+  <div class="side r"><span>Trazo · Dpto. de ventas</span><span>Funciones</span><span>02</span></div>
+</section>
+
+<!-- ======================= D ======================= -->
+<section class="frame dark" id="d">
+  <div class="glow" style="left:660px; top:240px; width:600px; height:420px; background:#FF5A1F; opacity:.14"></div>
+  <div class="head"><div class="chapter" style="position:static; margin-bottom:22px"><b class="label" style="color:var(--signal)">05</b><i></i><span class="label">Estructura organizativa</span></div>
+    <div class="big"><span class="serif" style="font-family:var(--serif);font-weight:400;letter-spacing:-0.01em;color:var(--signal)">nuestro </span>Organigrama</div></div>
+  <div class="chip2"><span class="dashed">Mixta · por cliente + canal</span></div>
+  <div class="plane"><div class="tree">
+    <svg style="position:absolute;inset:0" width="1920" height="700" fill="none" stroke="#FF5A1F" stroke-width="3" stroke-linecap="round">
+      <path d="M 960 120 V 210 M 420 210 H 1500 M 420 210 V 300 M 960 210 V 300 M 1500 210 V 300"/>
+      <path d="M 420 370 V 440 M 270 440 H 570 M 270 440 V 500 M 570 440 V 500 M 960 370 V 500" opacity=".7"/>
+      <circle cx="960" cy="210" r="7" fill="#FF5A1F"/>
+    </svg>
+    <div class="node top" style="left:960px; top:80px"><div class="av">DC</div><div><b>Dirección Comercial</b><small>1 director/a</small></div></div>
+    <div class="node" style="left:420px; top:335px"><div class="av">VP</div><div><b>Ventas Particulares</b><small>Jefe/a de ventas</small></div></div>
+    <div class="node" style="left:960px; top:335px"><div class="av">VE</div><div><b>Ventas Empresas</b><small>Jefe/a de ventas</small></div></div>
+    <div class="node" style="left:1500px; top:335px"><div class="av">AA</div><div><b>Administración y Análisis</b><small>2 personas</small></div></div>
+    <div class="node leaf" style="left:270px; top:545px"><div class="av">×3</div><div><b>Tienda Ruzafa</b><small>vendedores</small></div></div>
+    <div class="node leaf" style="left:600px; top:545px"><div class="av">×2</div><div><b>Venta online</b><small>vendedores</small></div></div>
+    <div class="node leaf" style="left:960px; top:545px"><div class="av">×2</div><div><b>Cuentas clave · flotas</b><small>comerciales</small></div></div>
+  </div></div>
+  <div class="legend"><div><b>cliente</b>particular / empresa</div><div><b>canal</b>tienda / online</div><div><b>12</b>personas en total</div></div>
+  <div class="side r"><span>Trazo · Dpto. de ventas</span><span>Organigrama</span><span>05</span></div>
+</section>
+
+<div class="vignette"></div>
+<div class="grain"></div>
+<div id="dust"></div>
+</div>
+<script>
+  const f = new URLSearchParams(location.search).get('f') || 'a';
+  document.getElementById(f).classList.add('on');
+  document.getElementById('abike').innerHTML = KIT.bike({ stroke: '#0C0D0F', accent: '#FF5A1F', sw: 5 });
+  document.getElementById('bbike').innerHTML = KIT.bike({ stroke: '#FFF4EC', accent: '#0C0D0F', sw: 6, spokes: false });
+  document.getElementById('bc').innerHTML = KIT.barcode(5, 170, 30, '#0C0D0F');
+  document.getElementById('acur').insertAdjacentHTML('afterbegin', KIT.cursor('#0C0D0F'));
+  document.getElementById('bcur').innerHTML = KIT.cursor('#F2EFE8');
+  document.getElementById('dust').innerHTML = KIT.dust(11, 80, f === 'a' ? '#0C0D0F' : '#F2EFE8');
+  if (f === 'a') document.querySelector('.vignette').style.opacity = .35;
+  document.fonts.ready.then(() => document.body.dataset.ready = '1');
+</script>
+</body>
+</html>

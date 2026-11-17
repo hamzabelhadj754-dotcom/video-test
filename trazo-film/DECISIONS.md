@@ -42,3 +42,9 @@
 
 ## Versions
 - (none yet)
+
+## v2 direction (after user reference: editorial layered reel)
+- User feedback: v1 frames "too basic". Reference = layered editorial reel (3D cards, defocused foreground, serif+grotesk mix, barcode/date/side credits, corner brackets, dashed boxes, cursor, glass panels with comments, light→dark switch, film dust).
+- No Higgsfield / no AI image generation (user request). Everything code-built.
+- Added: Instrument Serif italic (accent voice), line-art e-bike (KIT.bike), 3D social post card, glass review panel, TRAZO Care loyalty card, 3D-tilted org chart, side credits, barcode, dust layer.
+- Opening is light (paper #EEEAE1) → film switches to dark at chapter 02.

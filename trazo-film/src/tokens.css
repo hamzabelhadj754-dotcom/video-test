@@ -33,3 +33,19 @@ body { color: var(--paper); font-family: var(--text); -webkit-font-smoothing: an
 .chapter { position: absolute; left: 120px; top: 92px; display: flex; gap: 18px; align-items: center; z-index: 10; }
 .chapter b { color: var(--signal); font-weight: 600; }
 .chapter i { width: 48px; height: 1.5px; background: var(--mute); display: block; opacity: .6; }
+
+@font-face { font-family: "Serif"; src: url("../fonts/serif.woff2") format("woff2"); font-style: normal; font-display: block; }
+@font-face { font-family: "Serif"; src: url("../fonts/serif-italic.woff2") format("woff2"); font-style: italic; font-display: block; }
+:root { --serif: "Serif", serif; --paper-2: #E7E3DA; --ink-soft: #1F2124; }
+.serif { font-family: var(--serif); font-style: italic; font-weight: 400; letter-spacing: -0.01em; }
+
+/* editorial furniture (shared by every scene) */
+.side { position: absolute; top: 50%; font-size: 15px; letter-spacing: .18em; text-transform: uppercase; white-space: nowrap; color: var(--mute); z-index: 20; display: flex; gap: 70px; }
+.side.l { left: 46px; transform: translateY(-50%) rotate(-90deg) translateX(-50%); transform-origin: 0 0; left: 52px; top: 50%; }
+.side.r { right: 52px; transform: rotate(90deg) translateX(-50%); transform-origin: 100% 0; top: 50%; }
+.brackets { position: absolute; }
+.brackets::before, .brackets::after { content: ""; position: absolute; width: 34px; height: 34px; border: 2px solid currentColor; opacity: .7; }
+.brackets::before { left: -26px; top: -22px; border-right: 0; border-bottom: 0; }
+.brackets::after { right: -26px; bottom: -22px; border-left: 0; border-top: 0; }
+.dashed { border: 2px dashed currentColor; padding: 10px 26px; border-radius: 14px; display: inline-block; }
+.dust { position: absolute; inset: 0; pointer-events: none; z-index: 48; opacity: .55; mix-blend-mode: screen; }
