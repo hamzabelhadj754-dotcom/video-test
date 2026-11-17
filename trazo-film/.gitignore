@@ -13,3 +13,6 @@ out/review_full/
 out/chk*.png
 out/stripsA.png
 out/*_silent.mp4
+out/*.mp4
+!out/trazo_opening_v02.mp4
+out/look/

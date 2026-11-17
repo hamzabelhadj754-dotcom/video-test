@@ -13,7 +13,7 @@
   .scene { position: absolute; inset: 0; visibility: hidden; perspective: 1600px; perspective-origin: 50% 45%; }
   .cam { position: absolute; inset: 0; transform-style: preserve-3d; }
   .fill { position: absolute; inset: 0; }
-  canvas#gl { position: absolute; inset: 0; width: 1920px; height: 1080px; visibility: hidden; }
+  canvas#gl { position: absolute; inset: 0; width: 1920px; height: 1080px; visibility: hidden; z-index: 3; }
   .orange { position: absolute; background: var(--signal); visibility: hidden; z-index: 30; }
   .m { overflow: hidden; display: block; padding-bottom: .06em; }
   .m > * { display: inline-block; }
@@ -40,6 +40,7 @@
   .cfly { position: absolute; left: 0; right: 0; top: 190px; text-align: center; transform-style: preserve-3d; opacity: 0; }
   .cfly .n { font-family: var(--display); font-weight: 800; font-size: 560px; line-height: .8; letter-spacing: -0.06em; color: transparent; -webkit-text-stroke: 2.5px rgba(242,239,232,.85); font-variation-settings: "opsz" 96, "wdth" 85; }
   .cfly .t { font-family: var(--serif); font-style: italic; font-size: 70px; color: var(--signal); margin-top: 10px; }
+  .wp { position: absolute; top: -60px; left: -340px; width: 2600px; height: 1200px; transform: skewX(-14deg) translateX(-2900px); }
   .gcur { position: absolute; left: 0; top: 0; z-index: 20; opacity: 0; filter: drop-shadow(0 10px 18px rgba(0,0,0,.5)); }
   .gcur .ripple { position: absolute; left: -26px; top: -26px; width: 56px; height: 56px; border-radius: 50%; border: 2px solid var(--signal); opacity: 0; }
   .glass::before { content: ""; position: absolute; left: 30px; right: 30px; top: 0; height: 1.5px; background: linear-gradient(90deg, transparent, rgba(255,255,255,.45), transparent); }
@@ -206,8 +207,8 @@
   #s8 .acr b { font-family: var(--display); color: var(--paper); font-size: 30px; margin-right: 8px; font-weight: 700; }
   #chart { position: absolute; left: 0; top: 0; width: 4200px; height: 1080px; transform-style: preserve-3d; }
   .pt { position: absolute; }
-  .pt .bn { font-family: var(--display); font-weight: 760; font-size: 170px; letter-spacing: -0.045em; line-height: .85; color: var(--paper); font-variation-settings: "opsz" 96, "wdth" 88; }
-  .pt .cap { margin-top: 18px; font-size: 32px; line-height: 1.3; color: var(--paper); width: 520px; }
+  .pt .bn { font-family: var(--display); font-weight: 760; font-size: 140px; letter-spacing: -0.045em; line-height: .85; color: var(--paper); font-variation-settings: "opsz" 96, "wdth" 88; }
+  .pt .cap { margin-top: 14px; font-size: 28px; line-height: 1.3; color: var(--paper); width: 520px; }
   .pt .when { margin-top: 14px; font-size: 22px; letter-spacing: .14em; text-transform: uppercase; color: var(--signal); font-weight: 600; }
   .pt .idx { font-size: 20px; letter-spacing: .18em; color: var(--mute); margin-bottom: 10px; text-transform: uppercase; }
 
@@ -445,23 +446,19 @@
   </div></section>
 
   <!-- ===== S8 · SMART ===== -->
-  <section class="scene" id="s8">
+  <section class="scene" id="s8"><div class="cam" id="s8cam">
     <div class="title big" id="smt"><span class="m"><span>Tres objetivos <em>SMART</em></span></span></div>
     <div class="acr" id="acr"><div><b>S</b>Específico</div><div><b>M</b>Medible</div><div><b>A</b>Alcanzable</div><div><b>R</b>Relevante</div><div><b>T</b>Temporal</div></div>
-    <div class="cam" id="s8cam"><div id="chart">
-      <svg width="4200" height="1080" style="position:absolute;left:0;top:0">
-        <defs><linearGradient id="fg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FF5A1F" stop-opacity=".18"/><stop offset="1" stop-color="#FF5A1F" stop-opacity="0"/></linearGradient>
-          <clipPath id="reveal"><rect id="revealr" x="0" y="0" width="0" height="1080"/></clipPath></defs>
-        <g stroke="#1e2024" stroke-width="1.5"><line x1="0" y1="980" x2="4200" y2="980"/><line x1="0" y1="780" x2="4200" y2="780" stroke-dasharray="4 10"/><line x1="0" y1="580" x2="4200" y2="580" stroke-dasharray="4 10"/></g>
-        <path id="area" clip-path="url(#reveal)" fill="url(#fg)"/>
-        <path id="curve" fill="none" stroke="#FF5A1F" stroke-width="6" stroke-linecap="round" pathLength="1" stroke-dasharray="1"/>
-        <g id="pdots"></g>
-      </svg>
-      <div class="pt" id="p1"><div class="idx">Objetivo 01</div><div class="bn num"><span id="n1">+0</span> %</div><div class="cap">de ventas online</div><div class="when">antes del 31/12/2027</div></div>
-      <div class="pt" id="p2"><div class="idx">Objetivo 02</div><div class="bn num" id="n2">0</div><div class="cap">nuevos clientes empresa en Valencia</div><div class="when">antes del 30/06/2027</div></div>
-      <div class="pt" id="p3"><div class="idx">Objetivo 03</div><div class="bn num"><span id="n3" style="color:var(--signal)">0,0</span><span style="color:var(--mute);font-weight:400">/5</span></div><div class="cap">de satisfacción en encuestas</div><div class="when">durante 2027</div></div>
-    </div></div>
-  </section>
+    <svg width="1920" height="1080" style="position:absolute;left:0;top:0" id="chartsvg">
+      <g stroke="#23252a" stroke-width="1.5"><line x1="120" y1="960" x2="1800" y2="960"/><line x1="120" y1="800" x2="1800" y2="800" stroke-dasharray="3 9"/><line x1="120" y1="640" x2="1800" y2="640" stroke-dasharray="3 9"/><line x1="120" y1="480" x2="1800" y2="480" stroke-dasharray="3 9"/></g>
+      <path id="curveglow" fill="none" stroke="#FF5A1F" stroke-width="22" stroke-linecap="round" opacity=".18" style="filter:blur(10px)"/>
+      <path id="curve" fill="none" stroke="#FF5A1F" stroke-width="6" stroke-linecap="round"/>
+      <g id="pdots"></g>
+    </svg>
+    <div class="pt" id="p1" style="left:300px;top:430px"><div class="idx">Objetivo 01</div><div class="bn num"><span class="m"><span>+20 %</span></span></div><div class="cap">de ventas online</div><div class="when">antes del 31/12/2027</div></div>
+    <div class="pt" id="p2" style="left:930px;top:300px"><div class="idx">Objetivo 02</div><div class="bn num"><span class="m"><span>15</span></span></div><div class="cap" style="width:420px">nuevos clientes empresa en Valencia</div><div class="when">antes del 30/06/2027</div></div>
+    <div class="pt" id="p3" style="left:1330px;top:560px;text-align:right;width:470px"><div class="idx">Objetivo 03</div><div class="bn num"><span class="m"><span><span style="color:var(--signal)">4,6</span><span style="color:var(--mute);font-weight:400">/5</span></span></span></div><div class="cap" style="margin-left:auto;width:420px">de satisfacción en encuestas</div><div class="when">durante 2027</div></div>
+  </div></section>
 
   <!-- ===== S9 · Supervisión ===== -->
   <section class="scene" id="s9"><div class="cam" id="s9cam">
@@ -531,12 +528,13 @@
   <div class="orange" id="orange"></div>
   <div class="gcur" id="gcur"></div>
   </div>
+  <div id="wipe" style="position:absolute;inset:0;z-index:45;pointer-events:none;overflow:hidden">
+    <div class="wp" id="wp1" style="background:#FF5A1F"></div>
+    <div class="wp" id="wp2" style="background:#111215;border-left:6px solid #FF5A1F"></div>
+  </div>
   <canvas id="fgc" width="1920" height="1080" style="position:absolute;inset:0;z-index:35;pointer-events:none"></canvas>
   <div id="chapfly" style="position:absolute;inset:0;z-index:36;perspective:1400px;pointer-events:none"></div>
   <div class="frameui" id="frameui">
-    <i class="cm tl"></i><i class="cm tr"></i><i class="cm bl"></i><i class="cm br"></i>
-    <div class="tc" id="tc">TC 00:00:00:00</div>
-    <div class="geo"><b></b>39.4699° N · 0.3763° W — Valencia</div>
     <div class="prog"><s id="progbar"></s></div>
   </div>
 
@@ -544,8 +542,7 @@
     <div class="chap"><b id="hnum">02</b><i></i><span id="hname">Público objetivo</span></div>
     <div class="brand">TRAZO<span>.</span></div>
     <div class="ticks" id="ticks"><span id="hcount">02 / 07</span><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-    <div class="side l"><span>Práctica final · Tema 2</span><span>Departamento de ventas</span><span>Yasser</span></div>
-    <div class="side r"><span>trazo.vlc</span><span>Movilidad eléctrica</span><span>Valencia</span></div>
+    
   </div>
   <div class="vignette"></div>
   <div class="grain" id="grain"></div>
@@ -578,14 +575,17 @@
   $('#people').innerHTML = Array.from({ length: 12 }, (_, i) => `<i class="${i < 1 ? 'o' : ''}"></i>`).join('');
   const para = $('#para'); para.innerHTML = para.textContent.split(' ').map(w => `<span style="display:inline-block">${w}</span>`).join(' ');
 
-  // SMART chart geometry (world coords in a 4200 px strip)
-  const P = [[-20, 1000], [500, 960], [1000, 820], [1500, 820], [2100, 640], [2700, 540], [3200, 400], [3700, 300], [4220, 240]];
+  // SMART chart geometry (fixed frame, no pan)
+  const P = [[110, 975], [420, 865], [700, 845], [1000, 700], [1300, 640], [1640, 470], [1830, 400]];
   const cr = p => { let d = `M ${p[0][0]} ${p[0][1]}`; for (let i = 0; i < p.length - 1; i++) { const p0 = p[i - 1] || p[i], p1 = p[i], p2 = p[i + 1], p3 = p[i + 2] || p2;
       d += ` C ${p1[0] + (p2[0] - p0[0]) / 6} ${p1[1] + (p2[1] - p0[1]) / 6}, ${p2[0] - (p3[0] - p1[0]) / 6} ${p2[1] - (p3[1] - p1[1]) / 6}, ${p2[0]} ${p2[1]}`; } return d; };
-  const curveD = cr(P); $('#curve').setAttribute('d', curveD); $('#area').setAttribute('d', curveD + ' L 4220 1080 L -20 1080 Z');
-  const PTS = [P[2], P[4], P[6]];
-  $('#pdots').innerHTML = PTS.map((p, i) => `<g id="pd${i}"><circle cx="${p[0]}" cy="${p[1]}" r="34" fill="none" stroke="#FF5A1F" stroke-width="2" opacity=".5"/><circle cx="${p[0]}" cy="${p[1]}" r="16" fill="#0C0D0F" stroke="#FF5A1F" stroke-width="6"/><line x1="${p[0]}" y1="${p[1] - 40}" x2="${p[0]}" y2="${p[1] - 150}" stroke="#3a3c41" stroke-width="2" stroke-dasharray="4 8"/></g>`).join('');
-  [['#p1', PTS[0]], ['#p2', PTS[1]], ['#p3', PTS[2]]].forEach(([s, p]) => { const el = $(s); el.style.left = (p[0] - 30) + 'px'; el.style.top = (p[1] - 540) + 'px'; });
+  const curveD = cr(P); $('#curve').setAttribute('d', curveD); $('#curveglow').setAttribute('d', curveD);
+  const PTS = [P[1], P[3], P[5]];
+  $('#pdots').innerHTML = PTS.map((p, i) => `<g id="pd${i}"><line x1="${p[0]}" y1="${p[1] + 26}" x2="${p[0]}" y2="960" stroke="#3a3c41" stroke-width="2" stroke-dasharray="3 8"/><circle cx="${p[0]}" cy="${p[1]}" r="30" fill="none" stroke="#FF5A1F" stroke-width="2" opacity=".45"/><circle cx="${p[0]}" cy="${p[1]}" r="13" fill="#0C0D0F" stroke="#FF5A1F" stroke-width="5"/></g>`).join('');
+  const CL = $('#curve').getTotalLength();
+  const fracAtX = x => { let lo = 0, hi = CL; for (let i = 0; i < 30; i++) { const m = (lo + hi) / 2; if ($('#curve').getPointAtLength(m).x < x) lo = m; else hi = m; } return lo; };
+  const FR = PTS.map(p => fracAtX(p[0]));
+  $('#curve').setAttribute('stroke-dasharray', `${CL} ${CL}`); $('#curveglow').setAttribute('stroke-dasharray', `${CL} ${CL}`);
 
   // ------------------------------------------------------------------ 3D
   const canvas = $('#gl');
@@ -690,13 +690,12 @@
   tl.to('#orange', { left: 150, top: 360, width: 780, height: 590, borderRadius: 36, duration: .8, ease: 'tz-out' }, 9.95);
 
   // ---- S2 · Público objetivo (9.66 – 18.6)
-  show('#s2', 9.95, 18.9); show('#hud', 9.95, 91.8);
+  show('#s2', 9.95, 18.45); show('#hud', 9.95, 91.8);
   tl.set('#pa', { opacity: 0 }, 0).set('#pa', { opacity: 1 }, 10.72);
   rise('#s2 .title .m > *', V(6.26) - .1, 1.0, .1);
   tl.fromTo('#pa > *', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: .7, stagger: .06 }, 10.75);
   tl.fromTo('#person', { strokeDasharray: 600, strokeDashoffset: 600 }, { strokeDashoffset: 0, duration: 1.2, ease: 'tz-cam' }, 10.9);
-  tl.fromTo('#pa .num', { opacity: 0 }, { opacity: 1, duration: .3 }, V(8.96) - .55);
-  count('#ageA', 0, 18, V(8.96) - .5, .7); count('#ageB', 0, 40, V(9.64) - .3, .7);
+  tl.fromTo('#pa .num', { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: .9 }, V(8.96) - .45);
   tl.fromTo('#pa .chips span', { opacity: 0, x: 30 }, { opacity: 1, x: 0, duration: .6, stagger: .15 }, V(10.6));
   tl.fromTo('#pb', { opacity: 0, x: 220, rotationY: -25, z: -300 }, { opacity: 1, x: 0, rotationY: 0, z: 0, duration: 1.1 }, V(12.2));
   tl.fromTo('#fleet svg', { opacity: 0, scale: .6 }, { opacity: 1, scale: 1, duration: .45, stagger: .05, ease: 'back.out(2)' }, V(13.4));
@@ -705,11 +704,9 @@
     .to('#s2cam', { x: -150, rotationY: -6, z: 40, duration: 2.6, ease: 'tz-cam' }, V(12.0));
   tl.to('#pa', { filter: 'blur(5px)', opacity: .55, duration: 1.0, ease: 'tz-cam' }, V(12.3))
     .to('#pa', { filter: 'blur(0px)', opacity: 1, duration: .8, ease: 'tz-cam' }, V(14.3));
-  flyOut('#s2cam', 18.0, .7);
 
   // ---- S3 · Cuatro funciones (18.6 – 22.04)
-  show('#s3', 18.4, 22.3);
-  flyIn('#s3cam', 18.4, 1.0);
+  show('#s3', 18.45, 22.3);
   rise('#s3 .pre .m > *', V(15.2) - .2, .9);
   tl.fromTo('#four', { yPercent: 60, opacity: 0, scale: .7, filter: 'blur(20px)' }, { yPercent: 0, opacity: 1, scale: 1, filter: 'blur(0px)', duration: .9 }, V(17.04) - .25);
   rise('#s3 .fun .m > *', V(17.42) - .1, .9);
@@ -720,7 +717,7 @@
     .to('#four', { scale: 26, duration: .75, ease: 'tz-in', transformOrigin: '43% 58%' }, 21.45);
 
   // ---- S4–S7 · functions strip with camera pans (22.04 – 46.0)
-  show('#sf', 21.95, 46.4);
+  show('#sf', 21.95, 46.35);
   const PAN = [0, -2300, -4600, -6900];
   tl.fromTo('#sfcam', { z: -900, opacity: 0, filter: 'blur(16px)' }, { z: 0, opacity: 1, filter: 'blur(0px)', duration: .9 }, 21.95);
   tl.set('#strip', { x: PAN[0] }, 0);
@@ -756,7 +753,8 @@
   fnIn(3, V(32.24) + .1, [V(33.76), V(34.78), V(36.36)]);
   tl.fromTo('#o3', { rotationY: 35, rotationX: 12, z: -400, opacity: 0 }, { rotationY: 12, rotationX: 4, z: 0, opacity: 1, duration: 1.2 }, V(32.24))
     .to('#o3', { rotationY: 5, duration: 5, ease: 'none' }, V(32.24) + 1.2);
-  count('#sat', 0, 4.6, V(33.76), 1.2, es);
+  $('#sat').textContent = '4,6';
+  tl.fromTo('#tile1 .v', { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: .7 }, V(33.76));
   tl.fromTo('#stars i', { background: '#3a3c41', scale: .5 }, { background: '#FF5A1F', scale: 1, duration: .35, stagger: .15, ease: 'back.out(3)' }, V(33.76) + .1);
   tl.fromTo('#hb s', { scaleX: 0 }, { scaleX: 1, duration: .9, stagger: .12 }, V(34.78));
   tl.fromTo('#zbars > div', { scaleY: 0 }, { scaleY: 1, duration: .8, stagger: .1 }, V(36.36));
@@ -770,44 +768,36 @@
     .fromTo('#stamp', { scale: 2.4, rotationZ: -30, opacity: 0 }, { scale: 1, rotationZ: -12, opacity: 1, duration: .45, ease: 'power4.in' }, V(41.9) - .2)
     .fromTo('#o4', { x: 0 }, { keyframes: [{ x: -10, y: 6, duration: .05 }, { x: 6, y: -4, duration: .05 }, { x: 0, y: 0, duration: .08 }] }, V(41.9) + .25);
   // pull back: the whole strip recedes, table takes over (camera dolly out)
-  tl.to('#sfcam', { z: -1600, opacity: 0, filter: 'blur(10px)', duration: .9, ease: 'tz-in' }, 45.9);
 
   // ---- Summary table (46.4 – 49.1)
-  show('#st', 46.3, 49.5);
-  tl.fromTo('#stcam', { z: 700, opacity: 0, filter: 'blur(14px)' }, { z: 0, opacity: 1, filter: 'blur(0px)', duration: .9 }, 46.3);
+  show('#st', 46.35, 49.25);
+  tl.fromTo('#stcam', { z: 160 }, { z: 0, duration: 1.3 }, 46.35);
   rise('#st .h2 .m > *', 46.45, .9);
   tl.fromTo('#rows .rowt', { opacity: 0, x: 80 }, { opacity: 1, x: 0, duration: .7, stagger: .14 }, 46.6)
     .fromTo('#rows .rowt .a span', { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: .5, stagger: .03 }, 46.9)
     .fromTo('#rows .hl', { scaleX: 0 }, { scaleX: 1, duration: .6, stagger: .3 }, 47.4)
     .to('#stcam', { z: 60, duration: 2.5, ease: 'none' }, 46.9);
-  tl.to('#stcam', { y: -200, opacity: 0, filter: 'blur(10px)', duration: .6, ease: 'tz-in' }, 49.0);
 
-  // ---- S8 · SMART (49.08 – 63.6): tracking shot along the growth curve
-  show('#s8', 49.1, 63.9);
-  rise('#smt .m > *', V(43.86) - .2, 1.0);
-  tl.fromTo('#acr > div', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: .6, stagger: .08 }, V(44.16));
-  tl.fromTo('#curve', { attr: { 'stroke-dashoffset': 1 } }, { attr: { 'stroke-dashoffset': 0 }, duration: V(56.4) - V(44.8), ease: 'none' }, V(44.8));
-  // camera follows the tip; holds on each objective
-  tl.fromTo('#s8cam', { x: 200, z: -200, rotationY: 6 }, { x: -260, z: 0, rotationY: 2, duration: V(47.5) - 49.1, ease: 'tz-cam' }, 49.1)
-    .to('#s8cam', { x: -1450, y: 180, rotationY: -2, duration: 1.6, ease: 'tz-cam' }, V(50.82) - .7)
-    .to('#s8cam', { x: -1530, duration: 2.0, ease: 'none' }, V(50.82) + .9)
-    .to('#s8cam', { x: -2650, y: 420, rotationY: -3, duration: 1.5, ease: 'tz-cam' }, V(54.14) - .7)
-    .to('#s8cam', { x: -2720, duration: 1.8, ease: 'none' }, V(54.14) + .8)
-    // reveal shot: pull back to see the three objectives on one curve
-    .to('#s8cam', { x: -160, y: 120, z: -2600, rotationY: 0, rotationX: 8, duration: 1.2, ease: 'tz-cam' }, V(56.6));
-  tl.set('#chart', { transformOrigin: '50% 50%' }, 0);
-  tl.to(['#smt', '#acr'], { opacity: 0, duration: .4 }, V(50.6));
-  const ptIn = (i, at) => { tl.fromTo(`#pd${i}`, { scale: 0, transformOrigin: 'center', transformBox: 'fill-box' }, { scale: 1, duration: .6, ease: 'back.out(2.5)' }, at)
-      .fromTo(`#p${i + 1} > *`, { opacity: 0, y: 40, filter: 'blur(10px)' }, { opacity: 1, y: 0, filter: 'blur(0px)', duration: .7, stagger: .08 }, at + .05); };
-  ptIn(0, V(45.84) - .1); count('#n1', 0, 20, V(46.5) - .3, .9, v => '+' + Math.round(v));
-  ptIn(1, V(50.82) - .1); count('#n2', 0, 15, V(51.32) - .3, .9);
-  ptIn(2, V(54.14) - .1); count('#n3', 0, 4.6, V(54.64) - .3, 1.0, es);
-  tl.to('#s8cam', { opacity: 0, filter: 'blur(14px)', z: -3400, duration: .6, ease: 'tz-in' }, 63.2);
+  // ---- S8 · SMART (49.25 – 63.6): one clean chart, the line draws objective by objective
+  show('#s8', 49.25, 63.65);
+  rise('#smt .m > *', V(43.86) - .25, 1.0);
+  tl.fromTo('#acr > div', { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: .6, stagger: .07 }, V(44.16));
+  const draw = (from, to, at, d) => tl.fromTo(['#curve', '#curveglow'], { attr: { 'stroke-dashoffset': CL - from } }, { attr: { 'stroke-dashoffset': CL - to }, duration: d, ease: 'tz-cam', immediateRender: from === 0 }, at);
+  draw(0, FR[0], V(44.8), 1.3); draw(FR[0], FR[1], V(50.82) - 1.0, 1.2); draw(FR[1], FR[2], V(54.14) - 1.0, 1.2); draw(FR[2], CL, V(56.4), 1.0);
+  const ptIn = (i, at) => { tl.fromTo(`#pd${i} circle`, { scale: 0, transformOrigin: 'center', transformBox: 'fill-box' }, { scale: 1, duration: .55, ease: 'back.out(2.2)', stagger: .06 }, at)
+      .fromTo(`#pd${i} line`, { attr: { 'stroke-dashoffset': 0 }, opacity: 0 }, { opacity: 1, duration: .5 }, at)
+      .fromTo(`#p${i + 1} .idx`, { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: .6 }, at + .05)
+      .fromTo(`#p${i + 1} .bn .m > *`, { yPercent: 105 }, { yPercent: 0, duration: .8 }, at + .1)
+      .fromTo(`#p${i + 1} .cap, #p${i + 1} .when`, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: .6, stagger: .08 }, at + .3); };
+  ptIn(0, V(45.84) + .3); ptIn(1, V(50.82) + .2); ptIn(2, V(54.14) + .2);
+  // dim earlier objectives so the eye follows the voice, then bring all three back for the final read
+  tl.to('#p1', { opacity: .35, duration: .5 }, V(50.82)).to(['#p1', '#p2'], { opacity: .35, duration: .5 }, V(54.14)).to(['#p1', '#p2'], { opacity: 1, duration: .6 }, V(56.5));
+  tl.fromTo('#s8cam', { z: -120, rotationX: 5, y: 20 }, { z: 70, rotationX: -1, y: 0, duration: 14, ease: 'tz-cam' }, 49.25);
 
   // ---- S9 · Supervisión (63.62 – 76.0): question → truck along 3 cards → crane down to motivation
-  show('#s9', 63.5, 76.4);
-  tl.fromTo('#s9cam', { z: 500, opacity: 0 }, { z: 0, opacity: 1, duration: .8 }, 63.5);
-  rise('#q .m > *', V(57.62) - .1, .9);
+  show('#s9', 63.65, 75.95);
+  tl.fromTo('#s9cam', { z: 140 }, { z: 0, duration: 1.2 }, 63.65);
+  rise('#q .m > *', V(57.62) + .12, .9);
   tl.to('#q', { scale: .4, y: -330, opacity: 0, duration: .8, ease: 'tz-in' }, V(59.18) - .7);
   const svIn = (sel, at) => tl.fromTo(sel, { opacity: 0, rotationY: 50, z: -400, y: 60 }, { opacity: 1, rotationY: 0, z: 0, y: 0, duration: 1.0 }, at);
   svIn('#sv1', V(59.18) - .3); svIn('#sv2', V(60.76) - .3); svIn('#sv3', V(62.84) - .3);
@@ -827,11 +817,9 @@
   const bIn = (s, at) => tl.fromTo(s, { opacity: 0, y: 80, scale: .8 }, { opacity: 1, y: 0, scale: 1, duration: .8, ease: 'back.out(1.6)' }, at);
   bIn('#b1', V(66.74) - .15); bIn('#b2', V(67.84) - .15); bIn('#b3', V(68.62) - .15);
   tl.fromTo('#b3 svg', { rotation: -180, scale: 0 }, { rotation: 0, scale: 1, duration: .9, ease: 'back.out(2)' }, V(68.62));
-  tl.to('#s9cam', { z: 900, opacity: 0, filter: 'blur(16px)', duration: .6, ease: 'tz-in' }, 75.6);
 
   // ---- S10 · Factores (76.0 – 84.3)
-  show('#s10', 75.95, 84.7);
-  flyIn('#s10cam', 75.95, 1.0);
+  show('#s10', 75.95, 84.35);
   tl.fromTo('#divider', { scaleY: 0 }, { scaleY: 1, duration: 1.2, ease: 'tz-cam' }, 76.0);
   rise('#s10 .colh .m > *', 76.1, .9, .2);
   const fxIn = (s, at) => tl.fromTo(`${s} > *`, { opacity: 0, y: 30, filter: 'blur(8px)' }, { opacity: 1, y: 0, filter: 'blur(0px)', duration: .7, stagger: .08 }, at);
@@ -841,12 +829,11 @@
     .fromTo('#routeDot', { scale: 0, transformOrigin: 'center', transformBox: 'fill-box' }, { scale: 1, duration: .5, ease: 'back.out(3)' }, V(76.06) + 1.3)
     .fromTo('#map', { opacity: 0 }, { opacity: 1, duration: .6 }, V(75.66) + .2);
   tl.fromTo('#s10cam', { rotationY: 5, x: 40 }, { rotationY: -4, x: -40, duration: 8, ease: 'tz-cam' }, 76.0);
-  tl.to('#s10cam', { z: 900, opacity: 0, filter: 'blur(16px)', duration: .6, ease: 'tz-in' }, 84.0);
 
   // ---- S11 · Organigrama (84.32 – 92.5): crane over the tree
-  show('#s11', 84.3, 92.0);
+  show('#s11', 84.35, 92.0);
   tl.set('#s11', { visibility: 'hidden' }, 91.95);
-  tl.fromTo('#s11cam', { z: -900, opacity: 0, filter: 'blur(14px)' }, { z: 0, opacity: 1, filter: 'blur(0px)', duration: 1.0 }, 84.3);
+  tl.fromTo('#s11cam', { z: 160 }, { z: 0, duration: 1.3 }, 84.35);
   rise('#s11 .head .m > *', V(79.32) - .3, .9);
   tl.fromTo('#s11 .chip2', { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: .7 }, V(80.1));
   tl.fromTo('#hlc', { color: '#FF5A1F' }, { keyframes: [{ color: '#F2EFE8', duration: .2 }, { color: '#FF5A1F', duration: .8 }] }, V(80.96))
@@ -876,7 +863,7 @@
 
   // ------------------------------------------------------------------ living background (deterministic, drawn per frame)
   const bg = $('#bgc').getContext('2d'), fg = $('#fgc').getContext('2d');
-  const TR = [2.9, 9.5, 18.0, 21.6, 28.3, 35.1, 40.6, 45.9, 49.0, 63.2, 75.6, 84.0, 91.5]; // camera moves / transitions
+  const TR = [2.9, 9.5, 17.95, 21.6, 28.3, 35.1, 40.6, 45.85, 48.75, 63.15, 75.45, 83.85, 91.3]; // camera moves / transitions
   const sm = x => x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x);
   const travel = t => .45 * t + TR.reduce((a, c) => a + 3.2 * sm((t - c) / .9 + .5), 0);
   const speed = t => (travel(t + .02) - travel(t - .02)) / .04;
@@ -903,11 +890,11 @@
     const hy = 600 + d.y * .4, vx = 960 + d.x * 2.5 + 140 * Math.sin(t * .05), F = 520, tv = travel(t);
     const px = (X, z) => vx + X * F * 1.25 / z, py = z => hy + F / z;
     g.lineWidth = 1;
-    for (let k = -18; k <= 18; k++) { const gr = g.createLinearGradient(0, hy, 0, H); gr.addColorStop(0, 'rgba(242,239,232,0)'); gr.addColorStop(1, `rgba(242,239,232,${k % 4 === 0 ? .09 : .045})`);
+    for (let k = -18; k <= 18; k++) { const gr = g.createLinearGradient(0, hy, 0, H); gr.addColorStop(0, 'rgba(242,239,232,0)'); gr.addColorStop(1, `rgba(242,239,232,${k % 4 === 0 ? .055 : .028})`);
       g.strokeStyle = gr; g.beginPath(); g.moveTo(px(k, 60), py(60)); g.lineTo(px(k, .45), py(.45)); g.stroke(); }
     for (let i = 0; i < 60; i++) { const z = ((i - tv) % 60 + 60) % 60 + .5; const y = py(z); if (y > H + 2) continue;
-      g.strokeStyle = `rgba(242,239,232,${.075 * clamp(1 - z / 45) * (i % 4 === 0 ? 1.6 : 1)})`; g.beginPath(); g.moveTo(0, y); g.lineTo(W, y); g.stroke(); }
-    for (const L of lanes) { const z = ((L.z0 - tv * L.v) % 44 + 44) % 44 + .6, z2 = z + L.len; const x1 = px(L.k + .5, z), y1 = py(z), x2 = px(L.k + .5, z2), y2 = py(z2);
+      g.strokeStyle = `rgba(242,239,232,${.045 * clamp(1 - z / 45) * (i % 4 === 0 ? 1.5 : 1)})`; g.beginPath(); g.moveTo(0, y); g.lineTo(W, y); g.stroke(); }
+    for (const L of []) { const z = ((L.z0 - tv * L.v) % 44 + 44) % 44 + .6, z2 = z + L.len; const x1 = px(L.k + .5, z), y1 = py(z), x2 = px(L.k + .5, z2), y2 = py(z2);
       const gr = g.createLinearGradient(x1, y1, x2, y2); gr.addColorStop(0, rgba(P.w, L.a * clamp(1.4 - z / 30))); gr.addColorStop(1, rgba(P.w, 0));
       g.strokeStyle = gr; g.lineWidth = Math.max(1, 7 / z); g.lineCap = 'round'; g.beginPath(); g.moveTo(x1, y1); g.lineTo(x2, y2); g.stroke(); }
     // horizon haze + top shade
@@ -916,7 +903,7 @@
   }
   // foreground: huge out-of-focus wheel rims sweep past the lens during camera moves
   function drawFG(t) {
-    const g = fg; g.clearRect(0, 0, 1920, 1080);
+    const g = fg; g.clearRect(0, 0, 1920, 1080); return;
     TR.forEach((c, i) => { const p = (t - c) / 1.1 + .5; if (p <= 0 || p >= 1) return;
       const r = KIT.rng(7 + i); r(); const side = i % 2 ? 1 : -1, y0 = 200 + r() * 700, R = 420 + r() * 260;
       const x = 960 + side * (-1500 + 3000 * E.cam(p)), a = Math.sin(Math.PI * p) * .5;
@@ -928,7 +915,7 @@
   const tc = t => { const f = Math.floor(t * 30); const p2 = n => String(n).padStart(2, '0'); return `00:${p2(Math.floor(f / 1800))}:${p2(Math.floor(f / 30) % 60)}:${p2(f % 30)}`; };
 
   // chapter numbers fly past the camera at every chapter change (typographic transition)
-  const CF = [[9.55, '02', 'público objetivo'], [18.05, '03', 'funciones'], [48.75, '04', 'objetivos SMART'], [63.15, '05', 'supervisión'], [75.55, '06', 'factores'], [83.95, '07', 'organigrama']];
+  const CF = [];
   $('#chapfly').innerHTML = CF.map((c, i) => `<div class="cfly" id="cf${i}"><div class="n">${c[1]}</div><div class="t">${c[2]}</div></div>`).join('');
   CF.forEach((c, i) => { tl.fromTo(`#cf${i}`, { z: -2600, opacity: 0 }, { z: 1100, duration: 1.25, ease: 'tz-cam' }, c[0])
       .fromTo(`#cf${i}`, { opacity: 0 }, { keyframes: [{ opacity: 1, duration: .45 }, { opacity: 1, duration: .35 }, { opacity: 0, duration: .45 }] }, c[0]); });
@@ -963,6 +950,11 @@
   tl.fromTo('#s9cam', { rotationY: -4 }, { rotationY: 4, duration: 12, ease: 'none' }, 63.5);
   tl.fromTo('#s12cam', { y: -40 }, { y: 0, duration: 4, ease: 'tz-soft' }, 92.0);
 
+  // ---- the TRAZO wipe: an orange stroke sweeps the frame, an ink stroke follows; the scene changes underneath
+  gsap.set('.wp', { skewX: -14, x: -2900 });
+  const wipe = at => { tl.fromTo('#wp1', { x: -2900 }, { x: 2900, duration: 1.0, ease: 'tz-cam' }, at).fromTo('#wp2', { x: -2900 }, { x: 2900, duration: 1.0, ease: 'tz-cam' }, at + .05); };
+  [17.95, 45.85, 48.75, 63.15, 75.45, 83.85].forEach(wipe);
+
   // ------------------------------------------------------------------ HUD + seek
   const CH = [[9.66, '02', 'Público objetivo'], [18.6, '03', 'Funciones del departamento'], [49.08, '04', 'Objetivos SMART'], [63.62, '05', 'Supervisión y control'], [76.0, '06', 'Factores'], [84.32, '07', 'Estructura organizativa']];
   let lastCh = '';
@@ -980,11 +972,8 @@
     const d = drift(t);
     $('#world').style.transform = `translate(${d.x}px, ${d.y}px) rotate(${d.r}deg)`;
     drawBG(t, d); drawFG(t);
-    $('#tc').textContent = 'TC ' + tc(t);
     $('#progbar').style.transform = `scaleX(${clamp(t / DUR)})`;
     hud(t); pose3d(t);
-    if (t > 49 && t < 64) { const c = $('#curve'), off = parseFloat(c.getAttribute('stroke-dashoffset') ?? 1), L = c.getTotalLength();
-      $('#revealr').setAttribute('width', off >= 1 ? 0 : c.getPointAtLength((1 - off) * L).x); }
   };
   window.DURATION = DUR;
   window.seek(Number(new URLSearchParams(location.search).get('t') || 6));
