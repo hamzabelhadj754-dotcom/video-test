@@ -28,3 +28,4 @@ out/sheet_*.png
 out/r[0-9]*/
 out/*.log
 audio/ruta_bed.wav
+out/review_ruta*/
