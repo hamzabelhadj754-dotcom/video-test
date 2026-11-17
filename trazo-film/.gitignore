@@ -1,2 +1,4 @@
 node_modules/
 out/frames/
+out/t_*.png
+out/review_open/

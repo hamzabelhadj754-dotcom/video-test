@@ -48,3 +48,27 @@
 - No Higgsfield / no AI image generation (user request). Everything code-built.
 - Added: Instrument Serif italic (accent voice), line-art e-bike (KIT.bike), 3D social post card, glass review panel, TRAZO Care loyalty card, 3D-tilted org chart, side credits, barcode, dust layer.
 - Opening is light (paper #EEEAE1) → film switches to dark at chapter 02.
+
+## v3 direction: real 3D product hero (user: "más y más profesional")
+- three.js e-bike built from primitives (src/bike3d.js): graphite clearcoat frame, orange battery + motor ring, studio env lighting, VSM soft shadows, AgX tone mapping, orange rim light.
+- Hero: giant "TRAZO." behind the bike (type passes behind product), technical callouts anchored to projected 3D points (motor 250 W, batería 80 km, 25 km/h).
+- Motion: bike rolls in with wheels rotating by distance (expo-out), letters rise from mask with blur→sharp, callout dots pop, lines draw, labels slide from masks, word-by-word paragraph, rim light sweep, camera push + drift.
+- Pipeline: src/film.html exposes window.seek(t) (GSAP paused timeline + three render). tools/render.js renders 60 fps → tmix 2 → 30 fps (motion blur), H.264 CRF 16 BT.709. tools/render-par.sh splits into 4 parallel chunks.
+- Sound: tools/sound.py synthesizes original SFX + music bed from a cue JSON (no licensed audio needed). Target -14 LUFS, TP ≤ -1 dB.
+
+## Storyboard v3 (90 s)
+| Time | Scene | Content | Transition out |
+|---|---|---|---|
+| 0–8 | Hero | 3D bike + TRAZO. + callouts | push into battery → orange color field |
+| 8–17 | Público objetivo | particulares 18–40 / empresas con flotas | line-led |
+| 17–21 | Funciones intro | "Cuatro funciones. Una venta." | typographic |
+| 21–27 | Captación | 3D social post | card flip |
+| 27–33 | Fidelización | glass reviews + TRAZO Care card | card slides |
+| 33–38 | Análisis de mercado | dashboard: ventas por zona, encuestas | chart line continues |
+| 38–43 | Gestión administrativa | pedido → factura → financiación | rows collapse |
+| 43–48 | Tabla resumen | 4 x 3 table builds | line becomes chart |
+| 48–60 | Objetivos SMART | growth curve, counters | hard cut on beat |
+| 60–70 | Supervisión + motivación | weekly cadence + KPI panel + 3 measures | match cut |
+| 70–78 | Factores | internos / externos, Valencia | line branches |
+| 78–86 | Organigrama | 3D tree grows | camera pulls back |
+| 86–90 | End card | bike + TRAZO. + gracias | boom |
