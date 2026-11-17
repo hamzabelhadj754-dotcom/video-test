@@ -49,3 +49,6 @@ body { color: var(--paper); font-family: var(--text); -webkit-font-smoothing: an
 .brackets::after { right: -26px; bottom: -22px; border-left: 0; border-top: 0; }
 .dashed { border: 2px dashed currentColor; padding: 10px 26px; border-radius: 14px; display: inline-block; }
 .dust { position: absolute; inset: 0; pointer-events: none; z-index: 48; opacity: .55; mix-blend-mode: screen; }
+
+@font-face { font-family: "InterTight"; src: url("../fonts/intertight-latin.woff2") format("woff2"); font-weight: 100 900; font-display: block; unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+2000-206F, U+20AC, U+2122, U+2212; }
+@font-face { font-family: "InterTight"; src: url("../fonts/intertight-ext.woff2") format("woff2"); font-weight: 100 900; font-display: block; unicode-range: U+0100-024F, U+1E00-1EFF; }

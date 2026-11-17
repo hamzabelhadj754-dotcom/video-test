@@ -95,27 +95,27 @@ export function buildBike({ frameColor = '#ECE8DF', accent = '#FF5A1F' } = {}) {
   return bike;
 }
 
-export function studio(renderer, { glow = '#FF5A1F' } = {}) {
+export function studio(renderer, { glow = '#FF5A1F', light = false } = {}) {
   const scene = new THREE.Scene();
   renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.VSMShadowMap;
-  renderer.toneMapping = THREE.AgXToneMapping; renderer.toneMappingExposure = 1.15;
+  renderer.toneMapping = THREE.AgXToneMapping; renderer.toneMappingExposure = light ? 1.0 : 1.15;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   // soft environment for reflections
   const pm = new THREE.PMREMGenerator(renderer);
   const envScene = new THREE.Scene();
-  const box = new THREE.Mesh(new THREE.BoxGeometry(20, 20, 20), new THREE.MeshBasicMaterial({ color: '#0e0f11', side: THREE.BackSide })); envScene.add(box);
+  const box = new THREE.Mesh(new THREE.BoxGeometry(20, 20, 20), new THREE.MeshBasicMaterial({ color: light ? '#bdbdb9' : '#0e0f11', side: THREE.BackSide })); envScene.add(box);
   const panel = (c, i, p, s) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(s[0], s[1]), new THREE.MeshBasicMaterial({ color: new THREE.Color(c).multiplyScalar(i), side: THREE.DoubleSide })); m.position.set(...p); m.lookAt(0, 0, 0); envScene.add(m); };
-  panel('#ffffff', 6, [0, 9, 2], [12, 3]); panel('#ffffff', 3, [-9, 3, 4], [3, 8]); panel(glow, 4, [9, 2, -6], [4, 9]);
+  panel('#ffffff', 6, [0, 9, 2], [12, 3]); panel('#ffffff', 3, [-9, 3, 4], [3, 8]); panel(light ? '#ffffff' : glow, light ? 2 : 4, [9, 2, -6], [4, 9]);
   scene.environment = pm.fromScene(envScene, .02).texture;
 
-  const key = new THREE.DirectionalLight('#fff3e6', 2.2); key.position.set(-3, 9, 6); key.castShadow = true;
+  const key = new THREE.DirectionalLight(light ? '#ffffff' : '#fff3e6', light ? 2.4 : 2.2); key.position.set(-3, 9, 6); key.castShadow = true;
   key.shadow.mapSize.set(2048, 2048); key.shadow.radius = 14; key.shadow.blurSamples = 20;
   Object.assign(key.shadow.camera, { left: -6, right: 10, top: 6, bottom: -6, near: .5, far: 30 }); key.target.position.set(2.8, 0, 0);
   scene.add(key, key.target);
-  const rim = new THREE.DirectionalLight(glow, 3.2); rim.position.set(6, 3, -7); scene.add(rim);
-  const fill = new THREE.DirectionalLight('#9fb4d6', .35); fill.position.set(8, 2, 6); scene.add(fill);
+  const rim = new THREE.DirectionalLight(light ? '#ffffff' : glow, 3.2); rim.position.set(6, 3, -7); scene.add(rim);
+  const fill = new THREE.DirectionalLight(light ? '#ffffff' : '#9fb4d6', light ? .9 : .35); fill.position.set(8, 2, 6); scene.add(fill);
 
-  const floor = new THREE.Mesh(new THREE.PlaneGeometry(60, 60), new THREE.ShadowMaterial({ opacity: .55 }));
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(60, 60), new THREE.ShadowMaterial({ opacity: light ? .22 : .55 }));
   floor.rotation.x = -Math.PI / 2; floor.position.y = -1.585; floor.receiveShadow = true; scene.add(floor);
   scene.userData = { key, rim, fill, floor };
   return scene;
