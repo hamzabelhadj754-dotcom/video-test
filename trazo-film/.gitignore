@@ -21,3 +21,5 @@ out/p*.log
 out/patch_*.mp4
 out/review_v03/
 out/seg/
+out/probe*/
+out/psheet*.png

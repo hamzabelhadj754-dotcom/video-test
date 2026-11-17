@@ -283,6 +283,8 @@
   #s12 .credit { position: absolute; left: 120px; right: 120px; bottom: 40px; display: flex; justify-content: space-between; font-size: 17px; letter-spacing: .18em; text-transform: uppercase; color: var(--mute); }
   #s12 .credit b { color: var(--paper); font-weight: 600; }
 
+  .wd { display: inline-block; overflow: hidden; vertical-align: bottom; padding: 0 .02em .1em; margin: 0 -.02em -.1em; }
+  .wd > i { display: inline-block; font-style: inherit; }
   /* ================= WHITE STUDIO THEME (Apple-grade) ================= */
   :root { --ink: #1D1D1F; --ink-2: #FFFFFF; --paper: #1D1D1F; --mute: #86868B; --line: #E3E3E0; --display: "InterTight", sans-serif; --text: "InterTight", sans-serif; --serif: "InterTight", sans-serif; }
   html, body, .stage { background: #F4F4F2; }
@@ -338,6 +340,13 @@
   #s10 .divider { background: linear-gradient(180deg, var(--signal), rgba(255,90,31,.05)); }
   .gcur { filter: drop-shadow(0 6px 10px rgba(0,0,0,.18)); }
   #s2 { z-index: 4; }
+  #curveglow { display: none; }
+  #s8 .acr { left: auto; right: 120px; bottom: auto; top: 178px; gap: 28px; }
+  .panel .word .dashed { border: 0; padding: 0; }
+  .panel .word .big { font-size: 150px; letter-spacing: -0.05em; }
+  .panel .kick { font-size: 52px; color: #86868B; }
+  .tagz span, #s11 .chip2 .dashed { border-style: solid; }
+  #s12 .logo .ch { background: linear-gradient(100deg, #1D1D1F 40%, #A1A1A6 50%, #1D1D1F 60%); background-size: 320% 100%; background-position: 100% 0; -webkit-background-clip: text; color: transparent; }
   #s3 .four { left: 560px; font-weight: 800; }
   #s3 .fun { left: 1060px; }
   #s3 .names { left: 1066px; }
@@ -454,7 +463,7 @@
         <div class="glow" style="left:1100px;top:180px;width:700px;height:640px;background:#FF5A1F;opacity:.12"></div>
         <div class="left">
           <div class="kick ser"><span class="m"><span>Para decidir con datos:</span></span></div>
-          <div class="word"><span class="dashed"><span class="big" style="font-size:118px">Análisis de mercado</span></span></div>
+          <div class="word"><span class="dashed"><span class="big" style="font-size:124px">Análisis de mercado</span></span></div>
           <ul class="acts">
             <li><b>01</b><div>Encuestas post-venta<em>Después de cada compra</em></div></li>
             <li><b>02</b><div>Estudio de la competencia<em>Precios, cuotas y servicio</em></div></li>
@@ -477,7 +486,7 @@
         <div class="glow" style="left:1100px;top:160px;width:700px;height:700px;background:#FF5A1F;opacity:.14"></div>
         <div class="left">
           <div class="kick ser"><span class="m"><span>Y que todo funcione:</span></span></div>
-          <div class="word"><span class="dashed"><span class="big" style="font-size:118px">Gestión administrativa</span></span></div>
+          <div class="word"><span class="dashed"><span class="big" style="font-size:124px">Gestión administrativa</span></span></div>
           <ul class="acts">
             <li><b>01</b><div>Pedidos y facturas en el CRM<em>Del pedido a la factura, sin papel</em></div></li>
             <li><b>02</b><div>Financiación<em>Hasta 12 meses sin intereses</em></div></li>
@@ -633,6 +642,12 @@
   $('#cur1').innerHTML = KIT.cursor('#0C0D0F');
   $('#fleet').innerHTML = Array.from({ length: 12 }, () => `<svg viewBox="-190 -360 960 540">${KIT.bike({ stroke: '#1D1D1F', accent: '#FF5A1F', sw: 14, spokes: false })}</svg>`).join('');
   $('#people').innerHTML = Array.from({ length: 12 }, (_, i) => `<i class="${i < 1 ? 'o' : ''}"></i>`).join('');
+  // split headlines into words, each word rises from its own mask (keynote-style)
+  const splitWords = sel => $$(sel).forEach(root => { const walk = n => { [...n.childNodes].forEach(c => {
+      if (c.nodeType === 3) { const parts = c.textContent.split(/(\s+)/); const frag = document.createDocumentFragment();
+        parts.forEach(w => { if (!w) return; if (/^\s+$/.test(w)) frag.appendChild(document.createTextNode(w)); else { const o = document.createElement('span'); o.className = 'wd'; const i = document.createElement('i'); i.textContent = w; o.appendChild(i); frag.appendChild(o); } });
+        c.replaceWith(frag); } else if (c.nodeType === 1 && !c.classList.contains('wd')) walk(c); }); }; walk(root); });
+  ['#s2 .title', '#s3 .pre', '#s3 .fun', '#st .h2', '#smt', '#q', '#motiv .mtitle', '#s10 .colh', '#s11 .head', '#s12 .tag', '#s12 .thanks', '#s1f .top .ser', '.panel .kick', '.panel .word .big', '#s0 .pres'].forEach(splitWords);
   const para = $('#para'); para.innerHTML = para.textContent.split(' ').map(w => `<span style="display:inline-block">${w}</span>`).join(' ');
 
   // SMART chart geometry (fixed frame, no pan)
@@ -720,7 +735,7 @@
   // ---- S0 · Presentado por Yasser (0 – 3.4)
   show('#s0', 0, 3.45);
   tl.fromTo('#s0line', { attr: { 'stroke-dashoffset': 1 } }, { attr: { 'stroke-dashoffset': 0 }, duration: 2.2, ease: 'tz-cam' }, .1);
-  rise('#s0 .pres .m > *', .35, 1.0);
+  rise('#s0 .pres .wd > i', .35, 1.0);
   tl.fromTo('#yname', { yPercent: 110, filter: 'blur(14px)' }, { yPercent: 0, filter: 'blur(0px)', duration: 1.2 }, .55);
   rise('#s0 .meta .m > *', 1.0, .9);
   tl.fromTo('#s0 .cam', { scale: .94 }, { scale: 1.0, duration: 3.0, ease: 'none' }, 0);
@@ -733,7 +748,7 @@
     .fromTo('#giant .ch', { yPercent: 105, filter: 'blur(14px)' }, { yPercent: 0, filter: 'blur(0px)', duration: 1.1, stagger: .06 }, 3.55)
     .fromTo('#giant .dot', { scale: 0, transformOrigin: '50% 80%' }, { scale: 1, duration: .6, ease: 'back.out(2.2)' }, 4.35)
     .fromTo('#giant', { x: 18 }, { x: -22, duration: 6.5, ease: 'none' }, 3.4);
-  rise('#s1f .top .m > *', 4.5);
+  rise('#s1f .top .wd > i', 4.5);
   blurIn('#meta > *', 4.6, .7, .08, 12);
   specs.forEach((s, i) => { const t0 = 5.2 + i * .22;
     tl.fromTo(`#c${i} .dotc`, { scale: 0, transformOrigin: 'center', transformBox: 'fill-box' }, { scale: 1, duration: .5, ease: 'back.out(3)' }, t0)
@@ -752,7 +767,7 @@
 
   // ---- S2 · Público objetivo (9.66 – 18.6)
   show('#s2', 9.4, 18.45); show('#hud', 9.95, 91.8);
-    rise('#s2 .title .m > *', 10.15, 1.0, .1);
+    rise('#s2 .title .wd > i', 10.15, 1.0, .1);
   tl.fromTo('#pa > *:not(.num)', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: .8, stagger: .07 }, 10.5);
   tl.fromTo('#person', { strokeDasharray: 600, strokeDashoffset: 600 }, { strokeDashoffset: 0, duration: 1.2, ease: 'tz-cam' }, 10.9);
   tl.fromTo('#pa .num', { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: .9 }, V(8.96) - .45);
@@ -767,9 +782,9 @@
 
   // ---- S3 · Cuatro funciones (18.6 – 22.04)
   show('#s3', 18.45, 22.3);
-  rise('#s3 .pre .m > *', V(15.2) - .2, .9);
+  rise('#s3 .pre .wd > i', V(15.2) - .2, .9);
   tl.fromTo('#four', { yPercent: 60, opacity: 0, scale: .7, filter: 'blur(20px)' }, { yPercent: 0, opacity: 1, scale: 1, filter: 'blur(0px)', duration: .9 }, V(17.04) - .25);
-  rise('#s3 .fun .m > *', V(17.42) - .1, .9);
+  rise('#s3 .fun .wd > i', V(17.42) - .1, .9);
   tl.fromTo('#fnames span', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: .5, stagger: .08 }, V(17.42) + .2);
   tl.to('#s3cam', { x: -30, duration: 3.5, ease: 'none' }, 18.4);
   // scale-through the counter of the 4
@@ -786,8 +801,8 @@
       .fromTo('#sfcam', { rotationY: 0, rotationX: 0 }, { keyframes: [{ rotationY: -12, rotationX: 4, z: -340, duration: .45, ease: 'tz-in' }, { rotationY: 0, rotationX: 0, z: 0, duration: .45, ease: 'tz-out' }] }, at);
   };
   const fnIn = (n, at, items) => {
-    rise(`#f${n} .kick .m > *`, at - .05, .8);
-    tl.fromTo(`#f${n} .word`, { opacity: 0, y: 40, filter: 'blur(12px)' }, { opacity: 1, y: 0, filter: 'blur(0px)', duration: .8 }, at);
+    rise(`#f${n} .kick .wd > i`, at - .05, .8, .04);
+    rise(`#f${n} .word .wd > i`, at + .05, .95, .07);
     items.forEach((ti, k) => tl.fromTo(`#f${n} .acts li:nth-child(${k + 1})`, { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: .7 }, ti - .15));
   };
   // Captación
@@ -832,7 +847,7 @@
   // ---- Summary table (46.4 – 49.1)
   show('#st', 46.35, 49.25);
   tl.fromTo('#stcam', { z: 160 }, { z: 0, duration: 1.3 }, 46.35);
-  rise('#st .h2 .m > *', 46.45, .9);
+  rise('#st .h2 .wd > i', 46.45, .9);
   tl.fromTo('#rows .rowt', { opacity: 0, x: 80 }, { opacity: 1, x: 0, duration: .7, stagger: .14 }, 46.6)
     .fromTo('#rows .rowt .a span', { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: .5, stagger: .03 }, 46.9)
     .fromTo('#rows .hl', { scaleX: 0 }, { scaleX: 1, duration: .6, stagger: .3 }, 47.4)
@@ -840,7 +855,7 @@
 
   // ---- S8 · SMART (49.25 – 63.6): one clean chart, the line draws objective by objective
   show('#s8', 49.25, 63.65);
-  rise('#smt .m > *', V(43.86) - .25, 1.0);
+  rise('#smt .wd > i', V(43.86) - .25, 1.0);
   tl.fromTo('#acr > div', { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: .6, stagger: .07 }, V(44.16));
   const draw = (from, to, at, d) => tl.fromTo(['#curve', '#curveglow'], { attr: { 'stroke-dashoffset': CL - from } }, { attr: { 'stroke-dashoffset': CL - to }, duration: d, ease: 'tz-cam', immediateRender: from === 0 }, at);
   draw(0, FR[0], V(44.8), 1.3); draw(FR[0], FR[1], V(50.82) - 1.0, 1.2); draw(FR[1], FR[2], V(54.14) - 1.0, 1.2); draw(FR[2], CL, V(56.4), 1.0);
@@ -857,7 +872,7 @@
   // ---- S9 · Supervisión (63.62 – 76.0): question → truck along 3 cards → crane down to motivation
   show('#s9', 63.65, 75.95);
   tl.fromTo('#s9cam', { z: 140 }, { z: 0, duration: 1.2 }, 63.65);
-  rise('#q .m > *', V(57.62) + .12, .9);
+  rise('#q .wd > i', V(57.62) + .12, .9);
   tl.to('#q', { scale: .4, y: -330, opacity: 0, duration: .8, ease: 'tz-in' }, V(59.18) - .7);
   const svIn = (sel, at) => tl.fromTo(sel, { opacity: 0, rotationY: 50, z: -400, y: 60 }, { opacity: 1, rotationY: 0, z: 0, y: 0, duration: 1.0 }, at);
   svIn('#sv1', V(59.18) - .3); svIn('#sv2', V(60.76) - .3); svIn('#sv3', V(62.84) - .3);
@@ -873,7 +888,7 @@
   // crane down to the motivation row
   tl.to('#s9cam', { y: -1080, rotationX: -6, duration: 1.1, ease: 'tz-cam' }, V(65.1) - .3)
     .to('#s9cam', { rotationX: 0, duration: .8, ease: 'tz-out' }, V(65.1) + .8);
-  rise('#motiv .mtitle .m > *', V(65.3), .9);
+  rise('#motiv .mtitle .wd > i', V(65.3), .9);
   const bIn = (s, at) => tl.fromTo(s, { opacity: 0, y: 80, scale: .8 }, { opacity: 1, y: 0, scale: 1, duration: .8, ease: 'back.out(1.6)' }, at);
   bIn('#b1', V(66.74) - .15); bIn('#b2', V(67.84) - .15); bIn('#b3', V(68.62) - .15);
   tl.fromTo('#b3 svg', { rotation: -180, scale: 0 }, { rotation: 0, scale: 1, duration: .9, ease: 'back.out(2)' }, V(68.62));
@@ -881,7 +896,7 @@
   // ---- S10 · Factores (76.0 – 84.3)
   show('#s10', 75.95, 84.35);
   tl.fromTo('#divider', { scaleY: 0 }, { scaleY: 1, duration: 1.2, ease: 'tz-cam' }, 76.0);
-  rise('#s10 .colh .m > *', 76.1, .9, .2);
+  rise('#s10 .colh .wd > i', 76.1, .9, .2);
   const fxIn = (s, at) => tl.fromTo(`${s} > *`, { opacity: 0, y: 30, filter: 'blur(8px)' }, { opacity: 1, y: 0, filter: 'blur(0px)', duration: .7, stagger: .08 }, at);
   fxIn('#fx1', V(70.46) - .2); tl.fromTo('#people i', { scale: 0 }, { scale: 1, duration: .35, stagger: .04, ease: 'back.out(3)' }, V(70.94));
   fxIn('#fx2', V(71.88) - .2); fxIn('#fx3', V(73.72)); fxIn('#fx4', V(75.66));
@@ -894,7 +909,7 @@
   show('#s11', 84.35, 92.0);
   tl.set('#s11', { visibility: 'hidden' }, 91.95);
   tl.fromTo('#s11cam', { z: 160 }, { z: 0, duration: 1.3 }, 84.35);
-  rise('#s11 .head .m > *', V(79.32) - .3, .9);
+  rise('#s11 .head .wd > i', V(79.32) - .3, .9);
   tl.fromTo('#s11 .chip2', { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: .7 }, V(80.1));
   tl.fromTo('#hlc', { color: '#FF5A1F' }, { keyframes: [{ color: '#F2EFE8', duration: .2 }, { color: '#FF5A1F', duration: .8 }] }, V(80.96))
     .fromTo('#hlk', { color: '#FF5A1F' }, { keyframes: [{ color: '#F2EFE8', duration: .2 }, { color: '#FF5A1F', duration: .8 }] }, V(81.88));
@@ -914,8 +929,9 @@
   show('#s12', 91.9);
   tl.fromTo('#elogo .ch', { yPercent: 110, filter: 'blur(14px)' }, { yPercent: 0, filter: 'blur(0px)', duration: 1.0, stagger: .06 }, V(86.54) - .4)
     .fromTo('#elogo .dot', { scale: 0, transformOrigin: '50% 80%' }, { scale: 1, duration: .6, ease: 'back.out(2.2)' }, V(86.54) + .3);
-  rise('#s12 .tag .m > *', V(87.42) - .1, 1.0);
-  rise('#s12 .thanks .m > *', V(89.84) - .15, 1.0);
+  tl.fromTo('#elogo .ch', { backgroundPosition: '100% 0' }, { backgroundPosition: '0% 0', duration: 1.8, ease: 'tz-cam', stagger: .05 }, V(88.04));
+  rise('#s12 .tag .wd > i', V(87.42) - .1, 1.0);
+  rise('#s12 .thanks .wd > i', V(89.84) - .15, 1.0);
   tl.fromTo('#credit > span', { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: .8, stagger: .15 }, V(89.84) + .4);
   tl.fromTo('#s12cam', { scale: 1.04 }, { scale: 1, duration: 7, ease: 'tz-soft' }, 92.0);
   tl.to({}, { duration: .01 }, DUR);
