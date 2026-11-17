@@ -1,0 +1,6 @@
+black_start:18.4833 black_end:18.5333
+black_start:46.3833 black_end:46.4333
+black_start:49.2833 black_end:49.35
+black_start:63.6833 black_end:63.7333
+black_start:75.9833 black_end:76.0333
+black_start:84.3833 black_end:84.4333

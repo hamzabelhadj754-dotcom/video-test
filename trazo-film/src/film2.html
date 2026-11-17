@@ -973,6 +973,7 @@
     $('#world').style.transform = `translate(${d.x}px, ${d.y}px) rotate(${d.r}deg)`;
     drawBG(t, d); drawFG(t);
     $('#progbar').style.transform = `scaleX(${clamp(t / DUR)})`;
+    { const W = [[46.75, 49.0], [V(36.36) + .15, V(37.76) - .4], [84.95, 87.35]]; $('#gcur').style.visibility = W.some(([a, b]) => t >= a && t <= b) ? 'visible' : 'hidden'; }
     hud(t); pose3d(t);
   };
   window.DURATION = DUR;
