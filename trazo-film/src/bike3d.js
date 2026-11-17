@@ -1,5 +1,6 @@
 // TRAZO 3D e-bike, built from primitives (deterministic). Units: 1 = 100 design px.
 import * as THREE from 'three';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 
 export function buildBike({ frameColor = '#ECE8DF', accent = '#FF5A1F' } = {}) {
   const bike = new THREE.Group();
@@ -55,8 +56,16 @@ export function buildBike({ frameColor = '#ECE8DF', accent = '#FF5A1F' } = {}) {
     tube([v(HT0.x, HT0.y, z * .3), v(5.1, 1.0, z), v(5.6, 0, z)], .038, M.frame);
   }
   // battery on the down tube
-  const bpts = []; for (let t = .22; t <= .78; t += .02) bpts.push(down.getPoint(t).add(v(-.05, .09, 0)));
-  tube(bpts, .115, M.accent, 48);
+  const b0 = down.getPoint(.24), b1 = down.getPoint(.74), bdir = b1.clone().sub(b0), blen = bdir.length();
+  const batt = new THREE.Mesh(new RoundedBoxGeometry(blen, .26, .24, 6, .09), M.accent);
+  batt.position.copy(b0.clone().add(b1).multiplyScalar(.5)).add(v(-.08, .13, 0)); batt.rotation.z = Math.atan2(bdir.y, bdir.x); batt.castShadow = true; bike.add(batt);
+  const cap = new THREE.Mesh(new RoundedBoxGeometry(.16, .28, .26, 4, .05), M.dark); cap.position.copy(b1).add(v(-.12, .16, 0)); cap.rotation.z = batt.rotation.z; bike.add(cap);
+  const led = new THREE.Mesh(new THREE.BoxGeometry(.3, .02, .245), new THREE.MeshBasicMaterial({ color: '#fff1e6' })); led.position.copy(batt.position).add(v(-.02, .12, 0)); led.rotation.z = batt.rotation.z; bike.add(led);
+  // handlebar display
+  const disp = new THREE.Mesh(new RoundedBoxGeometry(.22, .05, .16, 3, .02), M.dark); disp.position.set(4.7, 3.2, 0); bike.add(disp);
+  const scr = new THREE.Mesh(new THREE.PlaneGeometry(.16, .1), new THREE.MeshBasicMaterial({ color: '#FF7A45' })); scr.rotation.x = -Math.PI / 2; scr.position.set(4.7, 3.226, 0); bike.add(scr);
+  // chain guard
+  const cg = new THREE.Mesh(new RoundedBoxGeometry(2.0, .16, .04, 3, .02), M.dark); cg.position.set(1.2, .12, .19); cg.rotation.z = Math.atan2(.12, 2.38); bike.add(cg);
   // cockpit
   tube([HT1, v(4.72, 3.12)], .045, M.dark);
   tube([v(4.62, 3.16, -.42), v(4.72, 3.14, 0), v(4.62, 3.16, .42)], .03, M.dark);
@@ -82,7 +91,7 @@ export function buildBike({ frameColor = '#ECE8DF', accent = '#FF5A1F' } = {}) {
   const fender = (c, a0, a1) => { const pts = []; for (let a = a0; a <= a1; a += .1) pts.push(v(c.x + Math.cos(a) * 1.66, c.y + Math.sin(a) * 1.66, 0)); tube(pts, .05, M.frame, 48); };
   fender(RA, .35, 2.6); fender(FA, .5, 2.4);
 
-  bike.userData = { rearWheel, frontWheel, crank, anchors: { battery: down.getPoint(.5).add(v(-.07, .12, 0)), motor: RA.clone(), light: v(5.08, 2.45, 0), saddle: v(2.05, 2.8, 0) } };
+  bike.userData = { rearWheel, frontWheel, crank, anchors: { battery: down.getPoint(.5).add(v(-.08, .13, 0)), motor: RA.clone(), light: v(5.08, 2.45, 0), saddle: v(2.05, 2.8, 0) } };
   return bike;
 }
 

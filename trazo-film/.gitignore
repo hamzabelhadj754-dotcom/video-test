@@ -3,3 +3,9 @@ out/frames/
 out/t_*.png
 out/review_open/
 out/review_v02/
+out/probe/
+out/psheet.png
+out/*_silent.mp4
+out/render_*.log
+audio/vo_placed.wav
+audio/bed.wav
