@@ -16,3 +16,7 @@ out/*_silent.mp4
 out/*.mp4
 !out/trazo_opening_v02.mp4
 out/look/
+out/p*.mp4
+out/p*.log
+out/patch_*.mp4
+out/review_v03/
