@@ -684,23 +684,25 @@
   tl.fromTo('#tagz span', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: .6, stagger: .32 }, V(3.76));
   // exit: DOM layers flare out as the 3D camera pushes into the battery; orange field takes the frame
   tl.to(['#s1cam', '#s1fcam'], { scale: 2.4, opacity: 0, filter: 'blur(14px)', duration: .8, ease: 'tz-in', transformOrigin: '50% 55%' }, 9.0);
-  show('#orange', 9.55, 10.75);
-  tl.fromTo('#orange', { left: 900, top: 520, width: 120, height: 60, borderRadius: 30, opacity: 0 }, { left: 0, top: 0, width: 1920, height: 1080, borderRadius: 0, opacity: 1, duration: .4, ease: 'tz-in' }, 9.55);
+  // the orange of the battery opens from its exact screen position and fills the frame (match cut)
+  pose3d(9.4); bike.updateMatrixWorld(); cam.updateMatrixWorld(); const [BX, BY] = proj(A.battery);
+  show('#orange', 9.4, 10.62);
+  tl.fromTo('#orange', { left: 0, top: 0, width: 1920, height: 1080, borderRadius: 0, opacity: 1, clipPath: `circle(0px at ${BX}px ${BY}px)` }, { clipPath: `circle(2400px at ${BX}px ${BY}px)`, duration: .48, ease: 'tz-in' }, 9.4);
   // the color field becomes card A of the next scene (shape morph)
-  tl.to('#orange', { left: 150, top: 360, width: 780, height: 590, borderRadius: 36, duration: .8, ease: 'tz-out' }, 9.95);
+  tl.to('#orange', { left: 150, top: 360, width: 780, height: 590, borderRadius: 36, duration: .75, ease: 'tz-out' }, 9.88);
 
   // ---- S2 · Público objetivo (9.66 – 18.6)
   show('#s2', 9.95, 18.45); show('#hud', 9.95, 91.8);
-  tl.set('#pa', { opacity: 0 }, 0).set('#pa', { opacity: 1 }, 10.72);
+  tl.set('#pa', { opacity: 0 }, 0).set('#pa', { opacity: 1 }, 10.6);
   rise('#s2 .title .m > *', V(6.26) - .1, 1.0, .1);
-  tl.fromTo('#pa > *', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: .7, stagger: .06 }, 10.75);
+  tl.fromTo('#pa > *:not(.num)', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: .7, stagger: .06 }, 10.62);
   tl.fromTo('#person', { strokeDasharray: 600, strokeDashoffset: 600 }, { strokeDashoffset: 0, duration: 1.2, ease: 'tz-cam' }, 10.9);
   tl.fromTo('#pa .num', { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: .9 }, V(8.96) - .45);
   tl.fromTo('#pa .chips span', { opacity: 0, x: 30 }, { opacity: 1, x: 0, duration: .6, stagger: .15 }, V(10.6));
   tl.fromTo('#pb', { opacity: 0, x: 220, rotationY: -25, z: -300 }, { opacity: 1, x: 0, rotationY: 0, z: 0, duration: 1.1 }, V(12.2));
   tl.fromTo('#fleet svg', { opacity: 0, scale: .6 }, { opacity: 1, scale: 1, duration: .45, stagger: .05, ease: 'back.out(2)' }, V(13.4));
   // camera: truck + yaw from card A to card B, rack focus
-  tl.fromTo('#s2cam', { x: 160, rotationY: 7, z: -60 }, { x: 70, rotationY: 4, z: 0, duration: 5.2, ease: 'tz-cam' }, 9.95)
+  tl.fromTo('#s2cam', { x: 0, rotationY: 0, z: 0 }, { x: 40, rotationY: 3, z: 30, duration: 4.6, ease: 'tz-cam' }, 10.62)
     .to('#s2cam', { x: -150, rotationY: -6, z: 40, duration: 2.6, ease: 'tz-cam' }, V(12.0));
   tl.to('#pa', { filter: 'blur(5px)', opacity: .55, duration: 1.0, ease: 'tz-cam' }, V(12.3))
     .to('#pa', { filter: 'blur(0px)', opacity: 1, duration: .8, ease: 'tz-cam' }, V(14.3));
@@ -839,11 +841,11 @@
   tl.fromTo('#hlc', { color: '#FF5A1F' }, { keyframes: [{ color: '#F2EFE8', duration: .2 }, { color: '#FF5A1F', duration: .8 }] }, V(80.96))
     .fromTo('#hlk', { color: '#FF5A1F' }, { keyframes: [{ color: '#F2EFE8', duration: .2 }, { color: '#FF5A1F', duration: .8 }] }, V(81.88));
   tl.fromTo('#n0', { opacity: 0, scale: .7 }, { opacity: 1, scale: 1, duration: .7, ease: 'back.out(2)' }, 84.7);
-  tl.fromTo('#br0', { attr: { 'stroke-dashoffset': 1 } }, { attr: { 'stroke-dashoffset': 0 }, duration: .5 }, V(80.76));
-  tl.fromTo(['#br1', '#br2', '#br3'], { attr: { 'stroke-dashoffset': 1 } }, { attr: { 'stroke-dashoffset': 0 }, duration: .7, ease: 'tz-cam' }, V(81.6));
+  tl.fromTo('#br0', { attr: { 'stroke-dashoffset': 1 } }, { attr: { 'stroke-dashoffset': 0 }, duration: .8, ease: 'tz-cam' }, V(80.76) - .1);
+  tl.fromTo(['#br1', '#br2', '#br3'], { attr: { 'stroke-dashoffset': 1 } }, { attr: { 'stroke-dashoffset': 0 }, duration: 1.1, ease: 'tz-cam' }, V(81.6) - .2);
   const nIn = (s, at) => tl.fromTo(s, { opacity: 0, y: 40, scale: .8 }, { opacity: 1, y: 0, scale: 1, duration: .6, ease: 'back.out(2)' }, at);
-  nIn('#nA', V(82.68) - .1); tl.fromTo('#br4', { attr: { 'stroke-dashoffset': 1 } }, { attr: { 'stroke-dashoffset': 0 }, duration: .6 }, V(83.02)); nIn('#nA1', V(83.3)); nIn('#nA2', V(83.45));
-  nIn('#nB', V(84.08) - .1); tl.fromTo('#br5', { attr: { 'stroke-dashoffset': 1 } }, { attr: { 'stroke-dashoffset': 0 }, duration: .5 }, V(84.42)); nIn('#nB1', V(84.6));
+  nIn('#nA', V(82.68) - .1); tl.fromTo('#br4', { attr: { 'stroke-dashoffset': 1 } }, { attr: { 'stroke-dashoffset': 0 }, duration: .9, ease: 'tz-cam' }, V(82.9)); nIn('#nA1', V(83.3)); nIn('#nA2', V(83.45));
+  nIn('#nB', V(84.08) - .1); tl.fromTo('#br5', { attr: { 'stroke-dashoffset': 1 } }, { attr: { 'stroke-dashoffset': 0 }, duration: .8, ease: 'tz-cam' }, V(84.3)); nIn('#nB1', V(84.6));
   nIn('#nC', V(85.24) - .1);
   tl.fromTo('#legend > div', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: .6, stagger: .12 }, V(85.5));
   tl.fromTo('#tree', { rotationX: 38, y: -60, z: -300 }, { rotationX: 14, y: 0, z: 0, duration: 4.5, ease: 'tz-cam' }, 84.3)
@@ -919,7 +921,8 @@
   $('#chapfly').innerHTML = CF.map((c, i) => `<div class="cfly" id="cf${i}"><div class="n">${c[1]}</div><div class="t">${c[2]}</div></div>`).join('');
   CF.forEach((c, i) => { tl.fromTo(`#cf${i}`, { z: -2600, opacity: 0 }, { z: 1100, duration: 1.25, ease: 'tz-cam' }, c[0])
       .fromTo(`#cf${i}`, { opacity: 0 }, { keyframes: [{ opacity: 1, duration: .45 }, { opacity: 1, duration: .35 }, { opacity: 0, duration: .45 }] }, c[0]); });
-  show('#frameui', 3.3, 91.9);
+  show('#frameui', 3.3, 92.7);
+  tl.to('#frameui', { opacity: 0, duration: .6, ease: 'tz-cam' }, 92.0);
   tl.fromTo('#frameui', { opacity: 0 }, { opacity: 1, duration: 1.0 }, 3.3);
 
   // cursor choreography
@@ -927,26 +930,26 @@
   const click = at => { tl.to('#gcur svg', { scale: .82, duration: .08, yoyo: true, repeat: 1, transformOrigin: '0 0' }, at)
       .fromTo('#gcur .ripple', { scale: .3, opacity: .9 }, { scale: 1.8, opacity: 0, duration: .5 }, at); };
   // table: hover each row as it lights up
-  tl.fromTo('#gcur', { x: 1560, y: 1000, opacity: 0 }, { x: 1600, y: 425, opacity: 1, duration: .7, ease: 'tz-cam' }, 46.8);
+  tl.fromTo('#gcur', { x: 1560, y: 1000, opacity: 0, scale: .6 }, { x: 1600, y: 425, opacity: 1, scale: 1, duration: .7, ease: 'tz-cam' }, 46.8);
   [47.7, 48.0, 48.3].forEach((a, i) => tl.to('#gcur', { y: 575 + i * 150, x: 1600 - (i % 2) * 40, duration: .28, ease: 'tz-cam' }, a));
   click(47.5);
-  tl.to('#gcur', { opacity: 0, duration: .25 }, 48.75);
+  tl.to('#gcur', { opacity: 0, scale: .6, duration: .3, ease: 'tz-in' }, 48.6);
   // dashboard: point at the strongest zone
-  tl.fromTo('#gcur', { x: 1700, y: 980, opacity: 0 }, { x: 1150, y: 640, opacity: 1, duration: .8, ease: 'tz-cam' }, V(36.36) + .2);
-  click(V(36.36) + 1.05);
-  tl.to('#gcur', { opacity: 0, duration: .25 }, V(37.76) - .7);
+  tl.fromTo('#gcur', { x: 1700, y: 980, opacity: 0, scale: .6 }, { x: 1150, y: 640, opacity: 1, scale: 1, duration: .6, ease: 'tz-cam' }, 39.55);
+  click(40.18);
+  tl.to('#gcur', { opacity: 0, scale: .6, duration: .25, ease: 'tz-in' }, 40.36);
   // org chart: click the top of the structure
-  tl.fromTo('#gcur', { x: 1500, y: 900, opacity: 0 }, { x: 1010, y: 420, opacity: 1, duration: .9, ease: 'tz-cam' }, 85.0);
+  tl.fromTo('#gcur', { x: 1500, y: 900, opacity: 0, scale: .6 }, { x: 1010, y: 420, opacity: 1, scale: 1, duration: .9, ease: 'tz-cam' }, 85.0);
   click(85.95);
   tl.fromTo('#n0', { boxShadow: '0 0 0 0 rgba(255,90,31,0)' }, { keyframes: [{ boxShadow: '0 0 0 14px rgba(255,90,31,.35)', duration: .25 }, { boxShadow: '0 0 0 34px rgba(255,90,31,0)', duration: .6 }] }, 85.97);
-  tl.to('#gcur', { opacity: 0, duration: .3 }, 87.0);
+  tl.to('#gcur', { opacity: 0, scale: .6, duration: .3, ease: 'tz-in' }, 86.9);
   // stronger dashboard bar highlight on click
-  tl.to('#zbars > div:first-child', { filter: 'brightness(1.35)', duration: .2, yoyo: true, repeat: 1 }, V(36.36) + 1.05);
+  tl.to('#zbars > div:first-child', { filter: 'brightness(1.35)', duration: .2, yoyo: true, repeat: 1 }, 40.2);
 
   // extra camera work
   tl.fromTo('#rows', { rotationX: 32, z: -200, transformOrigin: '50% 0%' }, { rotationX: 0, z: 0, duration: 1.4, ease: 'tz-out' }, 46.3);
   tl.fromTo('#s10cam', { rotationX: 8, z: -160 }, { rotationX: -2, z: 80, duration: 8, ease: 'tz-cam' }, 76.0);
-  tl.fromTo('#s2cam', { rotationX: 6 }, { rotationX: -3, duration: 8.5, ease: 'tz-cam' }, 9.95);
+  tl.fromTo('#s2cam', { rotationX: 0 }, { rotationX: -3, duration: 7.5, ease: 'tz-cam' }, 10.62);
   tl.fromTo('#s9cam', { rotationY: -4 }, { rotationY: 4, duration: 12, ease: 'none' }, 63.5);
   tl.fromTo('#s12cam', { y: -40 }, { y: 0, duration: 4, ease: 'tz-soft' }, 92.0);
 
@@ -972,8 +975,8 @@
     const d = drift(t);
     $('#world').style.transform = `translate(${d.x}px, ${d.y}px) rotate(${d.r}deg)`;
     drawBG(t, d); drawFG(t);
-    $('#progbar').style.transform = `scaleX(${clamp(t / DUR)})`;
-    { const W = [[46.75, 49.0], [V(36.36) + .15, V(37.76) - .4], [84.95, 87.35]]; $('#gcur').style.visibility = W.some(([a, b]) => t >= a && t <= b) ? 'visible' : 'hidden'; }
+    { const a = 84.5 / DUR; $('#progbar').style.transform = `scaleX(${t < 84.5 ? t / DUR : a + (1 - a) * E.cam(clamp((t - 84.5) / 7.3))})`; }
+    { const W = [[46.75, 48.95], [39.5, 40.65], [84.95, 87.25]]; $('#gcur').style.visibility = W.some(([a, b]) => t >= a && t <= b) ? 'visible' : 'hidden'; }
     hud(t); pose3d(t);
   };
   window.DURATION = DUR;
