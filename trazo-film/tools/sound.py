@@ -73,6 +73,29 @@ def shimmer(dur=2.0, level=.25):
         out += np.sin(2 * np.pi * f * t + rng.uniform(0, 6)) * (0.5 + 0.5 * np.sin(2 * np.pi * rng.uniform(3, 7) * t))
     return out / 4 * np.sin(np.linspace(0, np.pi, n)) ** 2 * level
 
+def chime(level=.3, up=True):
+    """Two-note transit station chime (soft bell partials)."""
+    n = int(SR * 1.1); t = np.arange(n) / SR; out = np.zeros(n)
+    notes = (659.3, 880.0) if up else (880.0, 659.3)
+    for k, f in enumerate(notes):
+        a = int(k * .16 * SR); tt = t[: n - a]
+        bell = np.sin(2 * np.pi * f * tt) + .35 * np.sin(2 * np.pi * f * 2.76 * tt) * np.exp(-tt * 9) + .2 * np.sin(2 * np.pi * f * 2 * tt)
+        out[a:] += bell * np.exp(-tt * 4.2) * np.minimum(1, tt / .004)
+    return out * level * .45
+
+
+def flaps(dur=1.6, level=.3):
+    """Split-flap board clatter: dense random clicks thinning out."""
+    n = int(SR * dur); out = np.zeros(n)
+    k = 0.0
+    while k < dur:
+        a = int(k * SR); m = int(SR * .012)
+        if a + m >= n: break
+        out[a:a + m] += bp(rng.standard_normal(m), 1800, 7000) * env(m, .0002, .004, 8) * rng.uniform(.5, 1)
+        k += rng.uniform(.008, .03) * (1 + 3 * (k / dur) ** 2)
+    return out * level
+
+
 def music(duration, bpm, start=0.0, sections=None):
     """Minimal original bed: warm pad chords + soft pulse + kick/hat from `start`."""
     n = int(SR * duration); t = np.arange(n) / SR; out = np.zeros(n)
@@ -116,7 +139,7 @@ def build(spec):
         for a, b in spec.get('duck', []):  # silence windows before big hits
             ia, ib = int(a * SR), int(b * SR); m[ia:ib] *= .15
         mix += np.stack([m, m], 1) * spec.get('music_level', 1.0)
-    gen = dict(hit=hit, boom=boom, whoosh=whoosh, riser=riser, click=click, pop=pop, tick=tick, shimmer=shimmer)
+    gen = dict(hit=hit, boom=boom, whoosh=whoosh, riser=riser, click=click, pop=pop, tick=tick, shimmer=shimmer, chime=chime, flaps=flaps)
     for c in spec['cues']:
         kw = {k: v for k, v in c.items() if k not in ('t', 'type', 'pan')}
         x = gen[c['type']](**kw); a = int(c['t'] * SR)

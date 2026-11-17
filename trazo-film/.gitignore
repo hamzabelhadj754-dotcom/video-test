@@ -25,3 +25,6 @@ out/probe*/
 out/psheet*.png
 out/sf*/
 out/sheet_*.png
+out/r[0-9]*/
+out/*.log
+audio/ruta_bed.wav

@@ -18,7 +18,7 @@ const { chromium } = require('playwright'); const path = require('path'); const 
   const t0 = Date.now();
   for (let i = 0; i < n; i++) {
     const t = Number(from) + i / (F * S);
-    await p.evaluate(t => window.seek(t), t);
+    await p.evaluate(t => { window.seek(t); return new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))); }, t);
     const buf = await p.screenshot({ type: 'jpeg', quality: 95 });
     if (!ff.stdin.write(buf)) await new Promise(r => ff.stdin.once('drain', r));
     if (i % 60 === 0) process.stdout.write(`\r${i}/${n} ${((Date.now() - t0) / 1000).toFixed(0)}s`);
