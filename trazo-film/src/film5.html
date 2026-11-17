@@ -97,7 +97,7 @@
 <div class="stage" id="stage">
   <canvas id="bgc" width="1920" height="1080" style="position:absolute;left:0;top:0"></canvas>
   <div id="world">
-    <svg id="map" width="1920" height="1080" viewBox="0 0 1920 1080" style="position:absolute;left:0;top:0"><g id="camg">
+    <svg id="map" width="1920" height="1080" viewBox="0 0 1920 1080" style="position:absolute;left:0;top:0;opacity:0;pointer-events:none"><g id="camg">
       <defs>
         <pattern id="streets" width="560" height="560" patternUnits="userSpaceOnUse">
           <path d="M0 140H560M0 420H560M140 0V560M420 0V560" stroke="#ECEBE5" stroke-width="10"/>
@@ -477,6 +477,38 @@
     grid(280, 5, '#EFEEE9', 140); grid(560, 10, '#ECEBE5', 140);
     g.strokeStyle = '#EFEEE9'; g.lineWidth = 6; g.beginPath();
     for (let k = Math.floor((x0 - y1) / 2240) * 2240; k <= x1 - y0; k += 2240) { g.moveTo(k + y0, y0); g.lineTo(k + y1, y1); } g.stroke();
+    paint($('#camg'));
+  }
+
+  // ------------------------------------------------------------------ map renderer: walks the (hidden) SVG model and paints it on the canvas
+  const P2D = new WeakMap();
+  const hatchC = document.createElement('canvas'); hatchC.width = hatchC.height = 22;
+  { const h = hatchC.getContext('2d'); h.strokeStyle = '#E5E4DE'; h.lineWidth = 6; h.beginPath(); for (let k = -22; k <= 44; k += 22) { h.moveTo(k, 22); h.lineTo(k + 22, 0); } h.stroke(); }
+  const hatchP = bg.createPattern(hatchC, 'repeat');
+  const A_ = (el, n, d) => { const v = el.getAttribute(n); return v == null ? d : v; };
+  function paint(el) {
+    for (const n of el.children) {
+      if (n.style && (n.style.visibility === 'hidden' || n.style.display === 'none')) continue;
+      const op = +A_(n, 'opacity', 1); if (op <= 0) continue;
+      const tag = n.tagName.toLowerCase();
+      if (tag === 'g') { paint(n); continue; }
+      if (tag !== 'path' && tag !== 'circle') continue;
+      let path;
+      if (tag === 'path') { const d = n.getAttribute('d'); if (!d) continue; let c = P2D.get(n); if (!c || c.d !== d) { c = { d, p: new Path2D(d) }; P2D.set(n, c); } path = c.p; }
+      else { const r = +A_(n, 'r', 0); if (r <= 0.01) continue; path = new Path2D(); path.arc(+n.getAttribute('cx'), +n.getAttribute('cy'), r, 0, Math.PI * 2); }
+      bg.globalAlpha = op;
+      const parent = n.parentNode;
+      const fill = A_(n, 'fill', tag === 'circle' ? '#000' : 'none'), stroke = A_(n, 'stroke', A_(parent, 'stroke', 'none'));
+      if (fill !== 'none') { bg.fillStyle = fill.startsWith('url(') ? hatchP : fill; bg.fill(path); }
+      if (stroke !== 'none') {
+        bg.strokeStyle = stroke; bg.lineWidth = +A_(n, 'stroke-width', A_(parent, 'stroke-width', 1));
+        bg.lineCap = A_(n, 'stroke-linecap', A_(parent, 'stroke-linecap', 'butt')); bg.lineJoin = A_(n, 'stroke-linejoin', A_(parent, 'stroke-linejoin', 'miter'));
+        const da = n.getAttribute('stroke-dasharray');
+        if (da) { bg.setLineDash(da.split(/[ ,]+/).map(Number)); bg.lineDashOffset = +A_(n, 'stroke-dashoffset', 0); } else bg.setLineDash([]);
+        bg.stroke(path); bg.setLineDash([]);
+      }
+      bg.globalAlpha = 1;
+    }
   }
 
   // ------------------------------------------------------------------ seek
@@ -486,7 +518,6 @@
     // camera (+ a breathing drift so it is never locked off)
     const c = camAt(t), dx = 6 * Math.sin(t * .6) + 2 * Math.sin(t * 1.7), dy = 4 * Math.sin(t * .8 + 1), ds = 1 + .006 * Math.sin(t * .35);
     const S = c.s * ds, ox = 960 + dx, oy = 540 + dy;
-    drawCity(c, S, ox, oy);
     $('#camg').setAttribute('transform', `translate(${ox} ${oy}) rotate(${c.r}) scale(${S}) translate(${-c.x} ${-c.y})`);
     for (const P of PINS) { const sx = (P.x - c.x) * S + ox, sy = (P.y - c.y) * S + oy;
       const vis = sx < 2300 && sx + 5000 * S > -300 && sy < 1500 && sy + 2200 * S > -300;
@@ -502,6 +533,7 @@
     // split-flap board
     if (t > 45.5 && t < 50) { const f = Math.floor(t * 30); flapEls.forEach((el, k) => { const F = FLAPS[k];
       const ch = t >= F.t ? F.c : t >= F.t - .55 ? CHARS[(k * 7919 + f * 104729) % CHARS.length] : ' '; if (el.textContent !== ch) el.textContent = ch; }); }
+    drawCity(c, S, ox, oy);
     hud(t);
     const g = Math.floor(t * 30); $('#grain').style.transform = `translate(${(g * 37) % 100 - 50}px, ${(g * 53) % 100 - 50}px)`;
   };
