@@ -29,3 +29,6 @@ out/r[0-9]*/
 out/*.log
 audio/ruta_bed.wav
 out/review_ruta*/
+out/v3a/
+out/test_*.mp4
+audio/ruta3_bed.wav

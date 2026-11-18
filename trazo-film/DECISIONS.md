@@ -72,3 +72,11 @@
 | 70–78 | Factores | internos / externos, Valencia | line branches |
 | 78–86 | Organigrama | 3D tree grows | camera pulls back |
 | 86–90 | End card | bike + TRAZO. + gracias | boom |
+
+## v03 La Ruta motion rules (film6.html)
+- Camera = holds (slow dolly + drift, never static) joined by van Wijk–Nuij smooth-zoom moves (rho 1.35), eased tz-cam.
+- Rider arrivals synced to camera hold starts; arrival ring instead of constant pulse.
+- Map painted on a 2x supersampled canvas; stroke/radius widths screen-consistent: w*0.8*(S/0.8)^0.25.
+- Two curves only: tz-out entrances, tz-in exits (0.45 s); no overshoot. Every station leaves when the camera leaves.
+- Board: mask reveal, 12 Hz flaps settling left to right. Render: 60 fps, sub=2 (motion blur).
+- Sound: camera whooshes generated from window.MOVES (audio/shots.json).
