@@ -7,11 +7,11 @@ TOTAL=$(ffprobe -v error -count_frames -select_streams v:0 -show_entries stream=
 prev=0; n=0
 while read -r i a b; do
   if [ "$a" -gt "$prev" ]; then
-    ffmpeg -v error -y -i "$BASE" -vf "trim=start_frame=$prev:end_frame=$a,setpts=PTS-STARTPTS" $E $D/s$(printf %03d $n).mp4; echo "file 's$(printf %03d $n).mp4'" >> $D/list.txt; n=$((n+1))
+    ffmpeg -nostdin -v error -y -i "$BASE" -vf "trim=start_frame=$prev:end_frame=$a,setpts=PTS-STARTPTS" $E $D/s$(printf %03d $n).mp4; echo "file 's$(printf %03d $n).mp4'" >> $D/list.txt; n=$((n+1))
   fi
-  ffmpeg -v error -y -i out/mv/mv$(printf %02d $i).mp4 $E $D/s$(printf %03d $n).mp4; echo "file 's$(printf %03d $n).mp4'" >> $D/list.txt; n=$((n+1))
+  ffmpeg -nostdin -v error -y -i out/mv/mv$(printf %02d $i).mp4 $E $D/s$(printf %03d $n).mp4; echo "file 's$(printf %03d $n).mp4'" >> $D/list.txt; n=$((n+1))
   prev=$b
 done < <(sort -n -k2 out/mv/ranges.txt)
-ffmpeg -v error -y -i "$BASE" -vf "trim=start_frame=$prev:end_frame=$TOTAL,setpts=PTS-STARTPTS" $E $D/s$(printf %03d $n).mp4; echo "file 's$(printf %03d $n).mp4'" >> $D/list.txt
-ffmpeg -v error -y -f concat -safe 0 -i $D/list.txt -c copy "$OUT"
+ffmpeg -nostdin -v error -y -i "$BASE" -vf "trim=start_frame=$prev:end_frame=$TOTAL,setpts=PTS-STARTPTS" $E $D/s$(printf %03d $n).mp4; echo "file 's$(printf %03d $n).mp4'" >> $D/list.txt
+ffmpeg -nostdin -v error -y -f concat -safe 0 -i $D/list.txt -c copy "$OUT"
 echo "spliced $OUT ($TOTAL base frames)"
