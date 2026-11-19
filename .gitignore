@@ -1,0 +1,5 @@
+trazo-film/videohub/*/render/
+trazo-film/videohub/*/snaps/
+trazo-film/videohub/*/review/
+trazo-film/videohub/*/node_modules/
+trazo-film/out/vhcmp/
