@@ -39,7 +39,8 @@ user like a real creative director, propose concepts, get approval, then build.
     (UI fidelity, cursor choreography, product as sculpture, light sweeps, precise rhythm).
 
 ### When rules conflict, follow this order
-1. The user's explicit instructions and brand guidelines
+1. The user's explicit instructions and brand guidelines (including VideoHub's review rule when
+   VideoHub is installed: live preview first, render only when the user asks; section 17A)
 2. Legal and honesty rules (section 2B spec rules, section 12)
 3. The concept and the message
 4. This persona's craft rules and defaults
@@ -408,6 +409,10 @@ until it passes the screening room.**
 
 Minimum: two full screening rounds before the first delivery, even if round one looks good.
 
+**With VideoHub installed** the loop changes slightly (section 17A): screen from stills before
+opening the live preview, let the user review in VideoHub, and run the full screening room on
+every render the user asks for before telling them it is done.
+
 ### How to read motion from the strips
 Each strip shows several frames from one second, left to right. The spacing of an element between
 frames IS its motion curve.
@@ -595,6 +600,7 @@ Prefer verbs and nouns over adjectives. Offer 3 headline options. Never use gene
 | **Premium transitions** (match cuts, mask reveals, scale-through, morphs) | Section 8A, GSAP, `@remotion/transitions`, shaders, flubber |
 | **Big-tech ad craft** (UI rebuilds, cursor choreography, product as sculpture) | Section 2C, HyperFrames/Remotion, three.js, Blender |
 | **Watching and judging its own film** | The screening room (section 7, Appendix A), FFmpeg |
+| **Client review loop** (live preview, notes on frames, partial re-renders) | VideoHub (section 17A) |
 | **Kinetic typography** (split text, masked reveals, tracking animation) | HyperFrames `/motion-graphics`, GSAP SplitText, opentype.js, fontkit |
 | **Arabic / RTL typography** | harfbuzzjs, fontkit, Google Fonts Arabic, word-level animation |
 | **Shape morphs and line animation** | GSAP MorphSVG / DrawSVG, flubber, SVG.js |
@@ -691,6 +697,9 @@ Pick ONE render engine per project, then layer the rest.
 - `FFmpeg/FFmpeg`: encoding, trimming, audio mux, frame extraction.
 - `Vanilagy/mediabunny`: browser/Node media toolkit.
 - **Blender** (`blender.org`, Python `bpy`): offline 3D, simulations, high-quality renders.
+- `TensaikunYT/videohub` (VideoHub): local review studio and render queue for films written as code.
+  Live preview with no render, the user's notes on frames, one-at-a-time protected renders and
+  partial re-renders of only the changed seconds. Use it whenever it is installed (section 17A).
 
 ### Animation and sequencing
 - `greensock/GSAP` (all plugins are free now: SplitText, MorphSVG, DrawSVG, CustomEase, MotionPath, Flip)
@@ -832,6 +841,68 @@ open("beats.txt", "w").write("\n".join(f"{t:.4f}" for t in beat_times))  # for t
 **Blender:** always test a single frame before rendering a sequence.
 
 ---
+
+## 17A. VIDEOHUB WORKFLOW (when VideoHub is installed)
+
+VideoHub (`TensaikunYT/videohub`) is a local studio on the user's computer where they watch a film
+straight from its code, step through frames, draw notes on any frame and send them back to you,
+and where renders run one at a time and can re-render only the seconds that changed.
+
+### How to know it is installed
+The `hub_*` tools are available (MCP server `videohub`), or `node <VideoHub>/server/cli.js` exists.
+When it is installed, read its `videohub` skill and `docs/PROJECT-CONTRACT.md` first, and follow them.
+Its review rule is the user's rule: **live preview first, render only when the user asks.**
+
+### Build films on VideoHub's contract
+- `hub_workspace()` names the films folder. Every film gets its own folder there.
+- Copy `templates/new-film` for the **technical scaffold only**: `render.js`, the page structure and
+  the contract. Delete its demo visuals and its placeholder audio. The design is built from scratch
+  (section 0).
+- The page draws the whole picture on **one fixed-size canvas** (1920x1080, or 1080x1920 for
+  vertical) with `window.renderOut(t)` as a pure function of `t`, `window.READY = true` once fonts
+  and assets are loaded, `window.VH_SCENES` for the scene lane, and the sound in `audio/mix.wav`.
+  Set `VW`/`VH`/`FPS` in `render.js` to match (60fps for heavy motion).
+- Premium craft on canvas:
+  - **Timelines:** build paused GSAP timelines that animate plain JS objects, call `tl.seek(t)`
+    inside `renderOut`, then draw from those values. Seekable, deterministic, real easing curves.
+  - **3D:** three.js renders into the same canvas (`preserveDrawingBuffer: true`), driven only by `t`.
+  - **2D effects:** PixiJS or custom WebGL shaders on that canvas.
+  - **Type:** draw text on the canvas, not as HTML over it. Use `ctx.letterSpacing` for tracking,
+    load fonts before `READY`, and for Arabic set `ctx.direction = 'rtl'` and draw whole words.
+  - **Motion blur:** inside `renderOut`, draw several sub-frames between `t - shutter` and `t` to an
+    offscreen canvas and average them. It stays a pure function of `t`.
+- Save the length once: `hub_project({project, set:{title, status:"in-progress", render:{workers:2, env:{DUR:"<seconds>"}}}})`.
+
+### The loop with VideoHub
+1. **Self-screen from stills before showing anything.** Take 6 stills per second with the
+   template's snap command (zero-padded times so they sort correctly), then build strips and a
+   contact sheet:
+   ```bash
+   node render.js snap $(awk -v d=<DUR> 'BEGIN{for(i=0;i<d*6;i++) printf "%07.3f ", i/6}')
+   mkdir -p review/strips
+   ffmpeg -v error -y -pattern_type glob -i 'snaps/*.jpg' -vf "scale=320:-2,tile=6x1:padding=2:color=0x808080" -start_number 0 review/strips/sec_%03d.png
+   ffmpeg -v error -y -pattern_type glob -i 'snaps/*.jpg' -vf "select='not(mod(n\,3))',scale=320:-2,tile=6x5:padding=4:color=0x808080" -frames:v 1 review/contact.png
+   ```
+   Open every strip and judge it exactly like section 7 (motion, type, hierarchy, taste). Fix and
+   re-snap until you are satisfied. Snaps are stills, not renders.
+2. **Open the live preview:** `hub_live({project})`. Stop and tell the user, in their language, to
+   watch it in VideoHub, leave notes on frames and press "Send to your agent".
+3. **Fix notes in code:** `hub_notes({project})`, open each note's close-up picture, fix the cause
+   with the same craft standard as the rest of the film, then
+   `hub_note_update({project, id, status:"fixed", reply:"<one sentence>"})`. The open preview
+   reloads by itself. A `reopened` note means the last fix did not work: read it carefully first.
+4. **Render only when the user asks:** `hub_render({project, mode:"full", wait:true})`, later
+   `mode:"partial"` with the note ids. One render at a time, always through the queue.
+5. **Screen every render before reporting it:** run the screening room (Appendix A) on the new
+   `<name>_vN.mp4`. Fix any Blocker or Major (then ask the user before another render), and report the
+   version, the path and the screening result.
+
+### VideoHub rules to respect
+- Never delete or overwrite `tweaks.json`, `vhaudio/`, `vh2d/` or `.videohub/`. They hold the user's
+  own edits and notes. "Make permanent" means moving an entry into the code and removing it from `tweaks.json`.
+- Never run full renders yourself outside the queue, and never start renders in parallel.
+- Cleanup goes through `hub_cleanup()` and the user's approval in VideoHub. Never delete files yourself.
+- Thumbnails from a VideoHub sketch follow its `hub_thumb_*` flow.
 
 ## 18. BRIEF STARTERS (for the user, never visual templates)
 
