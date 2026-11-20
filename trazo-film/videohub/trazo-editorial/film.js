@@ -377,8 +377,9 @@
   const XF = .38;     // half transition length
   const bufA = mk(W, H), bufB = mk(W, H);
   function drawScene(s, t, ctx) { const og = g; g = ctx; g.setTransform(1, 0, 0, 1, 0, 0); g.globalAlpha = 1; g.filter = 'none'; g.globalCompositeOperation = 'source-over';
+    g.fillStyle = s.t0 < 9 ? C.paper : s.t0 > 89 || (s.t0 > 68 && s.t0 < 69) ? '#04060A' : C.navy; g.fillRect(0, 0, W, H);   // no uncovered edge under the camera drift
     // slow camera push per scene, never static
-    const lt = (t - s.t0) / (s.t1 - s.t0), sc = 1 + .025 * lt; g.translate(960, 540); g.scale(sc, sc); g.translate(-960 + 4 * Math.sin(t * .5), -540 + 3 * Math.cos(t * .4));
+    const lt = (t - s.t0) / (s.t1 - s.t0), sc = 1.006 + .025 * lt; g.translate(960, 540); g.scale(sc, sc); g.translate(-960 + 4 * Math.sin(t * .5), -540 + 3 * Math.cos(t * .4));
     s.draw(t); g = og; }
   function frame(t) {
     T = t; const cur = SC.findIndex(s => t >= s.t0 && t < s.t1), i = cur < 0 ? SC.length - 1 : cur, s = SC[i];
