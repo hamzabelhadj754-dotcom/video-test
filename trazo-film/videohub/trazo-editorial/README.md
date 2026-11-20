@@ -13,5 +13,7 @@ Estilo editorial: papel claro → azul marino → negro con grano; serifa clási
 
 Créditos de fotos (Licencia Unsplash): bici eléctrica — KINGBULL Bikes (logos retirados); repartidor en bici de carga — Peter Wilkinson (logos retirados);
 estudiante — Oluwaseyi Akinlolu; ciclista — Wesley Mc Lachlan; Ciudad de las Artes y las Ciencias — Domenico Adornato.
+v04: foto de marca (bici eléctrica bajo L'Umbracle) — Himiway Bikes (logos retirados); reunión de equipo — Vitaly Gariev;
+panel de KPIs en portátil — Campaign Creators; reunión individual — Christina @ wocintechchat.com.
 
 Cómo abrirla: copia esta carpeta en `Documentos\VideoHub\films\` y ábrela en VideoHub → Live preview.

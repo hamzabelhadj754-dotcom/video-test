@@ -40,6 +40,7 @@ for e in d['ev']:
     elif ty == 'flip': a(t - .1, 'whoosh', dur=.5, level=.18)
     elif ty == 'card': a(t, 'pop', level=.14, f=620); a(t - .05, 'whoosh', dur=.3, level=.07)
     elif ty == 'shrink': a(t, 'whoosh', dur=.7, level=.14, up=False)
+    elif ty == 'carry': a(t - .2, 'riser', dur=.6, level=.14); a(t, 'whoosh', dur=.7, level=.22); a(t + .6, 'hit', level=.35)
 
 a(90.1, 'shimmer', dur=3.5, level=.1)
 slams = [e['t'] for e in d['ev'] if e['type'] == 'slam']
