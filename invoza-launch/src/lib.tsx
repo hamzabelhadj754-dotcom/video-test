@@ -1,16 +1,29 @@
 import React from "react";
 import { Easing, interpolate } from "remotion";
-import { loadFont } from "@remotion/fonts";
-import { staticFile } from "remotion";
+import { continueRender, delayRender, staticFile } from "remotion";
 import T from "./timeline.json";
 
 export const fontFamily = "Manrope";
-for (const w of ["300", "400", "500", "600", "700", "800"]) {
-  loadFont({
-    family: fontFamily,
-    url: staticFile(`fonts/manrope-latin-${w}-normal.woff2`),
-    weight: w,
-  });
+const WEIGHTS = ["300", "400", "500", "600", "700", "800"];
+if (typeof document !== "undefined" && !document.getElementById("manrope-faces")) {
+  const style = document.createElement("style");
+  style.id = "manrope-faces";
+  style.textContent = WEIGHTS.map(
+    (w) =>
+      `@font-face{font-family:"Manrope";font-weight:${w};font-style:normal;font-display:block;src:url("${staticFile(
+        `fonts/manrope-latin-${w}-normal.woff2`,
+      )}") format("woff2");}`,
+  ).join("\n");
+  document.head.appendChild(style);
+  const handle = delayRender("Loading Manrope");
+  const done = () => continueRender(handle);
+  const safety = setTimeout(done, 15000);
+  Promise.all(WEIGHTS.map((w) => document.fonts.load(`${w} 40px "Manrope"`, "Invoza €1,250")))
+    .then(() => {
+      clearTimeout(safety);
+      done();
+    })
+    .catch(done);
 }
 
 export const C = {

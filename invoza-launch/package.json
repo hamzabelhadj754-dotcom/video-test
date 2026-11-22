@@ -6,7 +6,6 @@
   "private": true,
   "dependencies": {
     "@remotion/cli": "4.0.465",
-    "@remotion/fonts": "^4.0.465",
     "@remotion/media": "4.0.465",
     "react": "19.2.3",
     "react-dom": "19.2.3",
