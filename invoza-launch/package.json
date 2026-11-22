@@ -1,0 +1,24 @@
+{
+  "name": "invoza-launch",
+  "version": "1.0.0",
+  "description": "Invoza 45s launch video (Remotion)",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "@remotion/cli": "4.0.465",
+    "@remotion/fonts": "^4.0.465",
+    "@remotion/media": "4.0.465",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "remotion": "4.0.465"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.7",
+    "typescript": "5.9.3"
+  },
+  "scripts": {
+    "dev": "remotion studio",
+    "render": "remotion render Invoza out/invoza-launch.mp4",
+    "lint": "tsc"
+  }
+}

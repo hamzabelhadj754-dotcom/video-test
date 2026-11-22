@@ -1,0 +1,49 @@
+{
+  "fps": 30,
+  "durationInFrames": 1350,
+  "scenes": {
+    "hook": [0, 150],
+    "pain": [150, 360],
+    "turn": [360, 480],
+    "f1": [480, 690],
+    "f2": [690, 900],
+    "f3": [900, 1110],
+    "payoff": [1110, 1230],
+    "cta": [1230, 1350]
+  },
+  "vo": [
+    { "id": "vo1", "start": 0.6, "subStart": 0.5, "subEnd": 4.4, "text": "You did the work. So why are you still waiting to get paid?" },
+    { "id": "vo2", "start": 6.3, "subStart": 6.2, "subEnd": 9.6, "text": "Awkward follow-ups. Spreadsheets. Guesswork." },
+    { "id": "vo3", "start": 12.75, "subStart": 12.6, "subEnd": 14.5, "text": "Meet Invoza." },
+    { "id": "vo4", "start": 17.0, "subStart": 16.9, "subEnd": 19.3, "text": "Create pro invoices in seconds." },
+    { "id": "vo5", "start": 24.0, "subStart": 23.9, "subEnd": 26.0, "text": "Reminders that send themselves." },
+    { "id": "vo6", "start": 31.0, "subStart": 30.9, "subEnd": 33.6, "text": "And see every payment, in real time." },
+    { "id": "vo7", "start": 37.8, "subStart": 37.7, "subEnd": 40.5, "text": "Less chasing. More doing what you love." },
+    { "id": "vo8", "start": 41.9, "subStart": 41.8, "subEnd": 44.2, "text": "Invoza. Start free today." }
+  ],
+  "typing": [
+    { "kind": "type", "t0": 5.4, "t1": 7.4, "text": "Hi, just following up on my invoice…" },
+    { "kind": "delete", "t0": 8.1, "t1": 8.8, "text": "Hi, just following up on my invoice…" },
+    { "kind": "type", "t0": 9.2, "t1": 11.0, "text": "Hi, sorry to bother you again…" }
+  ],
+  "events": {
+    "wake": 10,
+    "notifs": [30, 58, 86],
+    "transitions": [150, 480, 690, 900, 1110, 1230],
+    "blackCut": 360,
+    "sweep": 368,
+    "logo": 382,
+    "f1Client": 500,
+    "f1Items": [525, 550],
+    "f1Total": [565, 605],
+    "f1Tap": 630,
+    "f1Fly": 642,
+    "f2Toggle": 710,
+    "f2Cards": [718, 752, 790],
+    "f3Bars": 918,
+    "f3Paid": 1005,
+    "payNotif": 1122,
+    "ctaSweep": 1232,
+    "ctaButton": 1272
+  }
+}
