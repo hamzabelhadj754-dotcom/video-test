@@ -25,10 +25,10 @@
   // graded cut-outs: 'mono' = blue-grey duotone (paper scenes), 'cool' = cooled colour (navy scenes)
   function grade(img, mode) {
     const c = mk(img.width, img.height), x = c.getContext('2d');
-    x.filter = mode === 'mono' ? 'grayscale(1) contrast(1.15) brightness(1.02)' : 'saturate(.55) contrast(1.1) brightness(.92)';
+    x.filter = mode === 'mono' ? 'grayscale(1) contrast(1.15) brightness(1.02)' : mode === 'soft' ? 'saturate(.95) contrast(1.06) brightness(1.02)' : 'saturate(.55) contrast(1.1) brightness(.92)';
     x.drawImage(img, 0, 0); x.filter = 'none';
     x.globalCompositeOperation = 'source-atop';
-    x.fillStyle = mode === 'mono' ? 'rgba(40,70,130,.42)' : 'rgba(30,80,200,.28)'; x.globalCompositeOperation = mode === 'mono' ? 'color' : 'soft-light'; x.fillRect(0, 0, c.width, c.height);
+    x.fillStyle = mode === 'mono' ? 'rgba(40,70,130,.42)' : mode === 'soft' ? 'rgba(30,80,200,.1)' : 'rgba(30,80,200,.28)'; x.globalCompositeOperation = mode === 'mono' ? 'color' : 'soft-light'; x.fillRect(0, 0, c.width, c.height);
     x.globalCompositeOperation = 'source-atop'; const gr = x.createLinearGradient(0, 0, c.width, 0); gr.addColorStop(0, 'rgba(120,170,255,.0)'); gr.addColorStop(1, mode === 'mono' ? 'rgba(255,255,255,.08)' : 'rgba(120,170,255,.22)');
     x.fillStyle = gr; x.fillRect(0, 0, c.width, c.height);
     x.globalCompositeOperation = 'destination-in'; x.drawImage(img, 0, 0);   // keep the cut-out's own alpha
@@ -253,7 +253,7 @@
     g.save(); g.translate(W - 48, 540); g.rotate(Math.PI / 2); g.textAlign = 'center'; g.fillText('PRÁCTICA FINAL · RA3 · DEPARTAMENTO DE VENTAS', 0, 0); g.restore();
     g.letterSpacing = '0px'; g.restore();
   }
-  function stamp(col, a = 1) { g.save(); g.globalAlpha *= a; barcode(W - 300, 64, 170, 30, col); txt('20 · NOV · 2026', W - 130, 116, { size: 14, w: 600, ls: 2, col, align: 'right' }); g.restore(); }
+  function stamp() { }   // v07: barcode + date corner removed
   const NAVY_SIDE = 'rgba(169,196,255,.45)', NAVY_STAMP = 'rgba(169,196,255,.7)';
   function navyChrome(t, t0, a = 1) { sideTexts(NAVY_SIDE, a * k(t, t0, .6)); stamp(NAVY_STAMP, a * k(t, t0 + .1, .6)); }
 
@@ -739,11 +739,11 @@
       ['IT', 'intertight-latin.woff2', '100 900', 'normal', 'U+0000-00FF, U+0131, U+0152-0153, U+2000-206F, U+20AC, U+2122, U+2212'], ['IT', 'intertight-ext.woff2', '100 900', 'normal', 'U+0100-024F, U+1E00-1EFF'],
       ...['600', '700'].flatMap(w => ['normal', 'italic'].flatMap(st => [['CG', `cormorant-garamond-latin-${w}-${st}.woff2`, w, st, 'U+0000-00FF, U+0131, U+0152-0153, U+2000-206F, U+20AC, U+2122, U+2212'], ['CG', `cormorant-garamond-latin-ext-${w}-${st}.woff2`, w, st, 'U+0100-024F, U+1E00-1EFF']]))];
     for (const [fam, file, weight, style, ur] of faces) { const f = new FontFace(fam, `url(fonts/${file})`, { weight, style, unicodeRange: ur }); document.fonts.add(f); await f.load(); }
-    await Promise.all([loadImage('ebike', 'assets/cut/ebike.png'), loadImage('courier', 'assets/cut/courier.png'), loadImage('student', 'assets/cut/student.png'), loadImage('cyclist', 'assets/cut/cyclist.png'),
+    await Promise.all([loadImage('ebike', 'assets/cut/ebike.png'), loadImage('courier', 'assets/cut/courier3.png'), loadImage('student', 'assets/cut/student.png'), loadImage('cyclist', 'assets/cut/cyclist.png'),
       loadImage('cyclistPhoto', 'assets/photos/cyclist.jpg'), loadImage('valencia', 'assets/photos/valencia.jpg'),
       loadImage('brand', 'assets/photos/brand.jpg'), loadImage('supMeeting0', 'assets/photos/sup_meeting.jpg'), loadImage('supKpi0', 'assets/photos/sup_kpi.jpg'), loadImage('supOne0', 'assets/photos/sup_one.jpg')]);
     await document.fonts.ready;
-    IMG.ebikeMono = grade(IMG.ebike, 'mono'); IMG.studentCool = grade(IMG.student, 'cool'); IMG.courierCool = grade(IMG.courier, 'cool'); IMG.cyclistCool = grade(IMG.cyclist, 'cool');
+    IMG.ebikeMono = grade(IMG.ebike, 'mono'); IMG.studentCool = grade(IMG.student, 'cool'); IMG.courierCool = grade(IMG.courier, 'soft'); IMG.cyclistCool = grade(IMG.cyclist, 'cool');
     for (const k2 of ['studentCool', 'courierCool', 'cyclistCool']) IMG[k2].glow = rimGlow(IMG[k2]);
     for (const k2 of ['ebikeMono', 'cyclistCool']) { const s = IMG[k2], c = mk(s.width, s.height), x = c.getContext('2d'); x.filter = k2 === 'ebikeMono' ? 'grayscale(1) brightness(1.45) contrast(.55) blur(5px)' : 'grayscale(.6) brightness(1.7) contrast(.6) blur(5px)'; x.drawImage(s, 0, 0); s.pale = c; }
     { const v = IMG.valencia, c = mk(v.width, v.height), x = c.getContext('2d'); x.filter = 'saturate(.5) contrast(1.1) brightness(.85)'; x.drawImage(v, 0, 0); x.filter = 'none'; x.globalCompositeOperation = 'soft-light'; x.fillStyle = 'rgba(30,80,200,.55)'; x.fillRect(0, 0, c.width, c.height); IMG.valenciaCool = c; }

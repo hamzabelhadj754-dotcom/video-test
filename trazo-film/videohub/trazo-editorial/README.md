@@ -11,7 +11,7 @@ Estilo editorial: papel claro → azul marino → negro con grano; serifa clási
 | `assets/cut/` | recortes (rembg) de fotos de Unsplash; `assets/photos/` fotos de Unsplash |
 | `fonts/` | Inter Tight, Cormorant Garamond (SIL OFL) |
 
-Créditos de fotos (Licencia Unsplash): bici eléctrica — KINGBULL Bikes (logos retirados); repartidor en bici de carga — Peter Wilkinson (logos retirados);
+Créditos de fotos (Licencia Unsplash): bici eléctrica — KINGBULL Bikes (logos retirados); repartidor con bici eléctrica — Egor Myznik (textos retirados);
 estudiante — Oluwaseyi Akinlolu; ciclista — Wesley Mc Lachlan; Ciudad de las Artes y las Ciencias — Domenico Adornato.
 v04: foto de marca (bici eléctrica bajo L'Umbracle) — Himiway Bikes (logos retirados); reunión de equipo — Vitaly Gariev;
 panel de KPIs en portátil — Campaign Creators; reunión individual — Christina @ wocintechchat.com.
