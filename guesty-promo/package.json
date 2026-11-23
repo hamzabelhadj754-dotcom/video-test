@@ -10,7 +10,8 @@
     "stills": "tsx scripts/render-stills.ts",
     "render:9x16": "remotion render Promo9x16 out/guesty-promo-9x16.mp4 --codec h264 --crf 18 --x264-preset veryfast",
     "render:1x1": "remotion render Promo1x1 out/guesty-promo-1x1.mp4 --codec h264 --crf 18 --x264-preset veryfast",
-    "render": "npm run check-timing && npm run render:9x16 && npm run render:1x1"
+    "render": "npm run check-timing && npm run render:9x16 && npm run render:1x1",
+    "audio": "python3 scripts/make-audio.py"
   },
   "dependencies": {
     "@remotion/bundler": "4.0.465",

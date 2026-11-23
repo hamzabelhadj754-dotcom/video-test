@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { AbsoluteFill, cancelRender, continueRender, delayRender, Freeze, interpolate, Sequence, useCurrentFrame } from "remotion";
 import { Audio } from "@remotion/media";
 import { colors, ensureFont, fontFamily } from "./brand";
-import { musicSrc, popSrc, whooshSrc } from "./assets";
+import { musicSrc, sfxSrc } from "./assets";
+import { MUSIC_VOLUME, SFX_CUES } from "./sfx";
 import { Format, LayoutProvider } from "./layout";
 import { FPS, SCENES, TOTAL, TRANSITION_OVERLAP } from "./timing";
 import { Scene01 } from "./scenes/Scene01";
@@ -27,10 +28,6 @@ const SCENE_COMPONENTS: React.FC[] = [
   Scene09, Scene10, Scene11, Scene12, Scene13, Scene14, Scene15, Scene16,
 ];
 
-/** Scenes that open with a wipe (whoosh) vs. a pop. */
-const WHOOSH_SCENES = [4, 6, 8, 9, 10, 11, 12, 15, 16];
-const POP_SCENES = [1, 2, 5, 13, 14];
-
 /** After its last frame, a scene stays frozen underneath the next scene's wipe. */
 const FreezeAfter: React.FC<{ last: number; children: React.ReactNode }> = ({ last, children }) => {
   const frame = useCurrentFrame();
@@ -43,14 +40,13 @@ const FreezeAfter: React.FC<{ last: number; children: React.ReactNode }> = ({ la
 
 const Soundtrack: React.FC = () => {
   const music = musicSrc();
-  const whoosh = whooshSrc();
-  const pop = popSrc();
   return (
     <>
       {music ? (
         <Audio
           src={music}
           volume={(f) =>
+            MUSIC_VOLUME *
             interpolate(f, [0, 0.5 * FPS, TOTAL - 1 * FPS, TOTAL], [0, 1, 1, 0], {
               extrapolateLeft: "clamp",
               extrapolateRight: "clamp",
@@ -58,20 +54,14 @@ const Soundtrack: React.FC = () => {
           }
         />
       ) : null}
-      {whoosh
-        ? WHOOSH_SCENES.map((id) => (
-            <Sequence key={`w${id}`} from={Math.max(0, SCENES[id - 1].start - 3)} durationInFrames={30}>
-              <Audio src={whoosh} volume={0.45} />
-            </Sequence>
-          ))
-        : null}
-      {pop
-        ? POP_SCENES.map((id) => (
-            <Sequence key={`p${id}`} from={SCENES[id - 1].start} durationInFrames={20}>
-              <Audio src={pop} volume={0.4} />
-            </Sequence>
-          ))
-        : null}
+      {SFX_CUES.map((cue, i) => {
+        const src = sfxSrc(cue.sound);
+        return src ? (
+          <Sequence key={i} from={cue.frame} durationInFrames={Math.min(75, TOTAL - cue.frame)} name={`sfx ${cue.sound}`}>
+            <Audio src={src} volume={cue.volume} />
+          </Sequence>
+        ) : null;
+      })}
     </>
   );
 };
