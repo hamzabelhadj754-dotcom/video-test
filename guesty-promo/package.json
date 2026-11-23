@@ -1,0 +1,36 @@
+{
+  "name": "guesty-promo",
+  "version": "1.0.0",
+  "private": true,
+  "license": "UNLICENSED",
+  "scripts": {
+    "dev": "remotion studio",
+    "check-timing": "tsx scripts/check-timing.ts",
+    "typecheck": "tsc",
+    "stills": "tsx scripts/render-stills.ts",
+    "render:9x16": "remotion render Promo9x16 out/guesty-promo-9x16.mp4 --codec h264 --crf 18 --x264-preset veryfast",
+    "render:1x1": "remotion render Promo1x1 out/guesty-promo-1x1.mp4 --codec h264 --crf 18 --x264-preset veryfast",
+    "render": "npm run check-timing && npm run render:9x16 && npm run render:1x1"
+  },
+  "dependencies": {
+    "@remotion/bundler": "4.0.465",
+    "@remotion/cli": "4.0.465",
+    "@remotion/media": "4.0.465",
+    "@remotion/renderer": "4.0.465",
+    "@types/d3-geo": "^3.1.0",
+    "@types/geojson": "^7946.0.16",
+    "@types/topojson-client": "^3.1.5",
+    "d3-geo": "^3.1.1",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "remotion": "4.0.465",
+    "topojson-client": "^3.1.0",
+    "world-atlas": "^2.0.2"
+  },
+  "devDependencies": {
+    "@types/node": "22.10.2",
+    "@types/react": "19.2.7",
+    "tsx": "4.19.2",
+    "typescript": "5.9.3"
+  }
+}
