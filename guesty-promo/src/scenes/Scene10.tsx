@@ -20,7 +20,8 @@ const linePath = pts.reduce((acc, [x, y], i) => {
 }, "");
 
 /** Pricing: the line chart draws itself, the nightly rate ticks up, "Auto" switches on. */
-export const Scene10: React.FC = () => {
+/** The scene's UI illustration (shared by the classic and soft versions). */
+export const Scene10Stage: React.FC = () => {
   const frame = useCurrentFrame();
   const pCard = enter(frame, 0);
   const draw = ease(frame, 2, 26);
@@ -30,8 +31,6 @@ export const Scene10: React.FC = () => {
   const [dx, dy] = pts[idx];
 
   return (
-    <SceneShell bg={colors.mintSoft} transition="wipeLeft">
-      <LightBackdrop tint={colors.mint} />
       <VisualStage lines={COPY.s10.headline.length}>
         <UICard style={{ left: 0, top: 0, width: 900, height: 740, opacity: pCard, transform: `translateY(${(1 - pCard) * 50}px)` }}>
           <div style={{ padding: "34px 40px", fontFamily }}>
@@ -132,7 +131,13 @@ export const Scene10: React.FC = () => {
           </svg>
         </UICard>
       </VisualStage>
-      <Headline lines={COPY.s10.headline} tone="onLight" />
-    </SceneShell>
   );
 };
+
+export const Scene10: React.FC = () => (
+  <SceneShell bg={colors.mintSoft} transition="wipeLeft">
+    <LightBackdrop tint={colors.mint} />
+    <Scene10Stage />
+    <Headline lines={COPY.s10.headline} tone="onLight" />
+  </SceneShell>
+);

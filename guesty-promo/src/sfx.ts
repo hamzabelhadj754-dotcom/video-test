@@ -31,71 +31,83 @@ const VOL: Record<SfxName, number> = {
 
 const POPS: SfxName[] = ["pop-1", "pop-2", "pop-3"];
 
-const cues: Cue[] = [];
-const at = (scene: number, local: number | number[], sound: SfxName, gain = 1) => {
-  for (const l of Array.isArray(local) ? local : [local]) {
-    cues.push({ frame: SCENES[scene - 1].start + l, sound, volume: VOL[sound] * gain });
+export type Variant = "classic" | "soft";
+
+/** Builds the cue sheet. "soft" differs only where its animations differ (scene 5 search-pill morph). */
+export const buildCues = (variant: Variant): Cue[] => {
+  const cues: Cue[] = [];
+  const at = (scene: number, local: number | number[], sound: SfxName, gain = 1) => {
+    for (const l of Array.isArray(local) ? local : [local]) {
+      cues.push({ frame: SCENES[scene - 1].start + l, sound, volume: VOL[sound] * gain });
+    }
+  };
+  const range = (from: number, to: number, step: number) =>
+    Array.from({ length: Math.floor((to - from) / step) + 1 }, (_, i) => from + i * step);
+
+  /** Whoosh peaks ~6 frames into the file, so start it 4 frames early to hit the wipe. */
+  const WIPE_LEAD = -4;
+
+  // 1 — chaos: chips pop in, notifications keep pinging
+  [0, 2, 4].forEach((f, i) => at(1, f, POPS[i]));
+  [3, 8, 13, 18, 24, 30].forEach((f, i) => at(1, f, i % 2 ? "notify-2" : "notify-1"));
+  // 2 — calendars collide, alert slams in
+  at(2, 0, "swoosh");
+  at(2, 2, "swoosh", 0.8);
+  at(2, 6, "impact");
+  at(2, 9, "buzz");
+  // 3 — everything freezes
+  at(3, 0, "freeze");
+  // 4 — light sweep + logo
+  at(4, WIPE_LEAD, "whoosh", 1.2);
+  at(4, 2, "shimmer");
+  if (variant === "classic") {
+    // 5 — dashboard builds
+    at(5, 0, "swoosh");
+    [5, 7, 9, 11].forEach((f, i) => at(5, f, POPS[i % 3], 0.7));
+    at(5, [16, 20, 24], "tick", 2);
+  } else {
+    // 5 — search pill types "Meet Guesty", morphs into the feature card, rows pop in
+    at(5, WIPE_LEAD, "whoosh", 0.8);
+    at(5, [1, 2, 3, 5, 6, 7, 8, 9], "tick", 1.4);
+    at(5, 10, "swoosh");
+    [15, 18, 21, 24, 27].forEach((f, i) => at(5, f, POPS[i % 3], 0.6));
   }
+  // 6 — counter + channels fan out
+  at(6, WIPE_LEAD, "whoosh");
+  at(6, [1, 3, 5, 7], "tick");
+  [2, 4, 6].forEach((f, i) => at(6, f, POPS[i], 0.8));
+  // 7 — everything syncs at once
+  at(7, 10, "chime");
+  // 8 — reservation bars slide in
+  at(8, WIPE_LEAD, "whoosh");
+  at(8, [3, 7, 11], "swoosh", 0.7);
+  // 9 — messages stack in, AI reply types
+  at(9, WIPE_LEAD, "whoosh");
+  [2, 4, 6].forEach((f, i) => at(9, f, POPS[i], 0.8));
+  at(9, 10, "pop-3");
+  at(9, range(16, 38, 2), "tick", 0.8);
+  // 10 — Auto toggle + rate ticks up
+  at(10, WIPE_LEAD, "whoosh");
+  at(10, 8, "toggle");
+  at(10, range(10, 30, 4), "tick");
+  // 11 — two cards slide in
+  at(11, WIPE_LEAD, "whoosh");
+  at(11, [1, 3], "swoosh");
+  // 12–14 — stats count up, then land
+  at(12, WIPE_LEAD, "whoosh");
+  for (const s of [12, 13, 14]) {
+    at(s, [0, 2, 4, 6], "tick");
+    at(s, 7, "thump");
+  }
+  // 15 — red alert flips to green
+  at(15, WIPE_LEAD, "whoosh");
+  at(15, 2, "buzz", 0.8);
+  at(15, 13, "chime");
+  // 16 — CTA
+  at(16, WIPE_LEAD, "whoosh", 1.2);
+  at(16, 3, "shimmer");
+  at(16, 5, "pop-2");
+  return cues.filter((c) => c.frame >= 0);
 };
-const range = (from: number, to: number, step: number) =>
-  Array.from({ length: Math.floor((to - from) / step) + 1 }, (_, i) => from + i * step);
-
-/** Whoosh peaks ~6 frames into the file, so start it 4 frames early to hit the wipe. */
-const WIPE_LEAD = -4;
-
-// 1 — chaos: chips pop in, notifications keep pinging
-[0, 2, 4].forEach((f, i) => at(1, f, POPS[i]));
-[3, 8, 13, 18, 24, 30].forEach((f, i) => at(1, f, i % 2 ? "notify-2" : "notify-1"));
-// 2 — calendars collide, alert slams in
-at(2, 0, "swoosh");
-at(2, 2, "swoosh", 0.8);
-at(2, 6, "impact");
-at(2, 9, "buzz");
-// 3 — everything freezes
-at(3, 0, "freeze");
-// 4 — light sweep + logo
-at(4, WIPE_LEAD, "whoosh", 1.2);
-at(4, 2, "shimmer");
-// 5 — dashboard builds
-at(5, 0, "swoosh");
-[5, 7, 9, 11].forEach((f, i) => at(5, f, POPS[i % 3], 0.7));
-at(5, [16, 20, 24], "tick", 2);
-// 6 — counter + channels fan out
-at(6, WIPE_LEAD, "whoosh");
-at(6, [1, 3, 5, 7], "tick");
-[2, 4, 6].forEach((f, i) => at(6, f, POPS[i], 0.8));
-// 7 — everything syncs at once
-at(7, 10, "chime");
-// 8 — reservation bars slide in
-at(8, WIPE_LEAD, "whoosh");
-at(8, [3, 7, 11], "swoosh", 0.7);
-// 9 — messages stack in, AI reply types
-at(9, WIPE_LEAD, "whoosh");
-[2, 4, 6].forEach((f, i) => at(9, f, POPS[i], 0.8));
-at(9, 10, "pop-3");
-at(9, range(16, 38, 2), "tick", 0.8);
-// 10 — Auto toggle + rate ticks up
-at(10, WIPE_LEAD, "whoosh");
-at(10, 8, "toggle");
-at(10, range(10, 30, 4), "tick");
-// 11 — two cards slide in
-at(11, WIPE_LEAD, "whoosh");
-at(11, [1, 3], "swoosh");
-// 12–14 — stats count up, then land
-at(12, WIPE_LEAD, "whoosh");
-for (const s of [12, 13, 14]) {
-  at(s, [0, 2, 4, 6], "tick");
-  at(s, 7, "thump");
-}
-// 15 — red alert flips to green
-at(15, WIPE_LEAD, "whoosh");
-at(15, 2, "buzz", 0.8);
-at(15, 13, "chime");
-// 16 — CTA
-at(16, WIPE_LEAD, "whoosh", 1.2);
-at(16, 3, "shimmer");
-at(16, 5, "pop-2");
-
-export const SFX_CUES: readonly Cue[] = cues.filter((c) => c.frame >= 0);
 
 export const MUSIC_VOLUME = 1.0;

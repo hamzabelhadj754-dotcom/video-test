@@ -82,15 +82,14 @@ const BARS: Record<string, [number, number, number][]> = {
   Vrbo: [[0, 0, 2], [1, 2, 4], [2, 4, 3], [3, 1, 3]],
 };
 
-export const Scene02: React.FC = () => {
+/** The scene's UI illustration (shared by the classic and soft versions). */
+export const Scene02Stage: React.FC = () => {
   const frame = useCurrentFrame();
   // impact shake after the calendars collide, decaying
   const impact = mapRange(frame, [7, 9, 22], [0, 9, 0]);
   const pAlert = enter(frame, 3, 7);
 
   return (
-    <SceneShell bg={colors.forest}>
-      <DarkBackdrop />
       <VisualStage lines={COPY.s02.headline.length} shake={impact + 1.5}>
         {CALS.map((c) => {
           const p = enter(frame, c.delay, 8 - c.delay);
@@ -146,7 +145,13 @@ export const Scene02: React.FC = () => {
           </div>
         </div>
       </VisualStage>
-      <Headline lines={COPY.s02.headline} tone="onDark" />
-    </SceneShell>
   );
 };
+
+export const Scene02: React.FC = () => (
+  <SceneShell bg={colors.forest}>
+    <DarkBackdrop />
+    <Scene02Stage />
+    <Headline lines={COPY.s02.headline} tone="onDark" />
+  </SceneShell>
+);

@@ -30,12 +30,11 @@ const TOP = 170;
 const ROW = 104;
 
 /** Multi-calendar: reservation bars from every channel slide into place — no overlaps. */
-export const Scene08: React.FC = () => {
+/** The scene's UI illustration (shared by the classic and soft versions). */
+export const Scene08Stage: React.FC = () => {
   const frame = useCurrentFrame();
   const pCard = enter(frame, 0);
   return (
-    <SceneShell bg={colors.mintSoft} transition="wipeLeft">
-      <LightBackdrop tint={colors.mint} />
       <VisualStage lines={COPY.s08.headline.length}>
         <UICard style={{ left: 0, top: 0, width: 900, height: 740, opacity: pCard, transform: `translateY(${(1 - pCard) * 50}px)` }}>
           {/* legend */}
@@ -133,7 +132,13 @@ export const Scene08: React.FC = () => {
           })}
         </UICard>
       </VisualStage>
-      <Headline lines={COPY.s08.headline} tone="onLight" />
-    </SceneShell>
   );
 };
+
+export const Scene08: React.FC = () => (
+  <SceneShell bg={colors.mintSoft} transition="wipeLeft">
+    <LightBackdrop tint={colors.mint} />
+    <Scene08Stage />
+    <Headline lines={COPY.s08.headline} tone="onLight" />
+  </SceneShell>
+);

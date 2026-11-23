@@ -48,14 +48,13 @@ const Row: React.FC<{ label: string; value: string; strong?: boolean }> = ({ lab
 );
 
 /** Two cards slide in side by side: direct booking website + owner statements. */
-export const Scene11: React.FC = () => {
+/** The scene's UI illustration (shared by the classic and soft versions). */
+export const Scene11Stage: React.FC = () => {
   const frame = useCurrentFrame();
   const pL = enter(frame, 1, 8);
   const pR = enter(frame, 3, 8);
   const bars = [0.45, 0.6, 0.52, 0.75, 0.9];
   return (
-    <SceneShell bg={colors.cream} transition="wipeRight">
-      <LightBackdrop />
       <VisualStage lines={COPY.s11.headline.length}>
         {/* Booking website */}
         <UICard style={{ left: 0, top: 20, width: 435, height: 700, transform: `translateX(${(1 - pL) * -700}px) rotate(${(1 - pL) * -6}deg)` }}>
@@ -150,7 +149,13 @@ export const Scene11: React.FC = () => {
           </div>
         </UICard>
       </VisualStage>
-      <Headline lines={COPY.s11.headline} tone="onLight" />
-    </SceneShell>
   );
 };
+
+export const Scene11: React.FC = () => (
+  <SceneShell bg={colors.cream} transition="wipeRight">
+    <LightBackdrop />
+    <Scene11Stage />
+    <Headline lines={COPY.s11.headline} tone="onLight" />
+  </SceneShell>
+);

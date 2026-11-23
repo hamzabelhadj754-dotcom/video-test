@@ -1,29 +1,47 @@
-import React from "react";
+import React, { createContext, useContext } from "react";
 import { Img } from "remotion";
 import { channelColor, colors, fontFamily, radius, shadow } from "../brand";
 import { channelLogoSrc } from "../assets";
+
+/** "solid" = classic white cards; "glass" = frosted cards for the soft version. */
+export type UiTheme = "solid" | "glass";
+export const UiThemeContext = createContext<UiTheme>("solid");
+export const useUiTheme = () => useContext(UiThemeContext);
+
+export const GLASS_FILL = "linear-gradient(160deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.66) 100%)";
+export const glassSurface = (radius: number): React.CSSProperties => ({
+  background: GLASS_FILL,
+  border: "2px solid rgba(255,255,255,0.9)",
+  boxShadow: "0 40px 90px rgba(7,44,35,0.20), 0 8px 24px rgba(7,44,35,0.08), inset 0 1px 0 rgba(255,255,255,0.95)",
+  borderRadius: radius,
+  boxSizing: "border-box",
+});
 
 /** Rounded white card (radius 24, soft shadow) — base of every UI mockup. */
 export const UICard: React.FC<{
   style?: React.CSSProperties;
   children?: React.ReactNode;
   dark?: boolean;
-}> = ({ style, children, dark }) => (
-  <div
-    style={{
-      position: "absolute",
-      background: colors.white,
-      borderRadius: radius.card,
-      boxShadow: dark ? shadow.dark : shadow.card,
-      overflow: "hidden",
-      fontFamily,
-      color: colors.ink,
-      ...style,
-    }}
-  >
-    {children}
-  </div>
-);
+}> = ({ style, children, dark }) => {
+  const glass = useUiTheme() === "glass";
+  return (
+    <div
+      style={{
+        position: "absolute",
+        background: colors.white,
+        borderRadius: radius.card,
+        boxShadow: dark ? shadow.dark : shadow.card,
+        overflow: "hidden",
+        fontFamily,
+        color: colors.ink,
+        ...(glass ? glassSurface(32) : {}),
+        ...style,
+      }}
+    >
+      {children}
+    </div>
+  );
+};
 
 const CHIP_SIZES = {
   lg: { h: 120, font: 50, pad: 46, dot: 22, badge: 66, badgeFont: 32 },
@@ -44,6 +62,7 @@ export const Chip: React.FC<{
   showDot?: boolean;
 }> = ({ label, size = "md", badge, tone = "light", style, showDot = true }) => {
   const s = CHIP_SIZES[size];
+  const glass = useUiTheme() === "glass";
   const logo = channelLogoSrc(label);
   const dot = channelColor[label] ?? colors.primary;
   const bg = tone === "dark" ? colors.teal : tone === "tint" ? colors.mintSoft : colors.white;
@@ -66,6 +85,9 @@ export const Chip: React.FC<{
         letterSpacing: "-0.01em",
         whiteSpace: "nowrap",
         boxShadow: tone === "tint" ? "none" : shadow.soft,
+        ...(glass && tone === "light"
+          ? { background: GLASS_FILL, border: "2px solid rgba(255,255,255,0.9)", boxShadow: "0 18px 40px rgba(7,44,35,0.16)" }
+          : {}),
         ...style,
       }}
     >

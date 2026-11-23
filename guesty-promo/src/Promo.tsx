@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { AbsoluteFill, cancelRender, continueRender, delayRender, Freeze, interpolate, Sequence, useCurrentFrame } from "remotion";
-import { Audio } from "@remotion/media";
-import { colors, ensureFont, fontFamily } from "./brand";
-import { musicSrc, sfxSrc } from "./assets";
-import { MUSIC_VOLUME, SFX_CUES } from "./sfx";
+import React from "react";
+import { AbsoluteFill, Freeze, Sequence, useCurrentFrame } from "remotion";
+import { colors, fontFamily } from "./brand";
+import { buildCues } from "./sfx";
+import { Soundtrack, useBrandFont } from "./Soundtrack";
 import { Format, LayoutProvider } from "./layout";
-import { FPS, SCENES, TOTAL, TRANSITION_OVERLAP } from "./timing";
+import { SCENES, TRANSITION_OVERLAP } from "./timing";
 import { Scene01 } from "./scenes/Scene01";
 import { Scene02 } from "./scenes/Scene02";
 import { Scene03 } from "./scenes/Scene03";
@@ -23,6 +22,8 @@ import { Scene14 } from "./scenes/Scene14";
 import { Scene15 } from "./scenes/Scene15";
 import { Scene16 } from "./scenes/Scene16";
 
+const CLASSIC_CUES = buildCues("classic");
+
 const SCENE_COMPONENTS: React.FC[] = [
   Scene01, Scene02, Scene03, Scene04, Scene05, Scene06, Scene07, Scene08,
   Scene09, Scene10, Scene11, Scene12, Scene13, Scene14, Scene15, Scene16,
@@ -38,44 +39,7 @@ const FreezeAfter: React.FC<{ last: number; children: React.ReactNode }> = ({ la
   );
 };
 
-const Soundtrack: React.FC = () => {
-  const music = musicSrc();
-  return (
-    <>
-      {music ? (
-        <Audio
-          src={music}
-          volume={(f) =>
-            MUSIC_VOLUME *
-            interpolate(f, [0, 0.5 * FPS, TOTAL - 1 * FPS, TOTAL], [0, 1, 1, 0], {
-              extrapolateLeft: "clamp",
-              extrapolateRight: "clamp",
-            })
-          }
-        />
-      ) : null}
-      {SFX_CUES.map((cue, i) => {
-        const src = sfxSrc(cue.sound);
-        return src ? (
-          <Sequence key={i} from={cue.frame} durationInFrames={Math.min(75, TOTAL - cue.frame)} name={`sfx ${cue.sound}`}>
-            <Audio src={src} volume={cue.volume} />
-          </Sequence>
-        ) : null;
-      })}
-    </>
-  );
-};
-
 export type PromoProps = { format: Format };
-
-const useBrandFont = () => {
-  const [handle] = useState(() => delayRender("Loading Figtree"));
-  useEffect(() => {
-    ensureFont()
-      .then(() => continueRender(handle))
-      .catch((e) => cancelRender(e));
-  }, [handle]);
-};
 
 export const Promo: React.FC<PromoProps> = ({ format }) => {
   useBrandFont();
@@ -99,7 +63,7 @@ export const Promo: React.FC<PromoProps> = ({ format }) => {
           </Sequence>
         );
       })}
-      <Soundtrack />
+      <Soundtrack cues={CLASSIC_CUES} />
     </AbsoluteFill>
   </LayoutProvider>
   );

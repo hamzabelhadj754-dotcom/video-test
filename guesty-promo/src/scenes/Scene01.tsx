@@ -60,11 +60,10 @@ const Toast: React.FC<{ icon: IconName; text: string; p: number }> = ({ icon, te
   </div>
 );
 
-export const Scene01: React.FC = () => {
+/** The scene's UI illustration (shared by the classic and soft versions). */
+export const Scene01Stage: React.FC = () => {
   const frame = useCurrentFrame();
   return (
-    <SceneShell bg={colors.forest}>
-      <DarkBackdrop />
       <VisualStage lines={COPY.s01.headline.length} shake={4}>
         {TOASTS.map((t, i) => (
           <div key={i} style={{ position: "absolute", left: t.x, top: t.y, transform: `rotate(${t.rot}deg)` }}>
@@ -90,7 +89,13 @@ export const Scene01: React.FC = () => {
           );
         })}
       </VisualStage>
-      <Headline lines={COPY.s01.headline} tone="onDark" />
-    </SceneShell>
   );
 };
+
+export const Scene01: React.FC = () => (
+  <SceneShell bg={colors.forest}>
+    <DarkBackdrop />
+    <Scene01Stage />
+    <Headline lines={COPY.s01.headline} tone="onDark" />
+  </SceneShell>
+);

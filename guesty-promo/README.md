@@ -1,18 +1,23 @@
 # Guesty — 30 s promo (Remotion)
 
-"Chaos → Calm": 16 scenes, 900 frames @ 30 fps, in two formats.
+"Chaos → Calm": 16 scenes, 900 frames @ 30 fps, in two styles and two formats.
 
-| Output | Composition | Size |
-|---|---|---|
-| `out/guesty-promo-9x16.mp4` | `Promo9x16` | 1080×1920 (Reels) |
-| `out/guesty-promo-1x1.mp4` | `Promo1x1` | 1080×1080 |
+| Output | Composition | Style | Size |
+|---|---|---|---|
+| `out/guesty-promo-9x16.mp4` | `Promo9x16` | Classic (solid UI, wipes) | 1080×1920 (Reels) |
+| `out/guesty-promo-1x1.mp4` | `Promo1x1` | Classic | 1080×1080 |
+| `out/guesty-promo-soft-9x16.mp4` | `Soft9x16` | Soft (gradient + glass, blur reveals) | 1080×1920 (Reels) |
+| `out/guesty-promo-soft-1x1.mp4` | `Soft1x1` | Soft | 1080×1080 |
+
+The **soft** version (`src/soft/`) has a drifting mesh-gradient background whose mood follows the story (coral chaos → dark freeze → calm teal → deep green proof → cloudy sky). It also has word-by-word blur reveals, frosted-glass UI, a search pill that morphs into the feature card with channels orbiting it, 6-frame blur dissolves and a cloud end card. It uses the same copy, timing, music and sound effects as the classic version.
 
 ```bash
 npm install
 npm run check-timing   # asserts every hold >= 45 frames, total = 900, <= 6 words per hold
 npm run dev            # Remotion Studio
-npm run stills         # mid-hold still of every scene -> out/stills/<format>/
-npm run render         # check-timing + both MP4s (H.264, CRF 18, veryfast)
+npm run stills         # mid-hold still of every scene -> out/stills/<format>/ (add -- --soft for the soft version)
+npm run render         # check-timing + classic MP4s (H.264, CRF 18, veryfast)
+npm run render:soft    # check-timing + soft-style MP4s
 npm run audio          # regenerate public/music.mp3 + public/sfx/*.wav (needs python3 with numpy + scipy)
 ```
 

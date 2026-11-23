@@ -16,7 +16,8 @@ const MESSAGES = [
 const REPLY = "Sure! Early check-in at 1 PM is all set.";
 
 /** Unified inbox: messages from every channel stack in; an AI reply types itself. */
-export const Scene09: React.FC = () => {
+/** The scene's UI illustration (shared by the classic and soft versions). */
+export const Scene09Stage: React.FC = () => {
   const frame = useCurrentFrame();
   const pCard = enter(frame, 0);
   const pReply = enter(frame, 10, 8);
@@ -24,8 +25,6 @@ export const Scene09: React.FC = () => {
   const caretOn = Math.floor(frame / 8) % 2 === 0 || typed < REPLY.length;
 
   return (
-    <SceneShell bg={colors.cream} transition="wipeRight">
-      <LightBackdrop />
       <VisualStage lines={COPY.s09.headline.length}>
         <UICard style={{ left: 0, top: 50, width: 900, height: 640, opacity: pCard, transform: `translateY(${(1 - pCard) * 50}px)` }}>
           <div
@@ -122,7 +121,13 @@ export const Scene09: React.FC = () => {
           </div>
         </UICard>
       </VisualStage>
-      <Headline lines={COPY.s09.headline} tone="onLight" />
-    </SceneShell>
   );
 };
+
+export const Scene09: React.FC = () => (
+  <SceneShell bg={colors.cream} transition="wipeRight">
+    <LightBackdrop />
+    <Scene09Stage />
+    <Headline lines={COPY.s09.headline} tone="onLight" />
+  </SceneShell>
+);

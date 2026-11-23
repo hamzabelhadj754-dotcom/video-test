@@ -10,12 +10,13 @@ const args = process.argv.slice(2);
 const formats = args.filter((a) => a === "9x16" || a === "1x1");
 const extra = (args.find((a) => a.startsWith("--frames=")) ?? "").replace("--frames=", "").split(",").filter(Boolean).map(Number);
 const onlyExtra = args.includes("--only-extra");
+const soft = args.includes("--soft");
 
 const main = async () => {
   const serveUrl = await bundle({ entryPoint: path.resolve("src/index.ts") });
   const browser = await openBrowser("chrome", { browserExecutable: BROWSER_EXECUTABLE });
   for (const f of formats.length ? formats : ["9x16", "1x1"]) {
-    const id = f === "9x16" ? "Promo9x16" : "Promo1x1";
+    const id = `${soft ? "Soft" : "Promo"}${f}`;
     const composition = await selectComposition({ serveUrl, id, puppeteerInstance: browser, browserExecutable: BROWSER_EXECUTABLE });
     const frames = onlyExtra
       ? extra.map((fr) => ({ fr, name: `f${String(fr).padStart(3, "0")}` }))
@@ -27,7 +28,7 @@ const main = async () => {
           ...extra.map((fr) => ({ fr, name: `f${String(fr).padStart(3, "0")}` })),
         ];
     for (const { fr, name } of frames) {
-      const output = path.resolve(`out/stills/${f}/${name}.png`);
+      const output = path.resolve(`out/stills/${soft ? "soft-" : ""}${f}/${name}.png`);
       await renderStill({ composition, serveUrl, frame: fr, output, puppeteerInstance: browser, browserExecutable: BROWSER_EXECUTABLE, overwrite: true });
       console.log(`${f} ${name} (frame ${fr}) -> ${path.relative(process.cwd(), output)}`);
     }
