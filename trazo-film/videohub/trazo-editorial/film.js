@@ -119,7 +119,7 @@
   const spring = (t0, f = 1.5, d = 6.5) => { const x = T - t0; return x <= 0 ? 0 : 1 - Math.exp(-x * d * 1.22) * Math.cos(x * 2 * Math.PI * f); };
   const shakeAt = (t0, amp = 10, dur = .5) => { const x = T - t0; if (x < 0 || x > dur) return [0, 0]; const a = amp * Math.exp(-x * 8); return [a * Math.sin(x * 97), a * Math.cos(x * 71)]; };
   // true motion blur for fast moves: re-draw the element at earlier instants, the current one solid, the trail fading
-  function motion(fn, n = 8, sh = .012) { const T0 = T, a0 = g.globalAlpha; for (let j = 0; j < n; j++) { T = T0 - sh * j / (n - 1); g.globalAlpha = a0 / (j + 1); fn(); } T = T0; g.globalAlpha = a0; }
+  function motion(fn) { fn(); }   // v06: single draw (multi-sample trails read as a lagging double image)
   // letter-by-letter typing: each new glyph pops (scale + blur), blinking caret, settled text drawn kerned
   function typeOn(s, x, y, t0, o = {}) {
     const cps = o.cps || 22, fo = Object.assign({ f: SANS, size: 24, w: 600 }, o, { align: 'left' }), size = fo.size;
@@ -132,8 +132,8 @@
       g.save(); g.globalAlpha *= p; if (o.pop !== false) { const sc = 1 + .18 * (1 - E.out(p)), py = y - size * .35; g.translate(cx + cw / 2, py); g.scale(sc, sc); g.translate(-(cx + cw / 2), -py); }
       if (p < 1) g.filter = `blur(${(3 * (1 - p)).toFixed(1)}px)`; txt(ch, cx, y, fo); g.restore(); }
     const tEnd = t0 + (s.length - 1) / cps, hold = o.caretHold != null ? o.caretHold : .45;
-    if (o.caret !== false && T < tEnd + hold && (T < tEnd + .05 || Math.floor((T - tEnd) * 5) % 2 === 0)) {
-      g.fillStyle = o.caretCol || fo.col || C.white; g.fillRect(X + measure(s.slice(0, n), fo) + 4, y - size * .76, Math.max(2, size * .045), size * .9); }
+    if (o.caret !== false && T < tEnd + hold) { g.save(); g.globalAlpha *= 1 - clamp((T - tEnd - hold + .25) / .25);
+      g.fillStyle = o.caretCol || fo.col || C.white; g.fillRect(X + measure(s.slice(0, n), fo) + 4, y - size * .76, Math.max(2, size * .045), size * .9); g.restore(); }
     return full;
   }
   // design-tool selection box: dashed, marching, with corner handles; grows in from the left
@@ -171,10 +171,9 @@
     g.restore();
   }
   // image resolving from a pale blurred "ghost" into the solid photo
-  function ghost(img, cx, by, h, t0, o = {}) { const a = k(T, t0, .35), b = k(T, t0 + .3, 1.0, E.out); if (a <= 0) return; ev('ghost', t0);
-    const dx = (o.dx != null ? o.dx : 50) * (1 - b), s = h / img.height, w = img.width * s;
-    if (b < 1) { g.save(); g.globalAlpha *= .6 * a * (1 - b); g.drawImage(img.pale, cx - w / 2 + dx * 1.8, by - h, w, h); g.restore(); }
-    if (b > 0) { g.save(); g.globalAlpha *= b; if (b < 1) g.filter = `blur(${(12 * (1 - b)).toFixed(1)}px)`; photo(img, cx + dx, by, h, o); g.restore(); } }
+  function ghost(img, cx, by, h, t0, o = {}) { const a = k(T, t0, 1.0, E.out); if (a <= 0) return; ev('ghost', t0);
+    const sc = 1.04 - .04 * a, py = by - h / 2; g.save(); g.globalAlpha *= clamp(a * 1.6); g.translate(cx, py); g.scale(sc, sc); g.translate(-cx, -py);
+    if (a < 1) g.filter = `blur(${(10 * (1 - a)).toFixed(1)}px)`; photo(img, cx, by, h, o); g.restore(); }
   // keyframed cursor: glides on a slight arc, presses on clicks (ring), fades in/out
   function cursorPath(keys, col = C.ink, edge = '#fff', s = 1.15) {
     const t0 = keys[0][0], t1 = keys[keys.length - 1][0]; if (T < t0 - .35 || T > t1 + .45) return;
@@ -189,14 +188,14 @@
     g.save(); g.globalAlpha *= al; g.shadowColor = 'rgba(0,0,0,.3)'; g.shadowBlur = 12; g.shadowOffsetY = 5; cursor(x, y, s * press, col, edge); g.restore();
   }
   // small word that springs in (superscripts, numbers)
-  function popText(s, x, y, t0, o = {}) { if (T < t0) return; ev('pop', t0); const sp = Math.max(0, spring(t0, 1.6, 7)), m = measure(s, o), cx = o.align === 'center' ? x : o.align === 'right' ? x - m / 2 : x + m / 2, cy = y - (o.size || 24) * .35;
-    g.save(); g.globalAlpha *= clamp((T - t0) / .12); g.translate(cx, cy); g.scale(sp, sp); g.translate(-cx, -cy); txt(s, x, y, o); g.restore(); }
+  function popText(s, x, y, t0, o = {}) { if (T < t0) return; ev('pop', t0); const q = k(T, t0, .5, E.out), sp = .9 + .1 * q, m = measure(s, o), cx = o.align === 'center' ? x : o.align === 'right' ? x - m / 2 : x + m / 2, cy = y - (o.size || 24) * .35;
+    g.save(); g.globalAlpha *= q; g.translate(cx, cy + 10 * (1 - q)); g.scale(sp, sp); g.translate(-cx, -cy); txt(s, x, y, o); g.restore(); }
   // odometer: digits roll up into place, other glyphs rise in
   function roll(str, x, y, t0, o) { const fo = Object.assign({ f: SANS, w: 800, size: 200, col: C.white }, o, { align: 'left' }), sz = fo.size, lh = sz * 1.0;
     const full = measure(str, fo), X = o.align === 'center' ? x - full / 2 : x; if (T < t0) return; ev('roll', t0, { n: str.length });
     for (let i = 0; i < str.length; i++) { const ch = str[i]; if (ch === ' ') continue; const cx = X + measure(str.slice(0, i), fo), cw = measure(ch, fo), p = k(T, t0 + i * .07, 1.0, E.out); if (p <= 0) continue;
       g.save(); g.beginPath(); g.rect(cx - 6, y - sz * .86, cw + 12, sz * 1.08); g.clip(); if (o.glow) { g.shadowColor = 'rgba(59,123,255,.8)'; g.shadowBlur = 50; }
-      if (/\d/.test(ch)) { const steps = 7 + i * 3, pos = p * steps, c0 = Math.floor(pos), fr = pos - c0, d0 = ((+ch - steps + c0) % 10 + 10) % 10;
+      if (/\d/.test(ch)) { const steps = o.steps != null ? o.steps : 7 + i * 3, pos = p * steps, c0 = Math.floor(pos), fr = pos - c0, d0 = ((+ch - steps + c0) % 10 + 10) % 10;
         if (p < 1) g.filter = `blur(${(3 * (1 - p)).toFixed(1)}px)`; txt(String(d0), cx, y - fr * lh, fo); if (fr > 0) txt(String((d0 + 1) % 10), cx, y + (1 - fr) * lh, fo); }
       else { g.globalAlpha *= p; txt(ch, cx, y + (1 - p) * lh * .6, fo); }
       g.restore(); } }
@@ -245,7 +244,7 @@
   function leaves(t, mode, which, t0) {
     const L = LEAF[mode]; const spots = { tl: [-260, -330, 2.6, .9, 1], br: [W - 640, H - 560, -.35, 1, 2], tr: [W - 520, -380, 3.6, .75, 3], bl: [-300, H - 520, -1.2, .8, 4] };
     which.forEach((key, j) => { const [x, y, r, s, ph] = spots[key]; const q = t0 == null ? 1 : k(t, t0 + j * .14, 1.4, E.out); if (q < 1 && t0 != null) ev('leaves', t0);
-      const sx = key[1] === 'l' ? -1 : 1, sy = key[0] === 't' ? -1 : 1, sway = Math.sin(t * .7 + ph) * .05 + Math.sin(t * 1.9 + ph * 2) * .012;
+      const sx = key[1] === 'l' ? -1 : 1, sy = key[0] === 't' ? -1 : 1, sway = Math.sin(t * .45 + ph) * .045 + Math.sin(t * 1.1 + ph * 2) * .008;
       g.save(); g.translate(x + 500 * s + sx * 420 * (1 - q), y + 500 * s + sy * 320 * (1 - q)); g.rotate(r + sway + sx * sy * .9 * (1 - q)); g.scale(s, s); g.drawImage(L, -L.width / 2, -L.height / 2); g.restore(); });
   }
   function sideTexts(col, a = 1) {
@@ -336,16 +335,16 @@
     const dp = k(t, 9.75, 1.0, E.out), pulse = 1 + .07 * Math.sin(clamp((t - 15.55) / .6) * Math.PI); disc(lerp(-520, 960, dp), 590, 310 * pulse);
     // type counter (left) and profile chip (right)
     typeOn('TIPO', 440, 470, 11.5, { size: 14, w: 700, ls: 4, col: C.sky, cps: 30, caret: false });
-    if (t < 15.6) roll('01', 440, 556, 11.62, { size: 76, w: 800, col: C.white }); else roll('02', 440, 556, 15.62, { size: 76, w: 800, col: C.blue2 });
+    if (t < 15.6) roll('01', 440, 556, 11.62, { size: 76, w: 800, col: C.white, steps: 1 }); else roll('02', 440, 556, 15.62, { size: 76, w: 800, col: C.blue2, steps: 1 });
     pillSwap(1480, 445, [['18–40 AÑOS', 12.36], ['FLOTAS DE 5 A 50', 16.2]], 12.1, { size: 18, fill: 'rgba(6,16,31,.55)', stroke: 'rgba(169,196,255,.8)', col: C.sky });
     // A · student slides in from the right, leaves to the left
-    const sIn = k(t, 11.6, .9, E.out), sOut = k(t, 15.45, .5, E.in);
-    if (sIn > 0 && sOut < 1) { const draw = () => { const a = k(T, 11.6, .9, E.out), o = k(T, 15.45, .5, E.in); g.save(); g.globalAlpha *= clamp(a * 2) * (1 - o); const b = 10 * (1 - a) + 8 * o; if (b > .3) g.filter = `blur(${b.toFixed(1)}px)`; photo(IMG.studentCool, 960 + 620 * (1 - a) - 780 * o, 830, 560); g.restore(); };
+    const sIn = k(t, 11.6, 1.0, E.out), sOut = k(t, 15.4, .75, E.io);
+    if (sIn > 0 && sOut < 1) { const draw = () => { const a = k(T, 11.6, 1.0, E.out), o = k(T, 15.4, .75, E.io); g.save(); g.globalAlpha *= clamp(a * 2) * (1 - clamp(o / .5)); const b = 10 * (1 - a) + 9 * Math.sin(Math.PI * o); if (b > .3) g.filter = `blur(${b.toFixed(1)}px)`; photo(IMG.studentCool, 960 + 620 * (1 - a) - 820 * o, 830, 560); g.restore(); };
       (sIn < .85 || sOut > 0) ? motion(draw) : draw(); }
     // B · courier
-    const cIn = k(t, 15.62, .85, E.out);
-    if (cIn > 0) { const draw = () => { const a = k(T, 15.62, .85, E.out); g.save(); g.globalAlpha *= clamp(a * 2); if (a < 1) g.filter = `blur(${(10 * (1 - a)).toFixed(1)}px)`; photo(IMG.courierCool, 960 + 780 * (1 - a), 830, 530); g.restore(); };
-      cIn < .85 ? motion(draw) : draw(); }
+    const cIn = k(t, 15.4, .75, E.io);
+    if (cIn > 0) { const draw = () => { const a = k(T, 15.4, .75, E.io); g.save(); g.globalAlpha *= clamp((a - .3) / .45); const b = 9 * Math.sin(Math.PI * a); if (b > .3) g.filter = `blur(${b.toFixed(1)}px)`; photo(IMG.courierCool, 960 + 820 * (1 - a), 830, 530); g.restore(); };
+      draw(); }
     pillSwap(960, 852, [['ESTUDIANTES Y TRABAJADORES', 12.36], ['EMPRESAS DE REPARTO', 15.9]], 12.05, { size: 24, fill: 'rgba(6,16,31,.65)', stroke: C.white, lw: 2.5 });
     { const o = k(t, 15.4, .3, E.in); if (o < 1) { g.save(); g.globalAlpha *= 1 - o; typeOn('Estudiantes y trabajadores que se mueven por la ciudad.', 960, 958, 13.6, { size: 19, w: 400, col: C.sky, align: 'center', cps: 70, caret: false }); g.restore(); } }
     typeOn('Necesitan flotas de bicis fiables, todos los días.', 960, 958, 16.9, { size: 19, w: 400, col: C.sky, align: 'center', cps: 70, caret: false });
@@ -388,7 +387,7 @@
     typeOn(title, x + 35, 360, kt + .2, Object.assign({ cps: 18 }, TITLE));
     popText(num, x + bw + 22, 292, kt + .6, { size: 24, w: 800, col: C.blue2 });
     items.forEach(([s, a, sub], i) => { const y = 450 + i * 120; pillBar(x, y, a - .12, s, { size: 20, fill: 'rgba(6,16,31,.5)', stroke: 'rgba(244,246,250,.8)', col: C.white, lw: 2 });
-      typeOn(sub, x + 4, y + 76, a + .3, { size: 18, w: 400, col: C.sky, cps: 60, caret: false }); });
+      typeOn(sub, x + 4, y + 78, a + .3, { size: 20, w: 500, col: '#C4D6FF', cps: 60, caret: false }); });
     g.restore();
   }
 
@@ -497,7 +496,7 @@
   // the blue tick of the last card becomes the stage of the next scene
   const TICK0 = (() => { const a = 2.2 * Math.PI / 180, cx = 1410, cy = 610, dx = 1550 - cx, dy = 482 - cy; return [cx + dx * Math.cos(a) - dy * Math.sin(a), cy + dx * Math.sin(a) + dy * Math.cos(a)]; })();
   const CARRY = [67.75, 68.6];                       // overlay window: tick lifts at 67.75, lands as the stage at 68.8
-  const camPt = (name, t, x, y) => { const sc0 = SC.find(q => q.name === name), lt = (t - sc0.t0) / (sc0.t1 - sc0.t0), sc = 1.006 + .025 * lt;
+  const camPt = (name, t, x, y) => { const sc = CAM(t);
     return [960 + sc * (x - 960 + 4 * Math.sin(t * .5)), 540 + sc * (y - 540 + 3 * Math.cos(t * .4)), sc]; };
   const discR = t => 270 * (1 + .015 * Math.sin(t * 2));
   function carryOverlay(t) { if (t < CARRY[0] || t >= CARRY[1]) return; ev('carry', CARRY[0]); const og = g; g = main;
@@ -550,7 +549,7 @@
     if (t >= CARRY[1]) disc(960, 690, discR(t));
     ghost(IMG.cyclistCool, 960, 905, 400, CARRY[1] - .02, { dx: -60 });
     typeOn('INCENTIVO', 470, 640, 69.9, { size: 14, w: 700, ls: 4, col: C.sky, cps: 30, caret: false });
-    roll(t < 71.24 ? '01' : t < 72.02 ? '02' : '03', 470, 724, t < 71.24 ? 70.14 : t < 72.02 ? 71.24 : 72.02, { size: 76, w: 800, col: C.white });
+    roll(t < 71.24 ? '01' : t < 72.02 ? '02' : '03', 470, 724, t < 71.24 ? 70.14 : t < 72.02 ? 71.24 : 72.02, { size: 76, w: 800, col: C.white, steps: 1 });
     pillSwap(960, 935, [['COMISIÓN DEL 3 %', 70.14], ['BONUS TRIMESTRAL', 71.24], ['VENDEDOR DEL MES', 72.02]], 69.85, { size: 28, fill: C.white, col: C.ink });
   });
 
@@ -592,7 +591,7 @@
     drawLine([[420, 682], [420, 720], [270, 720], [270, 770]], 86.6, .6, L); drawLine([[420, 720], [580, 720], [580, 770]], 86.7, .6, L); drawLine([[960, 682], [960, 770]], 87.9, .5, L);
     const node = (x, y, h, s, a, top) => { const w = nodeW(h, s);
       if (top) { rr(x - w / 2, y - 46, w, 92, 18); g.fillStyle = C.white; g.fill(); typeOn(h, x, y + 2, a, { size: 26, w: 800, col: C.ink, align: 'center', cps: 34, caret: false }); typeOn(s, x, y + 30, a + .4, { size: 15, w: 600, ls: 2, col: '#4A5872', align: 'center', cps: 40, caret: false }); return; }
-      const sp = spring(a - .05, 1.5, 7); if (sp <= 0) return; ev('card', a - .05); g.save(); g.globalAlpha *= clamp((t - a + .05) / .15); g.translate(x, y); g.scale(Math.max(0, sp), Math.max(0, sp)); g.translate(-x, -y);
+      const q = k(t, a - .05, .55, E.out); if (q <= 0) return; ev('card', a - .05); const sp = .9 + .1 * q; g.save(); g.globalAlpha *= q; g.translate(x, y + 14 * (1 - q)); g.scale(sp, sp); g.translate(-x, -y);
       glass(x - w / 2, y - 46, w, 92, 18); typeOn(h, x, y + 2, a + .08, { size: 26, w: 700, col: C.white, align: 'center', cps: 36, caret: false }); typeOn(s, x, y + 30, a + .35, { size: 15, w: 600, ls: 2, col: C.sky, align: 'center', cps: 44, caret: false }); g.restore(); };
     node(960, 405, 'Dirección Comercial', '1 DIRECTOR/A', 81.95, true);
     node(420, 636, 'Ventas Particulares', 'CLIENTE · PARTICULAR', 86.08); node(960, 636, 'Ventas Empresas', 'CLIENTE · EMPRESA', 87.48); node(1500, 636, 'Administración', 'Y ANÁLISIS · 2', 88.64);
@@ -665,11 +664,12 @@
     68.4: ['match', .2], 73.3: ['disc', .5, [960, 690]], 81.65: ['match', .1], 89.55: ['match', .06],
   };
   window.VH_CUTS = CUTS;
+  const CAM = t => 1.02 + .012 * Math.sin(t * .21);   // slow global breathing zoom, continuous across every cut
   const LEAKS = [[1.15, 1.5, 1], [89.9, 1.8, 1]];
-  const bufA = mk(W, H), bufB = mk(W, H), bufC = mk(W, H), cA = bufA.getContext('2d'), cB = bufB.getContext('2d'), cC = bufC.getContext('2d');
+  const bufA = mk(W, H), bufB = mk(W, H), bufC = mk(W, H), bufD = mk(W, H), cA = bufA.getContext('2d'), cB = bufB.getContext('2d'), cC = bufC.getContext('2d'), cD = bufD.getContext('2d');
   function drawScene(s, t, ctx) { const og = g; g = ctx; g.setTransform(1, 0, 0, 1, 0, 0); g.globalAlpha = 1; g.filter = 'none'; g.globalCompositeOperation = 'source-over';
     g.fillStyle = s.base; g.fillRect(0, 0, W, H);   // no uncovered edge under the camera drift
-    const lt = (t - s.t0) / (s.t1 - s.t0), sc = 1.006 + .025 * lt; g.translate(960, 540); g.scale(sc, sc); g.translate(-960 + 4 * Math.sin(t * .5), -540 + 3 * Math.cos(t * .4));
+    const sc = CAM(t); g.translate(960, 540); g.scale(sc, sc); g.translate(-960 + 4 * Math.sin(t * .5), -540 + 3 * Math.cos(t * .4));
     s.draw(t); g = og; }
   function transition(type, A, B, t, p, ex, hl) {
     const m = main, e = E.io(clamp(p));
@@ -682,8 +682,12 @@
         if (sA < 1) { ctx.fillStyle = '#03050A'; ctx.fillRect(0, 0, W, H); }
         ctx.save(); ctx.translate(dx * off, dy * off); ctx.translate(960, 540); ctx.scale(s2, s2); ctx.translate(-960, -540); ctx.drawImage(bufA, 0, 0); ctx.restore();
         ctx.drawImage(bufB, dx * (off - L), dy * (off - L)); };
-      // A and B tile the frame, so each sample is an opaque full frame: running average with alpha 1/(j+1) is exact
-      for (let j = 0; j < n; j++) comp(m, n === 1 ? p : lerp(pa, pb, j / (n - 1)), 1 / (j + 1));
+      cC.setTransform(1, 0, 0, 1, 0, 0); cC.fillStyle = '#03050A'; cC.fillRect(0, 0, W, H); comp(cC, p, 1); cC.globalAlpha = 1; void n;
+      const f = Math.min(40, travel / 1.2);
+      if (f < 1.5) m.drawImage(bufC, 0, 0);
+      else { const tw = dx ? Math.max(16, Math.round(W / f)) : W, th = dy ? Math.max(16, Math.round(H / f)) : H;
+        cD.setTransform(1, 0, 0, 1, 0, 0); cD.imageSmoothingEnabled = true; cD.imageSmoothingQuality = 'high'; cD.clearRect(0, 0, W, H); cD.drawImage(bufC, 0, 0, tw, th);
+        m.imageSmoothingEnabled = true; m.imageSmoothingQuality = 'high'; m.drawImage(bufD, 0, 0, tw, th, 0, 0, W, H); }
       m.globalAlpha = 1;
     } else if (type === 'match') {       // continuity cut: the carried element is in the same place on both sides
       m.drawImage(bufA, 0, 0); m.globalAlpha = e; m.drawImage(bufB, 0, 0);
