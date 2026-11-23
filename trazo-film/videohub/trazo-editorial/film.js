@@ -386,13 +386,15 @@
     const fd = k(t, 10.95, .8, E.out), pulse = 1 + .05 * Math.sin(clamp((t - 15.55) / .6) * Math.PI);
     if (fd > 0) disc(960, 590, 310 * (.9 + .1 * fd) * pulse, fd);
     const thin = k(t, 12.0, .9, E.io); pen(PATH.ring, 10.5, .8, { lw: lerp(4.5, 2.2, thin), a: lerp(1, .55, thin), hot: thin < .5 });
+    if (t > 11.4 && t < 18.3) { const a0 = Math.PI / 2 + (t - 11.4) * .55, ga = k(t, 11.4, .8) * (1 - k(t, 17.8, .5));   // a glint keeps travelling the ring
+      g.save(); g.globalAlpha = ga; g.lineCap = 'round'; g.strokeStyle = 'rgba(255,170,120,.95)'; g.lineWidth = 3.5; g.shadowColor = 'rgba(255,90,31,.9)'; g.shadowBlur = 16; g.beginPath(); g.arc(960, 590, 310, a0, a0 + .32); g.stroke(); g.restore(); }
     typeOn('TIPO', 440, 470, 11.5, { size: 14, w: 700, ls: 4, col: C.sky, cps: 30, caret: false });
     if (t < 15.6) roll('01', 440, 556, 11.62, { f: DISP, size: 80, w: 800, col: C.white, steps: 1 }); else roll('02', 440, 556, 15.62, { f: DISP, size: 80, w: 800, col: C.blue2, steps: 1 });
     pillSwap(1480, 445, [['18–40 AÑOS', 12.36], ['FLOTAS DE 5 A 50', 16.2]], 12.1, { size: 18, fill: 'rgba(6,16,31,.55)', stroke: 'rgba(169,196,255,.8)', col: C.sky });
     const sIn = k(t, 11.6, 1.0, E.out), sOut = k(t, 15.4, .75, E.io);
-    if (sIn > 0 && sOut < 1) { g.save(); g.globalAlpha *= clamp(sIn * 2) * (1 - clamp(sOut / .5)); const bl = 10 * (1 - sIn) + 9 * Math.sin(Math.PI * sOut); if (bl > .3) g.filter = `blur(${bl.toFixed(1)}px)`; photo(IMG.studentCool, 960 + 620 * (1 - sIn) - 820 * sOut, 830, 560); g.restore(); }
+    if (sIn > 0 && sOut < 1) { g.save(); g.globalAlpha *= clamp(sIn * 2) * (1 - clamp(sOut / .5)); const bl = 10 * (1 - sIn) + 9 * Math.sin(Math.PI * sOut); if (bl > .3) g.filter = `blur(${bl.toFixed(1)}px)`; const zs = 1 + .035 * k(t, 12.4, 3.2, E.soft), sx = 960 + 620 * (1 - sIn) - 820 * sOut; g.translate(sx, 830); g.scale(zs, zs); g.translate(-sx, -830); photo(IMG.studentCool, sx, 830, 560); g.restore(); }
     const cIn = k(t, 15.4, .75, E.io);
-    if (cIn > 0) { g.save(); g.globalAlpha *= clamp((cIn - .3) / .45); const bl = 9 * Math.sin(Math.PI * cIn); if (bl > .3) g.filter = `blur(${bl.toFixed(1)}px)`; photo(IMG.courierCool, 960 + 820 * (1 - cIn), 830, 530); g.restore(); }
+    if (cIn > 0) { g.save(); g.globalAlpha *= clamp((cIn - .3) / .45); const bl = 9 * Math.sin(Math.PI * cIn); if (bl > .3) g.filter = `blur(${bl.toFixed(1)}px)`; const zc = 1 + .03 * k(t, 16.2, 2.2, E.soft), cx2 = 960 + 820 * (1 - cIn); g.translate(cx2, 830); g.scale(zc, zc); g.translate(-cx2, -830); photo(IMG.courierCool, cx2, 830, 530); g.restore(); }
     pillSwap(960, 852, [['ESTUDIANTES Y TRABAJADORES', 12.36], ['EMPRESAS DE REPARTO', 15.9]], 12.05, { size: 24, fill: 'rgba(6,16,31,.65)', stroke: C.white, lw: 2.5 });
   });
 
@@ -517,12 +519,13 @@
     OB.forEach(([n, big, lab, when, a], i) => { const inT = a - .3, outT = OB[i + 1] ? OB[i + 1][4] - .3 : 99; if (t < inT || t > outT + .5) return; ev('card', inT);
       const sp = spring(inT, 1.1, 6.5), o = k(t, outT, .45, E.in), cx = 960 + 1400 * (1 - sp) - 1400 * o;
       g.save(); g.globalAlpha *= clamp((t - inT) / .15) * (1 - o * .7); const bl = 14 * o + 10 * clamp(1 - (t - inT) / .45); if (bl > .4) g.filter = `blur(${bl.toFixed(1)}px)`;
+      { const zz = 1 + .035 * k(t, a + .7, 3.6, E.soft); g.translate(cx, 545); g.scale(zz, zz); g.translate(-cx, -545); }
       glass(cx - 560, 290, 1120, 510, 32); g.filter = bl > .4 ? `blur(${bl.toFixed(1)}px)` : 'none'; sweep(cx - 560, 290, 1120, 510, a + .2, 32);
       // the sign, drawn by the trazo inside the card
       g.save(); g.translate(cx - 960, 0);
-      if (i === 0) pen(PATH.smCurve, a + .05, .7, { lw: 4 });
-      if (i === 1) { pen(PATH.smTicks, a + .1, .9, { lw: 3.5 }); }
-      if (i === 2) { pen(PATH.smStar, a + .55, .7, { lw: 3.5 }); const fq = k(t, a + 1.2, .6, E.out); if (fq > 0) { g.save(); g.beginPath(); g.rect(1385 - 64, 470 - 62, 128 * .92 * fq, 130); g.clip(); g.fillStyle = 'rgba(255,90,31,.85)'; star(1385, 470, 56); g.restore(); } }
+      if (i === 0) { pen(PATH.smCurve, a + .05, .7, { lw: 4 }); if (t > a + .8) penTip(1462, 410, { a: .55 + .45 * Math.sin((t - a) * 3.2) }); }
+      if (i === 1) { pen(PATH.smTicks, a + .1, .9, { lw: 3.5 }); if (t > a + 1.1) { const u = ((t - a - 1.1) * .32) % 1; penTip(700 + 518 * u, 788, { a: .8 * Math.sin(Math.PI * u) }); } }
+      if (i === 2) { pen(PATH.smStar, a + .55, .7, { lw: 3.5 }); const fq = k(t, a + 1.2, .6, E.out); if (fq > 0) { const zp = 1 + .05 * Math.sin((t - a) * 2.6) * k(t, a + 1.8, .5); g.save(); g.translate(1385, 470); g.scale(zp, zp); g.translate(-1385, -470); g.beginPath(); g.rect(1385 - 64, 470 - 62, 128 * .92 * fq, 130); g.clip(); g.fillStyle = 'rgba(255,90,31,.85)'; g.shadowColor = 'rgba(255,90,31,.6)'; g.shadowBlur = 18; star(1385, 470, 56); g.restore(); } }
       g.restore();
       typeOn('OBJETIVO ' + n, cx, 352, a - .1, { size: 18, w: 700, ls: 6, col: C.sky, align: 'center', cps: 40, caret: false });
       roll(big, cx, 585, a, { f: DISP, size: 210, w: 800, col: C.white, align: 'center', glow: true });
@@ -622,7 +625,9 @@
     typeOn('ESTRUCTURA', PATH.orgX, 240, 83.0, Object.assign({ cps: 26, caret: false }, ORGBIG)); typeOn('MIXTA', PATH.orgX + measure('ESTRUCTURA ', ORGBIG), 240, 83.5, Object.assign({}, ORGBIG, { col: C.blue2, cps: 18 }));
     pillBar(790, 276, 84.1, 'POR CLIENTE', { align: 'center', size: 18, stroke: C.sky, col: C.sky, dash: [6, 5] }); pillBar(1130, 276, 85.05, 'POR CANAL', { align: 'center', size: 18, stroke: C.sky, col: C.sky, dash: [6, 5] });
     const o = { lw: 3.5 };
-    penPts([[960, 451], [960, 520], [420, 520], [420, 590]], 85.6, .5, o); penPts([[960, 520], [960, 590]], 87.05, .4, o); penPts([[960, 520], [1500, 520], [1500, 590]], 88.1, .5, o);
+    penPts([[960, 451], [960, 520]], 84.2, .3, o); penPts([[960, 520], [420, 520]], 84.5, .6, o); penPts([[960, 520], [1500, 520]], 84.5, .6, o);
+    node(420, 520, 85.1, 6); node(1500, 520, 85.1, 6); node(960, 520, 84.5, 6);
+    penPts([[420, 520], [420, 590]], 85.75, .3, o); penPts([[960, 520], [960, 590]], 87.15, .3, o); penPts([[1500, 520], [1500, 590]], 88.3, .3, o);
     penPts([[420, 682], [420, 720], [270, 720], [270, 770]], 86.35, .5, o); penPts([[420, 720], [580, 720], [580, 770]], 86.45, .5, o); penPts([[960, 682], [960, 770]], 87.65, .4, o);
     const nodeBox = (x, y, h, s, a, top) => { const w = nodeW(h, s);
       if (top) { rr(x - w / 2, y - 46, w, 92, 18); g.fillStyle = C.white; g.fill(); typeOn(h, x, y + 2, a, { size: 26, w: 800, col: C.ink, align: 'center', cps: 34, caret: false }); typeOn(s, x, y + 30, a + .4, { size: 15, w: 600, ls: 2, col: '#4A5872', align: 'center', cps: 40, caret: false }); return; }
@@ -718,7 +723,7 @@
     PATH.frame = sampleCmds([['M', e1[0], e1[1]], ['L', x + w, e1[1]], ['L', x + w, y + r], ['E', x + w - r, y + r, r, r, 0, -H2], ['L', x + r, y], ['E', x + r, y + r, r, r, -H2, -Math.PI],
       ['L', x, y + h - r], ['E', x + r, y + h - r, r, r, Math.PI, H2], ['L', x + w - r, y + h], ['E', x + w - r, y + h - r, r, r, H2, 0], ['L', x + w, e1[1]]]);
     // clientes: the stage circle, started where the comet lands
-    PATH.ring = sampleCmds([['E', 960, 590, 310, 310, Math.PI / 3, Math.PI / 3 + TAU]]);
+    PATH.ring = sampleCmds([['E', 960, 590, 310, 310, H2, H2 + TAU]]);
     // funciones: underline of the kicker, the 4 in one stroke, the rail with four stations
     const kw = measure('nuestro departamento de ventas tiene', { f: SERIF, size: 54, w: 600, it: true }), ux0 = 960 - kw / 2, ux1 = 960 + kw / 2;
     PATH.fnUnder = polyPath([[ux0, 352], [ux1, 352]]); PATH.fnU0 = [ux0, 352];
@@ -738,7 +743,7 @@
     // smart: underline under OBJETIVOS SMART, and the three signs
     const smw = measure('OBJETIVOS SMART', SMBIG); PATH.smX = 960 - smw / 2; PATH.smUnder = polyPath([[PATH.smX, 588], [PATH.smX + smw, 588]]);
     PATH.smCurve = sampleCmds([['M', 1272, 730], ['C', 1352, 722, 1410, 640, 1462, 410], ['L', 1438, 448], ['L', 1462, 410], ['L', 1480, 450]]);
-    { const pts = [['M', 700, 770]]; for (let i = 0; i < 15; i++) { const xx = 700 + i * 37; pts.push(['L', xx, 770], ['L', xx, 744], ['L', xx, 770]); } pts.push(['L', 1220, 770]); PATH.smTicks = sampleCmds(pts); }
+    { const pts = [['M', 700, 788]]; for (let i = 0; i < 15; i++) { const xx = 700 + i * 37; pts.push(['L', xx, 788], ['L', xx, 768], ['L', xx, 788]); } pts.push(['L', 1220, 788]); PATH.smTicks = sampleCmds(pts); }
     { const pts = []; for (let i = 0; i <= 10; i++) { const a = -H2 + i * Math.PI / 5, rr2 = i % 2 ? 56 * .45 : 56; pts.push([i ? 'L' : 'M', 1385 + Math.cos(a) * rr2, 470 + Math.sin(a) * rr2]); } PATH.smStar = sampleCmds(pts); }
     // supervisión: underline under CONTROLAMOS?
     const cw = measure('CONTROLAMOS?', SUPBIG); PATH.supUnder = polyPath([[960 - cw / 2, 566], [960 + cw / 2, 566]]);
@@ -760,7 +765,7 @@
     // comets (transits across travel cuts): lead in scene A coords, out in scene B coords
     const fnU = PATH.fnU0, smU = [PATH.smX, 588], spU = [960 - cw / 2, 566];
     COMETS.length = 0;
-    COMETS.push({ cut: 9.75, hl: .5, dir: 'x', lead: [['M', 1330, 805], ['C', 1360, 900, 1450, 960, 1560, 960]], leadT: [8.95, 9.25], out: [['M', 1560, 960], ['C', 1400, 960, 1235, 790, 960 + 310 * Math.cos(Math.PI / 3), 590 + 310 * Math.sin(Math.PI / 3)]], outT: [10.25, 10.5] });
+    COMETS.push({ cut: 9.75, hl: .5, dir: 'x', lead: [['M', 1330, 805], ['C', 1360, 900, 1450, 960, 1560, 960]], leadT: [8.95, 9.25], out: [['M', 1560, 960], ['C', 1300, 960, 1100, 900, 960, 900]], outT: [10.25, 10.5] });
     COMETS.push({ cut: 18.55, hl: .5, dir: 'y', lead: [['M', 960, 900], ['L', 960, 1000]], leadT: [17.75, 18.05], out: [['M', 960, 1000], ['C', 900, 700, 420, 360, fnU[0], fnU[1]]], outT: [19.05, 19.5] });
     COMETS.push({ cut: 46.4, hl: .5, dir: 'y', lead: [['M', 1730, 990], ['L', 1730, 1040]], leadT: [45.75, 45.9], out: [['M', 1730, 1040], ['C', 1500, 800, 300, 720, smU[0], smU[1]]], outT: [46.9, 47.5] });
     COMETS.push({ cut: 60.95, hl: .5, dir: 'x', lead: [['M', 1385, 414], ['C', 1480, 430, 1560, 700, 1560, 860]], leadT: [60.15, 60.45], out: [['M', 1560, 860], ['C', 1300, 860, 300, 700, spU[0], spU[1]]], outT: [61.45, 61.75] });
