@@ -1,0 +1,24 @@
+{
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "scenes": {
+    "hook": { "from": 0, "duration": 96 },
+    "meme": { "from": 96, "duration": 180 },
+    "reframe": { "from": 276, "duration": 150 },
+    "protocol": { "from": 426, "duration": 390 },
+    "payoff": { "from": 816, "duration": 90 },
+    "outro": { "from": 906, "duration": 114 }
+  },
+  "total": 1020,
+  "cues": {
+    "impacts": [24, 68, 230, 330, 426, 456, 576, 696, 816, 846, 906, 958],
+    "glitches": [50, 92, 228, 272, 324, 422, 812, 902],
+    "ticks": [6, 14, 60, 120, 150, 180, 950, 970],
+    "typing": [[72, 96], [104, 120], [376, 420]],
+    "counterRun": [106, 236],
+    "staticRun": [276, 330],
+    "revStages": [[456, 0.33], [576, 0.62], [696, 0.88], [816, 1.0]],
+    "engineOff": 906
+  }
+}

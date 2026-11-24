@@ -1,0 +1,27 @@
+{
+  "name": "gainsdom",
+  "version": "1.0.0",
+  "description": "GainsDom — The Discipline Engine. Motion pieces built with Remotion.",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "@remotion/cli": "4.0.465",
+    "@remotion/fonts": "4.0.465",
+    "@remotion/media": "4.0.465",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "remotion": "4.0.465"
+  },
+  "devDependencies": {
+    "@fontsource/anton": "5.2.6",
+    "@fontsource/jetbrains-mono": "5.2.6",
+    "@fontsource/inter-tight": "5.2.6",
+    "@types/react": "19.2.7",
+    "typescript": "5.9.3"
+  },
+  "scripts": {
+    "dev": "remotion studio",
+    "render": "remotion render Protocol001 out/gainsdom-protocol-001.mp4",
+    "lint": "tsc"
+  }
+}
