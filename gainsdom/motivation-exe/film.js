@@ -32,8 +32,18 @@
   function slamDo(t, t0, cx, cy, draw) { const k = slamK(t, t0); if (!k) return; g.save(); g.translate(cx, cy); g.scale(k, k); g.translate(-cx, -cy); draw(); g.restore(); }
   function glow(col, blur, fn) { g.save(); g.shadowColor = col; g.shadowBlur = blur; fn(); g.restore(); fn(); }
 
+  // ---------- footage (graded B&W JPEG sequences from tools/shots.py; SHOTS in assets/shots/shots.js)
+  const IMG = {};
+  function shotImg(name, t, t0, rate = 1) { const m = SHOTS[name], a = IMG[name]; if (!m || !a) return null; return a[clamp(Math.floor((t - t0) * m.fps * rate), 0, m.n - 1)]; }
+  function full(name, t, t0, dark, rate) {   // full-bleed, 4% overscan so the shake never shows an edge
+    const im = shotImg(name, t, t0, rate); if (!im || !im.naturalWidth) return;
+    g.save(); g.translate(540, 960); g.scale(1.04, 1.04); g.translate(-540, -960); g.drawImage(im, 0, 0, W, H); g.restore();
+    if (dark) { g.fillStyle = `rgba(10,10,10,${dark})`; g.fillRect(-80, -80, W + 160, H + 160); }
+  }
+  function shade(y0, y1, a0, a1) { const gr = g.createLinearGradient(0, y0, 0, y1); gr.addColorStop(0, `rgba(10,10,10,${a0})`); gr.addColorStop(1, `rgba(10,10,10,${a1})`); g.fillStyle = gr; g.fillRect(-80, y0, W + 160, y1 - y0); }
+
   // ---------- camera: never still (slow push + wander) + decaying shake on every hit
-  const SHAKES = [[TL.hook, 12], [TL.win, 5], [TL.you, 8], [TL.notLazy, 9], [TL.waiting, 7], [TL.install, 4], [TL.start, 18], [TL.now, 13]];
+  const SHAKES = [[TL.hook, 12], [TL.wait1, 5], [TL.wait2, 4], [TL.wait3, 4], [TL.win, 5], [TL.you, 8], [TL.notLazy, 9], [TL.waiting, 7], [TL.install, 4], [TL.start, 18], [TL.now, 13]];
   function shake(t) { let x = 0, y = 0; for (const [s, a] of SHAKES) { const d = t - s; if (d < 0 || d > .35) continue; const e = a * Math.exp(-d * 13); x += e * Math.sin(d * 97 + s); y += e * Math.cos(d * 73 + s * 2); } return [x, y]; }
   function camSet(t) {
     const k = 1 + .03 * t / DUR, [sx, sy] = shake(t);
@@ -51,7 +61,7 @@
     const st = t < TL.win ? 'WAITING' : t < TL.black1 ? 'NOT RESPONDING' : t < TL.glitch2 ? 'DIAGNOSIS' : t < TL.done ? 'INSTALLING' : t < TL.start ? 'READY' : t < TL.sign ? 'RUNNING' : 'ONLINE';
     const live = st === 'NOT RESPONDING' ? C.or : C.dim;
     mono('STATUS  ' + st, W - X0, 168, 22, live, 500, 'right');
-    if (t < TL.prompt || t >= TL.start) mono('// PROTOCOL 01 — THE 2-MINUTE INSTALL', X0, 1492, 22, C.dim, 500);
+    mono('// PROTOCOL 01 — THE 2-MINUTE INSTALL', X0, 1492, 22, C.dim, 500);
   }
 
   // ---------- 1 · HOOK (motivation stuck at 99%)
@@ -63,6 +73,14 @@
   }
   function hook(t) {
     const S = fit('MOTIVATION', BAR.w), pc = pct(t), frozen = t > TL.sprint1 + .25;
+    // footage: phone glow at night → what you're waiting for (cut on each beat)
+    if (t < TL.wait1) { full('phone', t, TL.hook, .5); shade(1100, 2000, 0, .65); }
+    else if (t < TL.wait2) full('clock', t, TL.wait1, .1);
+    else if (t < TL.wait3) full('rain', t, TL.wait2, .3);
+    else full('glass', t, TL.wait3, .15, t > TL.win ? .35 : 1);
+    if (t >= TL.wait1) { shade(0, 520, .75, 0); shade(1080, 2000, 0, .82); }
+    const m = E.io(p(t, TL.wait1 - .14, TL.wait1 + .1)), k = lerp(1, .34, m);
+    g.save(); g.translate(X0, lerp(470, 236, m)); g.scale(k, k); g.translate(-X0, -470);
     slamDo(t, TL.hook, 540, 900, () => {
       mono('// LOADING', X0, 520, 30, C.dim, 500);
       g.font = font(AN, S); g.letterSpacing = '0px'; g.fillStyle = C.ink; g.fillText('MOTIVATION', X0, 700);
@@ -79,14 +97,15 @@
       mono(frozen ? 'ETA  CALCULATING' + dots : 'ETA  ' + Math.max(1, 9 - Math.floor(pc / 11)) + ' MIN', X0, 840, 28, C.dim, 500);
       g.font = font(AN, fit('99%', BAR.w + 10)); g.fillStyle = C.ink; g.fillText(pc + '%', X0 - 10, 1352);
     });
-    if (t >= TL.wait1) {   // what you're waiting for, each replaced by the next; the days run away
+    g.restore();
+    if (t >= TL.wait1) {   // what you're waiting for: one big word per beat; the days run away
       const items = [[TL.wait1, 'MONDAY'], [TL.wait2, 'THE RIGHT MOOD'], [TL.wait3, 'FEELING READY']];
       let cur = items[0]; for (const it of items) if (t >= it[0]) cur = it;
-      const pre = 'WAITING FOR: ', s = typed(cur[1], cur[0], t, 46);
-      const wx = mono(pre, X0, 1434, 34, C.dim, 500); const w2 = mono(s, X0 + wx, 1434, 34, C.ink, 700);
-      cursor(X0 + wx + w2, 1434, 34, t, s.length < cur[1].length);
+      const WS = fit('THE RIGHT MOOD', XR - X0), wy = 1236;
+      mono('WAITING FOR:', X0, wy, 32, C.dim, 500);
       const d = Math.min(365, 1 + Math.floor(364 * p(t, TL.wait1, TL.dayEnd) ** 2.3));
-      mono('DAY ' + String(d).padStart(3, '0'), XR, 1434, 34, C.dim, 500, 'right');
+      mono('DAY ' + String(d).padStart(3, '0'), XR, wy, 32, C.ink, 700, 'right');
+      slamDo(t, cur[0], 540, wy + WS * .5, () => { g.font = font(AN, WS); g.letterSpacing = '0px'; g.fillStyle = C.ink; g.fillText(cur[1], X0, wy + 26 + WS * .78); });
     }
   }
 
@@ -122,6 +141,7 @@
   const LY1 = 900; let TS = 0, LY2 = 0, SS = 0, SY1 = 0, SY2 = 0;   // set once the fonts are loaded
   function truth(t) {
     const glitched = t >= TL.glitch2 + .05;
+    if (!glitched && t >= TL.waiting) { full('dial', t, TL.waiting, .7); shade(0, 600, .6, 0); }
     if (!glitched) {
       const lab = '// DIAGNOSIS', lab2 = t >= TL.waiting ? '  (CORRECTED)' : '';
       const w = mono(typed(lab, TL.diag, t, 60), X0, LY1 - TS * .86, 30, C.dim, 500);
@@ -150,59 +170,89 @@
     }
   }
 
-  // ---------- 4 · TOOL: the installer
-  const IW = { x: 76, y: 560, w: 928, h: 840 }, IB = { x: 126, y: 1010, w: XR - 126, h: 40 };
+  // ---------- 4 · TOOL: the installer (with a camera viewport showing each step)
+  const IW = { x: 76, y: 250, w: 928, h: 1190 }, VP = { x: 126, y: 340, w: 828, h: 466 }, IB = { x: 126, y: 1100, w: XR - 126, h: 40 };
+  function viewport(t) {
+    const segs = [['vlamp', TL.install, 'STANDBY // PHONE DOWN'], ['valarm', TL.check1, 'TRIGGER // ALARM'], ['vpush', TL.check2, 'ACTION // PUSH-UPS'],
+      ['vwatch', TL.check3, 'TIMER // 02:00'], ['vgym', TL.done, 'DISCIPLINE.EXE // RUNNING']];
+    let s = segs[0]; for (const x of segs) if (t >= x[1]) s = x;
+    g.save(); g.beginPath(); g.rect(VP.x, VP.y, VP.w, VP.h); g.clip();
+    g.fillStyle = '#000'; g.fillRect(VP.x, VP.y, VP.w, VP.h);
+    const im = shotImg(s[0], t, s[1]);
+    if (im && im.naturalWidth) { const z = 1 + .05 * p(t, s[1], s[1] + 1.4); g.translate(VP.x + VP.w / 2, VP.y + VP.h / 2); g.scale(z, z); g.drawImage(im, -VP.w / 2, -VP.h / 2, VP.w, VP.h); g.scale(1 / z, 1 / z); g.translate(-VP.x - VP.w / 2, -VP.y - VP.h / 2); }
+    if (t - s[1] < 2 / 60) { g.fillStyle = 'rgba(242,242,240,.22)'; g.fillRect(VP.x, VP.y, VP.w, VP.h); }   // camera switch
+    const prompt = t >= TL.prompt;
+    if (prompt) { g.fillStyle = 'rgba(10,10,10,.62)'; g.fillRect(VP.x, VP.y, VP.w, VP.h); }
+    // camera overlay: brackets, CAM / REC, timecode, the step it shows
+    g.strokeStyle = 'rgba(242,242,240,.85)'; g.lineWidth = 2;
+    for (const [x, y, sx, sy] of [[VP.x + 18, VP.y + 18, 1, 1], [VP.x + VP.w - 18, VP.y + 18, -1, 1], [VP.x + 18, VP.y + VP.h - 18, 1, -1], [VP.x + VP.w - 18, VP.y + VP.h - 18, -1, -1]]) { g.beginPath(); g.moveTo(x, y + sy * 28); g.lineTo(x, y); g.lineTo(x + sx * 28, y); g.stroke(); }
+    mono('CAM 01', VP.x + 40, VP.y + 52, 20, C.ink, 700);
+    if (Math.floor(t * 2) % 2 === 0) { g.fillStyle = C.ink; g.beginPath(); g.arc(VP.x + 148, VP.y + 45, 6, 0, 7); g.fill(); }
+    mono('REC', VP.x + 160, VP.y + 52, 20, C.ink, 500);
+    const el = Math.max(0, t - TL.install), tc = `00:00:${String(Math.floor(el)).padStart(2, '0')}:${String(Math.floor(el * 30) % 30).padStart(2, '0')}`;
+    mono(tc, VP.x + VP.w - 40, VP.y + 52, 20, C.ink, 500, 'right');
+    if (!prompt) mono(s[2], VP.x + 40, VP.y + VP.h - 36, 20, C.ink, 700);
+    else { const q = '> RUN DISCIPLINE.EXE?  [Y/n]', s2 = typed(q, TL.prompt, t, 44);
+      const w = mono(s2, VP.x + 48, VP.y + VP.h / 2 + 14, 34, C.ink, 700); cursor(VP.x + 48 + w, VP.y + VP.h / 2 + 14, 34, t, s2.length < q.length); }
+    g.restore();
+    g.strokeStyle = C.line; g.lineWidth = 2; g.strokeRect(VP.x, VP.y, VP.w, VP.h);
+  }
   function installer(t) {
     // the window unfolds out of the progress track
     const u = E.expo(p(t, TL.morph1, TL.install));
-    const cy = IB.y + IB.h / 2, top = lerp(IB.y - 20, IW.y, u), bot = lerp(IB.y + IB.h + 20, IW.y + IW.h, u);
-    push(t, TL.install, TL.collapse, .045, 540, 980);
-    g.fillStyle = C.card; g.fillRect(IW.x, top, IW.w, bot - top);
+    const top = lerp(IB.y - 20, IW.y, u), bot = lerp(IB.y + IB.h + 20, IW.y + IW.h, u);
+    push(t, TL.install, TL.collapse, .04, 540, 900);
+    g.save(); g.shadowColor = 'rgba(0,0,0,.9)'; g.shadowBlur = 90; g.fillStyle = C.card; g.fillRect(IW.x, top, IW.w, bot - top); g.restore();
     g.strokeStyle = C.line; g.lineWidth = 2; g.strokeRect(IW.x, top, IW.w, bot - top);
     if (u > .98) { g.fillStyle = '#222220'; g.fillRect(IW.x + 1, IW.y + 1, IW.w - 2, 63);
       for (let i = 0; i < 3; i++) { g.fillStyle = C.line; g.fillRect(IW.x + 30 + i * 24, IW.y + 26, 12, 12); }
-      mono('INSTALLER', IW.x + IW.w - 32, IW.y + 42, 22, C.dim, 500, 'right'); }
+      mono('DISCIPLINE.EXE — INSTALLER', IW.x + IW.w - 32, IW.y + 42, 22, C.dim, 500, 'right'); }
     const done = t >= TL.done, k = p(t, TL.install, TL.done);   // linear: discipline just runs
     g.strokeStyle = C.line; g.lineWidth = 2; g.strokeRect(IB.x, IB.y, IB.w, IB.h);
     const fw = (IB.w - 12) * k;
     if (done) glow('rgba(255,74,28,.7)', 36, () => { g.fillStyle = C.or; g.fillRect(IB.x + 6, IB.y + 6, fw, IB.h - 12); });
     else { g.fillStyle = C.ink; g.fillRect(IB.x + 6, IB.y + 6, fw, IB.h - 12); }
     if (t < TL.install) return;
-    mono(typed('INSTALLING', TL.install - .12, t, 60), IB.x, 720, 30, C.dim, 500);
+    viewport(t);
+    mono(typed('INSTALLING', TL.install - .12, t, 60), IB.x, 862, 28, C.dim, 500);
     const DS = fit('DISCIPLINE.EXE', IB.w);
-    slamDo(t, TL.install, 540, 820, () => { g.font = font(AN, DS); g.letterSpacing = '0px'; g.fillStyle = C.ink; g.fillText('DISCIPLINE.EXE', IB.x, 866); });
+    slamDo(t, TL.install, 540, 940, () => { g.font = font(AN, DS); g.letterSpacing = '0px'; g.fillStyle = C.ink; g.fillText('DISCIPLINE.EXE', IB.x, 996); });
     // REQUIRES: 0 MOTIVATION (the 0 is the accent until the install completes)
     const rq = 'REQUIRES: 0 MOTIVATION', s = typed(rq, TL.requires, t, 40);
-    setF(JB, 38, 700, 1.5); let x = IB.x;
+    setF(JB, 36, 700, 1.5); let x = IB.x;
     for (let i = 0; i < s.length; i++) { const ch = s[i], acc = i === 10 && !done; g.fillStyle = acc ? C.or : C.ink;
-      if (acc) glow('rgba(255,74,28,.6)', 24, () => g.fillText(ch, x, 948)); else g.fillText(ch, x, 948); x += g.measureText(ch).width + 1.5; }
-    if (s.length < rq.length) cursor(x, 948, 38, t, true);
+      if (acc) glow('rgba(255,74,28,.6)', 24, () => g.fillText(ch, x, 1066)); else g.fillText(ch, x, 1066); x += g.measureText(ch).width + 1.5; }
+    if (s.length < rq.length) cursor(x, 1066, 36, t, true);
     // progress line: status left, percent right
     const status = done ? 'INSTALL COMPLETE' : t < TL.check1 ? 'REMOVING: WAITING' : t < TL.check2 ? 'WRITING: TRIGGER' : t < TL.check3 ? 'WRITING: ACTION' : 'SETTING: TIMER';
-    mono(status, IB.x, 1100, 26, done ? C.or : C.dim, done ? 700 : 500);
-    mono(String(Math.floor(k * 100)).padStart(3, '0') + '%', XR, 1100, 26, done ? C.or : C.ink, 700, 'right');
+    mono(status, IB.x, 1190, 24, done ? C.or : C.dim, done ? 700 : 500);
+    mono(String(Math.floor(k * 100)).padStart(3, '0') + '%', XR, 1190, 24, done ? C.or : C.ink, 700, 'right');
     // the three lines of the protocol, one per beat
-    const rows = [[TL.check1, 'TRIGGER', 'AFTER COFFEE'], [TL.check2, 'ACTION', '10 PUSH-UPS'], [TL.check3, 'TIME', '2 MINUTES']];
+    const rows = [[TL.check1, 'TRIGGER', 'ALARM RINGS'], [TL.check2, 'ACTION', '10 PUSH-UPS'], [TL.check3, 'TIME', '2 MINUTES']];
     rows.forEach(([t0, a, v], i) => {
-      if (t < t0) return; const y = 1200 + i * 66, ck = E.o3(p(t, t0, t0 + .09));
+      if (t < t0) return; const y = 1272 + i * 60, ck = E.o3(p(t, t0, t0 + .09));
       g.strokeStyle = C.ink; g.lineWidth = 2.5; g.strokeRect(IB.x, y - 30, 34, 34);
       g.save(); g.beginPath(); g.moveTo(IB.x + 7, y - 13); g.lineTo(IB.x + 15, y - 4); g.lineTo(IB.x + 28, y - 23);
       g.lineWidth = 4.5; g.lineCap = 'square'; g.lineJoin = 'miter'; g.setLineDash([60 * ck, 99]); g.strokeStyle = C.ink; g.stroke(); g.restore();
-      mono(typed(a, t0 + .05, t, 70), IB.x + 62, y, 34, C.dim, 500);
-      mono(typed(v, t0 + .1, t, 60), IB.x + 300, y, 34, C.ink, 700);
+      mono(typed(a, t0 + .05, t, 70), IB.x + 62, y, 32, C.dim, 500);
+      mono(typed(v, t0 + .1, t, 60), IB.x + 300, y, 32, C.ink, 700);
     });
-    // the question the next scene answers
-    if (t >= TL.prompt) { const q = '> RUN DISCIPLINE.EXE?  [Y/n]', s2 = typed(q, TL.prompt, t, 44);
-      const w = mono(s2, X0, 1486, 30, C.ink, 700); cursor(X0 + w, 1486, 30, t, s2.length < q.length); }
   }
 
   // ---------- 5 · collapse to a cursor, silence, START NOW.
   function action(t) {
+    const cuts = [['a1', TL.start], ['a2', TL.now], ['a3', TL.now + BEAT / 2], ['a4', TL.now + BEAT]];
+    let s = cuts[0]; for (const c of cuts) if (t >= c[1]) s = c;
+    full(s[0], t, s[1], .38); shade(0, 600, .7, 0); shade(1250, 1920, 0, .75);
     push(t, TL.now, TL.glitch3, .05, 540, 960);
     g.font = font(AN, SS); g.letterSpacing = '0px';
     slamDo(t, TL.start, 540, SY1 - SS * .36, () => { g.fillStyle = C.ink; g.fillText('START', X0, SY1); });
+    if (t < TL.now) return;
+    const beat = (t - TL.now) / BEAT, pulse = .5 + .5 * Math.exp(-((beat % 1) * 6));   // breathes on the kick
+    // the word on a glossy floor: a faint mirror image under it (the "Focus on the mirror" reference, in brand type)
     slamDo(t, TL.now, 540, SY2 - SS * .36, () => {
-      const beat = (t - TL.now) / BEAT, pulse = .5 + .5 * Math.exp(-((beat % 1) * 6));   // breathes on the kick
+      g.save(); g.translate(0, SY2 * 2 + 22); g.scale(1, -1); g.globalAlpha = .2; g.fillStyle = C.or; g.fillText('NOW', X0, SY2); g.restore();
+      shade(SY2 + 10, SY2 + SS * .75, 0, .9);
       glow(`rgba(255,74,28,${(.35 + .4 * pulse).toFixed(3)})`, 30 + 40 * pulse, () => { g.fillStyle = C.or; g.fillText('NOW', X0, SY2); });
       g.fillStyle = C.ink; g.fillText('.', X0 + g.measureText('NOW').width, SY2);
     });
@@ -258,8 +308,13 @@
   const grainTile = mk(256, 256); { const x = grainTile.getContext('2d'), d = x.createImageData(256, 256); for (let i = 0; i < d.data.length; i += 4) { const v = hash(i * .37) * 255; d.data[i] = d.data[i + 1] = d.data[i + 2] = v; d.data[i + 3] = 255; } x.putImageData(d, 0, 0); }
   const scan = mk(W, H); { const x = scan.getContext('2d'); x.fillStyle = 'rgba(0,0,0,.16)'; for (let y = 0; y < H; y += 4) x.fillRect(0, y, W, 1); }
   let grainPat = null;
+  const blC = mk(270, 480), blX = blC.getContext('2d');
   function finish(t) {
     const m = main; m.setTransform(1, 0, 0, 1, 0, 0);
+    if (t < TL.black1 || (t >= TL.waiting && t < TL.glitch2) || (t >= TL.install && t < TL.collapse) || (t >= TL.start && t < TL.glitch3)) {
+      blX.globalCompositeOperation = 'source-over'; blX.filter = 'brightness(.75) contrast(3.2)'; blX.drawImage(cv, 0, 0, 270, 480); blX.filter = 'blur(7px)'; blX.drawImage(blC, 0, 0); blX.filter = 'none';
+      m.save(); m.globalCompositeOperation = 'screen'; m.globalAlpha = .2; m.drawImage(blC, 0, 0, W, H); m.restore();
+    }
     m.drawImage(scan, 0, 0);
     const by = ((t * 260) % (H + 600)) - 300, bg = m.createLinearGradient(0, by - 300, 0, by + 300); bg.addColorStop(0, 'rgba(242,242,240,0)'); bg.addColorStop(.5, 'rgba(242,242,240,.025)'); bg.addColorStop(1, 'rgba(242,242,240,0)');
     m.fillStyle = bg; m.fillRect(0, by - 300, W, 600);
@@ -271,7 +326,7 @@
   }
 
   // ---------- motion blur on every fast move: 5 sub-frames over a 180° shutter, averaged in float
-  const MBW = [[TL.hook, TL.hook + .12], [TL.sprint0, TL.sprint0 + .6], [TL.win, TL.win + .12], [TL.cur0, TL.click], [TL.you, TL.you + .12], [TL.notLazy, TL.notLazy + .12],
+  const MBW = [[TL.hook, TL.hook + .12], [TL.wait1 - .14, TL.wait1 + .1], [TL.wait2, TL.wait2 + .1], [TL.wait3, TL.wait3 + .1], [TL.sprint0, TL.sprint0 + .6], [TL.win, TL.win + .12], [TL.cur0, TL.click], [TL.you, TL.you + .12], [TL.notLazy, TL.notLazy + .12],
     [TL.roll, TL.waiting + .12], [TL.strike0, TL.strike1], [TL.morph0, TL.install + .12], [TL.collapse, TL.collapse + .17], [TL.start, TL.start + .12], [TL.now, TL.now + .12]];
   let ACC = null;
   function frame(t) {
@@ -291,6 +346,9 @@
     const faces = [[AN, 'anton-latin-400-normal.woff2', '400'], [JB, 'jetbrains-mono-latin-400-normal.woff2', '400'], [JB, 'jetbrains-mono-latin-500-normal.woff2', '500'], [JB, 'jetbrains-mono-latin-700-normal.woff2', '700']];
     for (const [fam, file, weight] of faces) { const f = new FontFace(fam, `url(fonts/${file})`, { weight }); document.fonts.add(f); await f.load(); }
     await document.fonts.ready;
+    const loads = [];
+    for (const [name, m] of Object.entries(SHOTS)) { IMG[name] = []; for (let i = 0; i < m.n; i++) { const im = new Image(); loads.push(new Promise(r => { im.onload = im.onerror = r; })); im.src = `assets/shots/${name}/${String(i).padStart(3, '0')}.jpg`; IMG[name].push(im); } }
+    await Promise.all(loads);
     TS = fit('NOT LAZY.', XR - X0); LY2 = LY1 + TS * .96; SS = fit('START', XR - X0); SY1 = 960 - SS * .1; SY2 = SY1 + SS * .93;
     window.renderOut(0);
     window.READY = true;

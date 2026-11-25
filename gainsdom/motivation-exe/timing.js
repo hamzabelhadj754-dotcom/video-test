@@ -22,7 +22,7 @@ var TL = {
 // sound events (type, time, extra): the audio script turns these into cues
 var EV = [
   ['slam', TL.hook, { big: 1 }], ['roll', TL.sprint0, { dur: .85 }],
-  ['type', TL.wait1, { n: 19 }], ['type', TL.wait2, { n: 14 }], ['type', TL.wait3, { n: 13 }],
+  ['slamS', TL.wait1], ['slamS', TL.wait2], ['slamS', TL.wait3], ['cutfx', TL.wait1], ['cutfx', TL.wait2], ['cutfx', TL.wait3],
   ['error', TL.win], ['slamS', TL.win], ['move', TL.cur0, { dur: .3 }], ['click', TL.click], ['glitch', TL.glitch1, { dur: .05 }], ['cut', TL.black1],
   ['type', TL.diag, { n: 12, cps: 60 }], ['slam', TL.you], ['slam', TL.notLazy],
   ['whoosh', TL.roll, { dur: .25 }], ['slam', TL.waiting, { accent: 1 }],
