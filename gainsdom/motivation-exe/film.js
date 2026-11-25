@@ -261,9 +261,9 @@
   function sign(t) {
     const y = 960, s1 = 'GAINSDOM', s2 = ' // THE DISCIPLINE ENGINE', all = s1 + s2, s = typed(all, TL.sign, t, 40);
     if (t >= TL.end) { cursor(X0 - 4, y, 36, t, false); return; }
-    const w1 = mono(s.slice(0, 8), X0, y, 36, C.ink, 700), w2 = s.length > 8 ? mono(s.slice(8), X0 + w1, y, 36, C.dim, 500) : 0;
-    cursor(X0 + w1 + w2, y, 36, t, s.length < all.length);
-    if (t >= TL.tag) mono('stop waiting. start small. never miss twice.', X0, y + 70, 26, C.dim, 500);
+    const w1 = mono(s.slice(0, 8), X0, y, 42, C.ink, 700), w2 = s.length > 8 ? mono(s.slice(8), X0 + w1, y, 42, C.dim, 500) : 0;
+    cursor(X0 + w1 + w2, y, 42, t, s.length < all.length);
+    if (t >= TL.tag) mono('stop waiting. start small. never miss twice.', X0, y + 76, 29, C.dim, 500);
   }
 
   // ---------- picture
@@ -326,7 +326,7 @@
   }
 
   // ---------- motion blur on every fast move: 5 sub-frames over a 180° shutter, averaged in float
-  const MBW = [[TL.hook, TL.hook + .12], [TL.wait1 - .14, TL.wait1 + .1], [TL.wait2, TL.wait2 + .1], [TL.wait3, TL.wait3 + .1], [TL.sprint0, TL.sprint0 + .6], [TL.win, TL.win + .12], [TL.cur0, TL.click], [TL.you, TL.you + .12], [TL.notLazy, TL.notLazy + .12],
+  const MBW = [[TL.hook, TL.hook + .12], [TL.wait1 - .14, TL.wait1 + .1], [TL.wait2, TL.wait2 + .1], [TL.wait3, TL.wait3 + .1], [TL.win, TL.win + .12], [TL.cur0, TL.click], [TL.you, TL.you + .12], [TL.notLazy, TL.notLazy + .12],
     [TL.roll, TL.waiting + .12], [TL.strike0, TL.strike1], [TL.morph0, TL.install + .12], [TL.collapse, TL.collapse + .17], [TL.start, TL.start + .12], [TL.now, TL.now + .12]];
   let ACC = null;
   function frame(t) {
