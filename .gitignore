@@ -8,3 +8,8 @@ audio/editorial_bed.wav
 trazo-film/audio/editorial_bed.wav
 trazo-film/out/review_ed1/
 trazo-film/out/review_ed2/
+gainsdom/*/node_modules
+gainsdom/*/snaps/
+gainsdom/*/render/
+gainsdom/*/assets/src/
+gainsdom/*/assets/shots/
