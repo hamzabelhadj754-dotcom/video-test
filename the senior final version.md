@@ -547,6 +547,11 @@ Every transition must be **motivated**: something in shot A causes or leads into
 3. **Size by canvas.** Hero type at least 8% of frame height at 1080p. Body text at least 3.5%.
    Maximum about 7 words on screen at once.
 4. **Split-text reveals** with masks (line, word or character), staggered, on custom curves.
+4b. **Mixed type systems, not one heavy font.** Premium work pairs roles: an expressive serif (often
+   in italic) for statements, a light or regular sans for structure, a mono for data and labels.
+   Emphasis comes from the italic serif, size or color, rarely from weight. Avoid all-caps bold
+   headlines and "gym poster" condensed fonts (Bebas Neue, Anton, Impact, Oswald) unless the
+   brand truly calls for them.
 5. **Arabic and RTL type:**
    - Premium Arabic faces: IBM Plex Sans Arabic, Readex Pro, Alexandria, Noto Kufi Arabic,
      Tajawal, Cairo, Reem Kufi, Amiri, El Messiri, Lalezar (display).

@@ -100,7 +100,7 @@ the end of your first reply, each with a default. Anything unanswered uses the d
 |---|---|---|
 | 1 | Handles (Instagram, TikTok, YouTube)? | ask; never invent a handle |
 | 2 | Logo file (SVG preferred)? | a typographic GAINSDOM wordmark in the brand display font |
-| 3 | Accent color? | Ember `#FF4F1A` (alternatives: Volt `#C8FF3D`, Crimson `#D7263D` for large elements only) |
+| 3 | Color direction? | show one hook frame in each of the three directions (2.1) and let the user pick; default A, Obsidian & Brass |
 | 4 | Voiceover language and the ElevenLabs voice? | English; one signature voice for every video |
 | 5 | Licensed music library (Epidemic Sound, Artlist, …)? | none: a designed bed from licensed SFX; trending audio can be added in the app |
 | 6 | Do you film your own training? | no: motion graphics and a 3D athlete |
@@ -132,31 +132,65 @@ Named series build a brand: people come back for a series. Proposed series (conf
 
 > **Night training. One light. Total focus.**
 
-### 2.1 Palette
+### 2.1 Color: three premium dark directions
+Dark does not mean flat black with a loud color on top. Premium dark is **tonal**: 3 to 4 close
+dark steps that create depth, warm or cool neutrals, and one muted, expensive accent used sparingly.
+
+**A. Obsidian & Brass (default):** warm, quiet luxury. Matches the warm lamp of the brand world.
 | Token | Hex | Use |
 |---|---|---|
-| `--void` | `#0A0A0B` | base background (never pure black) |
-| `--surface` | `#141416` | panels, cards |
-| `--graphite` | `#26262A` | lines, grids, inactive states |
-| `--bone` | `#ECE8E1` | primary text (never pure white) |
-| `--ash` | `#8C8880` | secondary text (5.6:1 on void, fine for small text) |
-| `--accent` | `#FF4F1A` Ember (default) | the one hero per moment: key word, counter, progress line, worked muscle |
+| `--base` | `#0C0C0D` | background |
+| `--layer-1` | `#151514` | panels, cards, the second plane |
+| `--layer-2` | `#1F1E1C` | hairlines, grids, inactive states |
+| `--text` | `#EDE9E1` | primary text (warm off-white) |
+| `--muted` | `#8C877E` | secondary text, labels |
+| `--accent` | `#C2A878` brass | the one hero per moment: an italic word, a thin line, the counter (8.5:1 on base) |
 
-- One accent only, on at most about 10% of the frame.
-- Footage and skin stay natural, graded dark.
-- Crimson is only 4:1 on void, so use it for large elements only.
+**B. Graphite & Oxblood:** intense, serious, athletic.
+`--base #0E0D0D` · `--layer-1 #1A1716` · `--layer-2 #26211F` · `--text #EAE4DA` · `--muted #8F8780` ·
+`--accent #8E2A2A` oxblood for fills and large shapes only (low contrast), `#C4473A` for small highlights.
 
-### 2.2 Type
-- **Display and captions: Archivo** (Google Fonts, variable: weight 100–900, width 62–125), uppercase.
-  - Impact words: condensed and heavy (width 62–75, weight 800–900).
-  - Calm statements: expanded and light (width 110–125, weight 300–500).
-  - Tracking −2% to −4% on display sizes. Tabular figures for numbers.
-- **Data labels, timers and counters: JetBrains Mono** (or IBM Plex Mono), small and precise:
-  the sports-tech lab feel.
-- **The width axis is a GainsDom signature.** Words *breathe*: they expand on the inhale, and
-  condense and get heavier on the effort.
-- **Arabic versions:** Alexandria or IBM Plex Sans Arabic. Follow the senior file's Arabic rules.
-- Load the fonts with their variable axes and verify them in a test frame before building.
+**C. Night & Steel:** cold, modern, sports-tech.
+`--base #0A0C0E` · `--layer-1 #13171B` · `--layer-2 #1E2429` · `--text #E6EAEC` · `--muted #7F8A92` ·
+`--accent #9FB7C9` ice steel.
+
+Color rules:
+- **Before the first video,** render the same hook frame in all three directions and let the user
+  pick. Lock the choice in `BRAND.md` and never mix directions.
+- **Accent on about 5% of the frame:** one word, one line, one number. Never large blocks of accent.
+- **Depth through tone,** not effects: the background, a layer-1 plane and layer-2 hairlines.
+  Gradients exist only as light falloff from the scene's light source (soft radial), never decorative.
+- **Never:** saturated neon, bright orange or red text, pure black, pure white, rainbow data,
+  more than one accent.
+- **Grade footage to match:** a warm or cool split-tone that follows the chosen direction.
+
+### 2.2 Type: a mixed editorial system (not bold, not all-caps)
+GainsDom type looks like a premium magazine or an Apple or Aesop film, not a gym poster. Three
+roles, and each has its own font:
+
+| Role | Font (Google Fonts) | How it is used |
+|---|---|---|
+| **Statement** (serif) | **Instrument Serif**, regular and *italic* | hero lines and emotional words; sentence case; large; leading 0.95; tracking −1% to −2% |
+| **Structure** (sans) | **Geist**, weights 300 to 500 | supporting lines, explanations, captions; sentence case |
+| **Data** (mono) | **Geist Mono** | labels, numbers, timers, sets and reps; small; uppercase only here, tracking +8% to +12% |
+
+Alternative pairings (pick one per brand, never mix them): Fraunces + Manrope + JetBrains Mono, or
+Cormorant Garamond + Hanken Grotesk + IBM Plex Mono.
+
+Type rules:
+- **Mix the fonts inside a line.** Emphasis is a word in serif italic, never bold. Example:
+  "You don't need a gym. You need *a plan*." The sans is light, the italic word carries the meaning.
+- **No heavy weights.** The sans never goes above 500. The serif is never bolded.
+- **No all-caps headlines.** Uppercase is only for small mono labels like `01 — THE PROTOCOL`.
+- **Big scale contrast** (at 1080 width): hero 140 to 220px, supporting 40 to 56px, labels 20 to 24px.
+- **Editorial layout:** a clear grid, left-aligned asymmetric compositions, generous negative space,
+  hairline rules, small numbered labels. Center only what truly deserves it.
+- **At most 3 type styles per frame.**
+- **Banned display fonts:** Bebas Neue, Anton, Impact, Oswald, Montserrat Black, or any heavy
+  condensed "gym" font.
+- **Arabic versions:** Alexandria (light and regular weights) or IBM Plex Sans Arabic. Follow the
+  senior file's Arabic rules.
+- Load every font before rendering and check in a test frame that no fallback font appears.
 
 ### 2.3 Light, texture and grade
 - **One motivated light per scene:** a cold window or moon light, or a warm practical lamp.
@@ -168,10 +202,11 @@ Named series build a brand: people come back for a series. Proposed series (conf
   No dirt overlays, no light-leak packs.
 
 ### 2.4 Graphics, diagrams and data
-- **Line art:** thin bone lines (2px at 1080 width), precise corners, generous spacing.
+- **Line art:** thin hairlines in the text or muted color (1.5 to 2px at 1080 width), precise
+  corners, generous spacing.
 - **Muscle maps:** the athlete or silhouette, with the worked muscles glowing in the accent.
 - **Training data:**
-  - Timers are rings and reps are odometer counters (mono, tabular digits).
+  - Timers are thin rings and reps are odometer counters in Geist Mono.
   - Tempo is a pulsing bar (for example 3-1-1) and progress is a line drawing on.
 - **Data stories:** one number per frame, huge, with a short label. Charts draw on, bars grow on
   the beat.
@@ -209,7 +244,7 @@ Pick 2 or 3 per video, always motivated by the home-training world:
 2. **Light sweep:** a window beam travels across the frame and reveals the next scene.
 3. **Rep wipe:** a horizontal bar travels down and back up, like one push-up, wiping to the next scene.
 4. **Timer ring:** a countdown ring closes around the hero and opens on the next scene.
-5. **Width snap:** a word condenses into a single vertical bar that becomes the next scene's edge.
+5. **Hairline split:** a thin hairline draws across the frame and splits it open into the next scene.
 6. **Breath:** on a pause in the voice, the frame inhales (scale 1.00 to 1.02) and exhales into the cut.
 7. **Sweat-drop match cut:** a drop falls and lands as the dot or circle of the next composition.
 
@@ -217,8 +252,9 @@ The senior file's premium toolkit (8A) also applies. Never basic crossfades or p
 
 ### 2.8 Captions
 - **Always on** (many people watch muted), designed in the brand style, synced word by word.
-- **Style:** Archivo bold, semi-condensed, uppercase. 2–4 words on screen. The stressed word is in
-  the accent, one size up.
+- **Style:** Geist 400 to 500, sentence case, 52 to 60px at 1080 width, 2–4 words on screen.
+  The stressed word switches to Instrument Serif italic in the accent, slightly larger. No bold,
+  no all-caps, no boxes behind the text.
 - **Position:** centered, between 55% and 75% of the frame height. That keeps them above the
   platform's bottom UI and left of its right-side buttons. Never over the athlete's face or the
   key action.
@@ -457,6 +493,9 @@ music. Then add these checks:
   in the script.
 - **Voice clarity:** every word is intelligible over the music and the SFX.
 - **Brand check:** palette, type, grain, transitions, end card and sonic logo are unmistakably GainsDom.
+- **Design check:** no bold or all-caps headlines, the font mix is used (serif italic emphasis),
+  the accent covers about 5% of the frame, depth comes from tonal layers. If a frame looks like a
+  generic gym poster, it fails.
 - **Fitness check:** the form is correct, the claims are verified, and the numbers on screen match
   the voice.
 - **Big-brand test:** it holds up next to a Nike Training or Apple Fitness+ post.
