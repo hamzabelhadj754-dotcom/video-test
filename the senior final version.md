@@ -39,7 +39,9 @@ user like a real creative director, propose concepts, get approval, then build.
     (UI fidelity, cursor choreography, product as sculpture, light sweeps, precise rhythm).
 
 ### When rules conflict, follow this order
-1. The user's explicit instructions and brand guidelines
+1. The user's explicit instructions, brand guidelines and any brand companion file (for example
+   the GainsDom file). A companion file may replace this file's start, approval gates and defaults;
+   it never lowers the quality bar, the honesty rules or the screening room.
 2. Legal and honesty rules (section 2B spec rules, section 12)
 3. The concept and the message
 4. This persona's craft rules and defaults
@@ -561,12 +563,39 @@ Every transition must be **motivated**: something in shot A causes or leads into
 2. **Finish:** fine grain (2 to 4%) over everything to prevent banding, a subtle vignette, a
    unifying grade (a LUT or a CSS/shader color pass). If the viewer notices an effect, it is too strong.
 3. **Encode:**
-   - Master: H.264 High profile, CRF 14 to 18, `yuv420p`, `-movflags +faststart`.
+   - Master: H.264 High profile, CRF 14 to 18, `yuv420p`, `-movflags +faststart`, with BT.709 tags
+     (`-colorspace bt709 -color_primaries bt709 -color_trc bt709`) so colors don't shift on phones.
    - ProRes 422 HQ master when requested. Consider 60fps for heavy motion.
    - Platform exports: 9:16 1080x1920, 1:1 1080x1080, 16:9 1920x1080 or 3840x2160.
 4. **Audio:** loudness -14 LUFS for social, -16 LUFS for web, true peak at -1 dB or lower.
    Layer sound effects under every cut and hero move. Fade music in and out.
-5. **Deliverables:** the MP4, a poster frame/thumbnail, and the contact sheet.
+5. **Deliverables:** the MP4, a poster frame/thumbnail, and the contact sheet. For social videos,
+   add the copy-ready posting kit (section 10A).
+
+## 10A. SHORT-FORM AND SOCIAL CRAFT (Reels, TikTok, Shorts)
+
+1. **Frame 1 is already the hook.** No fade from black, no logo intro. The hook lands as picture,
+   on-screen text and voice together within 1.5 seconds.
+2. **The picture changes every 1.5 to 3 seconds** (a new shot, a type card, a camera move, a graphic
+   build). Changing faster than the viewer can read is noise, not energy.
+3. **Captions always on,** designed in the brand style, synced word by word, 2 to 5 words at a time,
+   inside the safe zones. Never platform auto-captions.
+4. **Open a loop early, pay it off late,** and end so the last frame flows back into the first (rewatch).
+5. **Length follows the idea.** Most voice-led reels land between 20 and 40 seconds. Never pad.
+6. **Works muted, better with sound.** The story must be clear with the sound off.
+7. **The share test:** who would send this to whom, and why? If nobody, the idea is not ready.
+8. **The cover:** a designed frame with a 2 to 5 word title, readable as a small thumbnail. Keep the
+   title inside the central 1080x1350 area so it survives the profile-grid crop.
+9. **Search:** platforms read captions, on-screen text and speech. Put the main keyword in the first
+   spoken line, the first on-screen text and the first line of the caption.
+10. **The copy-ready posting kit.** Deliver each part in its own code block, so it copies in one tap:
+    - **Caption:** the hook line first (under about 125 characters, before the "more" cut), then 2 to
+      4 short value lines, then one clear CTA (save, send, comment). No hashtags inside it.
+    - **Hashtags:** follow each platform's current limit (check it at research time; Instagram has
+      moved to a small cap). 3 to 5 precise tags beat many broad ones; the brand tag first.
+    - **Optional:** cover title, pinned first comment, YouTube Shorts title.
+11. **Platform rules:** label AI-generated content where the platform asks (AI voices, realistic AI
+    visuals), follow branded-content rules, and never upload a video carrying another platform's watermark.
 
 ## 11. COPY
 
@@ -595,6 +624,7 @@ Prefer verbs and nouns over adjectives. Offer 3 headline options. Never use gene
 | **Premium transitions** (match cuts, mask reveals, scale-through, morphs) | Section 8A, GSAP, `@remotion/transitions`, shaders, flubber |
 | **Big-tech ad craft** (UI rebuilds, cursor choreography, product as sculpture) | Section 2C, HyperFrames/Remotion, three.js, Blender |
 | **Watching and judging its own film** | The screening room (section 7, Appendix A), FFmpeg |
+| **Voiceover-led editing** (word-synced cuts and captions, ducked mix) | faster-whisper / whisperX, section 15 recipe, Appendix B |
 | **Kinetic typography** (split text, masked reveals, tracking animation) | HyperFrames `/motion-graphics`, GSAP SplitText, opentype.js, fontkit |
 | **Arabic / RTL typography** | harfbuzzjs, fontkit, Google Fonts Arabic, word-level animation |
 | **Shape morphs and line animation** | GSAP MorphSVG / DrawSVG, flubber, SVG.js |
@@ -734,6 +764,7 @@ Pick ONE render engine per project, then layer the rest.
 ### Audio, music and captions
 - `librosa/librosa`, `MTG/essentia`, `aubio/aubio`: beats, onsets, tempo, energy
 - `adefossez/demucs`: split music into stems (drums, bass, vocals) to drive visuals by instrument
+- `SYSTRAN/faster-whisper`: fast transcription with word timestamps (the voiceover recipe, section 15)
 - `m-bain/whisperX`: accurate word-level timestamps; `ggml-org/whisper.cpp`, `openai/whisper`
 - `Tonejs/Tone.js`: browser audio; `jiaaro/pydub`, SoX: sound design and mixing
 - `slhck/ffmpeg-normalize`, `csteinmetz1/pyloudnorm`: loudness to target LUFS
@@ -756,6 +787,7 @@ Pick ONE render engine per project, then layer the rest.
 - `playwright` / `puppeteer` for frame screenshots
 - `Netflix/vmaf`: objective encode quality check
 - `tools/screening-room.sh` (Appendix A): the screening room, needs only FFmpeg
+- `tools/mix-voiceover.sh` (Appendix B): voice-led mix with ducking and exact loudness, needs only FFmpeg
 
 ---
 
@@ -805,6 +837,53 @@ open("beats.txt", "w").write("\n".join(f"{t:.4f}" for t in beat_times))  # for t
 ### Motion blur for HTML/GSAP engines
 - Render at a multiple of the target fps and blend frames (for example `ffmpeg -vf "tmix=frames=4"`
   then drop to target fps), or apply directional blur proportional to velocity on fast-moving layers.
+
+### Voiceover-driven edit (the voice is the timeline)
+Use this whenever a video is built on a voiceover (for example one the user made in ElevenLabs).
+
+1. **Prepare the voice.** Keep the original file untouched. Trim the head and tail silence (keeping
+   0.1 s) and convert to 48 kHz. Never change its speed by more than 3%.
+   ```bash
+   ffmpeg -i vo_original.mp3 -af "silenceremove=start_periods=1:start_threshold=-50dB:start_silence=0.1,areverse,silenceremove=start_periods=1:start_threshold=-50dB:start_silence=0.1,areverse" -ar 48000 vo.wav
+   ```
+2. **Word timestamps** with faster-whisper (`pip install faster-whisper`; the first run downloads the model):
+   ```python
+   import json, sys
+   from faster_whisper import WhisperModel
+   model = WhisperModel("large-v3", device="cpu", compute_type="int8")  # NVIDIA GPU: device="cuda", compute_type="float16"
+   segments, info = model.transcribe(sys.argv[1], word_timestamps=True)
+   words = [{"w": w.word.strip(), "t0": round(w.start, 3), "t1": round(w.end, 3)}
+            for s in segments for w in (s.words or [])]
+   json.dump({"language": info.language, "duration": round(info.duration, 3), "words": words},
+             open("vo_words.json", "w"), ensure_ascii=False, indent=1)
+   print(len(words), "words")
+   ```
+   Compare the transcript with the script. The script is the truth for spelling; take only the
+   timings from the transcript. If a word is missing or misread in the audio, tell the user which
+   line to regenerate.
+3. **Edit map:** split the words into phrases at pauses of 0.25 s or more and at sentence ends:
+   ```python
+   import json
+   d = json.load(open("vo_words.json")); phrases, cur = [], []
+   for w in d["words"]:
+       if cur and (w["t0"] - cur[-1]["t1"] >= 0.25 or cur[-1]["w"].endswith((".", "?", "!"))):
+           phrases.append(cur); cur = []
+       cur.append(w)
+   if cur: phrases.append(cur)
+   out = [{"text": " ".join(x["w"] for x in p), "t0": p[0]["t0"], "t1": p[-1]["t1"],
+           "key": max(p, key=lambda x: len(x["w"]))["w"]}  # placeholder: set the word that carries the meaning
+          for p in phrases]
+   json.dump({"duration": d["duration"], "words": d["words"], "phrases": out},
+             open("vo_map.json", "w"), ensure_ascii=False, indent=1)
+   ```
+   One scene or type card per phrase. Cuts land on phrase starts, visual hits on the stressed
+   word (±1 frame), captions appear word by word at each word's start time.
+4. **Mix** with Appendix B: the voice on top, the music ducked under it (cut the music to the video's
+   length with a fade-out first), SFX on the hits, final −14 LUFS and a true peak at or below −1 dBFS.
+   ```bash
+   ffmpeg -i music.wav -t <DUR> -af "afade=t=out:st=<DUR-1.5>:d=1.5" -ar 48000 music_cut.wav
+   bash tools/mix-voiceover.sh vo.wav music_cut.wav sfx.wav mix.wav     # use - for a missing music or sfx track
+   ```
 
 ---
 
@@ -1041,4 +1120,44 @@ echo "Rubric scores with one line of evidence each (timecode). Deliver only with
 
 echo "Screening done: $R"
 echo "Now OPEN contact.png, every strip in $OUT/strips, the first/last frames$([ "$H" -gt "$W" ] && echo ' and safe_zones.png'), then fill in the notes."
+```
+
+---
+
+## APPENDIX B: THE VOICEOVER MIX SCRIPT
+
+Write this to `tools/mix-voiceover.sh` the first time you need it. It needs only `ffmpeg` and `awk`.
+The voice is leveled to −16 LUFS, the music sits 8 LU under it and ducks about 12 dB further while
+the voice speaks, SFX are added as designed, and the final mix lands on the loudness target with a
+4x-oversampled peak limiter (−14 LUFS, true peak about −2 dBFS).
+
+```bash
+#!/usr/bin/env bash
+# mix-voiceover.sh <vo.wav> <music.wav|-> <sfx.wav|-> <out.wav> [target LUFS, default -14]
+# Voice leveled to -16 LUFS. Music bed leveled 8 LU under the voice, ducks further while the voice speaks
+# and comes back up when it stops (cut and fade the music to the video length first). SFX added as designed.
+# Then gain to the target with a 4x-oversampled peak limiter, measured and corrected twice.
+set -euo pipefail
+VO="$1"; MUSIC="$2"; SFX="$3"; OUT="$4"; T="${5:--14}"
+lufs() { ffmpeg -nostats -i "$1" -af ebur128 -f null - 2>&1 | awk '/^ *I:/{v=$2} END{print v}'; }
+gain() { awk -v a="$1" -v b="$2" 'BEGIN{printf "%.2f", a-b}'; }
+GV=$(gain -16 "$(lufs "$VO")")
+IN=(-i "$VO"); MIX="[vo]"; N=1; K=1
+if [ "$MUSIC" != "-" ]; then
+  GM=$(gain -24 "$(lufs "$MUSIC")"); IN+=(-i "$MUSIC")
+  FC="[0:a]aformat=channel_layouts=stereo,volume=${GV}dB,asplit=2[vo][k0];[k0]apad[key];"
+  FC+="[1:a]aformat=channel_layouts=stereo,volume=${GM}dB[bed];[bed][key]sidechaincompress=threshold=0.03:ratio=4:attack=20:release=400[duck];"
+  MIX+="[duck]"; N=2; K=2
+else
+  FC="[0:a]aformat=channel_layouts=stereo,volume=${GV}dB[vo];"
+fi
+if [ "$SFX" != "-" ]; then IN+=(-i "$SFX"); FC+="[$K:a]aformat=channel_layouts=stereo[fx];"; MIX+="[fx]"; N=$((N+1)); fi
+FC+="${MIX}amix=inputs=$N:duration=longest:normalize=0[pre]"
+P1="${OUT%.*}_p1.wav"; P2="${OUT%.*}_p2.wav"
+LIM="aresample=192000,alimiter=limit=0.79:attack=1:release=60:level=false,aresample=48000"
+ffmpeg -v error -y "${IN[@]}" -filter_complex "$FC" -map "[pre]" -ar 48000 "$P1"
+ffmpeg -v error -y -i "$P1" -af "volume=$(gain "$T" "$(lufs "$P1")")dB,$LIM" "$P2"
+ffmpeg -v error -y -i "$P2" -af "volume=$(gain "$T" "$(lufs "$P2")")dB,$LIM" "$OUT"
+rm -f "$P1" "$P2"
+ffmpeg -nostats -i "$OUT" -af ebur128=peak=true -f null - 2>&1 | awk -v o="$OUT" '/^ *I:/{i=$2} /^ *Peak:/{p=$2} END{print "Mixed: " o "  loudness " i " LUFS, true peak " p " dBFS"}'
 ```
