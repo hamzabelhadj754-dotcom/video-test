@@ -1,0 +1,331 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>GainsDom Motion Test</title>
+<style>
+  @font-face { font-family: 'Archivo'; src: url(../fonts/Archivo-latin.woff2) format('woff2');
+    font-weight: 100 900; font-stretch: 62% 125%; font-display: block; }
+  @font-face { font-family: 'JetBrains Mono'; src: url(../fonts/JetBrainsMono-latin.woff2) format('woff2');
+    font-weight: 100 800; font-display: block; }
+  :root {
+    --void: #06070A; --bone: #F0ECE4; --ash: #8C8880; --graphite: #2A2C33;
+    --ember: #FF4F1A; --amber: #FFB020; --ice: #3EC6FF;
+  }
+  html, body { margin: 0; background: var(--void); }
+  #stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: var(--void); }
+  #gl, .layer { position: absolute; inset: 0; }
+  .disp { position: absolute; left: 66px; margin: 0; font-family: 'Archivo'; text-transform: uppercase; color: var(--bone); line-height: .84; white-space: nowrap; will-change: transform, filter, opacity; }
+  .mono { font-family: 'JetBrains Mono'; font-variant-numeric: tabular-nums; text-transform: uppercase; letter-spacing: .16em; }
+  .hot { background: linear-gradient(100deg, #FF3D14 0%, #FF6A1F 45%, #FFB020 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  #cap { position: absolute; left: 0; right: 0; top: 1088px; text-align: center; font-family: 'Archivo'; text-transform: uppercase;
+         font-weight: 780; font-stretch: 86%; font-size: 64px; letter-spacing: -.01em; color: var(--bone); text-shadow: 0 4px 24px rgba(0,0,0,.7); }
+  #cap span { display: inline-block; margin: 0 .12em; will-change: transform, filter, opacity; }
+  .chip { position: absolute; left: 72px; display: flex; align-items: baseline; gap: 22px; }
+  .chip .k { font-size: 24px; color: var(--ash); width: 110px; }
+  .chip .v { font-size: 58px; color: var(--bone); letter-spacing: .04em; }
+  .chip .bar { position: absolute; left: 0; bottom: -18px; height: 3px; background: var(--graphite); width: 420px; }
+  .chip .bar i { display: block; height: 100%; width: 0; }
+  #grain { position: absolute; inset: 0; width: 1080px; height: 1920px; mix-blend-mode: overlay; opacity: .3; image-rendering: pixelated; }
+  .vig { background: radial-gradient(115% 80% at 50% 52%, transparent 50%, rgba(0,0,0,.7) 100%); }
+  #black { position: absolute; inset: 0; background: #000; opacity: 0; }
+</style>
+<script type="importmap">
+{ "imports": {
+  "three": "./node_modules/three/build/three.module.js",
+  "three/addons/": "./node_modules/three/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+<div id="stage">
+  <canvas id="gl" width="1080" height="1920"></canvas>
+  <div class="layer vig"></div>
+
+  <!-- HOOK OVERLAY -->
+  <div id="hook">
+    <div class="mono" style="position:absolute; left:72px; top:226px; font-size:23px; color:var(--ash);">Dom Science <span style="color:var(--ice)">/</span> 001</div>
+    <div class="mono" style="position:absolute; right:72px; top:226px; font-size:23px; color:var(--ash);"><span id="rec" style="color:var(--ember)">●</span>&nbsp; 22:47</div>
+    <h1 class="disp" id="l1" style="top:290px; font-size:104px; font-weight:300;">Light</h1>
+    <h1 class="disp" id="l2" style="top:384px; font-size:104px; font-weight:300;">weights.</h1>
+    <h1 class="disp" id="l3" style="top:512px; font-size:236px; font-weight:900; font-stretch:62%; letter-spacing:-.035em;">Real</h1>
+    <h1 class="disp hot" id="l4" style="top:704px; font-size:236px; font-weight:900; font-stretch:62%; letter-spacing:-.035em; filter: drop-shadow(0 0 28px rgba(255,79,26,.45));">Muscle.</h1>
+
+    <div class="chip mono" id="c1" style="top:296px;"><span class="k">Load</span><span class="v">5<small style="font-size:24px; color:var(--ash)"> KG</small></span><span class="bar"><i style="background:var(--ice)"></i></span></div>
+    <div class="chip mono" id="c2" style="top:388px;"><span class="k">Reps</span><span class="v" id="reps">00</span><span class="bar"><i style="background:linear-gradient(90deg,var(--ember),var(--amber))"></i></span></div>
+    <div class="chip mono" id="c3" style="top:480px;"><span class="k">RIR</span><span class="v" style="color:var(--amber)">1–2</span><span class="bar"><i style="background:var(--amber)"></i></span></div>
+  </div>
+
+  <div id="cap"></div>
+
+  <!-- END CARD OVERLAY -->
+  <div id="end" style="opacity:0">
+    <div style="position:absolute; left:0; right:0; top:640px; text-align:center;">
+      <div id="wm" style="font-family:'Archivo'; text-transform:uppercase; color:var(--bone); font-size:172px; line-height:1; letter-spacing:-.03em; white-space:nowrap;">
+        <span id="wm1" style="font-weight:880; font-stretch:68%;">Gains</span><span id="wm2" style="font-weight:300; font-stretch:118%;">dom</span>
+      </div>
+      <div id="wmbar" style="width:0; height:6px; margin:40px auto 0; background:linear-gradient(90deg,var(--ember),var(--amber));"></div>
+      <div id="tag" style="margin-top:40px; font-family:'Archivo'; text-transform:uppercase; font-size:52px; font-weight:340; font-stretch:122%; letter-spacing:.03em; color:var(--bone);">Built at home.</div>
+    </div>
+    <div id="cta" style="position:absolute; left:0; right:0; top:1100px; text-align:center;">
+      <div class="mono" style="font-size:24px; color:var(--ash);">@handle <span style="color:var(--ice)">·</span> to confirm</div>
+      <div style="margin-top:26px; display:inline-block; padding:16px 44px; border:2px solid var(--ember); font-family:'Archivo'; text-transform:uppercase; font-weight:820; font-stretch:82%; font-size:46px; letter-spacing:.08em; color:var(--bone);">Save</div>
+    </div>
+  </div>
+
+  <canvas id="grain" width="540" height="960"></canvas>
+  <div id="black"></div>
+</div>
+
+<script type="module">
+import * as THREE from 'three';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+import { Reflector } from 'three/addons/objects/Reflector.js';
+
+const W = 1080, H = 1920;
+const T_HIT_REAL = 0.85, T_HIT_MUSCLE = 1.30, T_SWITCH = 4.50, T_END = 4.62, DURATION = 7.0;
+
+// ---------- helpers ----------
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const lerp = (a, b, t) => a + (b - a) * t;
+const seg = (t, a, b) => clamp((t - a) / (b - a));
+function bez(x1, y1, x2, y2) { // cubic-bezier easing
+  return (x) => { let t = x; for (let i = 0; i < 8; i++) { const cx = 3*x1, bx = 3*(x2-x1)-cx, ax = 1-cx-bx;
+    const xt = ((ax*t+bx)*t+cx)*t - x; const d = (3*ax*t+2*bx)*t+cx; if (Math.abs(d) < 1e-6) break; t -= xt/d; }
+    const cy = 3*y1, by = 3*(y2-y1)-cy, ay = 1-cy-by; return ((ay*t+by)*t+cy)*t; };
+}
+const eHit = bez(0.16, 1, 0.3, 1), eCam = bez(0.37, 0, 0.63, 1), eLock = bez(0.25, 1, 0.5, 1);
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+
+// ---------- renderer ----------
+const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('gl'), antialias: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(1); renderer.setSize(W, H, false);
+renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.0;
+renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color('#06070A');
+scene.fog = new THREE.FogExp2('#070910', 0.32);
+
+// environment: dark studio with an ember strip, an ice strip and a warm top softbox (for metal reflections)
+{
+  const env = new THREE.Scene(); env.background = new THREE.Color('#020203');
+  const strip = (color, w, h, pos, rot, k) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ color: new THREE.Color(color).multiplyScalar(k), side: THREE.DoubleSide })); m.position.set(...pos); m.rotation.set(...rot); env.add(m); };
+  strip('#FF5A1F', 0.6, 4, [3, 1, -1], [0, -Math.PI/2.4, 0], 6);
+  strip('#3EC6FF', 0.6, 4, [-3, 1, -1], [0, Math.PI/2.4, 0], 5);
+  strip('#FFE6D0', 3, 1.2, [0, 4, 0.5], [Math.PI/2, 0, 0], 3);
+  const pm = new THREE.PMREMGenerator(renderer);
+  scene.environment = pm.fromScene(env, 0.04).texture;
+  scene.environmentIntensity = 0.55;
+}
+
+// ---------- floor: polished studio floor (reflection under a dark satin layer) ----------
+const reflector = new Reflector(new THREE.PlaneGeometry(12, 12), { textureWidth: 1080, textureHeight: 1920, color: 0x3a3a3a });
+reflector.rotation.x = -Math.PI/2; scene.add(reflector);
+const floor = new THREE.Mesh(new THREE.PlaneGeometry(12, 12), new THREE.MeshStandardMaterial({ color: '#08090C', roughness: 0.5, metalness: 0.1, transparent: true, opacity: 0.9 }));
+floor.rotation.x = -Math.PI/2; floor.position.y = 0.0008; floor.receiveShadow = true; scene.add(floor);
+
+// ---------- the dumbbell (hex heads, knurled chrome handle) ----------
+const dumbbell = new THREE.Group(); scene.add(dumbbell);
+const R = 0.062, HEAD = 0.085, HANDLE = 0.13, HR = 0.0165;
+const rubber = new THREE.MeshPhysicalMaterial({ color: '#121317', roughness: 0.55, metalness: 0.0, clearcoat: 0.45, clearcoatRoughness: 0.35 });
+const chrome = new THREE.MeshStandardMaterial({ color: '#D9DDE3', roughness: 0.2, metalness: 1.0 });
+const knurlTex = (() => { const c = document.createElement('canvas'); c.width = 256; c.height = 64; const g = c.getContext('2d');
+  g.fillStyle = '#808080'; g.fillRect(0,0,256,64); g.strokeStyle = '#3a3a3a'; g.lineWidth = 2;
+  for (let i = -64; i < 320; i += 6) { g.beginPath(); g.moveTo(i,0); g.lineTo(i+64,64); g.stroke(); g.beginPath(); g.moveTo(i+64,0); g.lineTo(i,64); g.stroke(); }
+  const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(1, 1); return t; })();
+const knurl = new THREE.MeshStandardMaterial({ color: '#C9CED6', roughness: 0.35, metalness: 1.0, bumpMap: knurlTex, bumpScale: 0.6 });
+function head(x) {
+  const g = new THREE.Group();
+  const geo = new THREE.CylinderGeometry(R, R, HEAD, 6, 1); geo.rotateZ(Math.PI/2);
+  const m = new THREE.Mesh(geo, rubber); m.castShadow = true; g.add(m);
+  // chamfer ring + chrome end cap
+  const cap = new THREE.Mesh(new THREE.CylinderGeometry(R*0.42, R*0.42, 0.004, 48).rotateZ(Math.PI/2), chrome);
+  cap.position.x = Math.sign(x) * (HEAD/2 + 0.002); g.add(cap);
+  const collar = new THREE.Mesh(new THREE.CylinderGeometry(HR*1.55, HR*1.55, 0.012, 48).rotateZ(Math.PI/2), chrome);
+  collar.position.x = -Math.sign(x) * (HEAD/2 + 0.006); collar.castShadow = true; g.add(collar);
+  g.position.x = x; return g;
+}
+dumbbell.add(head(-(HANDLE/2 + HEAD/2)), head(HANDLE/2 + HEAD/2));
+const handle = new THREE.Mesh(new THREE.CylinderGeometry(HR, HR, HANDLE, 48).rotateZ(Math.PI/2), knurl); handle.castShadow = true; dumbbell.add(handle);
+// hex with a flat face down: cylinder vertices start at angle 0, so rotate 30 deg about the axis
+dumbbell.children.forEach(c => c.rotation.x = Math.PI/6);
+dumbbell.position.y = R * Math.cos(Math.PI/6);
+dumbbell.rotation.y = 0.0;
+
+// ---------- the rep ring: a halo behind the athlete's weight, it draws on with the reps ----------
+const ringGroup = new THREE.Group(); ringGroup.position.set(0, 0.245, -0.30); scene.add(ringGroup);
+const ringMat = new THREE.MeshBasicMaterial({ color: new THREE.Color('#FF5A1F').multiplyScalar(2.2), toneMapped: false, fog: false });
+let ring = null;
+function setRing(p) {
+  if (ring) { ring.geometry.dispose(); ringGroup.remove(ring); }
+  if (p <= 0.001) { ring = null; return; }
+  ring = new THREE.Mesh(new THREE.TorusGeometry(0.19, 0.0018, 8, 300, Math.PI*2*p), ringMat);
+  ring.rotation.z = Math.PI/2; ring.scale.x = -1; ringGroup.add(ring);
+}
+const ticks = new THREE.Group(); ringGroup.add(ticks);
+const tickMat = new THREE.MeshBasicMaterial({ color: '#3EC6FF', transparent: true, opacity: 0.55, toneMapped: false, fog: false });
+for (let i = 0; i < 60; i++) {
+  const a = i / 60 * Math.PI * 2, big = i % 5 === 0;
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(big ? 0.0026 : 0.0014, big ? 0.016 : 0.008), tickMat);
+  const r = 0.212; m.position.set(Math.cos(a)*r, Math.sin(a)*r, 0); m.rotation.z = a - Math.PI/2; ticks.add(m);
+}
+
+// ---------- lights ----------
+function spot(color, pos, intensity, angle) {
+  const s = new THREE.SpotLight(color, intensity, 6, angle, 0.85, 2);
+  s.position.set(...pos); s.target.position.set(0, 0.04, 0); scene.add(s, s.target);
+  s.castShadow = true; s.shadow.mapSize.set(2048, 2048); s.shadow.bias = -0.0004; s.shadow.radius = 4; return s;
+}
+const emberL = spot('#FF4F1A', [0.75, 0.7, -1.0], 30, 0.40);
+const iceL   = spot('#3EC6FF', [-0.9, 0.6, -0.75], 15, 0.40);
+const keyL   = spot('#FFE7D2', [0.35, 1.5, 0.7], 6, 0.38);
+const lampL  = spot('#FFB46A', [0, 1.6, 0.02], 0, 0.55); // the end-card lamp
+const fill = new THREE.HemisphereLight('#1a2233', '#000000', 0.25); scene.add(fill);
+
+// fake volumetric beams (additive cones)
+function beam(light, color, len, rad, k) {
+  const geo = new THREE.ConeGeometry(rad, len, 64, 1, true); geo.translate(0, -len/2, 0);
+  const mat = new THREE.ShaderMaterial({ transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide,
+    uniforms: { uColor: { value: new THREE.Color(color) }, uK: { value: k }, uLen: { value: len } },
+    vertexShader: `varying float vY; varying vec3 vN; varying vec3 vV; void main(){ vY = position.y; vec4 mv = modelViewMatrix*vec4(position,1.); vN = normalize(normalMatrix*normal); vV = normalize(-mv.xyz); gl_Position = projectionMatrix*mv; }`,
+    fragmentShader: `uniform vec3 uColor; uniform float uK; uniform float uLen; varying float vY; varying vec3 vN; varying vec3 vV;
+      void main(){ float along = clamp(-vY/uLen,0.,1.); float edge = pow(abs(dot(vN,vV)),1.6); float a = (1.-along)*(1.-along)*edge*uK; gl_FragColor = vec4(uColor*a, 1.); }` });
+  const m = new THREE.Mesh(geo, mat); m.position.copy(light.position);
+  const dir = new THREE.Vector3().subVectors(light.target.position, light.position).normalize();
+  m.quaternion.setFromUnitVectors(new THREE.Vector3(0, -1, 0), dir); scene.add(m); return m;
+}
+const emberBeam = beam(emberL, '#FF5A1F', 1.35, 0.5, 0.16);
+const iceBeam = beam(iceL, '#3EC6FF', 1.3, 0.48, 0.13);
+const lampBeam = beam(lampL, '#FFB46A', 1.7, 0.75, 0.0);
+
+// dust in the light
+const dustN = 700, r0 = rng(20261126), dustBase = new Float32Array(dustN*3), dustCol = new Float32Array(dustN*3);
+for (let i = 0; i < dustN; i++) {
+  dustBase[i*3] = (r0()-0.5)*1.8; dustBase[i*3+1] = r0()*1.0; dustBase[i*3+2] = (r0()-0.5)*1.4 - 0.2;
+  const c = new THREE.Color(dustBase[i*3] > 0 ? '#FF9A6A' : '#9FDFFF').lerp(new THREE.Color('#F0ECE4'), r0()*0.6);
+  dustCol.set([c.r, c.g, c.b], i*3);
+}
+const dustGeo = new THREE.BufferGeometry(); dustGeo.setAttribute('position', new THREE.BufferAttribute(dustBase.slice(), 3)); dustGeo.setAttribute('color', new THREE.BufferAttribute(dustCol, 3));
+const dustTex = (() => { const c = document.createElement('canvas'); c.width = c.height = 64; const g = c.getContext('2d'); const gr = g.createRadialGradient(32,32,0,32,32,32); gr.addColorStop(0,'rgba(255,255,255,1)'); gr.addColorStop(.4,'rgba(255,255,255,.35)'); gr.addColorStop(1,'rgba(255,255,255,0)'); g.fillStyle = gr; g.fillRect(0,0,64,64); return new THREE.CanvasTexture(c); })();
+const dustMat = new THREE.PointsMaterial({ size: 0.008, map: dustTex, vertexColors: true, transparent: true, opacity: 0.55, depthWrite: false, blending: THREE.AdditiveBlending });
+const dust = new THREE.Points(dustGeo, dustMat); scene.add(dust);
+
+const _rb = reflector.onBeforeRender; reflector.onBeforeRender = function (...args) { const v = [ringGroup.visible, dust.visible]; ringGroup.visible = dust.visible = false; _rb.apply(this, args); ringGroup.visible = v[0]; dust.visible = v[1]; };
+
+// ---------- camera + post ----------
+const camera = new THREE.PerspectiveCamera(36, W/H, 0.01, 20);
+const composer = new EffectComposer(renderer);
+composer.setPixelRatio(1); composer.setSize(W, H);
+composer.addPass(new RenderPass(scene, camera));
+const bloom = new UnrealBloomPass(new THREE.Vector2(W, H), 0.5, 0.55, 0.86); composer.addPass(bloom);
+composer.addPass(new OutputPass());
+
+// ---------- overlay refs ----------
+const $ = (id) => document.getElementById(id);
+const L = ['l1','l2','l3','l4'].map($);
+const cap = $('cap');
+const CAPS = [ // mock word timings for the motion test (the real film uses vo_map.json)
+  { t0: 0.00, t1: 0.80, w: [['Light',0.00],['dumbbells',0.22],['can',0.60]] },
+  { t0: 0.80, t1: 2.20, w: [['build',0.80],['real',0.98],['muscle',T_HIT_MUSCLE,1]] },
+  { t0: 2.30, t1: 3.30, w: [['But',2.30],['only',2.48],['if',2.74],['you',2.88]] },
+  { t0: 3.30, t1: 4.45, w: [['do',3.30],['one',3.46,1],['thing.',3.70]] },
+];
+let lastCap = -1;
+function drawCaps(t) {
+  const i = CAPS.findIndex(c => t >= c.t0 && t < c.t1);
+  if (i !== lastCap) { cap.innerHTML = i < 0 ? '' : CAPS[i].w.map(w => `<span${w[2] ? ' class="hot" style="font-size:72px; filter:drop-shadow(0 0 16px rgba(255,79,26,.5))"' : ''}>${w[0]}</span>`).join(''); lastCap = i; }
+  if (i < 0) return;
+  [...cap.children].forEach((s, k) => { const p = eHit(seg(t, CAPS[i].w[k][1], CAPS[i].w[k][1] + 0.1));
+    s.style.opacity = p; s.style.transform = `translateY(${(1-p)*18}px)`; s.style.filter = (s.classList.contains('hot') ? 'drop-shadow(0 0 16px rgba(255,79,26,.5)) ' : '') + `blur(${(1-p)*6}px)`; });
+}
+
+const grain = $('grain'), gctx = grain.getContext('2d'), gimg = gctx.createImageData(540, 960);
+function drawGrain(frame) { const r = rng(1000 + frame); const d = gimg.data; for (let i = 0; i < d.length; i += 4) { const v = 128 + (r() - 0.5) * 120; d[i] = d[i+1] = d[i+2] = v; d[i+3] = 255; } gctx.putImageData(gimg, 0, 0); }
+
+const v3 = new THREE.Vector3();
+// ---------- the timeline ----------
+window.renderAt = function (t, frame) {
+  const hook = t < T_SWITCH;
+  // camera: slow orbit + push-in during the hook; high, still drift on the end card
+  let pos, look;
+  if (hook) {
+    const k = eCam(seg(t, 0, T_SWITCH));
+    const ang = lerp(0.40, -0.14, k), rad = lerp(1.50, 1.30, k), y = lerp(0.15, 0.21, k);
+    pos = new THREE.Vector3(Math.sin(ang)*rad, y, Math.cos(ang)*rad);
+    look = new THREE.Vector3(0, lerp(0.245, 0.235, k), 0);
+  } else {
+    const k = eCam(seg(t, T_END, DURATION));
+    const ang = lerp(0.10, -0.04, k), rad = lerp(1.85, 1.72, k);
+    pos = new THREE.Vector3(Math.sin(ang)*rad, lerp(0.42, 0.38, k), Math.cos(ang)*rad);
+    look = new THREE.Vector3(0, 0.40, 0);
+  }
+  // impact shake on MUSCLE, decays in 7 frames, < 0.5% of frame width
+  const sh = t >= T_HIT_MUSCLE && t < T_HIT_MUSCLE + 0.24 ? (1 - (t - T_HIT_MUSCLE)/0.24) : 0;
+  if (sh > 0) { const r = rng(frame); pos.x += (r()-.5)*0.006*sh; pos.y += (r()-.5)*0.006*sh; }
+  camera.position.copy(pos); camera.lookAt(look);
+
+  // lights: the lamp switch at 4.5 s (click, near-black, then one warm lamp)
+  const on = hook ? 1 : 0;
+  const pulse = 1 + 0.35 * Math.max(0, 1 - Math.abs(t - T_HIT_MUSCLE) / 0.35);
+  emberL.intensity = 30 * on * pulse; iceL.intensity = 15 * on; keyL.intensity = 6 * on;
+  emberBeam.material.uniforms.uK.value = 0.16 * on * pulse; iceBeam.material.uniforms.uK.value = 0.13 * on;
+  const lampK = hook ? 0 : (t < T_END ? 0 : eLock(seg(t, T_END, T_END + 0.5))) * (t < T_END + 0.12 ? 0.6 + 0.4*Math.sin(t*120) : 1);
+  lampL.intensity = 18 * lampK; lampBeam.material.uniforms.uK.value = 0.12 * lampK;
+  fill.intensity = hook ? 0.25 : 0.08 * lampK;
+
+  // rep ring draws on with the counter; ticks only in the hook
+  const ringP = hook ? Math.max(eHit(seg(t, 0.0, T_HIT_MUSCLE)) * 0.15, seg(t, 2.4, 3.8) ) : 0;
+  setRing(hook ? Math.max(0.15 * eHit(seg(t, 0.0, T_HIT_MUSCLE)), seg(t, 2.4, 3.8)) : 0);
+  ringMat.color.set('#FF5A1F').multiplyScalar(2.2 * pulse);
+  ticks.visible = hook; ringGroup.rotation.z = 0;
+  ringGroup.lookAt(camera.position.x, ringGroup.position.y, camera.position.z);
+
+  // dust drift
+  const p = dustGeo.attributes.position.array;
+  for (let i = 0; i < dustN; i++) { p[i*3] = dustBase[i*3] + Math.sin(t*0.4 + i)*0.01; p[i*3+1] = dustBase[i*3+1] + ((t*0.012 + i*0.37) % 0.05) - 0.025; p[i*3+2] = dustBase[i*3+2] + Math.cos(t*0.3 + i*1.7)*0.01; }
+  dustGeo.attributes.position.needsUpdate = true;
+  dustMat.opacity = hook ? 0.55 : 0.35 * lampK;
+
+  composer.render();
+
+  // ---- overlay ----
+  $('hook').style.opacity = hook ? 1 : 0; $('cap').style.opacity = hook ? 1 : 0;
+  // breathing width on the calm line (the inhale)
+  const br = 125 - 6 * eCam(seg(t, 0, 1.2));
+  L[0].style.fontStretch = L[1].style.fontStretch = br + '%';
+  L[0].style.transform = L[1].style.transform = `translateY(${-6*eCam(seg(t,0,T_SWITCH))}px)`;
+  const hit = (el, t0, extra = '') => { const k = eHit(seg(t, t0, t0 + 0.24)); el.style.opacity = k; el.style.transform = `translateY(${(1-k)*46}px) scale(${1.06 - 0.06*eLock(seg(t, t0, t0+0.3))})`; el.style.filter = extra + `blur(${(1-k)*10}px)`; };
+  hit(L[2], T_HIT_REAL); hit(L[3], T_HIT_MUSCLE, 'drop-shadow(0 0 28px rgba(255,79,26,.45)) ');
+  const ex = bez(0.5, 0, 0.75, 0)(seg(t, 2.0, 2.3));
+  if (ex > 0) L.forEach((el, j) => { el.style.opacity = (j < 2 ? 1 : +el.style.opacity) * (1 - ex); el.style.transform = `translateY(${-70*ex - (j<2?6:0)}px)`; el.style.filter = (j===3?'drop-shadow(0 0 28px rgba(255,79,26,.45)) ':'') + `blur(${ex*12}px)`; });
+  // data chips
+  [['c1', 2.25], ['c2', 2.4], ['c3', 3.75]].forEach(([id, t0], j) => { const el = $(id), k = eHit(seg(t, t0, t0 + 0.3)); el.style.opacity = k; el.style.transform = `translateX(${(1-k)*-24}px)`;
+    el.querySelector('.bar i').style.width = (j === 1 ? 420 * eCam(seg(t, 2.4, 3.8)) : 420 * eHit(seg(t, t0 + 0.1, t0 + 0.8)) * (j === 0 ? 0.25 : 0.9)) + 'px'; });
+  $('reps').textContent = String(Math.round(20 * eCam(seg(t, 2.4, 3.8)))).padStart(2, '0');
+  $('rec').style.opacity = Math.floor(t * 2) % 2 ? 0.25 : 1;
+  drawCaps(t);
+
+  // end card
+  const e = $('end'); e.style.opacity = hook ? 0 : 1;
+  if (!hook) {
+    const k1 = eHit(seg(t, T_END + 0.25, T_END + 0.75));
+    $('wm').style.opacity = k1; $('wm').style.filter = `blur(${(1-k1)*12}px) drop-shadow(0 0 ${30*k1}px rgba(255,180,106,.25))`;
+    $('wm').style.transform = `translateY(${(1-k1)*-20}px)`;
+    $('wm2').style.fontStretch = (125 - 7 * eLock(seg(t, T_END + 0.25, T_END + 1.0))) + '%';
+    $('wmbar').style.width = 120 * eHit(seg(t, T_END + 0.7, T_END + 1.1)) + 'px';
+    const k2 = eHit(seg(t, T_END + 0.85, T_END + 1.25)); $('tag').style.opacity = k2; $('tag').style.transform = `translateY(${(1-k2)*16}px)`;
+    const k3 = eHit(seg(t, T_END + 1.1, T_END + 1.5)); $('cta').style.opacity = k3; $('cta').style.transform = `translateY(${(1-k3)*16}px)`;
+  }
+  $('black').style.opacity = (t >= T_SWITCH && t < T_END) ? 0.96 : 0;
+  drawGrain(frame);
+};
+window.DURATION = DURATION;
+await document.fonts.ready;
+window.ready = true;
+</script>
+</body>
+</html>

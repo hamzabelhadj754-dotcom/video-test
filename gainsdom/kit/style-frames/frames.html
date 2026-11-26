@@ -1,0 +1,181 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  @font-face { font-family: 'Archivo'; src: url(../fonts/Archivo-latin.woff2) format('woff2');
+    font-weight: 100 900; font-stretch: 62% 125%; font-display: block; }
+  @font-face { font-family: 'JetBrains Mono'; src: url(../fonts/JetBrainsMono-latin.woff2) format('woff2');
+    font-weight: 100 800; font-display: block; }
+  :root {
+    --void: #0A0A0B; --surface: #141416; --graphite: #26262A;
+    --bone: #ECE8E1; --ash: #8C8880; --accent: #FF4F1A;
+  }
+  html, body { margin: 0; padding: 0; background: var(--void); }
+  .frame { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: var(--void); }
+  .layer { position: absolute; inset: 0; }
+  .display { font-family: 'Archivo'; text-transform: uppercase; color: var(--bone); margin: 0; line-height: .86; }
+  .mono { font-family: 'JetBrains Mono'; font-variant-numeric: tabular-nums; text-transform: uppercase; letter-spacing: .14em; }
+  .grain { mix-blend-mode: overlay; opacity: .55; }
+  .vignette { background: radial-gradient(120% 85% at 50% 48%, transparent 52%, rgba(0,0,0,.62) 100%); }
+</style>
+</head>
+<body>
+
+<!-- ============ FRAME 1: THE HOOK ============ -->
+<div class="frame" id="hook">
+  <svg class="layer" width="1080" height="1920" viewBox="0 0 1080 1920">
+    <defs>
+      <linearGradient id="beam" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#C9D3DE" stop-opacity=".20"/>
+        <stop offset=".55" stop-color="#C9D3DE" stop-opacity=".07"/>
+        <stop offset="1" stop-color="#C9D3DE" stop-opacity="0"/>
+      </linearGradient>
+      <radialGradient id="pool" cx=".5" cy=".5" r=".5">
+        <stop offset="0" stop-color="#D8DEE6" stop-opacity=".30"/>
+        <stop offset=".7" stop-color="#D8DEE6" stop-opacity=".08"/>
+        <stop offset="1" stop-color="#D8DEE6" stop-opacity="0"/>
+      </radialGradient>
+      <linearGradient id="headFace" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="#2E2E33"/>
+        <stop offset=".18" stop-color="#1A1A1D"/>
+        <stop offset="1" stop-color="#0F0F11"/>
+      </linearGradient>
+      <linearGradient id="headTop" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="#E9EEF3" stop-opacity=".95"/>
+        <stop offset=".5" stop-color="#9AA3AD" stop-opacity=".55"/>
+        <stop offset="1" stop-color="#3A3D42" stop-opacity=".3"/>
+      </linearGradient>
+      <linearGradient id="handle" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#D9DEE4"/>
+        <stop offset=".22" stop-color="#6B7077"/>
+        <stop offset=".6" stop-color="#1E1F22"/>
+        <stop offset="1" stop-color="#0E0E10"/>
+      </linearGradient>
+      <filter id="soft" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="28"/></filter>
+      <filter id="halo" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="6"/></filter>
+      <filter id="dustblur"><feGaussianBlur stdDeviation="1.6"/></filter>
+      <filter id="noise"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="7" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter>
+    </defs>
+
+    <!-- volumetric window beam, from upper left down to the floor -->
+    <polygon points="-120,180 300,60 920,1640 240,1720" fill="url(#beam)" filter="url(#soft)"/>
+    <!-- floor: horizon -->
+    <rect x="0" y="1500" width="1080" height="420" fill="#0C0C0E"/>
+    <line x1="0" y1="1500" x2="1080" y2="1500" stroke="#26262A" stroke-width="2"/>
+    <!-- window light on the floor, with the window frame's cross shadow -->
+    <g transform="translate(560 1690) skewX(-38) scale(1 .36)">
+      <ellipse cx="0" cy="0" rx="520" ry="380" fill="url(#pool)"/>
+    </g>
+    <g id="dust"></g>
+
+    <!-- the dumbbell: lit hard from the window (upper left), rim on the top edges -->
+    <g transform="translate(540 1628)">
+      <ellipse cx="0" cy="46" rx="400" ry="22" fill="#000" opacity=".7" filter="url(#halo)"/>
+      <!-- handle -->
+      <rect x="-190" y="-60" width="380" height="54" rx="10" fill="url(#handle)"/>
+      <g stroke="#000" stroke-opacity=".35" stroke-width="2">
+        <line x1="-110" y1="-58" x2="-110" y2="-8"/><line x1="-90" y1="-58" x2="-90" y2="-8"/>
+        <line x1="-70" y1="-58" x2="-70" y2="-8"/><line x1="70" y1="-58" x2="70" y2="-8"/>
+        <line x1="90" y1="-58" x2="90" y2="-8"/><line x1="110" y1="-58" x2="110" y2="-8"/>
+      </g>
+      <!-- heads (hex prisms seen from the side: top facet + front facet) -->
+      <g id="headL">
+        <rect x="-370" y="-150" width="180" height="200" rx="6" fill="url(#headFace)"/>
+        <rect x="-370" y="-170" width="180" height="34" rx="6" fill="url(#headTop)"/>
+        <rect x="-370" y="-171" width="180" height="3" fill="#F4F6F8" opacity=".9" filter="url(#halo)"/>
+        <rect x="-372" y="-170" width="3" height="215" fill="#E9EEF3" opacity=".55"/>
+      </g>
+      <g>
+        <rect x="190" y="-150" width="180" height="200" rx="6" fill="url(#headFace)"/>
+        <rect x="190" y="-170" width="180" height="34" rx="6" fill="url(#headTop)" opacity=".75"/>
+        <rect x="190" y="-171" width="180" height="2" fill="#F4F6F8" opacity=".6"/>
+      </g>
+      <!-- precise data callout -->
+      <line x1="280" y1="-200" x2="280" y2="-262" stroke="#ECE8E1" stroke-width="2"/>
+      <line x1="280" y1="-262" x2="350" y2="-262" stroke="#ECE8E1" stroke-width="2"/>
+    </g>
+    <rect width="1080" height="1920" filter="url(#noise)" class="grain" opacity=".07"/>
+  </svg>
+
+  <div class="layer vignette"></div>
+
+  <!-- top meta line -->
+  <div class="mono" style="position:absolute; left:72px; top:228px; font-size:24px; color:var(--ash);">Dom Science &nbsp;/&nbsp; 001</div>
+  <div class="mono" style="position:absolute; right:72px; top:228px; font-size:24px; color:var(--ash);">22:47</div>
+
+  <!-- hook display type: calm expanded line, then the condensed heavy hit -->
+  <h1 class="display" style="position:absolute; left:68px; top:300px; font-size:112px; font-weight:300; font-stretch:125%; letter-spacing:-.02em;">Light<br>weights.</h1>
+  <h1 class="display" style="position:absolute; left:64px; top:548px; font-size:250px; font-weight:900; font-stretch:62%; letter-spacing:-.035em; line-height:.82;">Real<br><span style="color:var(--accent)">muscle.</span></h1>
+
+  <div class="mono" style="position:absolute; left:898px; top:1353px; font-size:26px; color:var(--bone);">5 kg</div>
+
+  <!-- caption component (55–75% band): first spoken words -->
+  <div style="position:absolute; left:0; right:0; top:1150px; text-align:center; font-family:'Archivo'; text-transform:uppercase; font-weight:760; font-stretch:88%; font-size:66px; letter-spacing:-.01em; color:var(--bone);">
+    Light dumbbells
+  </div>
+</div>
+
+<!-- ============ FRAME 2: THE END CARD ============ -->
+<div class="frame" id="end">
+  <svg class="layer" width="1080" height="1920" viewBox="0 0 1080 1920">
+    <defs>
+      <radialGradient id="lampPool" gradientUnits="userSpaceOnUse" cx="540" cy="600" r="900">
+        <stop offset="0" stop-color="#FFD9B8" stop-opacity=".30"/>
+        <stop offset=".35" stop-color="#FFB98A" stop-opacity=".10"/>
+        <stop offset="1" stop-color="#FFB98A" stop-opacity="0"/>
+      </radialGradient>
+      <linearGradient id="cone" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#FFE3C7" stop-opacity=".26"/>
+        <stop offset="1" stop-color="#FFE3C7" stop-opacity="0"/>
+      </linearGradient>
+      <filter id="soft2" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="36"/></filter>
+      <filter id="bulb" x="-200%" y="-200%" width="500%" height="500%"><feGaussianBlur stdDeviation="14"/></filter>
+      <filter id="noise2"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="11" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter>
+    </defs>
+    <!-- pendant lamp: cable, shade, bulb -->
+    <line x1="540" y1="0" x2="540" y2="470" stroke="#26262A" stroke-width="3"/>
+    <path d="M470 470 L610 470 L660 560 L420 560 Z" fill="#141416" stroke="#26262A" stroke-width="2"/>
+    <rect x="420" y="556" width="240" height="4" fill="#FFE3C7" opacity=".8"/>
+    <ellipse cx="540" cy="566" rx="70" ry="14" fill="#FFE9D2" filter="url(#bulb)"/>
+    <!-- light cone onto the wordmark -->
+    <polygon points="425,560 655,560 1000,1500 80,1500" fill="url(#cone)" filter="url(#soft2)"/>
+    <rect width="1080" height="1920" fill="url(#lampPool)"/>
+    <rect width="1080" height="1920" filter="url(#noise2)" opacity=".07" style="mix-blend-mode:overlay"/>
+  </svg>
+  <div class="layer vignette"></div>
+
+  <div style="position:absolute; left:0; right:0; top:860px; text-align:center;">
+    <div class="display" style="font-size:176px; font-weight:840; font-stretch:72%; letter-spacing:-.03em; line-height:1;">Gains<span style="font-weight:300; font-stretch:118%; letter-spacing:-.02em;">dom</span></div>
+    <div style="width:64px; height:6px; background:var(--accent); margin:44px auto 0;"></div>
+    <div class="display" style="margin-top:44px; font-size:54px; font-weight:340; font-stretch:122%; letter-spacing:.02em; color:var(--bone); line-height:1;">Built at home.</div>
+  </div>
+
+  <div style="position:absolute; left:0; right:0; top:1520px; text-align:center;">
+    <div class="mono" style="font-size:26px; color:var(--ash);">@ handle — to confirm</div>
+    <div class="display" style="margin-top:34px; font-size:58px; font-weight:820; font-stretch:80%; letter-spacing:.06em; color:var(--accent);">Save</div>
+  </div>
+</div>
+
+<script>
+  // seeded dust in the window beam (mulberry32)
+  function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+  const r = rng(20261126), g = document.getElementById('dust'), NS='http://www.w3.org/2000/svg';
+  let n = 0;
+  while (n < 90) {
+    const x = r()*1080, y = 120 + r()*1450;
+    // inside the beam polygon roughly: between the two edges
+    const t = (y-120)/1400, left = -120 + t*380, right = 300 + t*600;
+    if (x < left || x > right) continue;
+    const c = document.createElementNS(NS,'circle');
+    const big = r() < .15;
+    c.setAttribute('cx', x.toFixed(1)); c.setAttribute('cy', y.toFixed(1));
+    c.setAttribute('r', (big ? 2.6 + r()*2 : .8 + r()*1.4).toFixed(2));
+    c.setAttribute('fill', '#ECE8E1');
+    c.setAttribute('opacity', ((big ? .18 : .25) + r()*.4*(1-t)).toFixed(2));
+    if (big) c.setAttribute('filter','url(#dustblur)');
+    g.appendChild(c); n++;
+  }
+</script>
+</body>
+</html>

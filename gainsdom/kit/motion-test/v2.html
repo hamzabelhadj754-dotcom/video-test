@@ -1,0 +1,211 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>GainsDom Motion Test v2</title>
+<style>
+  @font-face { font-family: 'Archivo'; src: url(../fonts/Archivo-latin.woff2) format('woff2');
+    font-weight: 100 900; font-stretch: 62% 125%; font-display: block; }
+  @font-face { font-family: 'JetBrains Mono'; src: url(../fonts/JetBrainsMono-latin.woff2) format('woff2');
+    font-weight: 100 800; font-display: block; }
+  :root {
+    --void: #040507; --bone: #F2F4F7; --ash: #7D8794; --line: #1C222B;
+    --ice: #3EC6FF; --deep: #2F6BFF; --mint: #6CF0D8;
+  }
+  html, body { margin: 0; background: var(--void); }
+  #stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: var(--void); perspective: 1800px; perspective-origin: 50% 46%; }
+  #world { position: absolute; inset: 0; transform-style: preserve-3d; }
+  .plane { position: absolute; inset: 0; transform-style: preserve-3d; }
+  .abs { position: absolute; }
+  .t { font-family: 'Archivo'; text-transform: uppercase; color: var(--bone); margin: 0; line-height: .9; white-space: nowrap; }
+  .mono { font-family: 'JetBrains Mono'; font-variant-numeric: tabular-nums; text-transform: uppercase; letter-spacing: .18em; }
+  .grad { background: linear-gradient(180deg, #E9FAFF 0%, #7FDBFF 30%, #3EC6FF 55%, #2F6BFF 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .glowtxt { filter: drop-shadow(0 0 30px rgba(62,198,255,.35)); }
+  .blob { position: absolute; border-radius: 50%; }
+  #cap { position: absolute; left: 0; right: 0; top: 1392px; text-align: center; font-family: 'Archivo'; text-transform: uppercase;
+         font-weight: 680; font-stretch: 96%; font-size: 58px; letter-spacing: .005em; color: var(--bone); }
+  #cap span { display: inline-block; margin: 0 .13em; }
+  #cap .hi { color: var(--ice); }
+  .cap-bg { text-shadow: 0 2px 18px rgba(0,0,0,.85); }
+  .bar { position: absolute; bottom: 0; width: 132px; border-radius: 66px; }
+  #grain { position: absolute; inset: 0; width: 1080px; height: 1920px; mix-blend-mode: overlay; opacity: .16; }
+  .vig { position: absolute; inset: 0; background: radial-gradient(120% 80% at 50% 50%, transparent 55%, rgba(0,0,0,.65) 100%); }
+  #black { position: absolute; inset: 0; background: #000; opacity: 0; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="world">
+    <!-- FAR: light fields -->
+    <div class="plane" id="pFar" style="transform: translateZ(-1400px) scale(1.8);">
+      <div class="blob" id="b1" style="left:60px; top:1060px; width:980px; height:700px; background: radial-gradient(closest-side, rgba(47,107,255,.55), rgba(47,107,255,0)); filter: blur(30px);"></div>
+      <div class="blob" id="b2" style="left:300px; top:980px; width:640px; height:520px; background: radial-gradient(closest-side, rgba(62,198,255,.55), rgba(62,198,255,0)); filter: blur(24px);"></div>
+      <div class="blob" id="b3" style="left:120px; top:1180px; width:420px; height:360px; background: radial-gradient(closest-side, rgba(108,240,216,.28), rgba(108,240,216,0)); filter: blur(24px);"></div>
+    </div>
+
+    <!-- MID: the hero numeral -->
+    <div class="plane" id="pMid" style="transform: translateZ(-420px);">
+      <div class="abs" id="num" style="left:0; right:0; top:740px; text-align:center;">
+        <span class="t grad glowtxt" style="display:inline-block; font-size:900px; font-weight:220; font-stretch:92%; letter-spacing:-.05em; line-height:.8;">5</span>
+        <span class="mono" style="position:relative; top:-60px; margin-left:12px; font-size:44px; color:var(--ice);">kg</span>
+      </div>
+      <!-- horizon line with tick marks -->
+      <div class="abs" id="horizon" style="left:-200px; right:-200px; top:1500px; height:1px; background: linear-gradient(90deg, transparent, rgba(62,198,255,.45), transparent);"></div>
+    </div>
+
+    <!-- DATA: light vs heavy bars -->
+    <div class="plane" id="pData" style="transform: translateZ(-120px);">
+      <div class="abs" id="chart" style="left:250px; top:640px; width:580px; height:520px;">
+        <div class="abs" id="topline" style="left:-80px; width:0; top:0; height:2px; background: linear-gradient(90deg, rgba(62,198,255,0), var(--ice) 20%, var(--ice) 80%, rgba(62,198,255,0));"></div>
+        <div class="abs mono" id="toplabel" style="right:-80px; top:-46px; font-size:22px; color:var(--ice);">Muscle growth</div>
+        <div class="bar" id="barL" style="left:70px; height:0; background: linear-gradient(0deg, rgba(108,240,216,.15), #6CF0D8 55%, #E6FFFA); box-shadow: 0 0 60px rgba(108,240,216,.45);"></div>
+        <div class="bar" id="barH" style="left:378px; height:0; background: linear-gradient(0deg, rgba(47,107,255,.15), #2F6BFF 55%, #9FD8FF); box-shadow: 0 0 60px rgba(47,107,255,.45);"></div>
+        <div class="abs mono" id="lblL" style="left:30px; width:212px; top:546px; text-align:center; font-size:24px; color:var(--bone);">Light<br><span style="color:var(--ash)">30% 1RM</span></div>
+        <div class="abs mono" id="lblH" style="left:338px; width:212px; top:546px; text-align:center; font-size:24px; color:var(--bone);">Heavy<br><span style="color:var(--ash)">80% 1RM</span></div>
+      </div>
+    </div>
+
+  </div>
+  <!-- NEAR: type (own layer, gentle parallax, never cropped) -->
+  <div id="hud" style="position:absolute; inset:0;">
+    <div>
+      <div class="mono abs" style="left:72px; top:226px; font-size:22px; color:var(--ash);">Dom Science <span style="color:var(--ice)">·</span> 001</div>
+      <div class="mono abs" id="studies" style="right:72px; top:226px; font-size:22px; color:var(--ash);">2 meta-analyses</div>
+      <div id="hookTxt">
+        <h1 class="t abs" id="l1" style="left:72px; top:300px; font-size:96px; font-weight:280; font-stretch:118%;">Light weights.</h1>
+        <h1 class="t abs" id="l2" style="left:68px; top:410px; font-size:178px; font-weight:720; font-stretch:92%; letter-spacing:-.03em;">Real</h1>
+        <h1 class="t abs grad glowtxt" id="l3" style="left:68px; top:568px; font-size:178px; font-weight:720; font-stretch:92%; letter-spacing:-.03em; line-height:1.0;">muscle.</h1>
+      </div>
+      <h1 class="t abs" id="sim" style="left:72px; top:300px; font-size:150px; font-weight:720; font-stretch:92%; letter-spacing:-.03em; opacity:0;">Same<br><span class="grad glowtxt">growth.</span></h1>
+      <div class="mono abs" id="src" style="left:0; right:0; top:1546px; text-align:center; font-size:19px; color:var(--ash); opacity:0;">Schoenfeld et al. 2017 · Lopez et al. 2021</div>
+    </div>
+  </div>
+
+  <div id="cap" class="cap-bg"></div>
+
+  <!-- END CARD -->
+  <div id="end" style="position:absolute; inset:0; opacity:0;">
+    <div class="blob" id="e1" style="left:-140px; top:980px; width:1360px; height:900px; background: radial-gradient(closest-side, rgba(47,107,255,.5), rgba(47,107,255,0)); filter: blur(40px);"></div>
+    <div class="blob" id="e2" style="left:200px; top:1080px; width:680px; height:560px; background: radial-gradient(closest-side, rgba(62,198,255,.5), rgba(62,198,255,0)); filter: blur(30px);"></div>
+    <div style="position:absolute; left:0; right:0; top:760px; text-align:center;">
+      <div id="wm" class="t" style="font-size:150px; letter-spacing:-.02em; line-height:1;"><span style="font-weight:760; font-stretch:92%;">Gains</span><span id="wm2" style="font-weight:260; font-stretch:118%;">dom</span></div>
+      <div id="wmline" style="width:0; height:3px; margin:46px auto 0; border-radius:2px; background: linear-gradient(90deg, var(--mint), var(--ice), var(--deep));"></div>
+      <div id="tag" class="t" style="margin-top:42px; font-size:46px; font-weight:320; font-stretch:118%; letter-spacing:.04em; color:var(--bone);">Built at home.</div>
+    </div>
+    <div id="cta" style="position:absolute; left:0; right:0; top:1190px; text-align:center;">
+      <div style="display:inline-block; padding:18px 56px; border-radius:60px; background: rgba(62,198,255,.12); border:1.5px solid rgba(62,198,255,.6); font-family:'Archivo'; text-transform:uppercase; font-weight:650; font-stretch:100%; font-size:38px; letter-spacing:.14em; color:var(--bone);">Save</div>
+      <div class="mono" style="margin-top:30px; font-size:22px; color:var(--ash);">@handle · to confirm</div>
+    </div>
+  </div>
+
+  <div class="vig"></div>
+  <canvas id="grain" width="540" height="960"></canvas>
+  <div id="black"></div>
+</div>
+
+<script>
+const DURATION = 7.0, T_REAL = 0.85, T_MUSCLE = 1.30, T_DATA = 2.25, T_SAME = 3.55, T_SWITCH = 4.50, T_END = 4.60;
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const lerp = (a, b, t) => a + (b - a) * t;
+const seg = (t, a, b) => clamp((t - a) / (b - a));
+function bez(x1, y1, x2, y2) { return (x) => { let t = x; for (let i = 0; i < 8; i++) { const cx = 3*x1, bx = 3*(x2-x1)-cx, ax = 1-cx-bx;
+  const xt = ((ax*t+bx)*t+cx)*t - x, d = (3*ax*t+2*bx)*t+cx; if (Math.abs(d) < 1e-6) break; t -= xt/d; }
+  const cy = 3*y1, by = 3*(y2-y1)-cy, ay = 1-cy-by; return ((ay*t+by)*t+cy)*t; }; }
+const eHit = bez(0.16, 1, 0.3, 1), eCam = bez(0.37, 0, 0.63, 1), eLock = bez(0.25, 1, 0.5, 1), eIn = bez(0.5, 0, 0.75, 0);
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const $ = (id) => document.getElementById(id);
+
+// enter: rise + blur-to-sharp; exit: lift + blur
+function show(el, t, t0, dur = 0.28, dy = 40) { const k = eHit(seg(t, t0, t0 + dur)); el.style.opacity = k; el.style.transform = `translateY(${(1-k)*dy}px)`; el.style.filter = (el.dataset.f || '') + ` blur(${(1-k)*10}px)`; return k; }
+function hide(el, t, t0, dur = 0.3) { const k = eIn(seg(t, t0, t0 + dur)); if (k <= 0) return; el.style.opacity = +el.style.opacity * (1 - k); el.style.transform += ` translateY(${-60*k}px)`; el.style.filter = (el.dataset.f || '') + ` blur(${k*12}px)`; }
+
+const CAPS = [ // mock timings for this look test; the real film uses the voiceover's word timings
+  { t0: 0.00, t1: 0.80, w: [['Light',0.00],['dumbbells',0.22],['can',0.60]] },
+  { t0: 0.80, t1: 2.20, w: [['build',0.80],['real',0.98],['muscle.',T_MUSCLE,1]] },
+  { t0: 2.25, t1: 2.92, w: [['Twenty',2.25],['studies.',2.55]] },
+  { t0: 2.92, t1: 3.45, w: [['Light',2.95],['and',3.12],['heavy.',3.24]] },
+  { t0: 3.45, t1: 4.45, w: [['The',3.45],['results',3.58],['were',3.86],['similar.',T_SAME + 0.17,1]] },
+];
+let lastCap = -1;
+function drawCaps(t) {
+  const cap = $('cap'), i = CAPS.findIndex(c => t >= c.t0 && t < c.t1);
+  if (i !== lastCap) { cap.innerHTML = i < 0 ? '' : CAPS[i].w.map(w => `<span class="${w[2] ? 'hi' : ''}">${w[0]}</span>`).join(''); lastCap = i; }
+  if (i < 0) return;
+  [...cap.children].forEach((s, k) => { const p = eHit(seg(t, CAPS[i].w[k][1], CAPS[i].w[k][1] + 0.1)); s.style.opacity = p; s.style.transform = `translateY(${(1-p)*14}px)`; s.style.filter = `blur(${(1-p)*5}px)`; });
+}
+
+const grain = $('grain'), gctx = grain.getContext('2d'), gimg = gctx.createImageData(540, 960);
+function drawGrain(f) { const r = rng(5000 + f), d = gimg.data; for (let i = 0; i < d.length; i += 4) { const v = 128 + (r() - .5) * 110; d[i] = d[i+1] = d[i+2] = v; d[i+3] = 255; } gctx.putImageData(gimg, 0, 0); }
+
+window.renderAt = function (t, f) {
+  const hook = t < T_SWITCH;
+  // ---- camera through the layers: push-in on the hook, lateral truck across the chart ----
+  const k1 = eCam(seg(t, 0, T_DATA + 0.2)), k2 = eCam(seg(t, T_DATA - 0.1, T_SWITCH));
+  let camZ = lerp(0, 200, k1) + lerp(0, 90, k2);
+  let camX = lerp(30, -10, k1) + lerp(0, 60, k2);
+  let camY = lerp(0, -30, k1);
+  let rotY = lerp(-2.0, 0.4, k1) + lerp(0, -1.8, k2);
+  let rotX = lerp(1.2, 0, k1);
+  const sh = t >= T_MUSCLE && t < T_MUSCLE + 0.22 ? 1 - (t - T_MUSCLE) / 0.22 : 0; // micro shake
+  if (sh) { const r = rng(f); camX += (r() - .5) * 8 * sh; camY += (r() - .5) * 8 * sh; }
+  $('world').style.transform = `translate3d(${-camX}px, ${-camY}px, ${camZ}px) rotateY(${rotY}deg) rotateX(${rotX}deg)`;
+  $('hud').style.transform = `translate(${-camX*0.15}px, ${-camY*0.15}px) scale(${1 + camZ/9000})`;
+  $('hud').style.opacity = hook ? 1 : 0;
+
+  // ---- light fields drift and breathe; they swell on the hit ----
+  const swell = 1 + 0.18 * Math.max(0, 1 - Math.abs(t - T_MUSCLE) / 0.5);
+  $('b1').style.transform = `translate(${Math.sin(t*.5)*30}px, ${Math.cos(t*.4)*18}px) scale(${swell})`;
+  $('b2').style.transform = `translate(${Math.cos(t*.6)*40}px, ${Math.sin(t*.5)*24}px) scale(${swell})`;
+  $('b3').style.transform = `translate(${Math.sin(t*.7+1)*50}px, 0)`;
+  $('pFar').style.opacity = hook ? 1 : 0;
+
+  // ---- hook type ----
+  $('l1').style.fontStretch = (122 - 6 * eCam(seg(t, 0, 1.4))) + '%';   // the inhale
+  $('l1').style.opacity = 1; $('l1').style.transform = ''; $('l1').style.filter = '';
+  $('l3').dataset.f = 'drop-shadow(0 0 30px rgba(62,198,255,.35))';
+  show($('l2'), t, T_REAL); show($('l3'), t, T_MUSCLE);
+  if (t < T_REAL) { $('l2').style.opacity = 0; } if (t < T_MUSCLE) { $('l3').style.opacity = 0; }
+  ['l1','l2','l3'].forEach(id => hide($(id), t, T_DATA - 0.15));
+
+  // numeral: present from frame 1, recedes when the data arrives
+  const nOut = eIn(seg(t, T_DATA - 0.2, T_DATA + 0.25));
+  $('num').style.opacity = 1 - nOut; $('num').style.filter = `blur(${nOut * 16}px)`;
+  $('num').style.transform = `translateZ(${-nOut * 400}px) scale(${1 + 0.03 * eCam(seg(t, 0, T_DATA))})`;
+
+  // ---- data: two bars grow to the same height ----
+  const dIn = eHit(seg(t, T_DATA, T_DATA + 0.3));
+  $('pData').style.opacity = hook ? dIn : 0;
+  const hL = 480 * eCam(seg(t, T_DATA + 0.1, T_SAME)), hH = 480 * eLock(seg(t, T_DATA + 0.1, T_DATA + 0.9));
+  $('barL').style.height = hL + 'px'; $('barH').style.height = hH + 'px';
+  $('lblL').style.opacity = $('lblH').style.opacity = eHit(seg(t, T_DATA + 0.15, T_DATA + 0.45));
+  const same = eHit(seg(t, T_SAME, T_SAME + 0.35));
+  $('topline').style.width = (740 * same) + 'px'; $('topline').style.top = (520 - 480) + 'px';
+  $('toplabel').style.opacity = same; $('toplabel').style.top = (520 - 480 - 46) + 'px';
+  $('sim').dataset.f = ''; show($('sim'), t, T_SAME + 0.05, 0.3, 30); if (t < T_SAME + 0.05) $('sim').style.opacity = 0;
+  $('src').style.opacity = eHit(seg(t, T_SAME + 0.2, T_SAME + 0.6));
+  $('studies').style.opacity = eHit(seg(t, T_DATA, T_DATA + 0.3));
+  $('horizon').style.opacity = 0.4 + 0.6 * dIn;
+
+  $('cap').style.opacity = hook ? 1 : 0; drawCaps(t);
+
+  // ---- end card ----
+  $('end').style.opacity = t >= T_END ? 1 : 0;
+  if (t >= T_END) {
+    const r = eLock(seg(t, T_END, T_END + 0.9));
+    $('e1').style.transform = `translateY(${(1-r)*260}px) scale(${0.8 + 0.2*r})`; $('e1').style.opacity = r;
+    $('e2').style.transform = `translateY(${(1-r)*200}px) translateX(${Math.sin(t*.6)*30}px)`; $('e2').style.opacity = r;
+    const w = eHit(seg(t, T_END + 0.2, T_END + 0.7)); $('wm').style.opacity = w; $('wm').style.filter = `blur(${(1-w)*12}px)`; $('wm').style.transform = `translateY(${(1-w)*26}px) scale(${1.04 - .04*w})`;
+    $('wm2').style.fontStretch = (125 - 7 * eLock(seg(t, T_END + 0.2, T_END + 1.0))) + '%';
+    $('wmline').style.width = 220 * eHit(seg(t, T_END + 0.6, T_END + 1.1)) + 'px';
+    const g = eHit(seg(t, T_END + 0.75, T_END + 1.15)); $('tag').style.opacity = g; $('tag').style.transform = `translateY(${(1-g)*16}px)`;
+    const c = eHit(seg(t, T_END + 1.0, T_END + 1.4)); $('cta').style.opacity = c; $('cta').style.transform = `translateY(${(1-c)*16}px)`;
+  }
+  $('world').style.opacity = hook ? 1 : 0;
+  $('black').style.opacity = (t >= T_SWITCH && t < T_END) ? 0.97 : 0;
+  drawGrain(f);
+};
+window.DURATION = DURATION;
+document.fonts.ready.then(() => { window.ready = true; });
+</script>
+</body>
+</html>

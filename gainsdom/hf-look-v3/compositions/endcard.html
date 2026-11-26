@@ -1,0 +1,53 @@
+<template>
+  <style>
+    @font-face { font-family: 'Barlow'; src: url('assets/fonts/Barlow-300.woff2') format('woff2'); font-weight: 300; font-display: block; }
+    @font-face { font-family: 'Barlow'; src: url('assets/fonts/Barlow-500.woff2') format('woff2'); font-weight: 500; font-display: block; }
+    @font-face { font-family: 'Barlow'; src: url('assets/fonts/Barlow-700.woff2') format('woff2'); font-weight: 700; font-display: block; }
+    #root { position: absolute; inset: 0; overflow: hidden; background: var(--color-ground, #0B0D10); }
+    .e-abs { position: absolute; }
+    #e-ring { position: absolute; left: 140px; top: 390px; width: 800px; height: 800px; }
+    #e-wm { left: 0; right: 0; top: 690px; text-align: center; font-family: 'Barlow'; text-transform: uppercase; font-size: 112px; letter-spacing: .02em; color: var(--color-ink, #ECEEF1); line-height: 1; }
+    #e-wm span { display: inline-block; }
+    .e-b { font-weight: 700; } .e-l { font-weight: 300; }
+    #e-rule { left: 470px; top: 842px; width: 140px; height: 4px; background: var(--color-accent, #5BB8E8); transform-origin: 50% 50%; }
+    #e-tag { left: 0; right: 0; top: 894px; text-align: center; font-family: 'Barlow'; font-weight: 500; text-transform: uppercase; font-size: 42px; letter-spacing: .18em; color: var(--color-ink, #ECEEF1); }
+    #e-cta { left: 0; right: 0; top: 1030px; text-align: center; }
+    #e-save { display: inline-block; padding: 16px 58px; border: 2px solid var(--color-accent, #5BB8E8); border-radius: 48px; font-family: 'Barlow'; font-weight: 700; text-transform: uppercase; font-size: 34px; letter-spacing: .2em; color: var(--color-ink, #ECEEF1); }
+    #e-handle { margin-top: 26px; font-family: 'IBM Plex Mono', monospace; font-size: 28px; letter-spacing: .14em; text-transform: uppercase; color: #8A939E; }
+  </style>
+
+  <div id="root" data-composition-id="endcard" data-width="1080" data-height="1920">
+    <svg id="e-ring" viewBox="-400 -400 800 800" data-layout-ignore>
+      <g id="e-ring-spin"><circle r="392" fill="none" stroke="#1C232B" stroke-width="2"/><g id="e-ticks" stroke="#252D36" stroke-width="2"></g></g>
+    </svg>
+    <div class="e-abs" id="e-wm"><span class="e-b">G</span><span class="e-b">A</span><span class="e-b">I</span><span class="e-b">N</span><span class="e-b">S</span><span class="e-l">D</span><span class="e-l">O</span><span class="e-l">M</span></div>
+    <div class="e-abs" id="e-rule"></div>
+    <div class="e-abs" id="e-tag">Built at home.</div>
+    <div class="e-abs" id="e-cta"><div id="e-save">Save</div><div id="e-handle">@handle · to confirm</div></div>
+  </div>
+
+  <script>
+    (function () {
+      const g = document.querySelector('#e-ticks'), NS = 'http://www.w3.org/2000/svg';
+      for (let i = 0; i < 120; i++) {
+        const a = i / 120 * Math.PI * 2, r1 = i % 10 === 0 ? 360 : 372;
+        const l = document.createElementNS(NS, 'line');
+        l.setAttribute('x1', (Math.cos(a) * r1).toFixed(2)); l.setAttribute('y1', (Math.sin(a) * r1).toFixed(2));
+        l.setAttribute('x2', (Math.cos(a) * 384).toFixed(2)); l.setAttribute('y2', (Math.sin(a) * 384).toFixed(2));
+        g.appendChild(l);
+      }
+    })();
+    const tl = gsap.timeline({ paused: true });
+    // the light switch: three frames of black, then the room comes back
+    tl.fromTo('#root', { opacity: 0 }, { opacity: 1, duration: 0.01 }, 0.1);
+    // the ring turns behind the still wordmark (motion lives in the world, not the title)
+    tl.fromTo('#e-ring-spin', { rotation: 0, svgOrigin: '0 0' }, { rotation: 9, svgOrigin: '0 0', duration: 2.8, ease: 'none' }, 0.1);
+    tl.fromTo('#e-ring', { scale: 0.94, opacity: 0 }, { scale: 1, opacity: 1, duration: 1.0, ease: 'expo.out' }, 0.1);
+    // the name: per letter, a frame apart-ish, opacity .3 -> 1 with a slight blur
+    tl.fromTo('#e-wm span', { opacity: 0.0, filter: 'blur(6px)' }, { opacity: 1, filter: 'blur(0px)', duration: 0.22, ease: 'power3.out', stagger: 0.05 }, 0.2);
+    tl.fromTo('#e-rule', { scaleX: 0 }, { scaleX: 1, duration: 0.45, ease: 'expo.out' }, 0.62);
+    tl.fromTo('#e-tag', { opacity: 0, filter: 'blur(8px)' }, { opacity: 1, filter: 'blur(0px)', duration: 0.2, ease: 'power4.out' }, 0.78);
+    tl.fromTo('#e-cta', { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.45, ease: 'expo.out' }, 0.85);
+    window.__timelines["endcard"] = tl;
+  </script>
+</template>

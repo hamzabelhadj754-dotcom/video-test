@@ -1,0 +1,36 @@
+<template>
+  <style>
+    @font-face { font-family: 'Barlow'; src: url('assets/fonts/Barlow-700.woff2') format('woff2'); font-weight: 700; font-display: block; }
+    #root { position: absolute; inset: 0; overflow: visible; pointer-events: none; }
+    .c-group { position: absolute; left: 120px; width: 660px; top: 1172px; text-align: center; font-family: 'Barlow'; font-weight: 700;
+               text-transform: uppercase; font-size: 54px; letter-spacing: .02em; color: var(--color-ink, #ECEEF1); opacity: 0; }
+    .c-group span { display: inline-block; margin: 0 .12em; }
+    .c-hi { color: var(--color-accent, #5BB8E8); }
+  </style>
+  <!-- Mock word timings for this look test. The real film takes every word from the voiceover's timings. -->
+  <div id="root" data-composition-id="captions" data-width="1080" data-height="1920">
+    <div class="c-group clip" id="c-g1" data-start="0.1"  data-duration="0.75" data-track-index="0"><span>Light</span><span>dumbbells</span><span>can</span></div>
+    <div class="c-group clip" id="c-g2" data-start="0.85" data-duration="1.35" data-track-index="0"><span>build</span><span>real</span><span class="c-hi">muscle.</span></div>
+    <div class="c-group clip" id="c-g3" data-start="2.25" data-duration="0.67" data-track-index="0"><span>Twenty</span><span>studies.</span></div>
+    <div class="c-group clip" id="c-g4" data-start="2.92" data-duration="0.6"  data-track-index="0"><span>Light</span><span>and</span><span>heavy.</span></div>
+    <div class="c-group clip" id="c-g5" data-start="3.52" data-duration="0.95" data-track-index="0"><span>Results</span><span>were</span><span class="c-hi">similar.</span></div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    const groups = [
+      ['#c-g1', 0.10, 0.85, [0.10, 0.30, 0.62]],
+      ['#c-g2', 0.85, 2.20, [0.85, 1.02, 1.30]],
+      ['#c-g3', 2.25, 2.92, [2.25, 2.52]],
+      ['#c-g4', 2.92, 3.52, [2.95, 3.12, 3.24]],
+      ['#c-g5', 3.52, 4.47, [3.55, 3.80, 3.98]],
+    ];
+    groups.forEach(([sel, start, end, words]) => {
+      tl.set(sel, { opacity: 1, visibility: 'visible' }, start);
+      const spans = document.querySelectorAll(sel + ' span');
+      spans.forEach((s, i) => tl.fromTo(s, { opacity: 0, filter: 'blur(6px)' }, { opacity: 1, filter: 'blur(0px)', duration: 0.13, ease: 'power3.out' }, words[i]));
+      tl.to(sel, { opacity: 0, duration: 0.1, ease: 'power2.in' }, end - 0.1);
+      tl.set(sel, { opacity: 0, visibility: 'hidden' }, end);
+    });
+    window.__timelines["captions"] = tl;
+  </script>
+</template>
