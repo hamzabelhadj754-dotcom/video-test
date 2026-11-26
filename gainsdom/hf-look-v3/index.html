@@ -33,6 +33,17 @@
       <div id="captions" data-composition-id="captions" data-composition-src="compositions/captions.html"
            data-start="0" data-duration="4.5" data-track-index="2" data-track-kind="captions"
            data-width="1080" data-height="1920" style="z-index: 5;"></div>
+      <div id="grain" data-composition-id="grain" data-composition-src="compositions/grain.html"
+           data-start="0" data-duration="7.8" data-track-index="3" data-track-kind="graphics"
+           data-width="1080" data-height="1920" style="z-index: 6;"></div>
+
+      <!-- sound design (licensed SFX, see assets/sfx/CREDITS.md): every sound sits on a visible action -->
+      <audio id="sfx-hit" class="clip" src="assets/sfx/impact-bass-1.mp3" data-start="1.28" data-duration="2.1" data-track-index="10" data-volume="0.55"></audio>
+      <audio id="sfx-zoom" class="clip" src="assets/sfx/whoosh-short.mp3" data-start="1.92" data-duration="0.57" data-track-index="11" data-volume="0.45"></audio>
+      <audio id="sfx-base" class="clip" src="assets/sfx/click-soft.mp3" data-start="2.56" data-duration="0.36" data-track-index="11" data-volume="0.3"></audio>
+      <audio id="sfx-same" class="clip" src="assets/sfx/click-soft.mp3" data-start="3.65" data-duration="0.36" data-track-index="10" data-volume="0.4"></audio>
+      <audio id="sfx-switch" class="clip" src="assets/sfx/click.mp3" data-start="4.5" data-duration="0.36" data-track-index="10" data-volume="0.5"></audio>
+      <audio id="sfx-logo" class="clip" src="assets/sfx/impact-bass-2.mp3" data-start="4.78" data-duration="2.59" data-track-index="10" data-volume="0.4" data-fade-out="0.8"></audio>
     </div>
     <script>
       window.__timelines["main"] = gsap.timeline({ paused: true });
