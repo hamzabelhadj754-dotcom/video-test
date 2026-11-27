@@ -42,4 +42,5 @@ brand hub (lovablebrand.lovable.app); page captured from the live site; no claim
   frame). Cloud container has no GPU: SwiftShader, about 8s a frame. On a Windows GPU: `GPU=1`.
 
 ## Feedback log
-- (none yet)
+- "render the video" / "send the video": stills approved implicitly; 30fps preview sent first, then the 60fps final (v01).
+- v01 screened: no blockers or majors, two polish notes in REVIEW.md.
