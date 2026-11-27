@@ -1,8 +1,8 @@
 import React from "react";
 import { AbsoluteFill, Audio, staticFile, useCurrentFrame } from "remotion";
 import { Backdrop, Grain } from "./components";
-import { pushLine, Bridge, Climb, Lunge, Push, Squat } from "./scenes/Exercises";
-import { Opening, RING } from "./scenes/Opening";
+import { pushLineScreen, Bridge, Climb, Lunge, Push, Squat } from "./scenes/Exercises";
+import { Opening, openingDrift, RING } from "./scenes/Opening";
 import { End, Rounds } from "./scenes/Outro";
 import { sliceStart, SLICE } from "./Ring";
 import { C, DISPLAY, EASE, useFonts } from "./theme";
@@ -27,7 +27,11 @@ export const Film: React.FC<{ audio?: boolean }> = ({ audio = true }) => {
 
   // T1  clock → zoom through slice 1 → squat
   const s1 = sliceStart(0) + SLICE / 2;
-  const z0 = { x: RING.cx + RING.r * Math.cos((s1 * Math.PI) / 180), y: RING.cy + RING.r * Math.sin((s1 * Math.PI) / 180) };
+  const dr = openingDrift(g);
+  const z0 = {
+    x: RING.cx + dr * RING.r * Math.cos((s1 * Math.PI) / 180),
+    y: RING.cy + dr * RING.r * Math.sin((s1 * Math.PI) / 180),
+  };
   const zoom = prog(g, 198, 220, EASE.in);
   if (g < 222) {
     layers.push(
@@ -87,7 +91,7 @@ export const Film: React.FC<{ audio?: boolean }> = ({ audio = true }) => {
         </Layer>,
       );
     } else {
-      const { a, b } = pushLine(lf);
+      const { a, b } = pushLineScreen(lf);
       const ux = (b.x - a.x) / Math.hypot(b.x - a.x, b.y - a.y);
       const uy = (b.y - a.y) / Math.hypot(b.x - a.x, b.y - a.y);
       const nx = -uy;

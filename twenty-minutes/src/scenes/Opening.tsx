@@ -16,13 +16,26 @@ export const lockPunch = (f: number, at: number) => {
   return 1 + 0.045 * Math.sin((t / 18) * Math.PI) * Math.exp(-t / 10);
 };
 
-export const HookTitle: React.FC<{ f: number; labelF: number; scale: number; y: number; size: number; reveal?: number }> = ({
+// A live clock: the colon blinks once a second (on for 20 frames, dim for 10). 900 % 30 == 0, so the loop stays seamless.
+export const blink = (g: number) => {
+  const p = ((g % 30) + 30) % 30;
+  if (p < 20) return 1;
+  if (p < 22) return lerp(1, 0.22, (p - 20) / 2);
+  if (p < 28) return 0.22;
+  return lerp(0.22, 1, (p - 28) / 2);
+};
+
+// Slow camera drift of the clock/ring world (keeps the zoom-through target exact).
+export const openingDrift = (f: number) => 1 + 0.035 * prog(f, 66, 214, (t) => t);
+
+export const HookTitle: React.FC<{ f: number; labelF: number; scale: number; y: number; size: number; reveal?: number; g: number }> = ({
   f,
   labelF,
   scale,
   y,
   size,
   reveal,
+  g,
 }) => (
   <>
     <div
@@ -37,7 +50,7 @@ export const HookTitle: React.FC<{ f: number; labelF: number; scale: number; y: 
         transformOrigin: `540px ${size * 0.45}px`,
       }}
     >
-      <Clock text="20:00" size={size} reveal={reveal === undefined ? undefined : f - reveal} />
+      <Clock text="20:00" size={size} reveal={reveal === undefined ? undefined : f - reveal} colonAlpha={blink(g)} />
     </div>
     <div style={{ position: "absolute", left: 0, right: 0, top: y - size * 0.5 - 92, display: "flex", justifyContent: "center" }}>
       <Typed text="YOU'VE GOT" f={labelF} cps={1.2} style={mono(34, { color: C.rest, letterSpacing: "0.42em", fontWeight: 600 })} />
@@ -50,7 +63,8 @@ export const Opening: React.FC<{ f: number }> = ({ f }) => {
   const toRing = prog(f, 64, 100, EASE.whip);
   const size = lerp(HOOK.size, 150, toRing);
   const y = lerp(HOOK.y, RING.cy + 6, toRing);
-  const punch = lockPunch(f, Wd.twenty);
+  const push = 1 + 0.035 * prog(f, 0, 64, EASE.inOut) * (1 - toRing);
+  const punch = lockPunch(f, Wd.twenty) * push;
   const labelOut = prog(f, 64, 74, EASE.in);
   const enoughIn = f - Wd.enough + 7;
 
@@ -85,13 +99,14 @@ export const Opening: React.FC<{ f: number }> = ({ f }) => {
     <Typed text={txt} f={f - at - 4} cps={1.5} style={mono(32, { color, fontWeight: 600, letterSpacing: "0.22em" })} />
   );
 
+  const d = openingDrift(f);
   return (
-    <AbsoluteFill>
+    <AbsoluteFill style={{ transform: `scale(${d})`, transformOrigin: `${RING.cx}px ${RING.cy}px` }}>
       {f >= 64 && <Ring {...RING} slices={slices} ticks={prog(f, 92, 112, EASE.out)} />}
 
       {/* the hook */}
       <div style={{ position: "absolute", inset: 0, opacity: 1 }}>
-        <HookTitle f={f} labelF={f < 62 ? 99 : 99 - (f - 62) * 1.3} scale={punch} y={y} size={size} />
+        <HookTitle f={f} g={f} labelF={f < 62 ? 99 : 8.4 - (f - 62) * 0.9} scale={punch} y={y} size={size} />
       </div>
       <div
         style={{

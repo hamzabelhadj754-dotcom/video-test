@@ -72,7 +72,7 @@ export const End: React.FC<{ f: number }> = ({ f }) => {
   const cx = lerp(RING.cx, DOT.x, morph);
   const cy = lerp(RING.cy, DOT.y, morph);
   const save = f - (Wd.save - B.end);
-  const exit = Wd.your - B.end - 6;
+  const exit = Wd.your - B.end - 10;
   const dotOut = prog(f, exit + 4, exit + 14, EASE.in);
   const g = B.end + f; // global frame
   return (
@@ -103,7 +103,8 @@ export const End: React.FC<{ f: number }> = ({ f }) => {
         <HookTitle
           f={g}
           labelF={g - (Wd.twenty2 + 4)}
-          scale={lockPunch(g, Wd.now)}
+          g={g}
+          scale={lockPunch(g, Wd.now) * (1 + 0.03 * (1 - prog(g, 836, B.total - 1, EASE.inOut)))}
           y={HOOK.y}
           size={HOOK.size}
           reveal={Wd.twenty2 - 3}

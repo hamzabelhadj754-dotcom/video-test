@@ -48,7 +48,8 @@ export const Clock: React.FC<{
   colon?: string;
   style?: React.CSSProperties;
   reveal?: number; // local frame of an odometer-style rise-in (undefined = static)
-}> = ({ text, size, colon = C.work, style, reveal }) => (
+  colonAlpha?: number;
+}> = ({ text, size, colon = C.work, style, reveal, colonAlpha = 1 }) => (
   <div style={{ ...display(size), display: "flex", alignItems: "baseline", whiteSpace: "nowrap", ...style }}>
     {text.split("").map((ch, i) => {
       const t = reveal === undefined ? 1 : prog(reveal, i * 2.2, i * 2.2 + 16, EASE.settle);
@@ -68,6 +69,7 @@ export const Clock: React.FC<{
             style={{
               display: "inline-block",
               color: isColon ? colon : undefined,
+              opacity: isColon ? colonAlpha : 1,
               transform: `translateY(${(1 - t) * 110 + (isColon ? -6 : 0)}%)`,
             }}
           >

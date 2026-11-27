@@ -8,6 +8,11 @@ import { B, clamp01, lerp, prog, Wd } from "../timeline";
 
 export const FLOOR_Y = 1380;
 
+// Slow camera push on the action layer only (title/header stay locked = parallax).
+export const CAM_O = { x: 540, y: FLOOR_Y - 220 };
+export const camScale = (f: number, dur: number) => 1 + 0.045 * clamp01((f + 10) / (dur + 20));
+export const cam = (p: { x: number; y: number }, s: number) => ({ x: CAM_O.x + (p.x - CAM_O.x) * s, y: CAM_O.y + (p.y - CAM_O.y) * s });
+
 const Frame: React.FC<{
   f: number;
   idx: number;
@@ -21,9 +26,11 @@ const Frame: React.FC<{
   const lineH = titleSize * 0.9;
   return (
     <AbsoluteFill>
-      <GhostNum n={String(idx + 1)} f={f} />
-      <Floor y={FLOOR_Y} f={f} />
-      {children}
+      <AbsoluteFill style={{ transform: `scale(${camScale(f, dur)})`, transformOrigin: `${CAM_O.x}px ${CAM_O.y}px` }}>
+        <GhostNum n={String(idx + 1)} f={f} />
+        <Floor y={FLOOR_Y} f={f} />
+        {children}
+      </AbsoluteFill>
       <div style={{ position: "absolute", top: 300, left: MARGIN - 6 }}>
         {title.map((t, i) => (
           <div key={i} style={{ height: lineH }}>
@@ -44,8 +51,9 @@ export const SQUAT_STAGE: Stage = { ox: 600, oy: FLOOR_Y, h: 760 };
 export const Squat: React.FC<{ f: number }> = ({ f }) => {
   const st = SQUAT_STAGE;
   const s = (p: P) => toScreen(st, p);
-  const hip = s(squat(40).near.hip);
-  const sh = s(squat(40).near.shoulder);
+  const live = squat(f);
+  const hip = s(live.near.hip);
+  const sh = s(live.near.shoulder);
   return (
     <Frame f={f} idx={0} dur={B.push - B.squat} title={["SQUAT"]} titleSize={196} titleAt={Wd.squats - B.squat - 9} sub="QUADS · GLUTES">
       <Figure pose={squat} f={f} stage={st} active={["hip", "knee"]} activeAmt={squatDepth(f)} />
@@ -64,6 +72,12 @@ export const pushLine = (f: number) => {
   const a = toScreen(PUSH_STAGE, k > 0.5 ? sk.near.knee : sk.near.ankle);
   const b = toScreen(PUSH_STAGE, sk.head);
   return { a, b };
+};
+// Same line in final screen space (after the camera push), for the split transition.
+export const pushLineScreen = (f: number) => {
+  const { a, b } = pushLine(f);
+  const s = camScale(f, B.lunge - B.push);
+  return { a: cam(a, s), b: cam(b, s) };
 };
 export const Push: React.FC<{ f: number }> = ({ f }) => {
   const st = PUSH_STAGE;
