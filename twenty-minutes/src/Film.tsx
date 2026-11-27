@@ -5,7 +5,7 @@ import { pushLine, Bridge, Climb, Lunge, Push, Squat } from "./scenes/Exercises"
 import { Opening, RING } from "./scenes/Opening";
 import { End, Rounds } from "./scenes/Outro";
 import { sliceStart, SLICE } from "./Ring";
-import { C, DISPLAY, EASE } from "./theme";
+import { C, DISPLAY, EASE, useFonts } from "./theme";
 import { B, lerp, prog } from "./timeline";
 
 const lin = (t: number) => t;
@@ -21,6 +21,7 @@ const Layer: React.FC<{ style?: React.CSSProperties; children: React.ReactNode }
 const NUM = { size: 520, ox: 0.645, oy: -0.27 };
 
 export const Film: React.FC<{ audio?: boolean }> = ({ audio = true }) => {
+  useFonts();
   const g = useCurrentFrame();
   const layers: React.ReactNode[] = [];
 
