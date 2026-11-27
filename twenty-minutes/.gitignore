@@ -5,3 +5,4 @@ out/beats.txt
 public/mix_pre.wav
 public/sfx.wav
 public/vo_48k.wav
+out/*.mp4
