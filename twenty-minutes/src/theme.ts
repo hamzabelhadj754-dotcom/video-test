@@ -1,7 +1,6 @@
-import { loadFont } from "@remotion/fonts";
-import { Easing, staticFile } from "remotion";
+import { continueRender, delayRender, Easing } from "remotion";
+import { ARCHIVO_B64, JBMONO_B64 } from "./fonts.generated";
 
-// ── Design tokens ────────────────────────────────────────────────────────────
 export const C = {
   bg: "#0A0A0B", // studio near-black (never #000)
   bgLift: "#15110E", // warm light pool behind the hero
@@ -21,19 +20,19 @@ export const MARGIN = 96;
 export const DISPLAY = "Archivo Display";
 export const MONO = "JB Mono";
 
-loadFont({
-  family: DISPLAY,
-  url: staticFile("archivo.woff2"),
-  weight: "100 900",
-  stretch: "62% 125%",
-  format: "woff2",
-});
-loadFont({
-  family: MONO,
-  url: staticFile("jbmono.woff2"),
-  weight: "100 800",
-  format: "woff2",
-});
+// Fonts are embedded as data URIs: no network fetch, nothing to hang in a render tab.
+if (typeof document !== "undefined" && !document.getElementById("tm-fonts")) {
+  const st = document.createElement("style");
+  st.id = "tm-fonts";
+  st.textContent = `
+@font-face{font-family:"${DISPLAY}";src:url(data:font/woff2;base64,${ARCHIVO_B64}) format("woff2");font-weight:100 900;font-stretch:62% 125%;font-display:block}
+@font-face{font-family:"${MONO}";src:url(data:font/woff2;base64,${JBMONO_B64}) format("woff2");font-weight:100 800;font-display:block}`;
+  document.head.appendChild(st);
+  const handle = delayRender("Embedded fonts", { timeoutInMilliseconds: 60000 });
+  Promise.all([document.fonts.load(`900 100px "${DISPLAY}"`), document.fonts.load(`500 30px "${MONO}"`)])
+    .then(() => document.fonts.ready)
+    .finally(() => continueRender(handle));
+}
 
 // Wide, heavy display voice: Archivo at full expansion.
 export const display = (size: number, extra: React.CSSProperties = {}): React.CSSProperties => ({
