@@ -3,3 +3,8 @@ renders/v*/part_*.mp4
 renders/v*/log_*.txt
 renders/preview_*.mp4
 renders/*_review/
+renders/v*/bed_raw.wav
+renders/v*/bed_pass*.wav
+renders/v*/*.p?.wav
+renders/v*/concat.txt
+renders/v*/log_w*.txt

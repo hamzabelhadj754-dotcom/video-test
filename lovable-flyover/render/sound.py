@@ -40,12 +40,13 @@ def swept_noise(t0, t1, f0, f1, peak, attack_shape=2.0, release_shape=3.0, octav
     env = np.where(tl < peak, ((tl - t0) / (peak - t0)) ** attack_shape, np.clip(1 - (tl - peak) / (t1 - peak), 0, 1) ** release_shape)
     y = y * env; y /= np.abs(y).max() + 1e-9
     out = np.zeros(N); out[i0:i1] = y; return out
-def tone(freqs, amps, env, detune=0.0018, h2=0.12):
+def tone(freqs, amps, env, h2=0.10):
+    # one pure voice per note (no detuned pairs: they beat and pump), a breath of slow vibrato, a soft 2nd harmonic
     y = np.zeros(N)
     for f, a in zip(freqs, amps):
-        ph = rng.uniform(0, 2 * np.pi, 3)
-        y += a * (np.sin(2 * np.pi * f * (1 - detune) * t + ph[0]) + np.sin(2 * np.pi * f * (1 + detune) * t + ph[1])
-                  + h2 * np.sin(2 * np.pi * 2 * f * t + ph[2])) / 2
+        ph = rng.uniform(0, 2 * np.pi, 2); vib = 1 + 0.0007 * np.sin(2 * np.pi * rng.uniform(0.11, 0.19) * t + ph[0])
+        phase = 2 * np.pi * np.cumsum(f * vib) / SR
+        y += a * (np.sin(phase + ph[1]) + h2 * np.sin(2 * phase))
     return y * env
 def reverb_ir(seconds=2.6, pre=0.018):
     n = int(seconds * SR); tt = np.arange(n) / SR
@@ -62,19 +63,19 @@ def verb(st, wet):
 mix = np.zeros((2, N)); send = np.zeros((2, N))
 
 # 1. air bed: a quiet room that breathes with the glide, gone before the hit
-air = hp(lp(pink(N), 2200), 90)
+air = hp(lp(pink(N), 2400), 180)
 air_env = smooth(0, 0.8, t) * (0.55 + 0.45 * speed_share(np.minimum(t, 8.3))) * (1 - smooth(9.25, 9.62, t)) + 0.35 * smooth(10.1, 11.0, t)
 air_env *= 1 - smooth(13.7, 14.5, t)
-mix += np.stack([air, np.roll(air, 2400)]) * air_env * db(-40)
+mix += np.stack([air, np.roll(air, 2400)]) * air_env * db(-47)
 
 # 2. score: a calm Dmaj9 voicing under the flight, swelling into the rise, silent before the hit
 pad_env = smooth(0.15, 1.7, t) * (1 + 0.35 * smooth(7.7, 8.6, t)) * (1 - smooth(8.75, 9.45, t))
-pad = lp(tone([146.83, 220.0, 329.63, 369.99, 554.37], [1.0, 0.8, 0.55, 0.42, 0.18], pad_env), 2600)
-mix += pan(pad, 0) * db(-27); send += pan(pad, 0) * db(-33)
+pad = hp(lp(tone([146.83, 220.0, 329.63, 369.99, 554.37], [0.8, 0.8, 0.6, 0.45, 0.2], pad_env), 2600), 110, 2)
+mix += pan(pad, 0) * db(-34); send += pan(pad, 0) * db(-38)
 # after the hit: the chord resolves and blooms under the title, then fades with the film
 res_env = smooth(10.0, 10.9, t) * (1 - smooth(13.5, 14.5, t))
-res = lp(tone([146.83, 220.0, 293.66, 369.99, 440.0], [1.0, 0.75, 0.6, 0.45, 0.25], res_env), 3200)
-mix += pan(res, 0) * db(-28); send += pan(res, 0) * db(-30)
+res = hp(lp(tone([146.83, 220.0, 293.66, 369.99, 440.0], [0.85, 0.75, 0.6, 0.45, 0.25], res_env), 3200), 100, 2)
+mix += pan(res, 0) * db(-31); send += pan(res, 0) * db(-33)
 
 # 3. the four tiles lift (0.1-0.28s): soft plucks, one per tile, staggered like the motion
 for i, (f, at) in enumerate(zip([587.33, 739.99, 880.0, 1108.73], [0.10, 0.16, 0.22, 0.28])):
