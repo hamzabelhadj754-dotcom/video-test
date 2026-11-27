@@ -1,0 +1,7 @@
+node_modules/
+out/*_review/
+out/*.log
+out/beats.txt
+public/mix_pre.wav
+public/sfx.wav
+public/vo_48k.wav
