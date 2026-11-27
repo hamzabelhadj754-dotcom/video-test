@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Lovable fly-over</title>
+<style>html,body{margin:0;background:#f5f6f8}canvas{display:block;width:1440px;height:1152px}</style>
+</head>
+<body>
+<canvas id="c" width="1440" height="1152"></canvas>
+<script type="module">
+import { createFilm } from './renderer.js';
+window.filmReady = createFilm(document.getElementById('c'))
+  .then(f => { window.film = f; return true; })
+  .catch(e => { window.filmError = String(e && e.stack || e); return false; });
+</script>
+</body>
+</html>

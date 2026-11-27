@@ -5,7 +5,7 @@
  "scale": 2,
  "pad": 28,
  "prompt": "Ask Lovable to create a landing page for my...",
- "capturedAt": "2026-11-27T12:38:14.173Z",
+ "capturedAt": "2026-11-27T12:51:25.396Z",
  "layers": [
   {
    "id": "hero_prompt",
@@ -52,6 +52,22 @@
     "x": 1177.546875,
     "y": 0,
     "width": 157.453125,
+    "height": 88
+   }
+  },
+  {
+   "id": "hero_plus",
+   "group": "hero",
+   "role": "chip",
+   "x": 403,
+   "y": 476.5,
+   "w": 32,
+   "h": 32,
+   "radius": 16,
+   "clip": {
+    "x": 375,
+    "y": 448.5,
+    "width": 88,
     "height": 88
    }
   },

@@ -16,6 +16,7 @@ const PIECES = [
   { id: 'hero_prompt',  group: 'hero',  role: 'mockup', find: `composer(0)` },
   { id: 'nav_login',    group: 'hero',  role: 'chip',   find: `byText('a','Log in')` },
   { id: 'nav_start',    group: 'hero',  role: 'chip',   find: `byText('a','Get started',0)` },
+  { id: 'hero_plus',    group: 'hero',  role: 'chip',   find: `composer(0).querySelector('button')` },
   // one platform
   { id: 'p2_templates', group: 'p2',    role: 'button', find: `byText('a','View templates')` },
   { id: 'p2_start',     group: 'p2',    role: 'button', find: `byText('a','Get started',1)` },
@@ -128,7 +129,8 @@ const HELPERS = `
   const solo = await page.addStyleTag({ content: `
     html,body{background:transparent!important}
     body *{visibility:hidden!important}
-    body.solo-on [data-solo], body.solo-on [data-solo] *{visibility:visible!important}` });
+    body.solo-on [data-solo], body.solo-on [data-solo] *{visibility:visible!important}
+    body.solo-on [data-solo] [data-film-layer]{opacity:0!important}` });
   for (const l of found) {
     await page.evaluate(id => {
       document.querySelectorAll('[data-solo]').forEach(e => e.removeAttribute('data-solo'));
