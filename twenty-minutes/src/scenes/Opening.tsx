@@ -7,7 +7,7 @@ import { lerp, prog, Wd } from "../timeline";
 
 // The clock is the idea: 20:00 becomes the face of a 20-slice workout ring.
 export const RING = { cx: 540, cy: 760, r: 300, w: 56 };
-export const HOOK = { y: 900, size: 250 };
+export const HOOK = { y: 900, size: 206 }; // fits x 160–920: clear of the platform button rail
 
 // Shared with the end card so the last frame == the first frame (seamless loop).
 export const lockPunch = (f: number, at: number) => {
@@ -113,7 +113,7 @@ export const Opening: React.FC<{ f: number }> = ({ f }) => {
           position: "absolute",
           left: 0,
           right: 0,
-          top: HOOK.y + 160,
+          top: HOOK.y + 128,
           display: "flex",
           justifyContent: "center",
           opacity: 1 - labelOut,

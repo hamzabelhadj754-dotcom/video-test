@@ -102,7 +102,7 @@ export const Push: React.FC<{ f: number }> = ({ f }) => {
           <line x1={p0.x} y1={p0.y} x2={p1.x} y2={p1.y} stroke={C.work} strokeWidth={3} strokeLinecap="round" />
         </svg>
       )}
-      <Cue from={mid} to={{ x: 560, y: 960 }} label="ONE STRAIGHT LINE" f={f - (Wd.straight - B.push) - 2} align="right" out={70} />
+      <Cue from={mid} to={{ x: 380, y: 960 }} label="ONE STRAIGHT LINE" f={f - (Wd.straight - B.push) - 2} align="right" out={70} />
       <Cue from={knee} to={{ x: 520, y: 1120 }} label="KNEES DOWN = OK" f={f - (Wd.knees - B.push) - 6} align="left" color={C.rest} />
     </Frame>
   );
