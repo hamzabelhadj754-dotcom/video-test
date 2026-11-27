@@ -1,5 +1,5 @@
 import React from "react";
-import { AbsoluteFill, useCurrentFrame } from "remotion";
+import { AbsoluteFill, Img, staticFile, useCurrentFrame } from "remotion";
 import { C, display, EASE, MARGIN, mono } from "./theme";
 import { clamp01, lerp, prog } from "./timeline";
 
@@ -26,15 +26,10 @@ export const Backdrop: React.FC<{ lightY?: number }> = ({ lightY = 760 }) => {
 
 export const Grain: React.FC = () => {
   const f = useCurrentFrame();
+  // 8 pre-baked grain plates (half-res, upscaled = film-sized grain), cycled per frame
   return (
-    <AbsoluteFill style={{ mixBlendMode: "screen", opacity: 0.11, pointerEvents: "none" }}>
-      <svg width={1080} height={1920}>
-        <filter id="grain">
-          <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed={f % 12} stitchTiles="stitch" />
-          <feColorMatrix type="matrix" values="0 0 0 0 0.9  0 0 0 0 0.88  0 0 0 0 0.85  0 0 0 1.6 -0.55" />
-        </filter>
-        <rect width="100%" height="100%" filter="url(#grain)" />
-      </svg>
+    <AbsoluteFill style={{ mixBlendMode: "soft-light", opacity: 0.32, pointerEvents: "none" }}>
+      <Img src={staticFile(`grain${f % 8}.png`)} style={{ width: 1080, height: 1920, imageRendering: "auto" }} />
     </AbsoluteFill>
   );
 };

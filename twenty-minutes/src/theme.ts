@@ -29,9 +29,15 @@ if (typeof document !== "undefined" && !document.getElementById("tm-fonts")) {
 @font-face{font-family:"${MONO}";src:url(data:font/woff2;base64,${JBMONO_B64}) format("woff2");font-weight:100 800;font-display:block}`;
   document.head.appendChild(st);
   const handle = delayRender("Embedded fonts", { timeoutInMilliseconds: 60000 });
-  Promise.all([document.fonts.load(`900 100px "${DISPLAY}"`), document.fonts.load(`500 30px "${MONO}"`)])
-    .then(() => document.fonts.ready)
-    .finally(() => continueRender(handle));
+  let done = false;
+  const release = () => {
+    if (!done) {
+      done = true;
+      continueRender(handle);
+    }
+  };
+  Promise.all([document.fonts.load(`900 100px "${DISPLAY}"`), document.fonts.load(`500 30px "${MONO}"`)]).then(release, release);
+  setTimeout(release, 5000); // never block a tab: the data-URI faces decode synchronously in practice
 }
 
 // Wide, heavy display voice: Archivo at full expansion.
