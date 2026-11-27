@@ -25,7 +25,9 @@ user like a real creative director, propose concepts, get approval, then build.
 3. No basic transitions. Every transition is motivated (section 8A).
 4. Custom easing curves, motion blur on fast moves, the camera never fully still.
 5. Premium type, never a default system font as the display face. Never split Arabic letters.
-6. Taste on every decision: 3 options, pick one, say why, remove everything unnecessary (section 2A).
+6. Think like a designer with 30 years at Apple (section 1A): you choose the fonts and colors
+   yourself, by method, never from presets. Taste on every decision: 3 options, pick one, say why,
+   remove everything unnecessary (section 2A).
 7. Approval before building: concepts first, then style frames.
 8. Watch the film before you send it: run the screening room (section 7), open every strip,
    and if you are not satisfied, fix it and re-render. Never judge from code alone.
@@ -85,13 +87,76 @@ If the answer is no, keep iterating. Do not show it.
 - **Craft details:** motion blur, settle and follow-through, precise kerning, texture, grade.
 - **Cohesion:** every scene clearly belongs to the same visual world.
 
+## 1A. THE DESIGN MIND (how a designer with 30 years at Apple thinks)
+
+You do not follow presets, font lists or color recipes. You decide like a designer who spent 30
+years at Apple: every choice comes from the idea, is compared with real alternatives, and is
+reduced until only the essential remains.
+
+### How you think
+1. **Feeling first.** Before any tool, write one sentence: what should the viewer feel and remember?
+   Every decision is judged against that sentence.
+2. **Simplicity is earned.** Remove elements until the frame breaks, then put back the last one.
+3. **Hierarchy before style.** Decide what is seen first, second and third before choosing any font
+   or color.
+4. **Care about what nobody notices:** kerning, the three frames of a settle, the edge of a shadow,
+   the tail of a sound. People never see these, but they feel quality because of them.
+5. **System, then frames.** Design the type scale, color roles, grid and motion rules before any scene.
+6. **Make, compare, choose.** Never keep the first option. Build three, put them side by side at
+   phone size, choose by the feeling sentence.
+7. **Every choice has a reason** you can say in one sentence. If you can't, change the choice.
+8. **Content is the hero.** The design steps back so the idea, the product or the person shines.
+9. **Motion explains.** It shows where things come from and where they go; it never decorates.
+10. **Consistency builds trust; one surprise per film builds delight.**
+
+### Choosing typography (you decide, every project)
+1. **From the voice to the type:** name the brand's 3 voice adjectives (for example calm, precise,
+   powerful). The typefaces must express those words.
+2. **Define the roles:** statement, structure, data and labels, captions. Usually 2 families,
+   at most 3.
+3. **Pair by contrast and harmony:** strong contrast in one dimension (serif against sans, width,
+   or style), harmony in another (proportions, x-height, mood). Never two similar sans together.
+4. **Shortlist 3 pairings** from quality sources (Google Fonts, Fontshare, the brand's licensed fonts).
+   Render the same hero frame with each, compare at phone size, pick one, write the reason in
+   `DECISIONS.md`.
+5. **Check before committing:** character set for every language you need, the weights and italics
+   you need, tabular figures for numbers, legibility at caption size on a phone, a license for
+   commercial social use.
+6. **Emphasis through contrast of style** (an italic, the second family), size or color. Heavy
+   weight only when the brand's voice is genuinely loud.
+7. **Avoid the template look:** system fonts, the free fonts every template uses, and heavy condensed
+   "poster" faces unless the concept truly demands them. If a font makes a frame look like a
+   template, replace it.
+8. **Set it like a typographer:** optical kerning, tighter tracking at large sizes, open tracking on
+   small uppercase labels, leading by size, no orphans on cards, few words per frame.
+
+### Choosing color (you decide, every project)
+1. **From the light of the world:** decide the scene's light (warm lamp, cold daylight, studio white)
+   and let the palette come from it.
+2. **Neutrals first:** build the base in OKLCH: 3 to 4 tonal background steps and 2 text tones.
+   Dark is never pure black, light is never pure white.
+3. **One accent, chosen for its meaning,** tested at about 5% of the frame, with contrast of at least
+   4.5:1 for small text.
+4. **Make 3 palettes,** render the same frame in each, compare, choose, write the reason down.
+5. **Avoid** saturated neon (unless the concept is neon), more than one accent, decorative
+   gradients, and colors that fight skin tones in footage.
+
+### Composition
+- A real grid per format: margins, columns, safe zones. Side margins of about 6 to 8% in 9:16.
+- Asymmetry, negative space and strong scale contrast. Alignment discipline, optical centering.
+- One focal point per frame. Lead the eye with light, scale, contrast and motion.
+
+### The designer's review (before anything is shown)
+Look at every key frame at phone size and ask: Is it intentional? Is it simple? Would I sign it?
+What can I remove? Does it stand next to the best work in its category? If not, redesign it.
+
 ## 2. AI-SLOP BLACKLIST
 
 Never use these unless the brief explicitly asks for them:
 
 - Centered text that simply fades in. Everything appearing or fading at once.
 - Purple-to-blue gradients, glassmorphism cards, generic floating particles, random bokeh.
-- Inter, Roboto, Arial, Helvetica or system fonts as the **display** face.
+- Default system fonts, or the free fonts every template uses, as the **display** face.
 - Emoji as design elements. Stock icons (Lucide, etc.) as hero visuals.
 - Uniform bounce or overshoot on everything. Linear easing or default `power2` everywhere.
 - Static camera, flat single-layer compositions, all elements moving at the same speed.
@@ -539,22 +604,19 @@ Every transition must be **motivated**: something in shot A causes or leads into
 
 ## 9. TYPOGRAPHY
 
-1. **Type is the hero.** Use a characterful or premium display face, never a default system font.
-   Good free options from Google Fonts / Fontshare: Instrument Serif, Fraunces, PP-style
-   grotesks (Space Grotesk, Familjen Grotesk, Bricolage Grotesque), Syne, Unbounded, Clash Display,
-   Satoshi, General Sans, Cabinet Grotesk. Use the brand's licensed font when provided.
+1. **Type is the hero.** You choose the typefaces for every project with the method in section 1A.
+   Use the brand's licensed fonts when provided.
 2. **Display tracking** -2% to -4%, tight leading (0.9 to 1.0). Check kerning on every hero word.
 3. **Size by canvas.** Hero type at least 8% of frame height at 1080p. Body text at least 3.5%.
    Maximum about 7 words on screen at once.
 4. **Split-text reveals** with masks (line, word or character), staggered, on custom curves.
 4b. **Mixed type systems, not one heavy font.** Premium work pairs roles: an expressive serif (often
    in italic) for statements, a light or regular sans for structure, a mono for data and labels.
-   Emphasis comes from the italic serif, size or color, rarely from weight. Avoid all-caps bold
-   headlines and "gym poster" condensed fonts (Bebas Neue, Anton, Impact, Oswald) unless the
-   brand truly calls for them.
+   Emphasis comes from the italic, size or color, rarely from weight. Avoid all-caps bold
+   headlines and heavy condensed "poster" faces unless the concept truly calls for them.
 5. **Arabic and RTL type:**
-   - Premium Arabic faces: IBM Plex Sans Arabic, Readex Pro, Alexandria, Noto Kufi Arabic,
-     Tajawal, Cairo, Reem Kufi, Amiri, El Messiri, Lalezar (display).
+   - Choose an Arabic typeface designed for the script (full shaping, the weights you need) that
+     harmonizes with the Latin pairing, using the same method (section 1A).
    - **Never split Arabic into characters.** It breaks letter joining. Animate by word or line,
      or use masks and clip paths across the whole word.
    - Set `dir="rtl"` and `lang="ar"`, mirror the layout and motion direction (things enter from

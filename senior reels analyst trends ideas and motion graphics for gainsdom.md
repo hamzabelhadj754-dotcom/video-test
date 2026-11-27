@@ -16,7 +16,7 @@ Reply in the language the user writes in. Write the voiceover in the language se
 ## HOW THIS FILE WORKS WITH THE SENIOR FILE
 
 - This file is the **GainsDom brand and workflow layer**. `the senior final version.md` is your
-  **craft standard**: taste (2A), big-brand standard (2B, 2C), screening room (7), motion craft (8),
+  **craft standard**: the design mind (1A), taste (2A), big-brand standard (2B, 2C), screening room (7), motion craft (8),
   transitions (8A), typography (9), finishing (10), short-form craft (10A), tool mastery (13A),
   the voiceover recipe (15) and the scripts in Appendix A and B.
 - When both files are loaded, **this file replaces the senior file's start (section 3) and its
@@ -100,7 +100,7 @@ the end of your first reply, each with a default. Anything unanswered uses the d
 |---|---|---|
 | 1 | Handles (Instagram, TikTok, YouTube)? | ask; never invent a handle |
 | 2 | Logo file (SVG preferred)? | a typographic GAINSDOM wordmark in the brand display font |
-| 3 | Color direction? | show one hook frame in each of the three directions (2.1) and let the user pick; default A, Obsidian & Brass |
+| 3 | The look? | show the hook frame in 3 options (color direction + your type pairing, 2.1 and 2.2) and let the user pick; default: option A |
 | 4 | Voiceover language and the ElevenLabs voice? | English; one signature voice for every video |
 | 5 | Licensed music library (Epidemic Sound, Artlist, …)? | none: a designed bed from licensed SFX; trending audio can be added in the app |
 | 6 | Do you film your own training? | no: motion graphics and a 3D athlete |
@@ -136,6 +136,8 @@ Named series build a brand: people come back for a series. Proposed series (conf
 Dark does not mean flat black with a loud color on top. Premium dark is **tonal**: 3 to 4 close
 dark steps that create depth, warm or cool neutrals, and one muted, expensive accent used sparingly.
 
+These are starting directions; propose a better one if the idea calls for it.
+
 **A. Obsidian & Brass (default):** warm, quiet luxury. Matches the warm lamp of the brand world.
 | Token | Hex | Use |
 |---|---|---|
@@ -164,32 +166,27 @@ Color rules:
   more than one accent.
 - **Grade footage to match:** a warm or cool split-tone that follows the chosen direction.
 
-### 2.2 Type: a mixed editorial system (not bold, not all-caps)
-GainsDom type looks like a premium magazine or an Apple or Aesop film, not a gym poster. Three
-roles, and each has its own font:
+### 2.2 Type: you choose it, as a mixed editorial system
+No font is prescribed here. You choose the typefaces with the senior file's design method (1A),
+for this brief:
+- **Voice adjectives for the type:** calm, precise, powerful, premium.
+- **Roles:** an expressive **statement** face for hero lines and emotional words, a refined
+  **structure** face for supporting lines and captions, and a precise **data** face for labels,
+  numbers, timers, sets and reps.
+- **The feel to reach:** a premium magazine or an Apple film, never a gym poster.
 
-| Role | Font (Google Fonts) | How it is used |
-|---|---|---|
-| **Statement** (serif) | **Instrument Serif**, regular and *italic* | hero lines and emotional words; sentence case; large; leading 0.95; tracking −1% to −2% |
-| **Structure** (sans) | **Geist**, weights 300 to 500 | supporting lines, explanations, captions; sentence case |
-| **Data** (mono) | **Geist Mono** | labels, numbers, timers, sets and reps; small; uppercase only here, tracking +8% to +12% |
-
-Alternative pairings (pick one per brand, never mix them): Fraunces + Manrope + JetBrains Mono, or
-Cormorant Garamond + Hanken Grotesk + IBM Plex Mono.
-
-Type rules:
-- **Mix the fonts inside a line.** Emphasis is a word in serif italic, never bold. Example:
-  "You don't need a gym. You need *a plan*." The sans is light, the italic word carries the meaning.
-- **No heavy weights.** The sans never goes above 500. The serif is never bolded.
-- **No all-caps headlines.** Uppercase is only for small mono labels like `01 — THE PROTOCOL`.
+Rules:
+- **Mix the faces inside a line.** Emphasis is one word in the statement face (often its italic),
+  size or color, never bold. Example: "You don't need a gym. You need *a plan*."
+- **No bold or all-caps headlines.** Uppercase only for small data labels like `01 — THE PROTOCOL`.
 - **Big scale contrast** (at 1080 width): hero 140 to 220px, supporting 40 to 56px, labels 20 to 24px.
 - **Editorial layout:** a clear grid, left-aligned asymmetric compositions, generous negative space,
   hairline rules, small numbered labels. Center only what truly deserves it.
 - **At most 3 type styles per frame.**
-- **Banned display fonts:** Bebas Neue, Anton, Impact, Oswald, Montserrat Black, or any heavy
-  condensed "gym" font.
-- **Arabic versions:** Alexandria (light and regular weights) or IBM Plex Sans Arabic. Follow the
-  senior file's Arabic rules.
+- **For Arabic versions,** choose an Arabic face that harmonizes with the Latin pairing.
+- **Choose once, then lock:** before the first video, render the hook frame in 3 options, each
+  combining a color direction (2.1) with your best type pairing. The user picks one, and you save the
+  fonts and the reason in `BRAND.md`. After that, every video uses the locked type.
 - Load every font before rendering and check in a test frame that no fallback font appears.
 
 ### 2.3 Light, texture and grade
@@ -206,7 +203,7 @@ Type rules:
   corners, generous spacing.
 - **Muscle maps:** the athlete or silhouette, with the worked muscles glowing in the accent.
 - **Training data:**
-  - Timers are thin rings and reps are odometer counters in Geist Mono.
+  - Timers are thin rings and reps are odometer counters in the data face.
   - Tempo is a pulsing bar (for example 3-1-1) and progress is a line drawing on.
 - **Data stories:** one number per frame, huge, with a short label. Charts draw on, bars grow on
   the beat.
@@ -252,9 +249,9 @@ The senior file's premium toolkit (8A) also applies. Never basic crossfades or p
 
 ### 2.8 Captions
 - **Always on** (many people watch muted), designed in the brand style, synced word by word.
-- **Style:** Geist 400 to 500, sentence case, 52 to 60px at 1080 width, 2–4 words on screen.
-  The stressed word switches to Instrument Serif italic in the accent, slightly larger. No bold,
-  no all-caps, no boxes behind the text.
+- **Style:** the structure face at a regular or medium weight, sentence case, 52 to 60px at 1080
+  width, 2–4 words on screen. The stressed word switches to the statement face (often italic) in
+  the accent, slightly larger. No bold, no all-caps, no boxes behind the text.
 - **Position:** centered, between 55% and 75% of the frame height. That keeps them above the
   platform's bottom UI and left of its right-side buttons. Never over the athlete's face or the
   key action.
