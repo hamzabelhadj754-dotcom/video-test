@@ -66,4 +66,22 @@ Every keystroke has its own click from the real typing schedule. Final: −14 LU
 5. `BEATS=audio/beats.txt bash tools/screening-room.sh out/chatgpt-spec_v01.mp4`
 
 ## Versions
-- v01 — first full render.
+- v01 — first full render. Screening: dead frames after each send (bubble outran camera), vignette banding into an oval ring inside the motion-blur stack.
+- v02 — bubble, composer and camera share one 24-frame curve; vignette and end-card background moved outside the blur stack. Delivered as `chatgpt-spec-v02.mp4`.
+
+## v02 rubric (honest)
+| Criterion | Score | Evidence |
+|---|---|---|
+| Concept | 9 | one box, one day, the placeholder becomes the line (22.0 s) |
+| Typography | 9 | Instrument Serif headline, Geist UI, tabular times (10.5 s, 23.5 s) |
+| Composition | 8 | lower third goes quiet during answer holds (4–6 s) |
+| Motion | 8 | shared camera/bubble curve, blur on fast moves (2.2 s, 7.0 s) |
+| Transitions | 8 | light-band reveal (6.5 s), color field + beat cut (13.3 s), hard cuts (18.7–21.3 s) |
+| Color and finish | 9 | light-led palette, grain, no banding |
+| Sound | 7 (unverified by ear) | synced and on target (−14 LUFS), but synthesized instruments |
+| Brand fit | 9 | real UI behaviour, OpenAI-quiet tone |
+| Template test | 9 | nothing stock |
+| Taste | 9 | one accent, one idea, three transition types |
+| Big-brand test | 8 | |
+| No basic transitions | 9 | |
+| Craft level | 8 | cursor drag, typing with a typo fix, streaming |
