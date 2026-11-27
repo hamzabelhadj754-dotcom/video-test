@@ -51,6 +51,8 @@ Master: two-pass loudnorm, linear, −14.0 LUFS integrated, −1.5 dBTP.
 
 ## Versions
 - v01: first full render.
+- v02: live clock blink, camera drift, live cue anchors, label/exit timing fixes.
+- v03: hero clock + labels clear of the platform button rail. DELIVERED (repo root: twenty-minutes-v03.mp4).
 
 ## Feedback log
 - "Make it shorter, ~30 seconds, storyboard built for retention." → 30s cut, loop ending.
