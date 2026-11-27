@@ -1,0 +1,5 @@
+renders/v*/chunks/
+renders/v*/part_*.mp4
+renders/v*/log_*.txt
+renders/preview_*.mp4
+renders/*_review/

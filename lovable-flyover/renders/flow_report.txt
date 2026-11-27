@@ -1,0 +1,49 @@
+frames 435 @ 30fps
+cruise 1.75-7.25s: page speed median 621 px/s (model 617), min 562, max 651, min/median 0.906
+cruise frames under 0.94x: ['1.77s 562px/s (97 feats)', '1.80s 562px/s (97 feats)']
+ease-in (0-1.6s) frame-to-frame drops >8%: ['0.90s']
+zoom during flight and rise: max -0.00187/frame -> never zooms in
+  t= 0.03  page speed   -10.5px/s  zoom -0.00185/frame  features 169
+  t= 0.37  page speed   189.7px/s  zoom -0.00536/frame  features 168
+  t= 0.70  page speed   328.4px/s  zoom -0.01035/frame  features 98
+  t= 1.03  page speed   290.1px/s  zoom -0.00937/frame  features 133
+  t= 1.37  page speed   334.1px/s  zoom -0.01118/frame  features 122
+  t= 1.70  page speed   598.6px/s  zoom -0.01658/frame  features 97
+  t= 2.03  page speed   634.8px/s  zoom -0.01410/frame  features 238
+  t= 2.37  page speed   628.0px/s  zoom -0.01283/frame  features 248
+  t= 2.70  page speed   622.5px/s  zoom -0.01261/frame  features 243
+  t= 3.03  page speed   615.1px/s  zoom -0.01094/frame  features 221
+  t= 3.37  page speed   618.9px/s  zoom -0.01335/frame  features 157
+  t= 3.70  page speed   628.5px/s  zoom -0.01469/frame  features 120
+  t= 4.03  page speed   624.5px/s  zoom -0.01296/frame  features 110
+  t= 4.37  page speed   621.4px/s  zoom -0.01144/frame  features 114
+  t= 4.70  page speed   617.5px/s  zoom -0.01022/frame  features 95
+  t= 5.03  page speed   624.1px/s  zoom -0.01091/frame  features 132
+  t= 5.37  page speed   622.3px/s  zoom -0.01042/frame  features 150
+  t= 5.70  page speed   622.3px/s  zoom -0.01092/frame  features 199
+  t= 6.03  page speed   620.5px/s  zoom -0.01111/frame  features 250
+  t= 6.37  page speed   620.9px/s  zoom -0.01024/frame  features 355
+  t= 6.70  page speed   617.9px/s  zoom -0.00921/frame  features 292
+  t= 7.03  page speed   615.9px/s  zoom -0.00937/frame  features 307
+  t= 7.37  page speed   614.5px/s  zoom -0.00816/frame  features 291
+  t= 7.70  page speed   460.9px/s  zoom -0.00812/frame  features 427
+  t= 8.03  page speed   465.9px/s  zoom -0.02891/frame  features 483
+  t= 8.37  page speed   323.8px/s  zoom -0.05948/frame  features 310
+  t= 8.70  page speed -1233.7px/s  zoom -0.05445/frame  features 260
+  t= 9.03  page speed -2431.5px/s  zoom -0.04861/frame  features 167
+  t= 9.37  page speed  -159.1px/s  zoom +0.00515/frame  features 155
+  t= 9.70  page speed -5057.6px/s  zoom +0.13571/frame  features 34
+  t=10.03  page speed    -0.0px/s  zoom +0.00000/frame  features 69
+  t=10.37  page speed     0.0px/s  zoom +0.00001/frame  features 169
+  t=10.70  page speed     0.0px/s  zoom +0.00000/frame  features 232
+  t=11.03  page speed    -0.0px/s  zoom +0.00000/frame  features 234
+  t=11.37  page speed     0.0px/s  zoom +0.00000/frame  features 233
+  t=11.70  page speed    -0.0px/s  zoom +0.00000/frame  features 233
+  t=12.03  page speed     0.0px/s  zoom +0.00000/frame  features 236
+  t=12.37  page speed     0.0px/s  zoom +0.00000/frame  features 237
+  t=12.70  page speed     0.0px/s  zoom +0.00000/frame  features 233
+  t=13.03  page speed     0.0px/s  zoom +0.00000/frame  features 231
+  t=13.37  page speed     0.0px/s  zoom +0.00000/frame  features 233
+  t=13.70  page speed     0.0px/s  zoom +0.00001/frame  features 236
+  t=14.03  page speed     0.0px/s  zoom +0.00000/frame  features 237
+  t=14.37  page speed     0.0px/s  zoom +0.00000/frame  features 237

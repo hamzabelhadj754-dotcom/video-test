@@ -136,6 +136,7 @@ float hash(vec2 p){ return fract(sin(dot(p, vec2(12.9898, 78.233)) + uFrame * 0.
 void main(){
   float zc = texture(uD, vUv).r; float c0 = coc(zc);
   float R = max(c0, texture(uTile, vUv).r);
+  if (uDebug == 7) { c0 = 0.0; R = 0.0; }                             // fast preview: no depth of field
   vec3 acc = textureLod(uC, vUv, 0.0).rgb; float wsum = 1.0;          // the centre always counts
   float rot = ign(gl_FragCoord.xy) * 6.2831853;
   if (c0 >= 0.75) {                                                    // its own blur: 40 taps over its own radius
@@ -165,7 +166,7 @@ void main(){
     if (uDebug == 6) { o = vec4(vec3(sp.a), 1); return; }
   }
   if (uDebug == 5 || uDebug == 6) { o = vec4(0.2, 0, 0, 1); return; }
-  if (uDebug == 1) { o = vec4(vec3(c0 / 120.0), 1); return; }
+  if (uDebug == 1) { o = vec4(vec3(coc(zc) / 120.0), 1); return; }
   if (uDebug == 2) { o = vec4(vec3(R / 120.0), 1); return; }
   if (uDebug == 3) { o = vec4(textureLod(uNear, vUv, 0.0).aaa, 1); return; }
   if (uDebug == 4) { o = vec4(vec3(zc / (uFocus * 2.0)), 1); return; }
@@ -292,6 +293,7 @@ export async function createFilm(canvas, base = '..') {
   }
 
   let curCam = null;
+  let pageOnly = false;
   function renderScene(t) {
     const cam = S.camera(t); curCam = cam;
     gl.bindFramebuffer(gl.FRAMEBUFFER, scene.fb); gl.viewport(0, 0, W, H);
@@ -308,8 +310,10 @@ export async function createFilm(canvas, base = '..') {
     for (const c of chunks) { if (c.y0 > m.h) continue; bindTex(0, c.tex, l.uTex); quad(P.page, [[0, c.y0, 0], [PAGE_W, c.y0, 0], [0, c.y1, 0], [PAGE_W, c.y1, 0]]); }
     // pieces and tiles, lowest first, no depth buffer
     const items = [];
-    for (const L of layers) { const st = S.pieceState(L, t); if (!st.cut) items.push({ z: st.z, L, st }); }
-    for (let i = 0; i < 4; i++) { const ts = S.tileState(i, t); if (ts.visible) items.push({ z: ts.P[2], tile: ts }); }
+    if (!pageOnly) {
+      for (const L of layers) { const st = S.pieceState(L, t); if (!st.cut) items.push({ z: st.z, L, st }); }
+      for (let i = 0; i < 4; i++) { const ts = S.tileState(i, t); if (ts.visible) items.push({ z: ts.P[2], tile: ts }); }
+    }
     items.sort((a, b) => a.z - b.z);
     for (const it of items) {
       if (it.tile) {
@@ -336,7 +340,8 @@ export async function createFilm(canvas, base = '..') {
     return cam;
   }
 
-  function seek(t, { subframes = 16, shutter = 0.7, fps = 60, debug = 0 } = {}) {
+  function seek(t, { subframes = 16, shutter = 0.7, fps = 60, debug = 0, page = false } = {}) {
+    pageOnly = page;
     gl.bindFramebuffer(gl.FRAMEBUFFER, acc.fb); gl.viewport(0, 0, W, H); gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
     for (let k = 0; k < subframes; k++) {
       const tk = subframes > 1 ? t + ((k + 0.5) / subframes - 0.5) * shutter / fps : t;
@@ -374,7 +379,12 @@ export async function createFilm(canvas, base = '..') {
     for (let y = 0; y < H; y++) out.set(px.subarray((H - 1 - y) * row, (H - y) * row), y * row);
     return out;
   }
-  return { seek, readFrame, layers, gl };
+  function readFrameB64() {
+    const u8 = readFrame(); let s = '';
+    for (let i = 0; i < u8.length; i += 0x8000) s += String.fromCharCode.apply(null, u8.subarray(i, i + 0x8000));
+    return btoa(s);
+  }
+  return { seek, readFrame, readFrameB64, layers, gl };
 }
 
 // logo tile: the brand's colour mark on a white rounded tile
