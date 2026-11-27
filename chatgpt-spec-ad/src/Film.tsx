@@ -30,8 +30,8 @@ const MAIN_KEYS: CamKey[] = [
   { f: 617.9, s: 1.6, fx: 610, fy: 404, rx: 3, ry: 4 },
   { f: 618, s: 2.05, fx: 660, fy: 452, rx: 2, ry: -1 }, // hard cut to 3 a.m.
   { f: 722, s: 2.2, fx: 660, fy: 452, rx: 2, ry: -1 },
-  { f: 746, s: 1.52, fx: 620, fy: 222, rx: 2, ry: -3 },
-  { f: 838, s: 1.78, fx: 580, fy: 240, rx: 2, ry: -4 },
+  { f: 746, s: 1.52, fx: 600, fy: 222, rx: 2, ry: -3 },
+  { f: 838, s: 1.78, fx: 540, fy: 240, rx: 2, ry: -4 },
 ];
 
 const lookFor = (scene: 1 | 2 | 3, frame: number): Look => {

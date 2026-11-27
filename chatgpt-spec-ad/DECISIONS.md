@@ -69,6 +69,12 @@ Every keystroke has its own click from the real typing schedule. Final: −14 LU
 - v01 — first full render. Screening: dead frames after each send (bubble outran camera), vignette banding into an oval ring inside the motion-blur stack.
 - v02 — bubble, composer and camera share one 24-frame curve; vignette and end-card background moved outside the blur stack. Delivered as `chatgpt-spec-v02.mp4`.
 
+- v03 — voiceover-led cut, 41.7 s (ElevenLabs take 2, "Stephanie"). Statement lines on the voice, question wall at 6:02 AM,
+  the send button flies to centre and opens like an iris onto the official Blossom (unmodified, black, open space),
+  "Ask anything." beneath. New score built on the voice's timings, music ducked under the voice (−14.1 LUFS, TP −1.9).
+  Screening fix: night-scene camera shifted so "ChatGPT" is never clipped (frames 722–837 re-rendered and spliced).
+  Logo use: OpenAI's guidelines require permission for logo use; this is a labeled spec piece. Ask partnercomms@openai.com before any paid placement.
+
 ## v02 rubric (honest)
 | Criterion | Score | Evidence |
 |---|---|---|
