@@ -47,6 +47,10 @@ export const LOOKS: Record<string, Look> = {
     wall: "#D5B49A", wallFar: "#9A7461", light: "#FFC293", lightOp: 0.85, skew: -34, paneX: -80, paneY: 120, paneBlur: 26,
     shadow: "#5A2E18", shadowOp: 0.09, glow: "#000000", glowOp: 0, vignette: 0.3, tint: "#FFC9A0", tintOp: 0.4,
   },
+  dawn: {
+    wall: "#EEECE6", wallFar: "#D8D5CD", light: "#FFF0DC", lightOp: 0.7, skew: -28, paneX: 1050, paneY: -120, paneBlur: 34,
+    shadow: "#000000", shadowOp: 0, glow: "#000000", glowOp: 0, vignette: 0.12, tint: "#FFFFFF", tintOp: 0,
+  },
   evening: {
     wall: "#1A1511", wallFar: "#0B0907", light: "#000000", lightOp: 0, skew: 0, paneX: 0, paneY: 0, paneBlur: 0,
     shadow: "#000000", shadowOp: 0, glow: "#FFB070", glowOp: 0.16, vignette: 0.34, tint: "#FFFFFF", tintOp: 0.0,

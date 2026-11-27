@@ -21,7 +21,7 @@ const Mic: React.FC<{ c: string }> = ({ c }) => (
     <path d="M4.6 9.6a5.4 5.4 0 0 0 10.8 0M10 15v2.6" stroke={c} strokeWidth="1.5" strokeLinecap="round" />
   </svg>
 );
-const Wave: React.FC<{ c: string }> = ({ c }) => (
+export const Wave: React.FC<{ c: string }> = ({ c }) => (
   <svg width="18" height="18" viewBox="0 0 18 18">
     {[
       [4, 7, 11],
@@ -73,7 +73,8 @@ export const Composer: React.FC<{
   placeholderStyle?: React.CSSProperties;
   showCaret?: boolean;
   attachH?: number;
-}> = ({ theme, text, caret, placeholder = "Ask anything", attachment, press = 0, hover = 0, placeholderStyle, showCaret = true, attachH = COMPOSER.attach }) => {
+  buttonOpacity?: number;
+}> = ({ theme, text, caret, placeholder = "Ask anything", attachment, press = 0, hover = 0, placeholderStyle, showCaret = true, attachH = COMPOSER.attach, buttonOpacity = 1 }) => {
   const has = text.length > 0;
   const pressScale = 1 - 0.1 * press;
   return (
@@ -136,6 +137,7 @@ export const Composer: React.FC<{
               alignItems: "center",
               justifyContent: "center",
               transform: `scale(${pressScale})`,
+              opacity: buttonOpacity,
             }}
           >
             {has ? <Arrow c={theme.btnIcon} /> : <Wave c={theme.btnIcon} />}
