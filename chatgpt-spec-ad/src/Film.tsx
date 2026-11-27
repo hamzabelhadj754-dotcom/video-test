@@ -16,16 +16,16 @@ import { Whiteboard } from "./Whiteboard";
 // ---------- Camera plan (panel coordinates; composer centre is 660, 440) ----------
 const MAIN_KEYS: CamKey[] = [
   { f: 0, s: 2.05, fx: 660, fy: 462, rx: 7, ry: -8 },
-  { f: 62, s: 2.24, fx: 662, fy: 456, rx: 6, ry: -7 },
-  { f: 100, s: 1.5, fx: 640, fy: 252, rx: 4, ry: -10 },
+  { f: 64, s: 2.26, fx: 662, fy: 456, rx: 6, ry: -7 },
+  { f: 88, s: 1.5, fx: 640, fy: 252, rx: 4, ry: -10 },
   { f: 188, s: 1.74, fx: 590, fy: 212, rx: 3, ry: -7 },
   { f: 222, s: 1.66, fx: 760, fy: 436, rx: 4, ry: 9 }, // whip through the passing light
-  { f: 286, s: 1.8, fx: 690, fy: 446, rx: 4, ry: 7 },
-  { f: 324, s: 1.42, fx: 650, fy: 330, rx: 3, ry: 6 },
+  { f: 290, s: 1.8, fx: 690, fy: 446, rx: 4, ry: 7 },
+  { f: 314, s: 1.42, fx: 650, fy: 330, rx: 3, ry: 6 },
   { f: 399.9, s: 1.62, fx: 610, fy: 404, rx: 3, ry: 4 },
   { f: 400, s: 2.05, fx: 660, fy: 452, rx: 2, ry: -1 }, // hard cut to 3 a.m.
-  { f: 472, s: 2.2, fx: 660, fy: 452, rx: 2, ry: -1 },
-  { f: 512, s: 1.52, fx: 620, fy: 222, rx: 2, ry: -3 },
+  { f: 478, s: 2.2, fx: 660, fy: 452, rx: 2, ry: -1 },
+  { f: 502, s: 1.52, fx: 620, fy: 222, rx: 2, ry: -3 },
   { f: 560, s: 1.7, fx: 580, fy: 236, rx: 2, ry: -4 },
 ];
 
@@ -65,10 +65,10 @@ const ChatFlow: React.FC<{
   const hBefore = COMPOSER.h + (attachment ? COMPOSER.attach : 0);
   const aH = sent ? interpolate(frame, [send, send + 8], [attachH, 0], { ...clamp, easing: ease.out }) : attachH;
   const h = COMPOSER.h + aH;
-  const cy = interpolate(frame, [send, send + 22], [composerCenterY, composerBottomY(COMPOSER.h)], { ...clamp, easing: ease.out });
+  const cy = interpolate(frame, [send, send + 24], [composerCenterY, composerBottomY(COMPOSER.h)], { ...clamp, easing: ease.cam });
   const top = cy - h / 2;
 
-  const rise = interpolate(frame, [send, send + 20], [0, 1], { ...clamp, easing: ease.out });
+  const rise = interpolate(frame, [send, send + 24], [0, 1], { ...clamp, easing: ease.cam });
   const startY = composerCenterY - hBefore / 2 + 16 + (attachment ? COMPOSER.attach : 0) - 84 - (bubbleImage ? 210 : 0);
   const bubbleO = interpolate(frame, [send, send + 3], [0, 1], clamp);
   const finalText = keys[keys.length - 1].text;
@@ -267,7 +267,6 @@ const MainShot: React.FC<{ frame: number; cam: Cam; scene: 1 | 2 | 3 }> = ({ fra
           {scene === 1 ? <Scene1 frame={frame} /> : scene === 2 ? <Scene2 frame={frame} /> : <Scene3 frame={frame} />}
         </Panel>
       </CameraRig>
-      <Vignette amount={look.vignette} />
     </AbsoluteFill>
   );
 };
@@ -319,7 +318,6 @@ const BurstShot: React.FC<{ frame: number }> = ({ frame }) => {
           </div>
         </Panel>
       </CameraRig>
-      <Vignette amount={look.vignette} />
     </AbsoluteFill>
   );
 };
@@ -337,7 +335,7 @@ const EndCard: React.FC<{ frame: number }> = ({ frame }) => {
   const urlIn = interpolate(frame, [END.brand + 7, END.brand + 27], [0, 1], { ...clamp, easing: ease.out });
   const specIn = interpolate(frame, [END.spec, END.spec + 20], [0, 1], { ...clamp, easing: ease.out });
   return (
-    <AbsoluteFill style={{ background: `radial-gradient(85% 75% at 50% 40%, #F8F7F3 0%, ${C.paper} 45%, #E7E5DE 100%)` }}>
+    <AbsoluteFill>
       <AbsoluteFill style={{ transform: `scale(${drift})` }}>
         <div style={{ position: "absolute", left: 0, right: 0, top: 268, textAlign: "center", fontFamily: F.serif, fontSize: 184, lineHeight: 1, letterSpacing: "-0.025em", color: C.ink }}>
           {words.map((w, i) => {
@@ -380,9 +378,25 @@ const EndCard: React.FC<{ frame: number }> = ({ frame }) => {
       <div style={{ position: "absolute", left: 120, bottom: 64, opacity: specIn * 0.9, fontFamily: F.mono, fontSize: 14, letterSpacing: "0.14em", textTransform: "uppercase", color: "#77746E" }}>
         Spec ad · Not affiliated with OpenAI
       </div>
-      <Vignette amount={0.1} />
     </AbsoluteFill>
   );
+};
+
+// Smooth gradients live outside the motion-blur stack, so stacked samples never band them.
+const EndBackground: React.FC = () => (
+  <AbsoluteFill style={{ background: `radial-gradient(140% 120% at 50% 42%, #F7F6F2 0%, ${C.paper} 50%, #ECEAE4 100%)` }} />
+);
+
+const vignetteAt = (frame: number) => {
+  if (frame >= END.start) return 0.1;
+  if (frame >= BURST.start) {
+    const i = Math.min(BURST.count - 1, Math.floor((frame - BURST.start) / BURST.shot));
+    return LOOKS[BURST_PROMPTS[i].look].vignette;
+  }
+  if (frame >= S3.start) return LOOKS.night.vignette;
+  if (frame >= T1.end) return lookFor(2, frame).vignette;
+  if (frame >= T1.start) return interpolate(frame, [T1.start, T1.end], [LOOKS.morning.vignette, LOOKS.afternoon.vignette], clamp);
+  return LOOKS.morning.vignette;
 };
 
 // ---------- The frame ----------
@@ -452,9 +466,10 @@ const TimeLabel: React.FC = () => {
 };
 
 const BLUR_RANGES: [number, number][] = [
-  [62, 100],
+  [64, 90],
   [186, 250],
-  [476, 512],
+  [290, 316],
+  [478, 504],
   [END.start + 4, END.start + 46],
 ];
 
@@ -463,6 +478,7 @@ export const Film: React.FC = () => {
   const blur = BLUR_RANGES.some(([a, b]) => frame >= a && frame <= b);
   return (
     <AbsoluteFill style={{ background: "#0A0A0A" }}>
+      {frame >= END.start ? <EndBackground /> : null}
       {blur ? (
         <CameraMotionBlur shutterAngle={180} samples={6}>
           <FilmFrame />
@@ -470,6 +486,7 @@ export const Film: React.FC = () => {
       ) : (
         <FilmFrame />
       )}
+      <Vignette amount={vignetteAt(frame)} />
       <TimeLabel />
     </AbsoluteFill>
   );

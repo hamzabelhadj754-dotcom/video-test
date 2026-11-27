@@ -37,7 +37,7 @@ export const LOOKS: Record<string, Look> = {
   },
   night: {
     wall: "#0D1017", wallFar: "#05070A", light: "#000000", lightOp: 0, skew: 0, paneX: 0, paneY: 0, paneBlur: 0,
-    shadow: "#000000", shadowOp: 0, glow: "#5A76B8", glowOp: 0.32, vignette: 0.5, tint: "#FFFFFF", tintOp: 0.0,
+    shadow: "#000000", shadowOp: 0, glow: "#5A76B8", glowOp: 0.32, vignette: 0.34, tint: "#FFFFFF", tintOp: 0.0,
   },
   noon: {
     wall: "#EAE5DA", wallFar: "#CBC3B4", light: "#FFF6E6", lightOp: 0.8, skew: -4, paneX: 900, paneY: -260, paneBlur: 14,
@@ -49,7 +49,7 @@ export const LOOKS: Record<string, Look> = {
   },
   evening: {
     wall: "#1A1511", wallFar: "#0B0907", light: "#000000", lightOp: 0, skew: 0, paneX: 0, paneY: 0, paneBlur: 0,
-    shadow: "#000000", shadowOp: 0, glow: "#FFB070", glowOp: 0.16, vignette: 0.5, tint: "#FFFFFF", tintOp: 0.0,
+    shadow: "#000000", shadowOp: 0, glow: "#FFB070", glowOp: 0.16, vignette: 0.34, tint: "#FFFFFF", tintOp: 0.0,
   },
 };
 
@@ -250,7 +250,7 @@ export const Vignette: React.FC<{ amount: number }> = ({ amount }) => (
       position: "absolute",
       inset: 0,
       pointerEvents: "none",
-      background: `radial-gradient(120% 100% at 50% 48%, transparent 52%, rgba(10,8,6,${amount}) 100%)`,
+      background: `radial-gradient(150% 130% at 50% 48%, rgba(10,8,6,0) 30%, rgba(10,8,6,${amount * 0.35}) 62%, rgba(10,8,6,${amount}) 100%)`,
     }}
   />
 );
