@@ -3,11 +3,11 @@ import { AbsoluteFill, Audio, continueRender, delayRender, Easing, Img, interpol
 import { MONO_B64, SERIF_B64, SERIF_ITALIC_B64 } from "./fonts.generated";
 
 // ── tokens ───────────────────────────────────────────────────────────────────
-const INK = "#EDEBE6";
+export const INK = "#EDEBE6";
 const BG = "#0B0A09";
-const SERIF = "Instrument Serif";
+export const SERIF = "Instrument Serif";
 const MONO = "JB Mono";
-const GRADE = "saturate(0.62) contrast(1.07) brightness(0.9)"; // one look for five different photos
+export const GRADE = "saturate(0.62) contrast(1.07) brightness(0.9)"; // one look for five different photos
 
 if (typeof document !== "undefined" && !document.getElementById("hr-fonts")) {
   const st = document.createElement("style");
@@ -18,7 +18,7 @@ if (typeof document !== "undefined" && !document.getElementById("hr-fonts")) {
 @font-face{font-family:"${MONO}";src:url(data:font/woff2;base64,${MONO_B64}) format("woff2");font-weight:100 800;font-display:block}`;
   document.head.appendChild(st);
 }
-const useFonts = () => {
+export const useFonts = () => {
   const [h] = useState(() => delayRender("fonts", { timeoutInMilliseconds: 60000 }));
   useEffect(() => {
     Promise.all([
@@ -221,7 +221,7 @@ const Title: React.FC = () => (
   </AbsoluteFill>
 );
 
-const Grain: React.FC<{ f: number }> = ({ f }) => (
+export const Grain: React.FC<{ f: number }> = ({ f }) => (
   <AbsoluteFill style={{ mixBlendMode: "soft-light", opacity: 0.42, pointerEvents: "none" }}>
     <Img src={staticFile(`grain${f % 8}.png`)} style={{ width: 1080, height: 1920 }} />
   </AbsoluteFill>
