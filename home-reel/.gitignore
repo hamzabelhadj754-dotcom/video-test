@@ -1,0 +1,5 @@
+out/*.mp4
+out/*_review/
+out/*.log
+node_modules/
+public/sfx_pre.wav

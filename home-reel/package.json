@@ -1,0 +1,19 @@
+{
+  "name": "home-reel",
+  "version": "1.0.0",
+  "private": true,
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@remotion/cli": "4.0.465",
+    "@remotion/media": "4.0.465",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "remotion": "4.0.465"
+  },
+  "devDependencies": {
+    "@fontsource/instrument-serif": "5.2.6",
+    "@fontsource-variable/inter-tight": "5.2.6",
+    "@types/react": "19.2.7",
+    "typescript": "5.9.3"
+  }
+}
