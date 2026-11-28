@@ -3,8 +3,9 @@ import { AbsoluteFill, Img, staticFile, useCurrentFrame } from "remotion";
 import { Grain, GRADE, INK, SERIF, useFonts } from "./Reel";
 
 // Photo dump: full-screen, locked position, one constant fast rhythm, no sound.
-export const SLOT = 9; // frames per photo = 0.3 s @ 30 fps
-const ORDER = [1, 2, 3, 4, 5]; // 10 full rounds in 15 s; ends on 5 → loops into 1
+export const SLOT = 7; // frames per photo ≈ 0.23 s @ 30 fps
+// All photos in the order sent; the cycle simply repeats until the 15 s are up.
+const ORDER = [1, 2, 3, 4, 5];
 export const FLICKER_TOTAL = 450;
 
 export const Flicker: React.FC = () => {

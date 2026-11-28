@@ -16,8 +16,12 @@ def cover(im, W, H, fx, fy):
     x = min(max(round(r.width * fx - W / 2), 0), r.width - W)
     y = min(max(round(r.height * fy - H / 2), 0), r.height - H)
     return r.crop((x, y, x + W, y + H)), s
-for i, (fx, fy) in FOCUS.items():
-    im = Image.open(f"{src}/{i}.jpg").convert("RGB")
+import glob, os
+files = sorted(glob.glob(f"{src}/*.jpg"), key=lambda p: int(os.path.splitext(os.path.basename(p))[0]))
+for path in files:
+    i = int(os.path.splitext(os.path.basename(path))[0])
+    fx, fy = FOCUS.get(i, (0.5, 0.5))  # new photos: centre crop unless tuned
+    im = Image.open(path).convert("RGB")
     for name, (W, H) in {"full": (1080, 1920), "card": (828, 1104)}.items():
         c, s = cover(im, W, H, fx, fy)
         if s > 1.05:
