@@ -5,7 +5,7 @@ import { Grain, GRADE, INK, SERIF, useFonts } from "./Reel";
 // Photo dump: full-screen, locked position, one constant fast rhythm, no sound.
 export const SLOT = 7; // frames per photo ≈ 0.23 s @ 30 fps
 // All photos in the order sent; the cycle simply repeats until the 15 s are up.
-const ORDER = [1, 2, 3, 4, 5];
+const ORDER = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 export const FLICKER_TOTAL = 450;
 
 export const Flicker: React.FC = () => {

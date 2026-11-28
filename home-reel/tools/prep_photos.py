@@ -9,6 +9,10 @@ FOCUS = {  # subject position in each photo
     3: (0.58, 0.50),  # stretch, top view
     4: (0.62, 0.50),  # mat + dumbbell flat lay
     5: (0.80, 0.50),  # plank, laptop in foreground
+    6: (0.46, 0.50),  # handstand on the rail (full height kept)
+    7: (0.44, 0.55),  # seated stretch: keep the reaching hand + head (square source)
+    8: (0.50, 0.50),  # child's pose by the lamp (already 9:16)
+    9: (0.56, 0.50),  # toe touch, bedroom
 }
 def cover(im, W, H, fx, fy):
     s = max(W / im.width, H / im.height)
