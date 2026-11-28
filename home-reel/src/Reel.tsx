@@ -51,9 +51,11 @@ const OPEN: [number, number][] = [
 ]; // 34 frames, then photo 4 holds
 const SHRINK = [48, 64];
 const GALLERY = [4, 1, 5, 3, 2]; // setup → work → work → stretch → rest
-const SLOT = 39;
-const G0 = 64; // gallery start: photo 4 already showing
-const EXPAND = [G0 + SLOT * 5, G0 + SLOT * 5 + 16]; // 259 → 275
+const G0 = 64; // gallery (card) start: photo 4 already showing since frame 34
+// Reveal frame of each gallery photo. The flat-lay is the quietest image, so it gets the
+// shortest stay; the workout photos get ~1.4s each.
+const REVEAL = [34, 84, 127, 170, 213];
+const EXPAND = [259, 275];
 const CLOSE: [number, number][] = [
   [5, 4], [3, 3], [4, 3], [1, 3], [5, 3], [2, 3], [4, 3], [3, 3],
 ]; // 25 frames → 300, last photo ≠ first photo so the loop reads as one more cut
@@ -67,7 +69,7 @@ export const CUTS = (() => {
     f += d;
   });
   out.push(f); // photo 4
-  for (let i = 1; i < GALLERY.length; i++) out.push(G0 + SLOT * (i - 1) + SLOT);
+  for (let i = 1; i < GALLERY.length; i++) out.push(REVEAL[i]);
   f = EXPAND[1];
   CLOSE.forEach(([, d]) => {
     out.push(f);
@@ -140,9 +142,9 @@ const Gallery: React.FC<{ f: number }> = ({ f }) => {
   // stack: previous photo underneath, current photo revealed bottom→top like a film gate
   const layers: React.ReactNode[] = [];
   GALLERY.forEach((n, i) => {
-    const start = i === 0 ? 34 : G0 + SLOT * i;
+    const start = REVEAL[i];
     if (f < start - 1) return;
-    const nextStart = G0 + SLOT * (i + 1);
+    const nextStart = REVEAL[i + 1] ?? EXPAND[0];
     if (i < GALLERY.length - 1 && f > nextStart + 12) return;
     const e = i === 0 ? 1 : p(f, start, start + 11, E.reveal);
     layers.push(<CardPhoto key={n} n={n} age={f - start} clipTop={1 - e} lift={(1 - e) * 6} />);
@@ -181,8 +183,8 @@ const Caption: React.FC<{ f: number }> = ({ f }) => {
       {/* frame counter: which photo of five */}
       <div style={{ position: "absolute", left: cardRect.l, top: cardRect.b + 30, display: "flex", gap: 10, opacity: a }}>
         {GALLERY.map((_, i) => {
-          const start = i === 0 ? G0 : G0 + SLOT * i;
-          const on = f >= start && (i === GALLERY.length - 1 || f < G0 + SLOT * (i + 1));
+          const start = i === 0 ? G0 : REVEAL[i];
+          const on = f >= start && (i === GALLERY.length - 1 || f < REVEAL[i + 1]);
           return <div key={i} style={{ width: on ? 34 : 10, height: 3, background: INK, opacity: on ? 0.9 : 0.3 }} />;
         })}
       </div>

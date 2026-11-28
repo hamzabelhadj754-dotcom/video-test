@@ -14,9 +14,10 @@ def arr(name):
     return [(int(a), int(b)) for a, b in re.findall(r"\[(\d+),\s*(\d+)\]", body)]
 num = lambda name: int(re.search(rf"const {name} = (\d+);", src).group(1))
 OPEN, CLOSE = arr("OPEN"), arr("CLOSE")
-SLOT, G0 = num("SLOT"), num("G0")
+G0 = num("G0")
+REVEAL = [int(x) for x in re.search(r"const REVEAL = \[(.*?)\];", src).group(1).split(",")]
+EXPAND = tuple(int(x) for x in re.search(r"const EXPAND = \[(.*?)\];", src).group(1).split(","))
 SHRINK = (48, 64)
-EXPAND = (G0 + SLOT * 5, G0 + SLOT * 5 + 16)
 TOTAL = EXPAND[1] + sum(d for _, d in CLOSE)
 N = int(SR * TOTAL / FPS)
 rng = np.random.default_rng(3)
@@ -96,8 +97,8 @@ put(air(0.6, 3500, 300, 0.75), SHRINK[0] - 4, -14)
 put(thud(), SHRINK[1] - 2, -10)
 # gallery: a film-gate tick + low breath on each new photo
 for i in range(1, 5):
-    put(gate_tick(), G0 + SLOT * i + 1, -17, pan=0.15 * (-1) ** i)
-    put(air(0.45, 250, 900, 0.3), G0 + SLOT * i, -26)
+    put(gate_tick(), REVEAL[i] + 1, -17, pan=0.15 * (-1) ** i)
+    put(air(0.45, 250, 900, 0.3), REVEAL[i], -26)
 # the frame opens: air rises into the closing cuts
 put(air(0.55, 300, 4000, 0.92), EXPAND[0] - 2, -13)
 
